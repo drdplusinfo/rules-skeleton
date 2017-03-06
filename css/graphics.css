@@ -1,0 +1,11 @@
+body {
+    background-image: url("../images/background.png");
+    background-repeat: repeat-y;
+    background-size: 100%;
+    background-color: #FFEDD5;
+    color: #011126;
+}
+
+.shadowed-from-left {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 100%);
+}
