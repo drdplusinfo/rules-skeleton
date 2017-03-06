@@ -1,8 +1,8 @@
 {
-  "name": "drd-plus/rules-skeleton",
+  "name": "drd-plus/rules-html-skeleton",
   "license": "MIT",
   "type": "library",
-  "description": "DrD+ rules skeleton",
+  "description": "Skeleton for DrD+ rules as HTML",
   "keywords": [
     "drd plus",
     "rules",
