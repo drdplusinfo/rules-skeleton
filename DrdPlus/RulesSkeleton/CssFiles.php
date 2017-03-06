@@ -28,11 +28,37 @@ class CssFiles extends StrictObject implements \IteratorAggregate
      */
     private function getConfirmedStyleSheets()
     {
-        $stylesheets = scandir($this->dirWithCss);
-        $confirmedStylesheets = array_filter($stylesheets, function ($file) {
-            return $file !== '.' && $file !== '..' && strpos($file, '.css') !== false;
-        });
+        return $this->scanForCss($this->dirWithCss, '');
+    }
 
-        return $confirmedStylesheets; // intentionally relative path
+    /**
+     * @param string $directory
+     * @param string $cssRelativeRoot
+     * @return array|string[]
+     */
+    private function scanForCss(string $directory, string $cssRelativeRoot): array
+    {
+        $css = [];
+        foreach (scandir($directory) as $folder) {
+            if (is_dir($folder)) {
+                if ($folder === '.' || $folder === '..') {
+                    continue;
+                }
+                $css = array_merge(
+                    $css,
+                    $this->scanForCss(
+                        $directory . '/' . $folder,
+                        $cssRelativeRoot !== ''
+                            ? ($cssRelativeRoot . '/' . $folder)
+                            : $folder
+                    )
+                );
+            }
+            if (is_file($folder) && strpos($folder, '.css') !== false) {
+                $css[] = $cssRelativeRoot . '/' . $folder; // intentionally relative path
+            }
+        }
+
+        return $css;
     }
 }

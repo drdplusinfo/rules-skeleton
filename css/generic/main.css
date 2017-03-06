@@ -144,7 +144,7 @@ div.clear-both {
 
 .example {
     margin-top: 0.5em;
-    background-image: url('../images/example-left-upper-corner.png'), url('../images/example-right-bottom-corner.png');
+    background-image: url('../images/graphics/example-left-upper-corner.png'), url('../images/graphics/example-right-bottom-corner.png');
     background-position: left top, right bottom;
     background-repeat: no-repeat;
     background-size: 6em 3em;
@@ -160,7 +160,7 @@ div.example {
 
 div.item-combination {
     margin-top: 6px;
-    background-image: url('../images/items-combination.png');
+    background-image: url('../images/graphics/items-combination.png');
     background-repeat: no-repeat;
     background-size: 100%;
     width: 192px;

@@ -253,7 +253,7 @@ table.borderless thead th {
 }
 
 table.battle-stats {
-    background-image: url('../images/battle-stats.png');
+    background-image: url('../images/graphics/battle-stats.png');
     background-repeat: no-repeat;
     background-size: 100%;
 }
@@ -279,7 +279,7 @@ table.battle-stats tbody:last-child td:last-child {
 }
 
 table.item-combination {
-    background-image: url('../images/items-combination.png');
+    background-image: url('../images/graphics/items-combination.png');
     background-repeat: no-repeat;
     background-size: 100%;
     width: 12em;
