@@ -6,9 +6,9 @@ if (!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1') 
     ini_set('display_errors', '0');
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
-
 $documentRoot = rtrim(dirname($_SERVER['SCRIPT_FILENAME']), '\/');
+
+require_once $documentRoot . '/vendor/autoload.php';
 
 $cache = new \DrdPlus\RulesSkeleton\Cache($documentRoot);
 
