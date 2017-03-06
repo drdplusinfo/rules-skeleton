@@ -40,21 +40,19 @@ class CssFiles extends StrictObject implements \IteratorAggregate
     {
         $css = [];
         foreach (scandir($directory) as $folder) {
-            if (is_dir($folder)) {
+            $folderPath = $directory . '/' . $folder;
+            if (is_dir($folderPath)) {
                 if ($folder === '.' || $folder === '..') {
                     continue;
                 }
                 $css = array_merge(
                     $css,
                     $this->scanForCss(
-                        $directory . '/' . $folder,
-                        $cssRelativeRoot !== ''
-                            ? ($cssRelativeRoot . '/' . $folder)
-                            : $folder
+                        $folderPath,
+                        ($cssRelativeRoot !== '' ? ($cssRelativeRoot . '/') : '') . $folder
                     )
                 );
-            }
-            if (is_file($folder) && strpos($folder, '.css') !== false) {
+            } else if (is_file($folderPath) && strpos($folder, '.css') !== false) {
                 $css[] = $cssRelativeRoot . '/' . $folder; // intentionally relative path
             }
         }
