@@ -27,10 +27,10 @@ if ($cache->pageCacheIsValid()) {
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
         <?php
         /** @var array|string[] $cssFiles */
-        $cssFiles = new \DrdPlus\RulesSkeleton\CssFiles($documentRoot . '/ css');
+        $cssFiles = new \DrdPlus\RulesSkeleton\CssFiles($documentRoot . '/css');
         foreach ($cssFiles as $cssFile) { ?>
             <link rel="stylesheet" type="text/css"
-                  href="css/<?php echo "$cssFile?version=" . md5_file($documentRoot . '/' . ltrim($cssFile, '\/')); ?>">
+                  href="css/<?php echo "/css/$cssFile?version=" . md5_file($documentRoot . '/' . ltrim($cssFile, '\/')); ?>">
         <?php } ?>
     </head>
     <body>

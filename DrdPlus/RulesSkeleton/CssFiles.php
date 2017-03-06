@@ -33,11 +33,6 @@ class CssFiles extends StrictObject implements \IteratorAggregate
             return $file !== '.' && $file !== '..' && strpos($file, '.css') !== false;
         });
 
-        return array_map(
-            function ($cssFileBaseName) {
-                return $this->dirWithCss . '/' . $cssFileBaseName; // intentionally relative path
-            },
-            $confirmedStylesheets
-        );
+        return $confirmedStylesheets; // intentionally relative path
     }
 }
