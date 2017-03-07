@@ -91,9 +91,9 @@ MANIFEST
     public function getManifest(): string
     {
         if (!$this->manifestCacheIsValid()) {
-            if (!empty($_COOKIE['manifest-id'])) {
+            if (!empty($_COOKIE['manifestId'])) {
                 return 'CACHE MANIFEST
-#' . $_COOKIE['manifest-id'];
+# ' . $_COOKIE['manifestId'];
             }
 
             return '';
