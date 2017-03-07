@@ -54,7 +54,7 @@ if ($pageCache->pageCacheIsValid()) {
         <article>
             <?php
             $article = $htmlHelper->prepareCodeLinks($fileContent);
-            $article = $htmlHelper->addIds($article);
+            $article = $htmlHelper->addIdsToTables($article);
             $article = $htmlHelper->addAnchorsToIds($article);
             $article = $htmlHelper->hideCovered($article);
             echo $article; ?>

@@ -48,20 +48,20 @@ class HtmlHelper extends StrictObject
      * @param string $html
      * @return string
      */
-    public function addIds(string $html)
+    public function addIdsToTables(string $html)
     {
-        $withThIds = preg_replace(
+        $thWithIds = preg_replace(
             '~<((th)(?:(?!id=")[^>])*)>(\s*(Tabulka\s+(?:(?!</\2>|<|\n).)*)(?:(?!</\2>).)*)</\2>~us',
             '<$1 id="$4">$3</$2>',
             $html
         );
-        $withOriginalIds = preg_replace(
+        $thWithIdsAndOriginalIds = preg_replace(
             '~(\s+id\s*=\s*"([^"]+)")([^>]*)>~',
             '$1 data-original-id="$2"$3>',
-            $withThIds
+            $thWithIds
         );
 
-        return $withOriginalIds;
+        return $thWithIdsAndOriginalIds;
     }
 
     /**
