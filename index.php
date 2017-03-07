@@ -14,6 +14,9 @@ $manifestCache = new \DrdPlus\RulesSkeleton\ManifestCache($documentRoot);
 $pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot);
 
 if ($pageCache->pageCacheIsValid()) {
+    if (!$manifestCache->manifestCacheIsValid()) {
+        $manifestCache->createManifest($pageCache->getCachedPage());
+    }
     echo $pageCache->getCachedPage();
     exit;
 } else {
