@@ -1,5 +1,5 @@
 <?php
-$documentRoot = rtrim(dirname($_SERVER['SCRIPT_FILENAME']), '\/');
+$documentRoot = rtrim(!empty($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : __DIR__, '\/');
 
 require_once $documentRoot . '/vendor/autoload.php';
 
