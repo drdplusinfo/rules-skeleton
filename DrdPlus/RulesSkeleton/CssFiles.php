@@ -39,6 +39,7 @@ class CssFiles extends StrictObject implements \IteratorAggregate
     private function scanForCss(string $directory, string $cssRelativeRoot): array
     {
         $css = [];
+        $cssRelativeRoot = rtrim($cssRelativeRoot, '\/');
         foreach (scandir($directory) as $folder) {
             $folderPath = $directory . '/' . $folder;
             if (is_dir($folderPath)) {
