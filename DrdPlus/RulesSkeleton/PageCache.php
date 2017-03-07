@@ -20,7 +20,22 @@ class PageCache extends Cache
 
     public function pageCacheIsValid(): bool
     {
-        return $this->manifestCacheIsValid && is_readable($this->getPageCacheFileName()) && $this->cachingHasSense();
+        return is_readable($this->getPageCacheFileName()) && $this->cachingHasSense() && $this->readyForManifest();
+    }
+
+    private function readyForManifest(): bool
+    {
+        $resource = fopen($this->getPageCacheFileName(), 'rb');
+        $content = '';
+        $matching['attributes'] = '';
+        do {
+            $row = fgets($resource);
+            $content .= $row;
+        } while ($row !== false && !preg_match('~<html(?<attributes>[^>]+)>~', $content, $matching));
+        preg_match('~manifest\s*=\s*"(?<manifestUrl>[^"]*)"~', $matching['attributes'], $matching);
+        $manifestUrl = $matching['manifestUrl'];
+
+        return ($this->manifestCacheIsValid && $manifestUrl !== '') || (!$this->manifestCacheIsValid && $manifestUrl === '');
     }
 
     private function getPageCacheFileName(): string
