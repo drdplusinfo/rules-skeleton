@@ -92,8 +92,13 @@ MANIFEST
     {
         if (!$this->manifestCacheIsValid()) {
             if (!empty($_COOKIE['manifestId'])) {
-                return 'CACHE MANIFEST
-# ' . $_COOKIE['manifestId'];
+                return <<<MANIFEST
+CACHE MANIFEST
+# {$_COOKIE['manifestId']}
+NETWORK:
+/
+*
+MANIFEST;
             }
 
             return '';
