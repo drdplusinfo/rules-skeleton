@@ -35,8 +35,13 @@ class ManifestCache extends Cache
             file_put_contents($manifestFilename, <<<MANIFEST
 CACHE MANIFEST
 # version {$manifestCacheVersionHash} since the {$date}
+
+CACHE:
 /
 {$assetsForManifest}
+
+NETWORK:
+* # everything not cached can be fetched from net
 MANIFEST
             );
         }
