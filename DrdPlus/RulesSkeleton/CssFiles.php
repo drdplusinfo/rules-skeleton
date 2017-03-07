@@ -28,7 +28,7 @@ class CssFiles extends StrictObject implements \IteratorAggregate
      */
     private function getConfirmedStyleSheets()
     {
-        return $this->scanForCssFiles($this->dirWithCss, '');
+        return $this->scanForCssFiles($this->dirWithCss);
     }
 
     /**
@@ -36,14 +36,14 @@ class CssFiles extends StrictObject implements \IteratorAggregate
      * @param string $cssRelativeRoot
      * @return array|string[]
      */
-    private function scanForCssFiles(string $directory, string $cssRelativeRoot): array
+    private function scanForCssFiles(string $directory, string $cssRelativeRoot = ''): array
     {
         $cssFiles = [];
         $cssRelativeRoot = rtrim($cssRelativeRoot, '\/');
         foreach (scandir($directory) as $folder) {
             $folderPath = $directory . '/' . $folder;
             if (is_dir($folderPath)) {
-                if ($folder === '.' || $folder === '..') {
+                if ($folder === '.' || $folder === '..' || $folder === '.gitignore') {
                     continue;
                 }
                 $cssFiles = array_merge(

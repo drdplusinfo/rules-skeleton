@@ -28,6 +28,7 @@ class ManifestCache extends Cache
     {
         if ($this->cachingHasSense()) {
             $assetsToCache = $this->parseAssetsToCache($pageContent);
+            $assetsToCache = array_unique(array_merge($assetsToCache, $this->getGenericAssetsToCache()));
             $assetsForManifest = implode("\n", $assetsToCache);
             $manifestCacheVersionHash = $this->getManifestCacheVersionHash();
             $date = date(DATE_ATOM);
@@ -63,6 +64,41 @@ MANIFEST
             },
             $assets
         );
+    }
+
+    private function getGenericAssetsToCache()
+    {
+        return $this->scanForAssets(__DIR__ . '/../../images', '/images');
+    }
+
+    /**
+     * @param string $directory
+     * @param string $relativeRoot
+     * @return array|string[]
+     */
+    private function scanForAssets(string $directory, string $relativeRoot): array
+    {
+        $assets = [];
+        $relativeRoot = rtrim($relativeRoot, '\/');
+        foreach (scandir($directory) as $folder) {
+            $folderPath = $directory . '/' . $folder;
+            if (is_dir($folderPath)) {
+                if ($folder === '.' || $folder === '..' || $folder === '.gitignore') {
+                    continue;
+                }
+                $assets = array_merge(
+                    $assets,
+                    $this->scanForAssets(
+                        $folderPath,
+                        ($relativeRoot !== '' ? ($relativeRoot . '/') : '') . $folder
+                    )
+                );
+            } else if (is_file($folderPath)) {
+                $assets[] = ($relativeRoot !== '' ? ($relativeRoot . '/') : '') . $folder; // intentionally relative path
+            }
+        }
+
+        return $assets;
     }
 
     public function clearManifestsOldCache()
