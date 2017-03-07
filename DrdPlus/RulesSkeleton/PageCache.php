@@ -4,16 +4,23 @@ namespace DrdPlus\RulesSkeleton;
 class PageCache extends Cache
 {
     /**
-     * @param string $documentRoot
+     * @var bool
      */
-    public function __construct(string $documentRoot)
+    private $manifestCacheIsValid;
+
+    /**
+     * @param string $documentRoot
+     * @param bool $manifestCacheIsValid
+     */
+    public function __construct(string $documentRoot, bool $manifestCacheIsValid)
     {
         parent::__construct($documentRoot);
+        $this->manifestCacheIsValid = $manifestCacheIsValid;
     }
 
     public function pageCacheIsValid(): bool
     {
-        return is_readable($this->getPageCacheFileName()) && $this->cachingHasSense();
+        return $this->manifestCacheIsValid && is_readable($this->getPageCacheFileName()) && $this->cachingHasSense();
     }
 
     private function getPageCacheFileName(): string
