@@ -7,7 +7,7 @@ class SourceCodeLinksTest extends TestCase
 {
     protected function setUp()
     {
-        if (!defined(DRD_PLUS_RULES_DIR_TO_TEST)) {
+        if (!defined('DRD_PLUS_RULES_DIR_TO_TEST')) {
             self::markTestSkipped('Missing constant \'DRD_PLUS_RULES_DIR_TO_TEST\'');
         }
     }
