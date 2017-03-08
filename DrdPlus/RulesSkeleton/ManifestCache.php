@@ -132,17 +132,15 @@ MANIFEST
     public function getManifest(): string
     {
         if (!$this->manifestCacheIsValid()) {
-            if (!empty($_COOKIE['manifestId'])) {
-                return <<<MANIFEST
+            $versionComment = !empty($_COOKIE['manifestId']) ? $_COOKIE['manifestId'] : microtime();
+
+            return <<<MANIFEST
 CACHE MANIFEST
-# {$_COOKIE['manifestId']}
+# {$versionComment}
 NETWORK:
 /
 *
 MANIFEST;
-            }
-
-            return '';
         }
 
         return (string)file_get_contents($this->getManifestCacheFilename());
