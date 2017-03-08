@@ -38,7 +38,6 @@ CACHE MANIFEST
 # version {$manifestCacheVersionHash} since the {$date}
 
 CACHE:
-/
 {$assetsForManifest}
 
 NETWORK:
