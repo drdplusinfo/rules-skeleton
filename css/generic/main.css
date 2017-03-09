@@ -56,11 +56,15 @@ h6 {
 }
 
 img.float-left {
-    margin-right: 10px
+    padding: 1em 1em 0 1em;
 }
 
 .float-right {
     float: right;
+}
+
+img.float-right {
+    padding: 1em 0 1em 1em;
 }
 
 img.centered {
