@@ -98,6 +98,7 @@ p.result {
     border: 1px solid black;
     padding: 0.4em;
     font-style: italic;
+    text-indent: 1em;
     margin-bottom: 0.5em;
 }
 
