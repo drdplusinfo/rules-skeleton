@@ -366,15 +366,15 @@ table.grid td {
     min-width: 10px;
 }
 
-div.calculation table.result {
+.calculation table.result {
     margin-left: 2em;
 }
 
-div.calculation table.result td:first-child {
+.calculation table.result td:first-child {
     text-align: right;
 }
 
-div.calculation table.result td:first-child + td {
+.calculation table.result td:first-child + td {
     text-align: right;
 }
 
