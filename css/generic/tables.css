@@ -496,7 +496,3 @@ table.squared-bonus-to-value tr:first-child td {
 table.squared-bonus-to-value tr:first-child td:first-child {
     font-weight: normal;
 }
-
-.calculation table {
-    margin: 0 0 0 2em;
-}
