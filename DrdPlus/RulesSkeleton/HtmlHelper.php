@@ -29,10 +29,22 @@ class HtmlHelper extends StrictObject
     {
         if (!$this->devMode) {
             $html = str_replace('source-code-title', 'hidden', $html);
-
-            return preg_replace(
-                '~\s*(data-source-code\s*="[^"]*"|covered-by-code|generic)\s*~',
+            $html = preg_replace(
+                '~\s*(data-source-code\s*=\s*"[^"]*")\s*~',
                 '',
+                $html
+            );
+
+            return preg_replace_callback(
+                '~class\s*=\s*"(?<classes>[^"]*(?:covered-by-code|generic))"~',
+                function (array $match) {
+                    $classes = preg_split('~\s+~', $match['classes']);
+                    $filteredClasses = array_filter($classes, function (string $class) {
+                        return !in_array($class, ['covered-by-code', 'generic'], true);
+                    });
+
+                    return 'class="' . implode(' ', $filteredClasses) . '"';
+                },
                 $html
             );
         } else {
