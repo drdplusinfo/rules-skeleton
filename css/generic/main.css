@@ -353,3 +353,21 @@ ol ul {
     position: absolute;
     right: 0;
 }
+
+.out-of-flow {
+    position: absolute;
+}
+
+table.rows {
+    margin: 0;
+    border-spacing: 0;
+}
+
+table.paragraphs {
+    margin: 0 0 0 1em;
+    border-spacing: 0;
+}
+
+.paragraph-intended {
+    margin-left: 1em;
+}
