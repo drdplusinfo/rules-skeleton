@@ -4,14 +4,20 @@ namespace DrdPlus\RulesSkeleton;
 class ManifestCache extends Cache
 {
 
-    public function __construct(string $documentRoot)
+    /**
+     * @var Request
+     */
+    private $request;
+
+    public function __construct(string $documentRoot, Request $request)
     {
         parent::__construct($documentRoot);
+        $this->request = $request;
     }
 
     public function getManifestCacheUrl(): string
     {
-        return $this->getServerUrl() . '/manifest.appcache.php';
+        return $this->request->getServerUrl() . '/manifest.appcache.php';
     }
 
     private function getManifestCacheFilename(): string

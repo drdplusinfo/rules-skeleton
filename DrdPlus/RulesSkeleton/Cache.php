@@ -3,6 +3,7 @@ namespace DrdPlus\RulesSkeleton;
 
 use Granam\Strict\Object\StrictObject;
 
+/** @noinspection SingletonFactoryPatternViolationInspection */
 abstract class Cache extends StrictObject
 {
     /**
@@ -44,31 +45,4 @@ abstract class Cache extends StrictObject
     {
         return $this->inProduction() || exec('git diff-index HEAD | wc -l') === '0';
     }
-
-    protected function getServerUrl(): string
-    {
-        $protocol = 'http';
-        if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
-            $protocol = $_SERVER['HTTP_X_FORWARDED_PROTO'];
-        } else if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
-            $protocol = 'https';
-        } else if (!empty($_SERVER['REQUES_SCHEME'])) {
-            $protocol = $_SERVER['REQUES_SCHEME'];
-        }
-        if (empty($_SERVER['SERVER_NAME'])) {
-            return '';
-        }
-        $port = 80;
-        if (!empty($_SERVER['SERVER_PORT']) && is_numeric($_SERVER['SERVER_PORT'])
-            && (int)$_SERVER['SERVER_PORT'] !== 80
-        ) {
-            $port = (int)$_SERVER['SERVER_PORT'];
-        }
-        $portString = $port === 80
-            ? ''
-            : (':' . $port);
-
-        return "{$protocol}://{$_SERVER['SERVER_NAME']}{$portString}";
-    }
-
 }

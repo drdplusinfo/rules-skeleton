@@ -8,9 +8,10 @@ if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1')
 
 $documentRoot = rtrim(dirname($_SERVER['SCRIPT_FILENAME']), '\/');
 
+/** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
 
-$manifestCache = new \DrdPlus\RulesSkeleton\ManifestCache($documentRoot);
+$manifestCache = new \DrdPlus\RulesSkeleton\ManifestCache($documentRoot, new \DrdPlus\RulesSkeleton\Request());
 $pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot, $manifestCache->manifestCacheIsValid());
 
 if ($pageCache->pageCacheIsValid()) {
