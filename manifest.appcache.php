@@ -20,7 +20,7 @@ if (empty($_COOKIE['manifestId'])) {
 
 $request = new \DrdPlus\RulesSkeleton\Request();
 $manifestCache = new \DrdPlus\RulesSkeleton\ManifestCache($documentRoot, new \DrdPlus\RulesSkeleton\Request());
-echo $manifestCache->getManifest(str_replace('//manifest.', '//', $request->getRequestRelativeRootUrl()));
+echo $manifestCache->getManifest($request->getRequestRelativeRootUrl());
 if ($manifestAccessCount >= 2) { // time for reset
     setcookie('manifestAccessCount', 0);
     setcookie('manifestId', '');
