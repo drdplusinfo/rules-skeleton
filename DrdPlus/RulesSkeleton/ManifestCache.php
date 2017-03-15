@@ -85,13 +85,13 @@ MANIFEST
                 if ($folder === '.' || $folder === '..' || $folder === '.gitignore') {
                     continue;
                 }
-                $assets = array_merge(
-                    $assets,
-                    $this->scanForAssets(
-                        $folderPath,
-                        ($relativeRoot !== '' ? ($relativeRoot . '/') : '') . $folder
-                    )
+                $additionalAssets = $this->scanForAssets(
+                    $folderPath,
+                    ($relativeRoot !== '' ? ($relativeRoot . '/') : '') . $folder
                 );
+                foreach ($additionalAssets as $additionalAsset) {
+                    $assets[] = $additionalAsset;
+                }
             } else if (is_file($folderPath)) {
                 $assets[] = ($relativeRoot !== '' ? ($relativeRoot . '/') : '') . $folder; // intentionally relative path
             }
@@ -128,8 +128,9 @@ MANIFEST
         return is_readable($this->getManifestCacheFilename()) && $this->cachingHasSense();
     }
 
-    public function getManifest(): string
+    public function getManifest(string $uriWithContentToCache): string
     {
+        $this->createManifestIfNotExists($uriWithContentToCache);
         if (!$this->manifestCacheIsValid()) {
             $versionComment = !empty($_COOKIE['manifestId']) ? $_COOKIE['manifestId'] : microtime();
 
@@ -143,5 +144,18 @@ MANIFEST;
         }
 
         return (string)file_get_contents($this->getManifestCacheFilename());
+    }
+
+    /**
+     * @param string $uriWithContentToCache
+     */
+    private function createManifestIfNotExists(string $uriWithContentToCache)
+    {
+        if (!file_exists($this->getManifestCacheFilename()) && $this->cachingHasSense()) {
+            $contents = file_get_contents($uriWithContentToCache);
+            if ($contents) {
+                $this->createManifest($contents);
+            }
+        }
     }
 }

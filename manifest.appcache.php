@@ -1,5 +1,5 @@
 <?php
-$documentRoot = rtrim(!empty($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : __DIR__, '\/');
+$documentRoot = rtrim(!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : __DIR__, '\/');
 
 require_once $documentRoot . '/vendor/autoload.php';
 
@@ -18,7 +18,7 @@ if (empty($_COOKIE['manifestId'])) {
 }
 
 $manifestCache = new \DrdPlus\RulesSkeleton\ManifestCache($documentRoot);
-echo $manifestCache->getManifest();
+echo $manifestCache->getManifest(dirname($_SERVER['REQUEST_URI']) /* to get index relative to current URl */);
 if ($manifestAccessCount >= 2) { // time for reset
     setcookie('manifestAccessCount', 0);
     setcookie('manifestId', '');
