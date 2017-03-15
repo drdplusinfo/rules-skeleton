@@ -17,7 +17,12 @@ class ManifestCache extends Cache
 
     public function getManifestCacheUrl(): string
     {
-        return $this->request->getServerUrl() . '/manifest.appcache.php';
+        $serverUrl = $this->request->getServerUrl();
+        if ($this->inProduction()) {
+            $serverUrl = str_replace('//', '//manifest.', $serverUrl);
+        }
+
+        return $serverUrl . '/manifest.appcache.php';
     }
 
     private function getManifestCacheFilename(): string

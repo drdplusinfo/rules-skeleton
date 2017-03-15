@@ -11,7 +11,8 @@ $documentRoot = rtrim(dirname($_SERVER['SCRIPT_FILENAME']), '\/');
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
 
-$manifestCache = new \DrdPlus\RulesSkeleton\ManifestCache($documentRoot, new \DrdPlus\RulesSkeleton\Request());
+$request = new \DrdPlus\RulesSkeleton\Request();
+$manifestCache = new \DrdPlus\RulesSkeleton\ManifestCache($documentRoot, $request);
 $pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot, $manifestCache->manifestCacheIsValid());
 
 if ($pageCache->pageCacheIsValid()) {
