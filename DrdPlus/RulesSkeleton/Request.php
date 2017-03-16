@@ -19,12 +19,10 @@ class Request extends StrictObject
             return '';
         }
         $port = 80;
-        if (!empty($_SERVER['SERVER_PORT']) && is_numeric($_SERVER['SERVER_PORT'])
-            && (int)$_SERVER['SERVER_PORT'] !== 80
-        ) {
+        if (!empty($_SERVER['SERVER_PORT']) && is_numeric($_SERVER['SERVER_PORT'])) {
             $port = (int)$_SERVER['SERVER_PORT'];
         }
-        $portString = $port === 80
+        $portString = $port === 80 || $port === 443
             ? ''
             : (':' . $port);
 
