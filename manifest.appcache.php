@@ -7,7 +7,7 @@ require_once $documentRoot . '/vendor/autoload.php';
 header('Content-Type: text/cache-manifest');
 header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1
 header('Pragma: no-cache'); // HTTP 1.0
-header('Expires: ' . date(\DateTime::RFC1123)); // Proxies
+header('Expires: 0'); // Proxies
 
 $manifestAccessCount = ($_COOKIE['manifestAccessCount'] ?? 0) + 1;
 setcookie('manifestAccessCount', $manifestAccessCount);
