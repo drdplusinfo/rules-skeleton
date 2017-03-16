@@ -46,10 +46,13 @@ CACHE MANIFEST
 # version {$manifestCacheVersionHash} since the {$date}
 
 CACHE:
+/
 {$assetsForManifest}
 
 NETWORK:
 * # everything not cached can be fetched from net
+http://* # Firefox specific requirement
+https://* # Firefox specific requirement
 MANIFEST
             );
         }
