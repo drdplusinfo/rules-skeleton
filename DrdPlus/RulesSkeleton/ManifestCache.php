@@ -142,17 +142,6 @@ MANIFEST
     public function getManifest(string $uriWithContentToCache): string
     {
         $this->createManifestIfNotExists($uriWithContentToCache);
-        if (!$this->manifestCacheIsValid()) {
-            $versionComment = !empty($_COOKIE['manifestId']) ? $_COOKIE['manifestId'] : microtime();
-
-            return <<<MANIFEST
-CACHE MANIFEST
-# {$versionComment}
-NETWORK:
-/
-*
-MANIFEST;
-        }
 
         return (string)file_get_contents($this->getManifestCacheFilename());
     }

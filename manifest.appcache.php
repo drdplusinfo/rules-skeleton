@@ -9,20 +9,11 @@ header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1
 header('Pragma: no-cache'); // HTTP 1.0
 header('Expires: 0'); // Proxies
 
-$manifestAccessCount = ($_COOKIE['manifestAccessCount'] ?? 0) + 1;
-setcookie('manifestAccessCount', $manifestAccessCount);
-$_COOKIE['manifestAccessCount'] = $manifestAccessCount;
-if (empty($_COOKIE['manifestId'])) {
-    $manifestId = uniqid('manifest', true);
-    setcookie('manifestId', $manifestId);
-    $_COOKIE['manifestId'] = $manifestId;
-}
-
 $request = new \DrdPlus\RulesSkeleton\Request();
 $manifestCache = new \DrdPlus\RulesSkeleton\ManifestCache($documentRoot, new \DrdPlus\RulesSkeleton\Request());
-echo $manifestCache->getManifest($request->getRequestRelativeRootUrl());
-if ($manifestAccessCount >= 2) { // time for reset
-    setcookie('manifestAccessCount', 0);
-    setcookie('manifestId', '');
+if (!$manifestCache->manifestCacheIsValid()) {
+    header('HTTP/1.0 404 Not Found');
+} else {
+    echo $manifestCache->getManifest($request->getRequestRelativeRootUrl());
 }
 exit;
