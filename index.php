@@ -40,6 +40,7 @@ if ($pageCache->pageCacheIsValid()) {
         <title>Drd+ <?= basename($documentRoot) ?></title>
         <link rel="shortcut icon" href="favicon.ico">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php
         /** @var array|string[] $cssFiles */
         $cssRoot = $documentRoot . '/css';
