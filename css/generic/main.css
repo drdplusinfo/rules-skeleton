@@ -7,18 +7,19 @@ h1 {
     font-weight: 600;
     text-align: center;
     margin-bottom: 10px;
-    font-size: 60px;
+    font-size: 3.75em;
+    word-wrap: break-word;
 }
 
 h2 {
     font-weight: 400;
-    font-size: 30px;
+    font-size: 2em;
     margin-bottom: 10px;
 }
 
 h3 {
     font-weight: 600;
-    font-size: 25px;
+    font-size: 1.55em;
     margin: 1em 0 0 0;
 }
 
@@ -26,12 +27,12 @@ h4 {
     font-weight: 600;
     margin: 1em 0 0 0;
     font-style: italic;
-    font-size: 20px;
+    font-size: 1.25em;
     text-indent: 0;
 }
 
 h5 {
-    font-size: 14px;
+    font-size: 1em;
     margin: 1em 0 0 0;
 }
 
@@ -55,15 +56,23 @@ h6 {
     float: left;
 }
 
-img.float-left {
-    padding: 1em 1em 0 1em;
-}
-
 .float-right {
     float: right;
 }
 
+img {
+    max-width: 100%;
+}
+
+img.float-left {
+    max-width: 48%;
+    min-width: 10em;
+    padding: 1em 1em 1em 0;
+}
+
 img.float-right {
+    max-width: 48%;
+    min-width: 10em;
     padding: 1em 0 1em 1em;
 }
 
@@ -370,4 +379,16 @@ table.paragraphs {
 
 .paragraph-intended {
     margin-left: 1em;
+}
+
+.tab-intended {
+    padding-left: 2em;
+}
+
+table.tab-intended-content {
+    padding-left: 0;
+}
+
+table.tab-intended-content th:not(:first-child), table.tab-intended-content td:not(:first-child) {
+    padding-left: 2em;
 }
