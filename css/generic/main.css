@@ -85,9 +85,9 @@ p.result {
 }
 
 .introduction {
-    font-family: cursive;
+    font-family: "Brush Script MT", "Brush Script Std", "Lucida Calligraphy", "Lucida Handwriting", "Apple Chancery", cursive;
     font-style: italic;
-    font-size: 14px;
+    font-size: 0.9em;
     text-indent: 1em;
     margin-bottom: 1em;
 }
