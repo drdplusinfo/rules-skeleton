@@ -41,7 +41,7 @@ if ($pageCache->pageCacheIsValid()) {
         <link rel="shortcut icon" href="favicon.ico">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://fonts.googleapis.com/css?family=Courgette|Dancing+Script|Jim+Nightshade|Marck+Script|Satisfy"
+        <link href="https://fonts.googleapis.com/css?family=Courgette|Marck+Script"
               rel="stylesheet">
         <?php
         /** @var array|string[] $cssFiles */
