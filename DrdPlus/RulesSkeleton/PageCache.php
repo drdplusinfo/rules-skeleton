@@ -4,38 +4,16 @@ namespace DrdPlus\RulesSkeleton;
 class PageCache extends Cache
 {
     /**
-     * @var bool
-     */
-    private $manifestCacheIsValid;
-
-    /**
      * @param string $documentRoot
-     * @param bool $manifestCacheIsValid
      */
-    public function __construct(string $documentRoot, bool $manifestCacheIsValid)
+    public function __construct(string $documentRoot)
     {
         parent::__construct($documentRoot);
-        $this->manifestCacheIsValid = $manifestCacheIsValid;
     }
 
     public function pageCacheIsValid(): bool
     {
-        return is_readable($this->getPageCacheFileName()) && $this->cachingHasSense() && $this->readyForManifest();
-    }
-
-    private function readyForManifest(): bool
-    {
-        $resource = fopen($this->getPageCacheFileName(), 'rb');
-        $content = '';
-        $matching['attributes'] = '';
-        do {
-            $row = fgets($resource);
-            $content .= $row;
-        } while ($row !== false && !preg_match('~<html(?<attributes>[^>]+)>~', $content, $matching));
-        preg_match('~manifest\s*=\s*"(?<manifestUrl>[^"]*)"~', $matching['attributes'], $matching);
-        $manifestUrl = $matching['manifestUrl'];
-
-        return ($this->manifestCacheIsValid && $manifestUrl !== '') || (!$this->manifestCacheIsValid && $manifestUrl === '');
+        return is_readable($this->getPageCacheFileName()) && $this->cachingHasSense();
     }
 
     private function getPageCacheFileName(): string

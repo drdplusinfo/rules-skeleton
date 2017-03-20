@@ -23,8 +23,7 @@ $documentRoot = rtrim(dirname($_SERVER['SCRIPT_FILENAME']), '\/');
 require_once $documentRoot . '/vendor/autoload.php';
 
 $request = new \DrdPlus\RulesSkeleton\Request();
-$manifestCache = new \DrdPlus\RulesSkeleton\ManifestCache($documentRoot, $request);
-$pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot, $manifestCache->manifestCacheIsValid());
+$pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot);
 
 if ($pageCache->pageCacheIsValid()) {
     echo $pageCache->getCachedPage();
@@ -34,8 +33,7 @@ if ($pageCache->pageCacheIsValid()) {
 }
 ?>
     <!DOCTYPE html>
-    <html lang="cs"
-          manifest="<?= $manifestCache->manifestCacheIsValid() ? $manifestCache->getManifestCacheUrl() : '' ?>">
+    <html lang="cs">
     <head>
         <title>Drd+ <?= basename($documentRoot) ?></title>
         <link rel="shortcut icon" href="favicon.ico">
@@ -87,5 +85,4 @@ $content .= ob_get_contents();
 ob_end_clean();
 echo $content;
 $pageCache->cachePage($content);
-$manifestCache->createManifest($content);
 exit;
