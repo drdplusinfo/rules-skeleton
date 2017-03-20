@@ -94,7 +94,8 @@ p.result {
 }
 
 .introduction {
-    font-family: 'Courgette', 'Marck Script', cursive;
+    font-family: 'Courgette', 'Marck Script', 'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', 'Apple Chancery', cursive;
+    font-style: italic;
     text-indent: 1em;
     margin-bottom: 1em;
 }
