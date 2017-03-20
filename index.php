@@ -39,8 +39,10 @@ if ($pageCache->pageCacheIsValid()) {
     <head>
         <title>Drd+ <?= basename($documentRoot) ?></title>
         <link rel="shortcut icon" href="favicon.ico">
-        <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css?family=Courgette|Dancing+Script|Jim+Nightshade|Marck+Script|Satisfy"
+              rel="stylesheet">
         <?php
         /** @var array|string[] $cssFiles */
         $cssRoot = $documentRoot . '/css';
