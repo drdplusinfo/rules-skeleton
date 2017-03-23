@@ -36,6 +36,7 @@ if ($pageCache->pageCacheIsValid()) {
     <html lang="cs">
     <head>
         <title>Drd+ <?= basename($documentRoot) ?></title>
+        <!--suppress HtmlUnknownTarget -->
         <link rel="shortcut icon" href="favicon.ico">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -59,6 +60,11 @@ if ($pageCache->pageCacheIsValid()) {
     <?php
     $content = ob_get_contents();
     ob_clean();
+
+    if (file_exists($documentRoot . '/custom_body_content.php')) {
+        /** @noinspection PhpIncludeInspection */
+        include $documentRoot . '/custom_body_content.php';
+    }
 
     $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
         !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
