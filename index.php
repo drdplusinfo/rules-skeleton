@@ -41,6 +41,13 @@ if ($pageCache->pageCacheIsValid()) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php
         /** @var array|string[] $cssFiles */
+        $jsRoot = $documentRoot . '/js';
+        $jsFiles = new \DrdPlus\RulesSkeleton\JsFiles($jsRoot);
+        foreach ($jsFiles as $jsFile) { ?>
+            <script type="text/javascript"
+                    src="js/<?php echo "$jsFile?version=" . md5_file($jsRoot . '/' . ltrim($jsFile, '\/')); ?>"></script>
+        <?php }
+        /** @var array|string[] $cssFiles */
         $cssRoot = $documentRoot . '/css';
         $cssFiles = new \DrdPlus\RulesSkeleton\CssFiles($cssRoot);
         foreach ($cssFiles as $cssFile) { ?>
