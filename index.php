@@ -61,15 +61,17 @@ if ($pageCache->pageCacheIsValid()) {
     $content = ob_get_contents();
     ob_clean();
 
-    if (file_exists($documentRoot . '/custom_body_content.php')) {
-        /** @noinspection PhpIncludeInspection */
-        include $documentRoot . '/custom_body_content.php';
-    }
-
     $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
         !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
         !empty($_GET['hide']) && trim($_GET['hide']) === 'covered'
     );
+
+    if (file_exists($documentRoot . '/custom_body_content.php')) {
+        /** @noinspection PhpIncludeInspection */
+        include $documentRoot . '/custom_body_content.php';
+        $content .= ob_get_contents();
+        ob_clean();
+    }
 
     /** @var array|string[] $sortedHtmlFiles */
     $sortedHtmlFiles = new \DrdPlus\RulesSkeleton\HtmlFiles($documentRoot . '/html');
