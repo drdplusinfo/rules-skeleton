@@ -501,3 +501,21 @@ table.squared-bonus-to-value tr:first-child td {
 table.squared-bonus-to-value tr:first-child td:first-child {
     font-weight: normal;
 }
+
+table.rows {
+    margin: 0;
+    border-spacing: 0;
+}
+
+table.paragraphs {
+    margin: 0 0 0 1em;
+    border-spacing: 0;
+}
+
+table.tab-intended-content {
+    padding-left: 0;
+}
+
+table.tab-intended-content th:not(:first-child), table.tab-intended-content td:not(:first-child) {
+    padding-left: 2em;
+}
