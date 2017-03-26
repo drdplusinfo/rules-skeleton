@@ -38,6 +38,9 @@ class JsFiles extends StrictObject implements \IteratorAggregate
      */
     private function scanForJsFiles(string $directory, string $jsRelativeRoot = ''): array
     {
+        if (!is_dir($directory)) {
+            return [];
+        }
         $jsFiles = [];
         $jsRelativeRoot = rtrim($jsRelativeRoot, '\/');
         foreach (scandir($directory) as $folder) {
