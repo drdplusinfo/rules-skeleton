@@ -92,6 +92,14 @@ table.basic tbody + thead tr th {
     padding-top: 1em;
 }
 
+table.basic th[colspan="100%"]:first-child {
+    text-align: center;
+}
+
+table.basic thead tr:first-child th {
+    border-top: 1px solid black;
+}
+
 table.basic thead tr:last-child th {
     border-bottom: 1px solid black;
 }
