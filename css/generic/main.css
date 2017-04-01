@@ -9,12 +9,14 @@ h1 {
     margin-bottom: 10px;
     font-size: 3.75em;
     word-wrap: break-word;
+    clear: both;
 }
 
 h2 {
     font-weight: 400;
     font-size: 2em;
     margin-bottom: 10px;
+    clear: both;
 }
 
 h3 {
