@@ -381,3 +381,10 @@ ol ul {
 .tab-intended {
     padding-left: 2em;
 }
+
+.preview {
+    position: absolute;
+    background-color: #c8cd86;
+    z-index: 2;
+    padding: 0.4em;
+}
