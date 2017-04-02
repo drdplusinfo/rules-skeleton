@@ -25,9 +25,7 @@ var removeAnchorsFromElement = function (element) {
 
 var elementParentIsTable = function (element) {
     var parent = element.parentNode;
-    while (parent.tagName !== 'TABLE'
-    && (parent.tagName === 'THEAD' || parent.tagName === 'TR' || parent.tagName === 'TH'
-    || parent.tagName === 'TBODY' || parent.tagName === 'TD')) {
+    while (parent.tagName !== 'TABLE' && parent.tagName !== 'BODY') {
         parent = parent.parentNode;
     }
     return parent.tagName === 'TABLE';
@@ -44,7 +42,7 @@ var getTableForPreview = function (tableHeaderId) {
         return '';
     }
     var parent = tableHeader.parentNode;
-    while (parent.tagName !== 'TABLE' && (parent.tagName === 'TH' || parent.tagName === 'TR' || parent.tagName === 'THEAD')) {
+    while (parent.tagName !== 'TABLE' && parent.tagName !== 'BODY') {
         parent = parent.parentNode;
     }
     if (parent.tagName !== 'TABLE') {
