@@ -66,7 +66,7 @@ var addPreviewToInnerTableLinks = function () {
         ) {
             continue;
         }
-        anchor.addEventListener('onmouseover', function () {
+        anchor.addEventListener('mouseover', function () {
             var tablePreviewWrapped = this.getElementsByClassName('preview');
             if (tablePreviewWrapped.length > 0) {
                 var tablePreview = tablePreviewWrapped[0];
@@ -80,7 +80,7 @@ var addPreviewToInnerTableLinks = function () {
                 }
                 tablePreview.appendChild(linkedTable);
                 this.appendChild(tablePreview); // add newly created
-                this.addEventListener('onmouseout', function () { // hide on mouse out
+                this.addEventListener('mouseout', function () { // hide on mouse out
                     var tablePreviewWrapped = this.getElementsByClassName('preview');
                     if (tablePreviewWrapped.length === 0) {
                         console.log('Can not find .preview for anchor ' + this.href);
@@ -96,4 +96,4 @@ var addPreviewToInnerTableLinks = function () {
     }
 };
 
-window.addEventListener('onload', addPreviewToInnerTableLinks);
+window.addEventListener('load', addPreviewToInnerTableLinks);
