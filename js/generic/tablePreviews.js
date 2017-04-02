@@ -61,7 +61,7 @@ var showPreview = function (onElement, pinIt) {
     var tablePreviewWrapped = onElement.getElementsByClassName('preview');
     if (tablePreviewWrapped.length > 0) {
         var tablePreview = tablePreviewWrapped[0];
-        tablePreview.className = tablePreview.className.replace(/(\s*hidden|hidden\s*)/, ''); // reveal if hidden
+        tablePreview.className = tablePreview.className.replace('hidden', '').trim(); // reveal if hidden
     } else {
         var tablePreview = document.createElement('div');
         tablePreview.className = 'preview';
@@ -89,7 +89,7 @@ var togglePreview = function (onElement) {
         return;
     }
     tablePreview.className += ' hidden';
-    tablePreview.className = tablePreview.className.replace(/(\s*pinned|pinned\s*)/, '');
+    tablePreview.className = tablePreview.className.replace('pinned', '').trim();
 };
 
 var addPreviewToInnerTableLinks = function () {
