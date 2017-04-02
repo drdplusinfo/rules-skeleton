@@ -121,7 +121,6 @@ var addPreviewToInnerTableLinks = function () {
                 return;
             }
             var tablePreview = tablePreviewWrapped[0];
-            console.log(tablePreview.className);
             if (!tablePreview.className.includes('hidden') && !tablePreview.className.includes('pinned')) {
                 tablePreview.className += ' hidden';
             }
