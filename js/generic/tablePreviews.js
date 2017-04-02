@@ -88,7 +88,9 @@ var togglePreview = function (onElement) {
         showPreview(onElement, true);
         return;
     }
-    tablePreview.className += ' hidden';
+    if (!tablePreview.className.includes('hidden')) {
+        tablePreview.className += ' hidden';
+    }
     tablePreview.className = tablePreview.className.replace('pinned', '').trim();
 };
 
