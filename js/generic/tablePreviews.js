@@ -57,6 +57,41 @@ var getTableForPreview = function (tableHeaderId) {
     return table;
 };
 
+var showPreview = function (onElement, pinIt) {
+    var tablePreviewWrapped = onElement.getElementsByClassName('preview');
+    if (tablePreviewWrapped.length > 0) {
+        var tablePreview = tablePreviewWrapped[0];
+        tablePreview.className = tablePreview.className.replace(/(\s*hidden|hidden\s*)/, ''); // reveal if hidden
+    } else {
+        var tablePreview = document.createElement('div');
+        tablePreview.className = 'preview';
+        var linkedTable = getTableForPreview(onElement.href.replace(/^.*#/, ''));
+        if (!linkedTable) {
+            return;
+        }
+        tablePreview.appendChild(linkedTable);
+        onElement.appendChild(tablePreview); // add newly created
+    }
+    if (pinIt) {
+        tablePreview.className += ' pinned';
+    }
+};
+
+var togglePreview = function (onElement) {
+    var tablePreviewWrapped = onElement.getElementsByClassName('preview');
+    if (tablePreviewWrapped.length === 0) {
+        showPreview(onElement);
+        return;
+    }
+    var tablePreview = tablePreviewWrapped[0];
+    if (tablePreview.className.includes('hidden') || !tablePreview.className.includes('pinned')) {
+        showPreview(onElement, true);
+        return;
+    }
+    tablePreview.className += ' hidden';
+    tablePreview.className = tablePreview.className.replace(/(\s*pinned|pinned\s*)/, '');
+};
+
 var addPreviewToInnerTableLinks = function () {
     var anchors = document.getElementsByTagName('a');
     for (var i = 0, anchorsLength = anchors.length; i < anchorsLength; i++) {
@@ -66,31 +101,29 @@ var addPreviewToInnerTableLinks = function () {
         ) {
             continue;
         }
+        anchor.addEventListener('click', function (event) {
+            togglePreview(this);
+            event.preventDefault();
+            return false;
+        });
+        anchor.addEventListener('touch', function (event) {
+            togglePreview(this);
+            event.preventDefault();
+            return false;
+        });
         anchor.addEventListener('mouseover', function () {
+            showPreview(this);
+        });
+        anchor.addEventListener('mouseout', function () { // hide on mouse out
             var tablePreviewWrapped = this.getElementsByClassName('preview');
-            if (tablePreviewWrapped.length > 0) {
-                var tablePreview = tablePreviewWrapped[0];
-                tablePreview.className = tablePreview.className.replace('hidden', ''); // reveal if hidden
-            } else {
-                var tablePreview = document.createElement('div');
-                tablePreview.className = 'preview';
-                var linkedTable = getTableForPreview(this.href.replace(/^.*#/, ''));
-                if (!linkedTable) {
-                    return;
-                }
-                tablePreview.appendChild(linkedTable);
-                this.appendChild(tablePreview); // add newly created
-                this.addEventListener('mouseout', function () { // hide on mouse out
-                    var tablePreviewWrapped = this.getElementsByClassName('preview');
-                    if (tablePreviewWrapped.length === 0) {
-                        console.log('Can not find .preview for anchor ' + this.href);
-                        return;
-                    }
-                    var tablePreview = tablePreviewWrapped[0];
-                    if (!tablePreview.className.includes('hidden')) {
-                        tablePreview.className += ' hidden';
-                    }
-                });
+            if (tablePreviewWrapped.length === 0) {
+                console.log('Can not find .preview for anchor ' + this.href);
+                return;
+            }
+            var tablePreview = tablePreviewWrapped[0];
+            console.log(tablePreview.className);
+            if (!tablePreview.className.includes('hidden') && !tablePreview.className.includes('pinned')) {
+                tablePreview.className += ' hidden';
             }
         });
     }
