@@ -31,24 +31,25 @@ var elementParentIsTable = function (element) {
     return parent.tagName === 'TABLE';
 };
 
-var getTableForPreview = function (tableHeaderId) {
-    if (tableHeaderId === 'undefined' || !tableHeaderId) {
-        console.log('Missing table ID');
+var getTableForPreview = function (inTableElementId) {
+    if (inTableElementId === 'undefined' || !inTableElementId) {
+        console.log('Missing ID of an element in a table');
         return '';
     }
-    var tableHeader = document.getElementById(tableHeaderId);
-    if (tableHeader === 'undefined' || !tableHeader) {
-        console.log('Table not found by ID ' + tableHeaderId);
+    var element = document.getElementById(inTableElementId);
+    if (element === 'undefined' || !element) {
+        console.log('Element in a table not found by ID ' + inTableElementId);
         return '';
     }
-    var parent = tableHeader.parentNode;
-    while (parent.tagName !== 'TABLE' && parent.tagName !== 'BODY') {
-        parent = parent.parentNode;
+    var searchedTable = element;
+    while (searchedTable.tagName !== 'TABLE' && searchedTable.tagName !== 'BODY') {
+        searchedTable = searchedTable.parentNode;
     }
-    if (parent.tagName !== 'TABLE') {
+    if (searchedTable.tagName !== 'TABLE') {
+        console.log('Wrapping table not found for an element with ID ' + inTableElementId);
         return '';
     }
-    var table = parent.cloneNode(true);
+    var table = searchedTable.cloneNode(true);
     removeIdsFromElement(table);
     removeAnchorsFromElement(table);
 
@@ -65,7 +66,8 @@ var showPreview = function (onElement, pinIt) {
         tablePreview.className = 'preview';
         var linkedTable = getTableForPreview(onElement.href.replace(/^.*#/, ''));
         if (!linkedTable) {
-            return;
+            console.log('No linked table found for ' + onElement.href);
+            return false;
         }
         tablePreview.appendChild(linkedTable);
         onElement.appendChild(tablePreview); // add newly created
@@ -73,23 +75,25 @@ var showPreview = function (onElement, pinIt) {
     if (pinIt) {
         tablePreview.className += ' pinned';
     }
+
+    return true;
 };
 
 var togglePreview = function (onElement) {
     var tablePreviewWrapped = onElement.getElementsByClassName('preview');
     if (tablePreviewWrapped.length === 0) {
-        showPreview(onElement, true);
-        return;
+        return showPreview(onElement, true);
     }
     var tablePreview = tablePreviewWrapped[0];
     if (tablePreview.className.includes('hidden') || !tablePreview.className.includes('pinned')) {
-        showPreview(onElement, true);
-        return;
+        return showPreview(onElement, true);
     }
     if (!tablePreview.className.includes('hidden')) {
         tablePreview.className += ' hidden';
     }
     tablePreview.className = tablePreview.className.replace('pinned', '').trim();
+
+    return true;
 };
 
 var addPreviewToInnerTableLinks = function () {
@@ -102,14 +106,16 @@ var addPreviewToInnerTableLinks = function () {
             continue;
         }
         anchor.addEventListener('click', function (event) {
-            togglePreview(this);
-            event.preventDefault();
-            return false;
+            if (togglePreview(this)) {
+                event.preventDefault();
+                return false;
+            }
         });
         anchor.addEventListener('touchstart', function (event) {
-            togglePreview(this);
-            event.preventDefault();
-            return false;
+            if (togglePreview(this)) {
+                event.preventDefault();
+                return false;
+            }
         });
         anchor.addEventListener('mouseover', function () {
             showPreview(this);
