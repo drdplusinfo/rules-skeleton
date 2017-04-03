@@ -52,6 +52,15 @@ var getTableForPreview = function (inTableElementId) {
     var table = searchedTable.cloneNode(true);
     removeIdsFromElement(table);
     removeAnchorsFromElement(table);
+    table.addEventListener('touchstart', function (event) {
+        event.stopPropagation();
+    });
+    table.addEventListener('touch', function (event) {
+        event.stopPropagation();
+    });
+    table.addEventListener('touchend', function (event) {
+        event.stopPropagation();
+    });
 
     return table;
 };
