@@ -78,7 +78,7 @@ var showPreview = function (onElement, pinIt) {
 var togglePreview = function (onElement) {
     var tablePreviewWrapped = onElement.getElementsByClassName('preview');
     if (tablePreviewWrapped.length === 0) {
-        showPreview(onElement);
+        showPreview(onElement, true);
         return;
     }
     var tablePreview = tablePreviewWrapped[0];
@@ -106,7 +106,7 @@ var addPreviewToInnerTableLinks = function () {
             event.preventDefault();
             return false;
         });
-        anchor.addEventListener('touch', function (event) {
+        anchor.addEventListener('touchstart', function (event) {
             togglePreview(this);
             event.preventDefault();
             return false;
