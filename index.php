@@ -57,40 +57,40 @@ ob_start();
         <?php } ?>
     </head>
     <body>
-    <?php
-    $content = ob_get_contents();
-    ob_clean();
-
-    $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
-        !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
-        !empty($_GET['hide']) && trim($_GET['hide']) === 'covered'
-    );
-
-    if (file_exists($documentRoot . '/custom_body_content.php')) {
-        /** @noinspection PhpIncludeInspection */
-        include $documentRoot . '/custom_body_content.php';
-        $content .= ob_get_contents();
-        ob_clean();
-    }
-
-    /** @var array|string[] $sortedHtmlFiles */
-    $sortedHtmlFiles = new \DrdPlus\RulesSkeleton\HtmlFiles($documentRoot . '/html');
-    foreach ($sortedHtmlFiles as $htmlFile) {
-        $fileContent = file_get_contents($htmlFile);
-        ?>
-        <article>
-            <?php
-            $article = $htmlHelper->prepareCodeLinks($fileContent);
-            $article = $htmlHelper->addIdsToTables($article);
-            $article = $htmlHelper->addAnchorsToIds($article);
-            $article = $htmlHelper->hideCovered($article);
-            echo $article; ?>
-        </article>
+    <article>
         <?php
-        $content .= ob_get_contents();
-        /** @noinspection DisconnectedForeachInstructionInspection */
+        $content = ob_get_contents();
         ob_clean();
-    } ?>
+
+        $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
+            !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
+            !empty($_GET['hide']) && trim($_GET['hide']) === 'covered'
+        );
+
+        if (file_exists($documentRoot . '/custom_body_content.php')) {
+            /** @noinspection PhpIncludeInspection */
+            include $documentRoot . '/custom_body_content.php';
+            $content .= ob_get_contents();
+            ob_clean();
+        }
+
+        /** @var array|string[] $sortedHtmlFiles */
+        $sortedHtmlFiles = new \DrdPlus\RulesSkeleton\HtmlFiles($documentRoot . '/html');
+        foreach ($sortedHtmlFiles as $htmlFile) {
+            $fileContent = file_get_contents($htmlFile);
+            ?>
+            <?php
+            $part = $htmlHelper->prepareCodeLinks($fileContent);
+            $part = $htmlHelper->addIdsToTables($part);
+            $part = $htmlHelper->addAnchorsToIds($part);
+            $part = $htmlHelper->hideCovered($part);
+            echo $part; ?>
+            <?php
+            $content .= ob_get_contents();
+            /** @noinspection DisconnectedForeachInstructionInspection */
+            ob_clean();
+        } ?>
+    </article>
     </body>
     </html>
 <?php
