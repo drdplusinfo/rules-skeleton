@@ -6,18 +6,6 @@ if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1')
     ini_set('display_errors', '0');
 }
 
-if (!isset($_SERVER['PHP_AUTH_USER'])) {
-    header('WWW-Authenticate: Basic realm="DrD plus"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo '401 Unauthorized';
-    exit;
-}
-if ($_SERVER['PHP_AUTH_USER'] !== 'drd' || $_SERVER['PHP_AUTH_PW'] !== '+') {
-    header('HTTP/1.0 401 Unauthorized');
-    echo '401 Unauthorized';
-    exit;
-}
-
 $documentRoot = rtrim(dirname($_SERVER['SCRIPT_FILENAME']), '\/');
 
 /** @noinspection PhpIncludeInspection */
