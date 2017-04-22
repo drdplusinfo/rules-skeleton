@@ -6,7 +6,7 @@ if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1')
     ini_set('display_errors', '0');
 }
 
-$documentRoot = rtrim(dirname($_SERVER['SCRIPT_FILENAME']), '\/');
+$documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']), '\/') : getcwd();
 
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
