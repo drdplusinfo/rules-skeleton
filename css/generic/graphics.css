@@ -1,9 +1,25 @@
 body {
-    background-image: url("/images/graphics/background.png");
+    background-image: url(/images/graphics/background.png);
     background-repeat: repeat-y;
     background-size: 100%;
     background-color: #FFEDD5;
     color: #011126;
+}
+
+body:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url(/images/rules-monochromatic.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+    z-index: -1;
 }
 
 .shadowed-from-left {
