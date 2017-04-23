@@ -2,7 +2,6 @@
 namespace DrdPlus\RulesSkeleton;
 
 use Granam\Strict\Object\StrictObject;
-use GuzzleHttp\Cookie\SetCookie;
 
 class UsagePolicy extends StrictObject
 {
@@ -37,28 +36,27 @@ class UsagePolicy extends StrictObject
      */
     private function getCookieName(): string
     {
-        return 'confirmedOwnershipOf' . $this->articleNameToConfirmOwnership;
+        return 'confirmedOwnershipOf' . ucfirst($this->articleNameToConfirmOwnership);
     }
 
     /**
      * @return bool
+     * @throws \RuntimeException
      */
     public function confirmOwnershipOfVisitor(): bool
     {
-        $cookie = new SetCookie([
-            'Name' => $this->getCookieName(),
-            'Value' => '1',
-            'Domain' => $_SERVER['SERVER_NAME'],
-            'Expires' => (new \DateTime('+ 1 year'))->format(\DATE_COOKIE),
-            'Secure' => true,
-            'HttpOnly' => true,
-        ]);
-        if ($cookie->validate() !== true) {
-            trigger_error('Current cookie is not valid: ' . $cookie . ' (' . $cookie->validate() . ')', E_USER_WARNING);
-
-            return false;
+        $cookieSet = \setcookie(
+            $this->getCookieName(),
+            '1', // value
+            (new \DateTime('+ 1 year'))->getTimestamp(), // expires at
+            '/', // path
+            $_SERVER['SERVER_NAME'], // domain
+            !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', // secure
+            true // http only
+        );
+        if (!$cookieSet) {
+            throw new \RuntimeException('Could not set acceptance cookie');
         }
-        header($cookie->__toString());
         $_COOKIE[$this->getCookieName()] = '1';
 
         return true;
