@@ -12,9 +12,12 @@ $documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']),
 require_once $documentRoot . '/vendor/autoload.php';
 
 $usagePolicy = new \DrdPlus\RulesSkeleton\UsagePolicy(basename($documentRoot));
-require __DIR__ . '/visitorLicenceOwningConfirmation.php';
-
 $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership();
+if (!$visitorHasConfirmedOwnership) {
+    require __DIR__ . '/visitorLicenceOwningConfirmation.php';
+    $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership(); // could changed
+}
+
 if (!$visitorHasConfirmedOwnership) {
     exit;
 }
