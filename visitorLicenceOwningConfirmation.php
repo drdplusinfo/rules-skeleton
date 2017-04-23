@@ -17,73 +17,7 @@ if (!empty($_POST['confirm'])) {
     <link rel="shortcut icon" href="favicon.ico">
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style type="text/css">
-
-        body {
-            font-size: 20px;
-            font-family: "Times New Roman", Times, serif;
-        }
-
-        input[type=submit] {
-            font-size: inherit;
-        }
-
-        .vertical-centered-wrapper {
-            position: absolute;
-            width: 98%;
-            height: 98%;
-            display: table;
-        }
-
-        .vertical-centered {
-            display: table-cell;
-            vertical-align: middle;
-        }
-
-        .horizontal-centered-wrapper {
-            text-align: center;
-        }
-
-        .horizontal-centered {
-            display: inline-block;
-            text-align: left;
-        }
-
-        .content {
-            padding: 1em;
-        }
-
-        h1 {
-            font-style: italic;
-        }
-
-        .upper-index {
-            position: relative;
-            top: -0.5em;
-            font-size: 80%;
-        }
-
-        .footer {
-            font-size: 15px;
-            margin-top: 2em;
-            font-style: italic;
-        }
-
-        .horizontal-centered:after {
-            content: "";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-image: url(/images/graphics/pph-monochromatic.png);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-            width: 100%;
-            height: 100%;
-            opacity: 0.2;
-            z-index: -1;
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/generic/visitor_licence_owning_confirmation.css">
 </head>
 <body>
 <div class="vertical-centered-wrapper">
