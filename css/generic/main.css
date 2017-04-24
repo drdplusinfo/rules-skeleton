@@ -56,18 +56,12 @@ h6 {
 
 .float-left {
     float: left;
-}
-
-.float-left + .float-left {
-    margin-left: 1em;
+    margin-right: 1em;
 }
 
 .float-right {
     float: right;
-}
-
-.float-right + .float-right {
-    margin-right: 1em;
+    margin-left: 1em;
 }
 
 img {
