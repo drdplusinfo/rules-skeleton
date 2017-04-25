@@ -17,7 +17,7 @@ body:after {
     background-clip: content-box;
     background-size: cover;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh + 60px);
     opacity: 0.15;
     z-index: -1;
 }
