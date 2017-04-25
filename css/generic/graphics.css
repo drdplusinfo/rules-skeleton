@@ -14,8 +14,10 @@ body:after {
     background-image: url(/images/rules-monochromatic.png);
     background-repeat: no-repeat;
     background-position: center;
-    width: 99%;
-    height: 99%;
+    background-clip: content-box;
+    background-size: cover;
+    width: 101%;
+    height: 101%;
     opacity: 0.15;
     z-index: -1;
 }
