@@ -173,10 +173,6 @@ p.result {
     font-family: sans-serif;
 }
 
-div.example {
-    display: inline-block;
-}
-
 div.item-combination {
     margin-top: 6px;
     background-image: url('/images/graphics/items-combination.png');
