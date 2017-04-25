@@ -17,6 +17,7 @@ if (!empty($_POST['confirm'])) {
     <link rel="shortcut icon" href="favicon.ico">
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/generic/graphics.css">
     <style type="text/css">
         body {
             font-size: 20px;
@@ -66,22 +67,6 @@ if (!empty($_POST['confirm'])) {
             font-size: 15px;
             margin-top: 2em;
             font-style: italic;
-        }
-
-        body:after {
-            content: "";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-image: url(/images/rules-monochromatic.png);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-            width: 100%;
-            height: 100%;
-            opacity: 0.2;
-            z-index: -1;
         }
     </style
 </head>
