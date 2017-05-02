@@ -19,6 +19,10 @@ h1 + table.content {
     margin-left: 0;
 }
 
+.calculation > table.content {
+    float: none;
+}
+
 table.content th {
     text-align: left;
 }
