@@ -171,6 +171,7 @@ p.result {
     background-size: 6em 3em;
     padding: 0.8em 1.3em;
     font-family: sans-serif;
+    overflow: auto;
 }
 
 div.item-combination {
