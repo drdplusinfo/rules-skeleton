@@ -54,12 +54,18 @@ var getTableForPreview = function (inTableElementId) {
     removeAnchorsFromElement(table);
     table.addEventListener('touchstart', function (event) {
         event.stopPropagation();
+        event.preventDefault();
+        return false
     });
     table.addEventListener('touch', function (event) {
         event.stopPropagation();
+        event.preventDefault();
+        return false
     });
     table.addEventListener('touchend', function (event) {
         event.stopPropagation();
+        event.preventDefault();
+        return false
     });
 
     return table;
@@ -67,11 +73,12 @@ var getTableForPreview = function (inTableElementId) {
 
 var showPreview = function (onElement, pinIt) {
     var tablePreviewWrapped = onElement.getElementsByClassName('preview');
+    var tablePreview;
     if (tablePreviewWrapped.length > 0) {
-        var tablePreview = tablePreviewWrapped[0];
+        tablePreview = tablePreviewWrapped[0];
         tablePreview.className = tablePreview.className.replace('hidden', '').trim(); // reveal if hidden
     } else {
-        var tablePreview = document.createElement('div');
+        tablePreview = document.createElement('div');
         tablePreview.className = 'preview';
         var linkedTable = getTableForPreview(onElement.href.replace(/^.*#/, ''));
         if (!linkedTable) {
@@ -109,7 +116,8 @@ var addPreviewToInnerTableLinks = function () {
     var anchors = document.getElementsByTagName('a');
     for (var i = 0, anchorsLength = anchors.length; i < anchorsLength; i++) {
         var anchor = anchors[i];
-        if (anchor.href === 'undefined' || !anchor.href || !anchor.href.includes('#tabulka')
+        if (anchor.href === 'undefined' || !anchor.href
+            || (!anchor.href.includes('#tabulka') && !!anchor.href.includes('#Tabulka'))
             || elementParentIsTable(anchor)
         ) {
             continue;
@@ -117,12 +125,14 @@ var addPreviewToInnerTableLinks = function () {
         anchor.addEventListener('click', function (event) {
             if (togglePreview(this)) {
                 event.preventDefault();
+                event.stopPropagation();
                 return false;
             }
         });
         anchor.addEventListener('touchstart', function (event) {
             if (togglePreview(this)) {
                 event.preventDefault();
+                event.stopPropagation();
                 return false;
             }
         });
