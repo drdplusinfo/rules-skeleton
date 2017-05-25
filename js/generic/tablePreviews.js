@@ -52,21 +52,6 @@ var getTableForPreview = function (inTableElementId) {
     var table = searchedTable.cloneNode(true);
     removeIdsFromElement(table);
     removeAnchorsFromElement(table);
-    table.addEventListener('touchstart', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        return false
-    });
-    table.addEventListener('touch', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        return false
-    });
-    table.addEventListener('touchend', function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        return false
-    });
 
     return table;
 };
@@ -123,13 +108,6 @@ var addPreviewToInnerTableLinks = function () {
             continue;
         }
         anchor.addEventListener('click', function (event) {
-            if (togglePreview(this)) {
-                event.preventDefault();
-                event.stopPropagation();
-                return false;
-            }
-        });
-        anchor.addEventListener('touchstart', function (event) {
             if (togglePreview(this)) {
                 event.preventDefault();
                 event.stopPropagation();
