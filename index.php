@@ -11,18 +11,9 @@ $documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']),
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
 
-if ($_SERVER['QUERY_STRING'] === 'pdf' && file_exists($documentRoot . '/pdf') && glob($documentRoot . '/pdf/*.pdf')) {
-    if (!isset($_SERVER['PHP_AUTH_USER'])) {
-        header('WWW-Authenticate: Basic realm="DrD plus"');
-        header('HTTP/1.0 401 Unauthorized');
-        echo '401 Unauthorized';
-        exit;
-    }
-    if ($_SERVER['PHP_AUTH_USER'] !== 'drd' || $_SERVER['PHP_AUTH_PW'] !== '+') {
-        header('HTTP/1.0 401 Unauthorized');
-        echo '401 Unauthorized';
-        exit;
-    }
+if (($_SERVER['QUERY_STRING'] === 'pdf' || !file_exists($documentRoot . '/html'))
+    && file_exists($documentRoot . '/pdf') && glob($documentRoot . '/pdf/*.pdf')
+) {
     $pdfFileBasename = glob($documentRoot . '/pdf/*.pdf')[0];
     $pdfFile = $documentRoot . '/pdf/' . $pdfFileBasename;
     header('Content-type:application/pdf');
