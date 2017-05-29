@@ -78,7 +78,7 @@ if (!empty($_POST['confirm'])) {
                 <div class="content">
                     <div>
                         <h1>Prohlášení</h1>
-                        <form action="" method="post">
+                        <form action="" method="post" onsubmit="return window.confirm('A klidně to potvrdím dvakrát')">
                             <?php if (is_readable($documentRoot . '/name.txt')) {
                                 $name = file_get_contents($documentRoot . '/name.txt');
                             } else {
@@ -93,8 +93,7 @@ if (!empty($_POST['confirm'])) {
                             </p>
                             <p>
                                 <label>
-                                    <input type="submit" name="confirm" value="Vlastním <?= $name ?>"
-                                           onclick="window.confirm('A klidně to potvrdím dvakrát')">
+                                    <input type="submit" name="confirm" value="Vlastním <?= $name ?>">
                                     Prohlašuji na svou čest, že vlastním
                                     legální kopii <strong><?= $name ?></strong>
                                 </label>
