@@ -1,8 +1,6 @@
 body {
-    background-image: url(/images/graphics/background.png);
-    background-repeat: repeat-y;
+    background: url(/images/graphics/background.png) repeat-y #FFEDD5;
     background-size: 100%;
-    background-color: #FFEDD5;
     color: #011126;
 }
 
@@ -11,13 +9,11 @@ body:after {
     position: fixed;
     top: 0;
     left: 0;
-    background-image: url(/images/rules-monochromatic.png);
-    background-repeat: no-repeat;
-    background-position: center;
+    background: url(/images/rules-monochromatic.png) no-repeat center;
     background-clip: content-box;
     background-size: cover;
     width: 100%;
-    height: 105%;
+    height: 110%;
     opacity: 0.15;
     z-index: -1;
 }
