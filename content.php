@@ -20,7 +20,7 @@ ob_start();
         <!--suppress HtmlUnknownTarget -->
         <link rel="shortcut icon" href="favicon.ico">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         <?php
         /** @var array|string[] $cssFiles */
         $jsRoot = $documentRoot . '/js';
