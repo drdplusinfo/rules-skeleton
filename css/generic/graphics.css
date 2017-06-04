@@ -1,9 +1,19 @@
 body {
-    background-image: url(/images/rules-monochromatic.png), url(/images/graphics/background.png);
-    background-repeat: no-repeat, repeat-y;
+    background-image: url(/images/graphics/background.png);
+    background-repeat: repeat-y;
     background-color: #FFEDD5;
-    background-position: center, left;
-    background-attachment: fixed, fixed;
+    background-position: left;
+    background-attachment: fixed;
     background-size: cover, 100%;
     color: #011126;
+}
+
+.background-image {
+    background-image: url(/images/rules-monochromatic.png);
+    background-repeat: no-repeat;
+    background-position-x: center;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
 }

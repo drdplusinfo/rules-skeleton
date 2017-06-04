@@ -39,6 +39,9 @@ class PageCache extends Cache
 
     private function clearPagesOldCache()
     {
+        if (!is_dir($this->getDocumentRoot() . '/cache/pages')) {
+            return;
+        }
         $currentCommitHash = $this->getCurrentCommitHash();
         $cachingHasSense = $this->cachingHasSense();
         foreach (scandir($this->getDocumentRoot() . '/cache/pages') as $folder) {

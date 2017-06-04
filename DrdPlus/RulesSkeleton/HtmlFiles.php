@@ -35,6 +35,9 @@ class HtmlFiles extends StrictObject implements \IteratorAggregate
      */
     private function getUnsortedHtmlFileNames(): array
     {
+        if (!is_dir($this->htmlFilesDir)) {
+            return [];
+        }
         return array_filter(scandir($this->htmlFilesDir), function ($file) {
             return $file !== '.' && $file !== '..' && preg_match('~\.html$~', $file);
         });

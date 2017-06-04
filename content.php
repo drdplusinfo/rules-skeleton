@@ -38,6 +38,7 @@ ob_start();
         <?php } ?>
     </head>
     <body>
+    <div class="background-image"></div>
     <article>
         <?php
         $content = ob_get_contents();
