@@ -1,5 +1,5 @@
 <?php
-namespace PPH;
+namespace DrdPlus\Tests\Rules;
 
 use PHPUnit\Framework\TestCase;
 
@@ -18,6 +18,7 @@ class AnchorsTest extends TestCase
     public function All_anchors_point_to_valid_links()
     {
         ob_start();
+        /** @noinspection PhpIncludeInspection */
         include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
         $content = ob_get_clean();
         preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?!#|http|/).)+[^>]+>)~', $content, $matches);

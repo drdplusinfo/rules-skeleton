@@ -1,5 +1,5 @@
 <?php
-namespace PPH;
+namespace DrdPlus\Tests\Rules;
 
 use PHPUnit\Framework\TestCase;
 
@@ -40,7 +40,7 @@ class SourceCodeLinksTest extends TestCase
     /**
      * @return array|string[]
      */
-    private function getSourceUrls()
+    private function getSourceUrls(): array
     {
         $sourceUrls = [];
         foreach (new \DirectoryIterator(DRD_PLUS_RULES_DIR_TO_TEST) as $file) {
@@ -66,7 +66,7 @@ class SourceCodeLinksTest extends TestCase
      * @param string $html
      * @return array|string[]
      */
-    private function parseSourceUrls($html)
+    private function parseSourceUrls($html): array
     {
         preg_match_all('~data-source-code="(?<links>[^"]+)"~', $html, $matches);
 
@@ -78,7 +78,7 @@ class SourceCodeLinksTest extends TestCase
      *     https://github.com/jaroslavtyc/drd-plus-professions/blob/master/DrdPlus/Professions/Priest.php
      * @return string
      */
-    private function toLocalPath($link)
+    private function toLocalPath($link): string
     {
         $withoutWebRoot = str_replace('https://github.com/jaroslavtyc/', '', $link);
         $withoutGithubSpecifics = preg_replace('~(?<type>blob|tree)/master/~', '', $withoutWebRoot);
