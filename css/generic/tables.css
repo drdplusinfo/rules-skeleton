@@ -145,6 +145,14 @@ table.simplified thead th:first-child {
     text-align: left;
 }
 
+.last-column-to-left th:last-child {
+    text-align: left;
+}
+
+.last-column-to-left td:last-child {
+    text-align: left;
+}
+
 table.simplified.last-column-to-left thead th:last-child {
     text-align: left;
 }
@@ -212,18 +220,12 @@ table.first-column-left td:first-child {
     text-align: left;
 }
 
-table.first-column-centered {
-}
-
 table.first-column-centered thead th:first-child {
     text-align: center;
 }
 
 table.first-column-centered td:first-child {
     text-align: center;
-}
-
-table.last-column-centered {
 }
 
 table.last-column-centered thead th:last-child {
