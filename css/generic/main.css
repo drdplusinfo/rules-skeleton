@@ -1,3 +1,8 @@
+body {
+    margin: 0;
+    padding: 1em;
+}
+
 p {
     text-indent: 15px;
     margin: 0;
