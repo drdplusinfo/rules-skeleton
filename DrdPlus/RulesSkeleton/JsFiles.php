@@ -26,7 +26,7 @@ class JsFiles extends StrictObject implements \IteratorAggregate
     /**
      * @return array|string[]
      */
-    private function getConfirmedJavaScripts()
+    private function getConfirmedJavaScripts(): array
     {
         return $this->scanForJsFiles($this->dirWithJs);
     }
@@ -41,6 +41,7 @@ class JsFiles extends StrictObject implements \IteratorAggregate
         if (!is_dir($directory)) {
             return [];
         }
+        $genericJsFiles = [];
         $jsFiles = [];
         $jsRelativeRoot = rtrim($jsRelativeRoot, '\/');
         foreach (scandir($directory) as $folder) {
@@ -49,18 +50,20 @@ class JsFiles extends StrictObject implements \IteratorAggregate
                 if ($folder === '.' || $folder === '..' || $folder === '.gitignore') {
                     continue;
                 }
-                $jsFiles = array_merge(
-                    $jsFiles,
-                    $this->scanForJsFiles(
-                        $folderPath,
-                        ($jsRelativeRoot !== '' ? ($jsRelativeRoot . '/') : '') . $folder
-                    )
+                $jsFilesFromDir = $this->scanForJsFiles(
+                    $folderPath,
+                    ($jsRelativeRoot !== '' ? ($jsRelativeRoot . '/') : '') . $folder
                 );
+                if ($folder === 'generic') {
+                    $genericJsFiles[] = array_merge($genericJsFiles, $jsFilesFromDir);
+                } else {
+                    $jsFiles[] = array_merge($jsFiles, $jsFilesFromDir);
+                }
             } else if (is_file($folderPath) && strpos($folder, '.js') !== false) {
                 $jsFiles[] = ($jsRelativeRoot !== '' ? ($jsRelativeRoot . '/') : '') . $folder; // intentionally relative path
             }
         }
 
-        return $jsFiles;
+        return array_merge($genericJsFiles, $jsFiles); // generic first
     }
 }
