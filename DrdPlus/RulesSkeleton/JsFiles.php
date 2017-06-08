@@ -55,9 +55,13 @@ class JsFiles extends StrictObject implements \IteratorAggregate
                     ($jsRelativeRoot !== '' ? ($jsRelativeRoot . '/') : '') . $folder
                 );
                 if ($folder === 'generic') {
-                    $genericJsFiles[] = array_merge($genericJsFiles, $jsFilesFromDir);
+                    foreach ($jsFilesFromDir as $jsFileFromDir) {
+                        $genericJsFiles[] = $jsFileFromDir;
+                    }
                 } else {
-                    $jsFiles[] = array_merge($jsFiles, $jsFilesFromDir);
+                    foreach ($jsFilesFromDir as $jsFileFromDir) {
+                        $jsFiles[] = $jsFileFromDir;
+                    }
                 }
             } else if (is_file($folderPath) && strpos($folder, '.js') !== false) {
                 $jsFiles[] = ($jsRelativeRoot !== '' ? ($jsRelativeRoot . '/') : '') . $folder; // intentionally relative path
