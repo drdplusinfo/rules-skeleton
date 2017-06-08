@@ -135,4 +135,9 @@ var getTableByIdForPreview = function (inTableElementId) {
     return table;
 };
 
-window.addEventListener('load', addPreviewToInnerLinks(isAnchorToTable, getTableByIdForPreview));
+window.addEventListener(
+    'load',
+    function () {
+        addPreviewToInnerLinks(isAnchorToTable, getTableByIdForPreview);
+    }
+);
