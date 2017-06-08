@@ -23,6 +23,79 @@ var removeAnchorsFromElement = function (element) {
     }
 };
 
+var showPreview = function (onElement, pinIt, getElementByIdForPreview) {
+    var previewWrapped = onElement.getElementsByClassName('preview');
+    var preview;
+    if (previewWrapped.length > 0) {
+        preview = previewWrapped[0];
+        preview.className = preview.className.replace('hidden', '').trim(); // reveal if hidden
+    } else {
+        preview = document.createElement('div');
+        preview.className = 'preview';
+        var linkedTable = getElementByIdForPreview(onElement.href.replace(/^.*#/, ''));
+        if (!linkedTable) {
+            console.log('No linked element found for ' + onElement.href);
+            return false;
+        }
+        preview.appendChild(linkedTable);
+        onElement.appendChild(preview); // add newly created
+    }
+    if (pinIt) {
+        preview.className += ' pinned';
+    }
+
+    return true;
+};
+
+var togglePreview = function (onElement, getElementByIdForPreview) {
+    var wrappedPreview = onElement.getElementsByClassName('preview');
+    if (wrappedPreview.length === 0) {
+        return showPreview(onElement, true, getElementByIdForPreview);
+    }
+    var preview = wrappedPreview[0];
+    if (preview.className.includes('hidden') || !preview.className.includes('pinned')) {
+        return showPreview(onElement, true, getElementByIdForPreview);
+    }
+    if (!preview.className.includes('hidden')) {
+        preview.className += ' hidden';
+    }
+    preview.className = preview.className.replace('pinned', '').trim();
+
+    return true;
+};
+
+var addPreviewToInnerLinks = function (isRequiredAnchor, getElementByIdForPreview) {
+    var anchors = document.getElementsByTagName('a');
+    for (var i = 0, anchorsLength = anchors.length; i < anchorsLength; i++) {
+        var anchor = anchors[i];
+        if (!isRequiredAnchor(anchor)) {
+            continue;
+        }
+        anchor.addEventListener('click', function (event) {
+            if (togglePreview(this)) {
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }
+        });
+        anchor.addEventListener('mouseover', function () {
+            showPreview(this, false, getElementByIdForPreview);
+        });
+        anchor.addEventListener('mouseout', function () { // hide on mouse out
+            var previewWrapped = this.getElementsByClassName('preview');
+            if (previewWrapped.length === 0) {
+                console.log('Can not find .preview for anchor ' + this.href);
+                return;
+            }
+            var tablePreview = previewWrapped[0];
+            if (!tablePreview.className.includes('hidden') && !tablePreview.className.includes('pinned')) {
+                tablePreview.className += ' hidden';
+            }
+        });
+    }
+};
+
+
 var elementParentIsTable = function (element) {
     var parent = element.parentNode;
     while (parent.tagName !== 'TABLE' && parent.tagName !== 'BODY') {
@@ -31,7 +104,13 @@ var elementParentIsTable = function (element) {
     return parent.tagName === 'TABLE';
 };
 
-var getTableForPreview = function (inTableElementId) {
+var isAnchorToTable = function (anchor) {
+    return anchor.href !== 'undefined' && anchor.href
+        && (anchor.href.includes('#tabulka') || anchor.href.includes('#Tabulka'))
+        && !elementParentIsTable(anchor);
+};
+
+var getTableByIdForPreview = function (inTableElementId) {
     if (inTableElementId === 'undefined' || !inTableElementId) {
         console.log('Missing ID of an element in a table');
         return '';
@@ -56,79 +135,4 @@ var getTableForPreview = function (inTableElementId) {
     return table;
 };
 
-var showPreview = function (onElement, pinIt) {
-    var tablePreviewWrapped = onElement.getElementsByClassName('preview');
-    var tablePreview;
-    if (tablePreviewWrapped.length > 0) {
-        tablePreview = tablePreviewWrapped[0];
-        tablePreview.className = tablePreview.className.replace('hidden', '').trim(); // reveal if hidden
-    } else {
-        tablePreview = document.createElement('div');
-        tablePreview.className = 'preview';
-        var linkedTable = getTableForPreview(onElement.href.replace(/^.*#/, ''));
-        if (!linkedTable) {
-            console.log('No linked table found for ' + onElement.href);
-            return false;
-        }
-        tablePreview.appendChild(linkedTable);
-        onElement.appendChild(tablePreview); // add newly created
-    }
-    if (pinIt) {
-        tablePreview.className += ' pinned';
-    }
-
-    return true;
-};
-
-var togglePreview = function (onElement) {
-    var tablePreviewWrapped = onElement.getElementsByClassName('preview');
-    if (tablePreviewWrapped.length === 0) {
-        return showPreview(onElement, true);
-    }
-    var tablePreview = tablePreviewWrapped[0];
-    if (tablePreview.className.includes('hidden') || !tablePreview.className.includes('pinned')) {
-        return showPreview(onElement, true);
-    }
-    if (!tablePreview.className.includes('hidden')) {
-        tablePreview.className += ' hidden';
-    }
-    tablePreview.className = tablePreview.className.replace('pinned', '').trim();
-
-    return true;
-};
-
-var addPreviewToInnerTableLinks = function () {
-    var anchors = document.getElementsByTagName('a');
-    for (var i = 0, anchorsLength = anchors.length; i < anchorsLength; i++) {
-        var anchor = anchors[i];
-        if (anchor.href === 'undefined' || !anchor.href
-            || (!anchor.href.includes('#tabulka') && !!anchor.href.includes('#Tabulka'))
-            || elementParentIsTable(anchor)
-        ) {
-            continue;
-        }
-        anchor.addEventListener('click', function (event) {
-            if (togglePreview(this)) {
-                event.preventDefault();
-                event.stopPropagation();
-                return false;
-            }
-        });
-        anchor.addEventListener('mouseover', function () {
-            showPreview(this);
-        });
-        anchor.addEventListener('mouseout', function () { // hide on mouse out
-            var tablePreviewWrapped = this.getElementsByClassName('preview');
-            if (tablePreviewWrapped.length === 0) {
-                console.log('Can not find .preview for anchor ' + this.href);
-                return;
-            }
-            var tablePreview = tablePreviewWrapped[0];
-            if (!tablePreview.className.includes('hidden') && !tablePreview.className.includes('pinned')) {
-                tablePreview.className += ' hidden';
-            }
-        });
-    }
-};
-
-window.addEventListener('load', addPreviewToInnerTableLinks);
+window.addEventListener('load', addPreviewToInnerLinks(isAnchorToTable, getTableByIdForPreview));
