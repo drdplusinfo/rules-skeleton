@@ -12,6 +12,7 @@ table.content {
     margin-left: 25px;
     min-width: 15%;
     margin-top: 0;
+    margin-bottom: 0;
 }
 
 h1 + table.content {
@@ -21,6 +22,7 @@ h1 + table.content {
 
 .calculation > table.content {
     float: none;
+    margin-bottom: 1em;
 }
 
 table.content th {
