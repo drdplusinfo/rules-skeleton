@@ -381,3 +381,16 @@ ol ul {
     z-index: 2;
     padding: 0.4em;
 }
+
+.rules-authors {
+    font-weight: bold;
+}
+
+.rules-authors .title {
+    font-style: italic;
+    opacity: .7;
+}
+
+.rules-authors .altar {
+    margin-top: 1em;
+}
