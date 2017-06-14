@@ -399,3 +399,7 @@ ol ul {
 .rules-authors .altar {
     margin-top: 1em;
 }
+
+.max-width-30-pct {
+    max-width: 30%;
+}
