@@ -3,12 +3,20 @@ namespace DrdPlus\RulesSkeleton;
 
 class PageCache extends Cache
 {
+    /** @var string */
+    private $cacheRoot;
+
     /**
      * @param string $documentRoot
+     * @throws \RuntimeException
      */
     public function __construct(string $documentRoot)
     {
         parent::__construct($documentRoot);
+        $this->cacheRoot = "{$this->getDocumentRoot()}/cache/pages";
+        if (!file_exists($this->cacheRoot) && !@mkdir($this->cacheRoot, 0775, true /* recursive */) && !is_dir($this->cacheRoot)) {
+            throw new \RuntimeException('Can not create directory for page cache ' . $this->cacheRoot);
+        }
     }
 
     public function pageCacheIsValid(): bool
@@ -21,7 +29,7 @@ class PageCache extends Cache
         $currentCommitHash = $this->getCurrentCommitHash();
         $currentGetHash = $this->getCurrentGetHash();
 
-        return $this->getDocumentRoot() . "/cache/pages/{$currentCommitHash}_{$currentGetHash}.html";
+        return $this->cacheRoot . "/{$currentCommitHash}_{$currentGetHash}.html";
     }
 
     public function getCachedPage(): string
@@ -39,17 +47,14 @@ class PageCache extends Cache
 
     private function clearPagesOldCache()
     {
-        if (!is_dir($this->getDocumentRoot() . '/cache/pages')) {
-            return;
-        }
         $currentCommitHash = $this->getCurrentCommitHash();
         $cachingHasSense = $this->cachingHasSense();
-        foreach (scandir($this->getDocumentRoot() . '/cache/pages') as $folder) {
+        foreach (scandir($this->cacheRoot, SCANDIR_SORT_NONE) as $folder) {
             if (in_array($folder, ['.', '..', '.gitignore'], true)) {
                 continue;
             }
             if (!$cachingHasSense || strpos($folder, $currentCommitHash) === false) {
-                unlink($this->getDocumentRoot() . '/cache/pages/' . $folder);
+                unlink($this->cacheRoot . '/' . $folder);
             }
         }
     }
