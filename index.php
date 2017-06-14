@@ -14,11 +14,7 @@ require_once $documentRoot . '/vendor/autoload.php';
 if (($_SERVER['QUERY_STRING'] === 'pdf' || !file_exists($documentRoot . '/html'))
     && file_exists($documentRoot . '/pdf') && glob($documentRoot . '/pdf/*.pdf')
 ) {
-    $pdfFile = glob($documentRoot . '/pdf/*.pdf')[0];
-    $pdfFileBasename = basename($pdfFile);
-    header('Content-type:application/pdf');
-    header('Content-Length: ' . filesize($pdfFile));
-    readfile($pdfFile);
+    include __DIR__ . '/get_pdf.php';
     exit;
 }
 
