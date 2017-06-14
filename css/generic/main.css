@@ -265,6 +265,11 @@ div.item-combination-bottom-right-part .content {
 div.intermezzo {
     margin: 15px 0;
     text-align: center;
+    letter-spacing: 1em;
+}
+
+div.intermezzo::after {
+    content: '***';
 }
 
 ul {
