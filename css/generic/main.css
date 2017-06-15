@@ -169,7 +169,7 @@ p.result {
 }
 
 .example {
-    margin-top: 0.5em;
+    margin: 0.5em 0 0.3em;
     background: url('/images/generic/example-left-upper-corner.png') left top no-repeat, url('/images/generic/example-right-bottom-corner.png') right bottom no-repeat;
     background-size: 6em 3em;
     padding: 0.8em 1.3em;
