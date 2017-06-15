@@ -52,7 +52,7 @@ var addPreviewToInnerLinks = function (isRequiredAnchor, getElementByIdForPrevie
             continue;
         }
         anchor.addEventListener('mouseover', function () {
-            showPreview(this, false, getElementByIdForPreview);
+            showPreview(this, getElementByIdForPreview);
         });
         anchor.addEventListener('mouseout', function () { // hide on mouse out
             var previewWrapped = this.getElementsByClassName('preview');
