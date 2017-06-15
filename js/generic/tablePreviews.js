@@ -74,7 +74,19 @@ var elementParentIsTargetTable = function (element, tableId) {
     while (parent.tagName !== 'TABLE' && parent.tagName !== 'BODY') {
         parent = parent.parentNode;
     }
-    return parent.tagName === 'TABLE' && parent.id === tableId;
+    if (parent.tagName !== 'TABLE') {
+        return false;
+    }
+    if (parent.id === tableId) {
+        return true;
+    }
+    var titles = parent.getElementsByClassName('title');
+    for (var titlesLength = titles.length, titlesIndex = 0; titlesIndex < titlesLength; titlesIndex++) {
+        if (titles[titlesIndex].id === tableId) {
+            return true;
+        }
+    }
+    return false;
 };
 
 var isAnchorToTable = function (anchor) {
