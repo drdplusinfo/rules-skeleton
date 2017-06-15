@@ -281,6 +281,7 @@ table.borderless thead th {
 table.battle-stats {
     background: url('/images/generic/battle-stats.png') no-repeat;
     background-size: 100%;
+    display: table;
 }
 
 table.battle-stats th {
