@@ -1,7 +1,6 @@
 table {
     overflow-x: auto;
     display: block;
-    max-width: calc(100vw - 1em);
     margin-top: 1em;
     margin-bottom: 1em;
 }
