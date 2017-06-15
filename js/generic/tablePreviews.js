@@ -23,7 +23,7 @@ var removeAnchorsFromElement = function (element) {
     }
 };
 
-var showPreview = function (onElement, pinIt, getElementByIdForPreview) {
+var showPreview = function (onElement, getElementByIdForPreview) {
     var previewWrapped = onElement.getElementsByClassName('preview');
     var preview;
     if (previewWrapped.length > 0) {
@@ -40,26 +40,6 @@ var showPreview = function (onElement, pinIt, getElementByIdForPreview) {
         preview.appendChild(linkedTable);
         onElement.appendChild(preview); // add newly created
     }
-    if (pinIt) {
-        preview.className += ' pinned';
-    }
-
-    return true;
-};
-
-var togglePreview = function (onElement, getElementByIdForPreview) {
-    var wrappedPreview = onElement.getElementsByClassName('preview');
-    if (wrappedPreview.length === 0) {
-        return showPreview(onElement, true, getElementByIdForPreview);
-    }
-    var preview = wrappedPreview[0];
-    if (preview.className.includes('hidden') || !preview.className.includes('pinned')) {
-        return showPreview(onElement, true, getElementByIdForPreview);
-    }
-    if (!preview.className.includes('hidden')) {
-        preview.className += ' hidden';
-    }
-    preview.className = preview.className.replace('pinned', '').trim();
 
     return true;
 };
@@ -71,13 +51,6 @@ var addPreviewToInnerLinks = function (isRequiredAnchor, getElementByIdForPrevie
         if (!isRequiredAnchor(anchor)) {
             continue;
         }
-        anchor.addEventListener('click', function (event) {
-            if (togglePreview(this)) {
-                event.preventDefault();
-                event.stopPropagation();
-                return false;
-            }
-        });
         anchor.addEventListener('mouseover', function () {
             showPreview(this, false, getElementByIdForPreview);
         });
@@ -88,7 +61,7 @@ var addPreviewToInnerLinks = function (isRequiredAnchor, getElementByIdForPrevie
                 return;
             }
             var tablePreview = previewWrapped[0];
-            if (!tablePreview.className.includes('hidden') && !tablePreview.className.includes('pinned')) {
+            if (!tablePreview.className.includes('hidden')) {
                 tablePreview.className += ' hidden';
             }
         });
@@ -96,18 +69,18 @@ var addPreviewToInnerLinks = function (isRequiredAnchor, getElementByIdForPrevie
 };
 
 
-var elementParentIsTable = function (element) {
+var elementParentIsTargetTable = function (element, tableId) {
     var parent = element.parentNode;
     while (parent.tagName !== 'TABLE' && parent.tagName !== 'BODY') {
         parent = parent.parentNode;
     }
-    return parent.tagName === 'TABLE';
+    return parent.tagName === 'TABLE' && parent.id === tableId;
 };
 
 var isAnchorToTable = function (anchor) {
-    return anchor.href !== 'undefined' && anchor.href
-        && (anchor.href.includes('#tabulka') || anchor.href.includes('#Tabulka'))
-        && !elementParentIsTable(anchor);
+    return anchor.hash !== 'undefined' && anchor.hash
+        && (anchor.hash.substring(0, 8) === '#tabulka' || anchor.hash.substring(0, 8) === '#Tabulka')
+        && !elementParentIsTargetTable(anchor, anchor.hash.substring(1) /* id */);
 };
 
 var getTableByIdForPreview = function (inTableElementId) {
