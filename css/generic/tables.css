@@ -60,6 +60,7 @@ table.basic {
 
 table.basic thead th {
     padding-right: 1em;
+    padding-top: 0.2em;
 }
 
 table.basic thead th.title {
