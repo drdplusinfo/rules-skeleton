@@ -9,6 +9,7 @@ $pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot);
 
 if ($pageCache->cacheIsValid()) {
     echo $pageCache->getCachedContent();
+
     return;
 }
 ob_start();
@@ -16,7 +17,7 @@ ob_start();
     <!DOCTYPE html>
     <html lang="cs">
     <head>
-        <title>Drd+ <?= basename($documentRoot) ?></title>
+        <title><?= is_readable($documentRoot . '/name.txt') ? file_get_contents($documentRoot . '/name.txt') : ('Drd+ ' . basename($documentRoot)) ?></title>
         <link rel="shortcut icon" href="favicon.ico">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
