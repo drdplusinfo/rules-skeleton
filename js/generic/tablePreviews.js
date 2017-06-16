@@ -51,7 +51,15 @@ var addPreviewToInnerLinks = function (isRequiredAnchor, getElementByIdForPrevie
         if (!isRequiredAnchor(anchor)) {
             continue;
         }
-        anchor.addEventListener('mouseover', function () {
+        // to trigger mouseout after touch and its mouseover effect
+        anchor.addEventListener('touchstart', function (event) {
+            event.target.dataset.blockPreview = true;
+        });
+        anchor.addEventListener('mouseover', function (event) {
+            if (event.target.dataset.blockPreview) {
+                event.target.dataset.blockPreview = false;
+                return;
+            }
             showPreview(this, getElementByIdForPreview);
         });
         anchor.addEventListener('mouseout', function () { // hide on mouse out
