@@ -18,6 +18,11 @@ if (($_SERVER['QUERY_STRING'] === 'pdf' || !file_exists($documentRoot . '/html')
     exit;
 }
 
+if ($_GET['tables'] ?? false) { // we do not require licence confirmation for tables only
+    include __DIR__ . '/get_tables.php';
+    exit;
+}
+
 $usagePolicy = new \DrdPlus\RulesSkeleton\UsagePolicy(basename($documentRoot));
 $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership();
 if (!$visitorHasConfirmedOwnership) {
@@ -30,3 +35,4 @@ if (!$visitorHasConfirmedOwnership) {
 }
 
 require __DIR__ . '/content.php';
+exit;

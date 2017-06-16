@@ -1,11 +1,11 @@
 <?php
 namespace DrdPlus\RulesSkeleton;
 
-class PageCache extends Cache
+class TablesCache extends Cache
 {
     protected function getCachePrefix(): string
     {
-        return 'page';
+        return 'tables';
     }
 
 }

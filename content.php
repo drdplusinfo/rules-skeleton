@@ -7,9 +7,9 @@ if (empty($visitorHasConfirmedOwnership)) {
 
 $pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot);
 
-if ($pageCache->pageCacheIsValid()) {
-    echo $pageCache->getCachedPage();
-    exit;
+if ($pageCache->cacheIsValid()) {
+    echo $pageCache->getCachedContent();
+    return;
 }
 ob_start();
 ?>
@@ -17,7 +17,6 @@ ob_start();
     <html lang="cs">
     <head>
         <title>Drd+ <?= basename($documentRoot) ?></title>
-        <!--suppress HtmlUnknownTarget -->
         <link rel="shortcut icon" href="favicon.ico">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
@@ -79,5 +78,4 @@ ob_start();
 $content .= ob_get_contents();
 ob_end_clean();
 echo $content;
-$pageCache->cachePage($content);
-exit;
+$pageCache->cacheContent($content);
