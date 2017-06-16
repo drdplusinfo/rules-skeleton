@@ -86,6 +86,13 @@ var elementParentIsTargetTable = function (element, tableId) {
             return true;
         }
     }
+    var headerCells = parent.getElementsByTagName('TH');
+    for (var headerCellsLength = headerCells.length, headerCellsIndex = 0; headerCellsIndex < headerCellsLength; headerCellsIndex++) {
+        if (headerCells[headerCellsIndex].id === tableId) {
+            return true;
+        }
+    }
+
     return false;
 };
 
