@@ -2,3 +2,4 @@
 /vendor/
 /phpunit_log/
 /composer.lock
+/cache/*

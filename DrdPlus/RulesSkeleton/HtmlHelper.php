@@ -74,11 +74,33 @@ class HtmlHelper extends StrictObject
                     continue;
                 }
                 $headerCell->setAttribute('id', $id);
-                if ($headerCell->getAttribute('data-original-id')) {
-                    continue;
-                }
-                $headerCell->setAttribute('data-original-id', $id);
             }
+        }
+    }
+
+    public function replaceDiacriticsFromIds(HTMLDocument $html)
+    {
+        $this->replaceDiacriticsFromChildrenIds($html->body->children);
+    }
+
+    private function replaceDiacriticsFromChildrenIds(HTMLCollection $children)
+    {
+        foreach ($children as $child) {
+            // recursion
+            $this->replaceDiacriticsFromChildrenIds($child->children);
+            $id = $child->getAttribute('id');
+            if (!$id) {
+                continue;
+            }
+            $idWithoutDiacritics = StringTools::toConstant($id);
+            if ($idWithoutDiacritics === $id) {
+                continue;
+            }
+            $child->setAttribute('data-original-id', $id);
+            $child->setAttribute('id', $idWithoutDiacritics);
+            $child->appendChild($invisibleId = new Element('span'));
+            $invisibleId->setAttribute('id', $id);
+            $invisibleId->className = 'invisible-id';
         }
     }
 
@@ -88,25 +110,13 @@ class HtmlHelper extends StrictObject
     public function addAnchorsToIds(HTMLDocument $html)
     {
         $this->addAnchorsToChildrenWithIds($html->body->children);
-        $withoutDiacritics = preg_replace_callback(
-            '~\s+(?:id\s*="|href\s*="#)(?<name>[^"]+)"~',
-            function ($matches) {
-                return str_replace($matches['name'], StringTools::toConstant($matches['name']), $matches[0]);
-            },
-            $html->body->innerHTML
-        );
-        $withAnchorsToOriginalIds = preg_replace(
-            '~<(([[:alnum:]]+)(?:(?!data-original-id=")[^>])*)data-original-id\s*=\s*"([^"]+)"\s*([^>]*)>((?:(?!</\2>).)+)</\2>~is',
-            '<$1 $4><span id="$3" class="invisible-id">#$3</span>$5</$2>',
-            $withoutDiacritics
-        );
-
-        $html->body->innerHTML = $withAnchorsToOriginalIds;
     }
 
     public function addAnchorsToChildrenWithIds(HTMLCollection $children)
     {
         foreach ($children as $child) {
+            // recursion
+            $this->addAnchorsToChildrenWithIds($child->children);
             if ($child->id) {
                 $anchorToChildItself = false;
                 /** @var \DOMNode $childNode */
@@ -130,8 +140,6 @@ class HtmlHelper extends StrictObject
                     $anchorToChildItself->appendChild($childNode);
                 }
             }
-            // recursion
-            $this->addAnchorsToChildrenWithIds($child->children);
         }
     }
 
