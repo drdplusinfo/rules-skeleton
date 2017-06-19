@@ -39,44 +39,41 @@ ob_start();
     </head>
     <body>
     <div class="background-image"></div>
-    <article>
-        <?php
-        $content = ob_get_contents();
+    <?php
+    $content = ob_get_contents();
+    ob_clean();
+
+    if (file_exists($documentRoot . '/custom_body_content.php')) {
+        /** @noinspection PhpIncludeInspection */
+        include $documentRoot . '/custom_body_content.php';
+        $content .= ob_get_contents();
         ob_clean();
+    }
 
-        $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
-            !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
-            !empty($_GET['hide']) && trim($_GET['hide']) === 'covered'
-        );
-
-        if (file_exists($documentRoot . '/custom_body_content.php')) {
-            /** @noinspection PhpIncludeInspection */
-            include $documentRoot . '/custom_body_content.php';
-            $content .= ob_get_contents();
-            ob_clean();
-        }
-
-        /** @var array|string[] $sortedHtmlFiles */
-        $sortedHtmlFiles = new \DrdPlus\RulesSkeleton\HtmlFiles($documentRoot . '/html');
-        foreach ($sortedHtmlFiles as $htmlFile) {
-            $fileContent = file_get_contents($htmlFile);
-            ?>
-            <?php
-            $part = $htmlHelper->prepareCodeLinks($fileContent);
-            $part = $htmlHelper->addIdsToTables($part);
-            $part = $htmlHelper->addAnchorsToIds($part);
-            $part = $htmlHelper->hideCovered($part);
-            echo $part; ?>
-            <?php
-            $content .= ob_get_contents();
-            /** @noinspection DisconnectedForeachInstructionInspection */
-            ob_clean();
-        } ?>
-    </article>
+    /** @var array|string[] $sortedHtmlFiles */
+    $sortedHtmlFiles = new \DrdPlus\RulesSkeleton\HtmlFiles($documentRoot . '/html');
+    foreach ($sortedHtmlFiles as $htmlFile) {
+        $content .= file_get_contents($htmlFile);
+        /*$part = $htmlHelper->prepareCodeLinks($fileContent);
+        $part = $htmlHelper->addIdsToTables($part);
+        $part = $htmlHelper->addAnchorsToIds($part);
+        $part = $htmlHelper->hideCovered($part);*/
+    } ?>
     </body>
     </html>
 <?php
 $content .= ob_get_contents();
 ob_end_clean();
-echo $content;
-$pageCache->cacheContent($content);
+
+$htmlDocument = new \Gt\Dom\HTMLDocument($content);
+$htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
+    !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
+    !empty($_GET['hide']) && trim($_GET['hide']) === 'covered'
+);
+$htmlHelper->prepareCodeLinks($htmlDocument);
+$htmlHelper->addIdsToTablesAndHeadings($htmlDocument);
+$htmlHelper->addAnchorsToIds($htmlDocument);
+$htmlHelper->hideCovered($htmlDocument);
+$updated = $htmlDocument->saveHTML();
+echo $updated;
+$pageCache->cacheContent($updated);

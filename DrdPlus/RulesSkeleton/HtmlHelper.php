@@ -3,6 +3,10 @@ namespace DrdPlus\RulesSkeleton;
 
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringTools;
+use Gt\Dom\Element;
+use Gt\Dom\HTMLCollection;
+use Gt\Dom\HTMLDocument;
+use Gt\Dom\Node;
 
 class HtmlHelper extends StrictObject
 {
@@ -22,77 +26,74 @@ class HtmlHelper extends StrictObject
     }
 
     /**
-     * @param string $html
-     * @return string
+     * @param HTMLDocument $html
      */
-    public function prepareCodeLinks(string $html)
+    public function prepareCodeLinks(HTMLDocument $html)
     {
         if (!$this->devMode) {
-            $html = str_replace('source-code-title', 'hidden', $html);
-            $html = preg_replace(
-                '~\s*(data-source-code\s*=\s*"[^"]*")\s*~',
-                '',
-                $html
-            );
-
-            return preg_replace_callback(
-                '~class\s*=\s*"(?<classes>[^"]*(?:covered-by-code|generic))"~',
-                function (array $match) {
-                    $classes = preg_split('~\s+~', $match['classes']);
-                    $filteredClasses = array_filter($classes, function (string $class) {
-                        return !in_array($class, ['covered-by-code', 'generic'], true);
-                    });
-
-                    return 'class="' . implode(' ', $filteredClasses) . '"';
-                },
-                $html
-            );
+            foreach ($html->getElementsByClassName('source-code-title') as $withSourceCode) {
+                $withSourceCode->className = str_replace('source-code-title', 'hidden', $withSourceCode->className);
+                $withSourceCode->classList->remove('covered-by-code');
+                $withSourceCode->classList->remove('generic');
+                $withSourceCode->removeAttribute('data-source-code');
+            }
         } else {
-            return preg_replace(
-                '~<(([[:alnum:]]+)(?:(?!data-source-code)[^>])*)\s+data-source-code\s*="([^"]*)"\s*>((?:(?!</\2>).)*)</\2>~s',
-                '<$1>$4 <a class="source-code" href="$3">source code</a></$2>',
-                $html
-            );
+            foreach ($html->getElementsByClassName('source-code-title') as $withSourceCode) {
+                $withSourceCode->appendChild($sourceCodeLink = new Element('a', 'source code'));
+                $sourceCodeLink->setAttribute('class', 'source-code');
+                $sourceCodeLink->setAttribute('href', $withSourceCode->getAttribute('data-source-code'));
+            }
         }
     }
 
     /**
-     * @param string $html
-     * @return string
+     * @param HTMLDocument $html
      */
-    public function addIdsToTables(string $html)
+    public function addIdsToTablesAndHeadings(HTMLDocument $html)
     {
-        $thWithIds = preg_replace(
-            '~<((th)(?:(?!id=")[^>])*)>(\s*(Tabulka\s+(?:(?!</\2>|<|\n).)*)(?:(?!</\2>).)*)</\2>~us',
-            '<$1 id="$4">$3</$2>',
-            $html
-        );
-        $thWithIdsAndOriginalIds = preg_replace(
-            '~(\s+id\s*=\s*"([^"]+)")([^>]*)>~',
-            '$1 data-original-id="$2"$3>',
-            $thWithIds
-        );
+        $elementNames = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'th'];
+        foreach ($elementNames as $elementName) {
+            /** @var Element $headerCell */
+            foreach ($html->getElementsByTagName($elementName) as $headerCell) {
 
-        return $thWithIdsAndOriginalIds;
+                if ($headerCell->getAttribute('id')) {
+                    continue;
+                }
+                if ($elementName === 'th' && strpos(trim($headerCell->textContent), 'Tabulka') === false) {
+                    continue;
+                }
+                $id = false;
+                /** @var \DOMNode $childNode */
+                foreach ($headerCell->childNodes as $childNode) {
+                    if ($childNode->nodeType === XML_TEXT_NODE) {
+                        $id = trim($childNode->nodeValue);
+                        break;
+                    }
+                }
+                if (!$id) {
+                    continue;
+                }
+                $headerCell->setAttribute('id', $id);
+                if ($headerCell->getAttribute('data-original-id')) {
+                    continue;
+                }
+                $headerCell->setAttribute('data-original-id', $id);
+            }
+        }
     }
 
     /**
-     * @param string $html
-     * @return string
+     * @param HTMLDocument $html
      */
-    public function addAnchorsToIds(string $html)
+    public function addAnchorsToIds(HTMLDocument $html)
     {
-        $withAnchors = preg_replace(
-            '~<(([[:alnum:]]+)(?:(?!id=")[^>])*id\s*=\s*"([^"]+)"[^>]*)>((?:(?!</\2>).)+)</\2>~is',
-            '<$1><a href="#$3">$4</a></$2>',
-            $html
-        );
+        $this->addAnchorsToChildrenWithIds($html->body->children);
         $withoutDiacritics = preg_replace_callback(
             '~\s+(?:id\s*="|href\s*="#)(?<name>[^"]+)"~',
             function ($matches) {
                 return str_replace($matches['name'], StringTools::toConstant($matches['name']), $matches[0]);
             },
-            $withAnchors
+            $html->body->innerHTML
         );
         $withAnchorsToOriginalIds = preg_replace(
             '~<(([[:alnum:]]+)(?:(?!data-original-id=")[^>])*)data-original-id\s*=\s*"([^"]+)"\s*([^>]*)>((?:(?!</\2>).)+)</\2>~is',
@@ -100,29 +101,57 @@ class HtmlHelper extends StrictObject
             $withoutDiacritics
         );
 
-        return $withAnchorsToOriginalIds;
+        $html->body->innerHTML = $withAnchorsToOriginalIds;
+    }
+
+    public function addAnchorsToChildrenWithIds(HTMLCollection $children)
+    {
+        foreach ($children as $child) {
+            if ($child->id) {
+                $anchorToChildItself = false;
+                /** @var \DOMNode $childNode */
+                foreach ($child->childNodes as $childNode) {
+                    if ($childNode->nodeType === XML_TEXT_NODE) {
+                        $anchorToChildItself = new Element('a');
+                        $child->replaceChild($anchorToChildItself, $childNode);
+                        $anchorToChildItself->nodeValue = $childNode->nodeValue;
+                        break;
+                    }
+                }
+                if (!$anchorToChildItself) {
+                    continue;
+                }
+                $anchorToChildItself->setAttribute('href', '#' . $child->id);
+                foreach ($child->childNodes as $childNode) {
+                    if ($childNode === $anchorToChildItself) {
+                        continue;
+                    }
+                    $child->removeChild($childNode);
+                    $anchorToChildItself->appendChild($childNode);
+                }
+            }
+            // recursion
+            $this->addAnchorsToChildrenWithIds($child->children);
+        }
     }
 
     /**
-     * @param string $html
-     * @return string
+     * @param HTMLDocument $html
      */
-    public function hideCovered(string $html)
+    public function hideCovered(HTMLDocument $html)
     {
         if (!$this->devMode || !$this->shouldHideCovered) {
-            return $html;
+            return;
         }
-
-        $withoutImages = preg_replace(
-            '~<img\s+[^>]+>~i',
-            '',
-            $html
-        );
-
-        return preg_replace(
-            '~class=\s*"[^"]*(covered-by-code|introduction|quote|generic|note|excluded)[^"]*"~i',
-            'class="hidden"',
-            $withoutImages
-        );
+        /** @var Node $image */
+        foreach ($html->getElementsByTagName('img') as $image) {
+            $html->removeChild($image);
+        }
+        $classesToHide = ['covered-by-code', 'introduction', 'quote', 'generic', 'note', 'excluded'];
+        foreach ($classesToHide as $classToHide) {
+            foreach ($html->getElementsByClassName($classToHide) as $nodeToHide) {
+                $nodeToHide->className = str_replace($classToHide, 'hidden', $nodeToHide->className);
+            }
+        }
     }
 }
