@@ -109,6 +109,10 @@ p.result {
     margin-bottom: 1em;
 }
 
+.quote {
+    display: table;
+}
+
 .quote .title {
     font-style: italic;
     margin-top: 1em;
@@ -121,6 +125,7 @@ p.result {
     font-style: italic;
     text-indent: 1em;
     margin-bottom: 0.5em;
+    display: table;
 }
 
 .quote .content {
