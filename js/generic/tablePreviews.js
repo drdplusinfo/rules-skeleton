@@ -76,12 +76,14 @@ var addPreviewToInnerLinks = function (isDesiredAnchor, getElementByIdForPreview
     }
 };
 
-
 var elementParentIsTargetTable = function (element, tableId) {
     var parent = element.parentNode;
     do {
         if (parent.id === tableId) {
             return true;
+        }
+        if (!parent.parentNode) {
+            return false;
         }
         parent = parent.parentNode;
     } while (parent.tagName !== 'TABLE' && parent.tagName !== 'BODY' && parent !== 'undefined');
