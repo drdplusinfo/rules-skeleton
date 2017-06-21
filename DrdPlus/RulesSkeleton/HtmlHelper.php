@@ -235,33 +235,43 @@ class HtmlHelper extends StrictObject
 
     /**
      * @param HTMLDocument $html
+     * @param array|string[] $requiredIds filter of required tables by their IDs
      * @return array|Element[]
      */
-    public function findTablesWithIds(HTMLDocument $html): array
+    public function findTablesWithIds(HTMLDocument $html, array $requiredIds = []): array
     {
         $tablesWithIds = [];
         /** @var Element $table */
         foreach ($html->getElementsByTagName('table') as $table) {
-            if ($table->id || $this->hasChildWithId($table->children)) {
-                $tablesWithIds[] = $table;
+            if ($table->id) {
+                $tablesWithIds[$table->id] = $table;
+                continue;
+            }
+            $childId = $this->getChildId($table->children);
+            if ($childId) {
+                $tablesWithIds[$childId] = $table;
             }
         }
+        if (count($requiredIds) === 0) {
+            return $tablesWithIds;
+        }
 
-        return $tablesWithIds;
+        return array_intersect_key($tablesWithIds, array_fill_keys($requiredIds, true));
     }
 
     /**
      * @param HTMLCollection $children
-     * @return bool
+     * @return string|bool
      */
-    private function hasChildWithId(HTMLCollection $children): bool
+    private function getChildId(HTMLCollection $children)
     {
         foreach ($children as $child) {
             if ($child->id) {
-                return true;
+                return $child->id;
             }
-            if ($this->hasChildWithId($child->children)) {
-                return true;
+            $grandChildId = $this->getChildId($child->children);
+            if ($grandChildId !== false) {
+                return $grandChildId;
             }
         }
 

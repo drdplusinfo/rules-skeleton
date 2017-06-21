@@ -36,7 +36,20 @@ $rawContent = require __DIR__ . '/content.php';
         !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
         !empty($_GET['hide']) && trim($_GET['hide']) === 'covered'
     );
-    $tables = $htmlHelper->findTablesWithIds(new \Gt\Dom\HTMLDocument($rawContent));
+    $tables = $htmlHelper->findTablesWithIds(
+        new \Gt\Dom\HTMLDocument($rawContent),
+        array_filter(
+            array_map(
+                function (string $id) {
+                    return trim($id);
+                },
+                explode(',', $_GET['tables'] ?? $_GET['tabulky'] ?? '')
+            ),
+            function (string $id) {
+                return $id !== '';
+            }
+        )
+    );
     foreach ($tables as $table) {
         $content .= $table->outerHTML . "\n";
     }
