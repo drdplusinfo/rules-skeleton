@@ -69,7 +69,9 @@ abstract class Cache extends StrictObject
     public function cacheContent(string $content)
     {
         file_put_contents($this->getCacheFileName(), $content);
-        $this->clearOldCache();
+        if ($this->cachingHasSense()) {
+            $this->clearOldCache();
+        }
     }
 
     private function clearOldCache()
