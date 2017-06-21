@@ -56,7 +56,7 @@ abstract class Cache extends StrictObject
 
     private function getCacheFileName(): string
     {
-        return $this->cacheRoot . "/{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getCurrentGetHash()}.html";
+        return $this->cacheRoot . "/{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getCurrentGetHash()}_{$this->cachingHasSense()}.html";
     }
 
     abstract protected function getCachePrefix(): string;
@@ -68,9 +68,7 @@ abstract class Cache extends StrictObject
 
     public function cacheContent(string $content)
     {
-        if ($this->cachingHasSense()) {
-            file_put_contents($this->getCacheFileName(), $content);
-        }
+        file_put_contents($this->getCacheFileName(), $content);
         $this->clearOldCache();
     }
 
