@@ -44,11 +44,11 @@ var showPreview = function (onElement, getElementByIdForPreview) {
     return true;
 };
 
-var addPreviewToInnerLinks = function (isRequiredAnchor, getElementByIdForPreview) {
+var addPreviewToInnerLinks = function (isDesiredAnchor, getElementByIdForPreview) {
     var anchors = document.getElementsByTagName('a');
     for (var i = 0, anchorsLength = anchors.length; i < anchorsLength; i++) {
         var anchor = anchors[i];
-        if (!isRequiredAnchor(anchor)) {
+        if (!isDesiredAnchor(anchor)) {
             continue;
         }
         // to trigger mouseout after touch and its mouseover effect
@@ -79,14 +79,14 @@ var addPreviewToInnerLinks = function (isRequiredAnchor, getElementByIdForPrevie
 
 var elementParentIsTargetTable = function (element, tableId) {
     var parent = element.parentNode;
-    while (parent.tagName !== 'TABLE' && parent.tagName !== 'BODY') {
+    do {
+        if (parent.id === tableId) {
+            return true;
+        }
         parent = parent.parentNode;
-    }
+    } while (parent.tagName !== 'TABLE' && parent.tagName !== 'BODY' && parent !== 'undefined');
     if (parent.tagName !== 'TABLE') {
         return false;
-    }
-    if (parent.id === tableId) {
-        return true;
     }
     var titles = parent.getElementsByClassName('title');
     for (var titlesLength = titles.length, titlesIndex = 0; titlesIndex < titlesLength; titlesIndex++) {
