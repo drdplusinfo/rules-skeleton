@@ -166,11 +166,33 @@ class HtmlHelper extends StrictObject
                     if ($childNode === $anchorToChildItself) {
                         continue;
                     }
+                    if (!$this->containsOnlySpans($childNode)) {
+                        continue;
+                    }
+                    // only span can be inside anchor
                     $child->removeChild($childNode);
                     $anchorToChildItself->appendChild($childNode);
                 }
             }
         }
+    }
+
+    private function containsOnlySpans(\DOMNode $element): bool
+    {
+        if (!$element->hasChildNodes()) {
+            return true;
+        }
+        /** @var \DOMNode $childNode */
+        foreach ($element->childNodes as $childNode) {
+            if ($childNode->nodeName !== 'span' && $childNode->nodeType !== XML_TEXT_NODE) {
+                return false;
+            }
+            if (!$this->containsOnlySpans($childNode)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
