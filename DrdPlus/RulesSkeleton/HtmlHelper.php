@@ -208,4 +208,39 @@ class HtmlHelper extends StrictObject
             $this->removeClassesAboutCodeCoverage($child);
         }
     }
+
+    /**
+     * @param HTMLDocument $html
+     * @return array|Element[]
+     */
+    public function findTablesWithIds(HTMLDocument $html): array
+    {
+        $tablesWithIds = [];
+        /** @var Element $table */
+        foreach ($html->getElementsByTagName('table') as $table) {
+            if ($table->id || $this->hasChildWithId($table->children)) {
+                $tablesWithIds[] = $table;
+            }
+        }
+
+        return $tablesWithIds;
+    }
+
+    /**
+     * @param HTMLCollection $children
+     * @return bool
+     */
+    private function hasChildWithId(HTMLCollection $children): bool
+    {
+        foreach ($children as $child) {
+            if ($child->id) {
+                return true;
+            }
+            if ($this->hasChildWithId($child->children)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

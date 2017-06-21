@@ -14,4 +14,3 @@ $pdfFileBasename = basename($pdfFile);
 header('Content-type:application/pdf');
 header('Content-Length: ' . filesize($pdfFile));
 readfile($pdfFile);
-exit;

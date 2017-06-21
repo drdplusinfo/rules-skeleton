@@ -14,12 +14,12 @@ require_once $documentRoot . '/vendor/autoload.php';
 if (($_SERVER['QUERY_STRING'] === 'pdf' || !file_exists($documentRoot . '/html'))
     && file_exists($documentRoot . '/pdf') && glob($documentRoot . '/pdf/*.pdf')
 ) {
-    include __DIR__ . '/get_pdf.php';
+    echo include __DIR__ . '/get_pdf.php';
     exit;
 }
 
-if ($_GET['tables'] ?? false) { // we do not require licence confirmation for tables only
-    include __DIR__ . '/get_tables.php';
+if (array_key_exists('tables', $_GET)) { // we do not require licence confirmation for tables only
+    echo include __DIR__ . '/get_tables.php';
     exit;
 }
 
@@ -34,5 +34,5 @@ if (!$visitorHasConfirmedOwnership) {
     exit;
 }
 
-require __DIR__ . '/content.php';
+echo require __DIR__ . '/content.php';
 exit;

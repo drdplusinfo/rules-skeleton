@@ -8,9 +8,7 @@ if (empty($visitorHasConfirmedOwnership)) {
 $pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot);
 
 if ($pageCache->cacheIsValid()) {
-    echo $pageCache->getCachedContent();
-
-    return;
+    return $pageCache->getCachedContent();
 }
 ob_start();
 ?>
@@ -58,8 +56,7 @@ ob_start();
     </body>
     </html>
 <?php
-$content .= ob_get_contents();
-ob_end_clean();
+$content .= ob_get_clean();
 
 $htmlDocument = new \Gt\Dom\HTMLDocument($content);
 $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
@@ -73,5 +70,5 @@ $htmlHelper->replaceDiacriticsFromAnchorHashes($htmlDocument);
 $htmlHelper->addAnchorsToIds($htmlDocument);
 $htmlHelper->hideCovered($htmlDocument);
 $updated = $htmlDocument->saveHTML();
-echo $updated;
 $pageCache->cacheContent($updated);
+return $updated;
