@@ -18,7 +18,7 @@ if (($_SERVER['QUERY_STRING'] === 'pdf' || !file_exists($documentRoot . '/html')
     exit;
 }
 
-if (array_key_exists('tables', $_GET)) { // we do not require licence confirmation for tables only
+if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     echo include __DIR__ . '/get_tables.php';
     exit;
 }
