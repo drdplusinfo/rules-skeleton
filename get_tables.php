@@ -18,7 +18,10 @@ $rawContent = require __DIR__ . '/content.php';
         /** @var array|string[] $cssFiles */
         $cssRoot = $documentRoot . '/css';
         $cssFiles = new \DrdPlus\RulesSkeleton\CssFiles($cssRoot);
-        foreach ($cssFiles as $cssFile) { ?>
+        foreach ($cssFiles as $cssFile) {
+            if ($cssFile === 'generic/graphics.css') {
+                continue;
+            } ?>
             <link rel="stylesheet" type="text/css"
                   href="css/<?php echo "$cssFile?version=" . md5_file($cssRoot . '/' . ltrim($cssFile, '\/')); ?>">
         <?php } ?>
