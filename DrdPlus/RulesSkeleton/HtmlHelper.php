@@ -166,8 +166,10 @@ class HtmlHelper extends StrictObject
                     if ($childNode === $anchorToChildItself) {
                         continue;
                     }
-                    if (!$this->containsOnlySpans($childNode)) {
-                        continue;
+                    if (($childNode->nodeType !== XML_TEXT_NODE && $childNode->nodeName !== 'span')
+                        || !$this->containsOnlySpans($childNode)
+                    ) {
+                        break; // only text and span nodes BEFORE others are used as anchor content
                     }
                     // only span can be inside anchor
                     $child->removeChild($childNode);
