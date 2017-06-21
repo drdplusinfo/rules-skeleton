@@ -69,6 +69,7 @@ $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
 $htmlHelper->prepareSourceCodeLinks($htmlDocument);
 $htmlHelper->addIdsToTablesAndHeadings($htmlDocument);
 $htmlHelper->replaceDiacriticsFromIds($htmlDocument);
+$htmlHelper->replaceDiacriticsFromAnchorHashes($htmlDocument);
 $htmlHelper->addAnchorsToIds($htmlDocument);
 $htmlHelper->hideCovered($htmlDocument);
 $updated = $htmlDocument->saveHTML();

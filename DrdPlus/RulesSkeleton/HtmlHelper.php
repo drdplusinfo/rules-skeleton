@@ -102,6 +102,38 @@ class HtmlHelper extends StrictObject
         }
     }
 
+    public function replaceDiacriticsFromAnchorHashes(HTMLDocument $html)
+    {
+        $this->replaceDiacriticsFromChildrenAnchorHashes($html->getElementsByTagName('a'));
+    }
+
+    private function replaceDiacriticsFromChildrenAnchorHashes(\Traversable $children)
+    {
+        /** @var Element $child */
+        foreach ($children as $child) {
+            // recursion
+            $this->replaceDiacriticsFromChildrenAnchorHashes($child->children);
+            $href = $child->getAttribute('href');
+            if (!$href) {
+                continue;
+            }
+            $hashPosition = strpos($href, '#');
+            if ($hashPosition === false) {
+                continue;
+            }
+            $hash = substr($href, $hashPosition + 1);
+            if ($hash === '') {
+                continue;
+            }
+            $hashWithoutDiacritics = StringTools::toConstant($hash);
+            if ($hashWithoutDiacritics === $hash) {
+                continue;
+            }
+            $hrefWithoutDiacritics = substr($href, 0, $hashPosition) . '#' . $hashWithoutDiacritics;
+            $child->setAttribute('href', $hrefWithoutDiacritics);
+        }
+    }
+
     /**
      * @param HTMLDocument $html
      */
