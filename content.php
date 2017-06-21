@@ -54,10 +54,6 @@ ob_start();
     $sortedHtmlFiles = new \DrdPlus\RulesSkeleton\HtmlFiles($documentRoot . '/html');
     foreach ($sortedHtmlFiles as $htmlFile) {
         $content .= file_get_contents($htmlFile);
-        /*$part = $htmlHelper->prepareCodeLinks($fileContent);
-        $part = $htmlHelper->addIdsToTables($part);
-        $part = $htmlHelper->addAnchorsToIds($part);
-        $part = $htmlHelper->hideCovered($part);*/
     } ?>
     </body>
     </html>
@@ -70,7 +66,7 @@ $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
     !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
     !empty($_GET['hide']) && trim($_GET['hide']) === 'covered'
 );
-$htmlHelper->prepareCodeLinks($htmlDocument);
+$htmlHelper->prepareSourceCodeLinks($htmlDocument);
 $htmlHelper->addIdsToTablesAndHeadings($htmlDocument);
 $htmlHelper->replaceDiacriticsFromIds($htmlDocument);
 $htmlHelper->addAnchorsToIds($htmlDocument);

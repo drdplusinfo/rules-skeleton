@@ -28,13 +28,11 @@ class HtmlHelper extends StrictObject
     /**
      * @param HTMLDocument $html
      */
-    public function prepareCodeLinks(HTMLDocument $html)
+    public function prepareSourceCodeLinks(HTMLDocument $html)
     {
         if (!$this->devMode) {
             foreach ($html->getElementsByClassName('source-code-title') as $withSourceCode) {
                 $withSourceCode->className = str_replace('source-code-title', 'hidden', $withSourceCode->className);
-                $withSourceCode->classList->remove('covered-by-code');
-                $withSourceCode->classList->remove('generic');
                 $withSourceCode->removeAttribute('data-source-code');
             }
         } else {
@@ -149,6 +147,10 @@ class HtmlHelper extends StrictObject
     public function hideCovered(HTMLDocument $html)
     {
         if (!$this->devMode || !$this->shouldHideCovered) {
+            foreach ($html->children as $child) {
+                $this->removeClassesAboutCodeCoverage($child);
+            }
+
             return;
         }
         /** @var Node $image */
@@ -160,6 +162,18 @@ class HtmlHelper extends StrictObject
             foreach ($html->getElementsByClassName($classToHide) as $nodeToHide) {
                 $nodeToHide->className = str_replace($classToHide, 'hidden', $nodeToHide->className);
             }
+        }
+    }
+
+    private function removeClassesAboutCodeCoverage(Element $html)
+    {
+        $classesToRemove = ['covered-by-code', 'generic', 'note', 'excluded'];
+        foreach ($html->children as $child) {
+            foreach ($classesToRemove as $classToRemove) {
+                $child->classList->remove($classToRemove);
+            }
+            // recursion
+            $this->removeClassesAboutCodeCoverage($child);
         }
     }
 }
