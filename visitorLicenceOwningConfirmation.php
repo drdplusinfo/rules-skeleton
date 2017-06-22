@@ -57,6 +57,22 @@ if (!empty($_POST['confirm'])) {
             font-style: italic;
         }
 
+        .manifest a {
+            color: black;
+        }
+
+        input[type=submit], label {
+            cursor: pointer;
+        }
+
+        label:hover {
+            text-shadow: 1px 1px 3px #424242;
+        }
+
+        label:hover input[type=submit] {
+            text-shadow: 1px 1px 3px #424242;
+        }
+
         .upper-index {
             position: relative;
             top: -0.5em;
@@ -78,24 +94,32 @@ if (!empty($_POST['confirm'])) {
                 <div class="content">
                     <div>
                         <h1>Prohlášení</h1>
-                        <form action="" method="post" onsubmit="return window.confirm('A klidně to potvrdím dvakrát')">
-                            <?php if (is_readable($documentRoot . '/name.txt')) {
-                                $name = file_get_contents($documentRoot . '/name.txt');
-                            } else {
-                                $name = basename($documentRoot);
-                            } ?>
+                        <?php if (is_readable($documentRoot . '/name.txt')) {
+                            $name = file_get_contents($documentRoot . '/name.txt');
+                        } else {
+                            $name = basename($documentRoot);
+                        }
+                        $eShop = 'http://obchod.altar.cz';
+                        if (is_readable($documentRoot . '/eshop.txt')) {
+                            $eShop = file_get_contents($documentRoot . '/eshop.txt');
+                        }
+                        ?>
+                        <form class="manifest" action="<?= $eShop ?>" method="get">
                             <p>
                                 <label>
                                     <input type="submit" name="buy" value="Koupím <?= $name ?>">
-                                    Zatím nemám <strong><?= $name ?></strong>, tak si je od Altaru koupím (doporučujeme
-                                    PDF verzi)
+                                    Zatím nemám <strong><?= $name ?></strong>, tak si je od Altaru
+                                    <a href="<?= $eShop ?>">koupím (doporučujeme PDF verzi)</a>
                                 </label>
                             </p>
+                        </form>
+                        <form class="manifest" action="" method="post"
+                              onsubmit="return window.confirm('A klidně to potvrdím dvakrát')">
                             <p>
                                 <label>
                                     <input type="submit" name="confirm" value="Vlastním <?= $name ?>">
                                     Prohlašuji na svou čest, že vlastním
-                                    legální kopii <strong><?= $name ?></strong>
+                                    legální kopii <a href="<?= $eShop ?>"><strong><?= $name ?></strong></a>
                                 </label>
                             </p>
                         </form>
@@ -107,8 +131,8 @@ if (!empty($_POST['confirm'])) {
                             <p>Hledáš-li živou komunitu kolem RPG, mrkni na <a
                                         href="https://rpgforum.cz">rpgforum.cz</a>, nebo rovnou na
                                 <a href="https://rpgforum.cz/forum/viewforum.php?f=238&sid=a8a110335d3b47d604ad0ab10b630ba4">
-                                    sekci pro DrD+
-                                </a>.
+                                    sekci pro DrD+.
+                                </a>
                             </p>
 
                             <div>Pokud nevlastníš pravidla DrD+, prosím, <a href="http://obchod.altar.cz">kup si je</a>
