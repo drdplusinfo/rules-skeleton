@@ -10,14 +10,12 @@ use Gt\Dom\Node;
 
 class HtmlHelper extends StrictObject
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $devMode;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $shouldHideCovered;
+    /** @var bool */
+    private $externalUrlsMarked = false;
 
     public function __construct(bool $devMode, bool $shouldHideCovered)
     {
@@ -278,23 +276,74 @@ class HtmlHelper extends StrictObject
         return false;
     }
 
-    public function markRemoteLinksByClass(HTMLDocument $html)
+    public function markExternalLinksByClass(HTMLDocument $html)
     {
         /** @var Element $anchor */
         foreach ($html->getElementsByTagName('a') as $anchor) {
-            if (preg_match('~^(https?:)?//((?!#).)~', $anchor->getAttribute('href'))) {
+            if (preg_match('~^(https?:)?//[^#]~', $anchor->getAttribute('href'))) {
                 $anchor->classList->add('external-url');
             }
         }
+        $this->externalUrlsMarked = true;
     }
 
-    public function remoteLinksTargetToBlank(HTMLDocument $html)
+    public function externalLinksTargetToBlank(HTMLDocument $html)
     {
+        if (!$this->externalUrlsMarked) {
+            throw new \LogicException('External links have to marked first, use markExternalLinksByClass method for that');
+        }
         /** @var Element $anchor */
         foreach ($html->getElementsByClassName('external-url') as $anchor) {
             if (!$anchor->getAttribute('target')) {
                 $anchor->setAttribute('target', '_blank');
             }
         }
+    }
+
+    public function injectIframesWithRemoteTables(HTMLDocument $html)
+    {
+        if (!$this->externalUrlsMarked) {
+            throw new \LogicException('External links have to marked first, use markExternalLinksByClass method for that');
+        }
+        $remoteDrdPlusLinks = [];
+        /** @var Element $anchor */
+        foreach ($html->getElementsByClassName('external-url') as $anchor) {
+            if (!preg_match('~(?:https?:)?//(?<host>[[:alpha:]]+\.drdplus\.info)/[^#]*#(?<tableId>tabulka_\w+)~', $anchor->getAttribute('href'), $matches)) {
+                continue;
+            }
+            $remoteDrdPlusLinks[$matches['host']][] = $matches['tableId'];
+        }
+        if (count($remoteDrdPlusLinks) === 0) {
+            return;
+        }
+        /** @var Element $body */
+        $body = $html->getElementsByTagName('body')[0];
+        foreach ($remoteDrdPlusLinks as $remoteDrdPlusHost => $tableIds) {
+            $iFrame = $html->createElement('iframe');
+            $body->appendChild($iFrame);
+            $iFrame->setAttribute('id', $remoteDrdPlusHost); // we will target that iframe via JS by remote host name
+            $iFrame->setAttribute('src', "https://{$remoteDrdPlusHost}/?tables=" . htmlspecialchars(implode(',', $tableIds)));
+            $iFrame->setAttribute('style', 'display:none');
+        }
+    }
+
+    /**
+     * @param HTMLDocument $html
+     */
+    public function makeExternalLinksLocal(HTMLDocument $html)
+    {
+        foreach ($html->getElementsByClassName('external-url') as $anchor) {
+            $anchor->setAttribute('href', $this->makeDrdPlusHostLocal($anchor->getAttribute('href')));
+        }
+        /** @var Element $iFrame */
+        foreach ($html->getElementsByTagName('iframe') as $iFrame) {
+            $iFrame->setAttribute('src', $this->makeDrdPlusHostLocal($iFrame->getAttribute('src')));
+            $iFrame->setAttribute('id', str_replace('drdplus.info', 'drdplus.loc', $iFrame->getAttribute('id')));
+        }
+    }
+
+    private function makeDrdPlusHostLocal(string $linkWithRemoteDrdPlusHost): string
+    {
+        return preg_replace('~(?:https?:)?//([[:alpha:]]+)\.drdplus\.info/~', 'http://$1.drdplus.loc/', $linkWithRemoteDrdPlusHost);
     }
 }

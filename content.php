@@ -69,8 +69,12 @@ $htmlHelper->replaceDiacriticsFromIds($htmlDocument);
 $htmlHelper->replaceDiacriticsFromAnchorHashes($htmlDocument);
 $htmlHelper->addAnchorsToIds($htmlDocument);
 $htmlHelper->hideCovered($htmlDocument);
-$htmlHelper->markRemoteLinksByClass($htmlDocument);
-$htmlHelper->remoteLinksTargetToBlank($htmlDocument);
+$htmlHelper->markExternalLinksByClass($htmlDocument);
+$htmlHelper->externalLinksTargetToBlank($htmlDocument);
+$htmlHelper->injectIframesWithRemoteTables($htmlDocument);
+if (preg_match('~drdplus\.loc~', $_SERVER['HTTP_HOST'])) {
+    $htmlHelper->makeExternalLinksLocal($htmlDocument);
+}
 $updated = $htmlDocument->saveHTML();
 $pageCache->cacheContent($updated);
 return $updated;

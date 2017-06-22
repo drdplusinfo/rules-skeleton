@@ -1,4 +1,6 @@
 <?php
+header('Access-Control-Allow-Origin: *', true); // anyone can show content of this page
+
 $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache($documentRoot);
 if ($tablesCache->cacheIsValid()) {
     return $tablesCache->getCachedContent();
@@ -27,6 +29,10 @@ $rawContent = require __DIR__ . '/content.php';
                 float: left;
             }
         </style>
+        <script type="text/javascript">
+            // let just second level domain to be the document domain to allow access to iframes from other subdomains
+            document.domain = document.domain.replace(/^(?:[^.]+\.)*([^.]+\.[^.]+).*/, '$1');
+        </script>
     </head>
     <body>
     <?php
