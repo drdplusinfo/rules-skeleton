@@ -69,6 +69,8 @@ $htmlHelper->replaceDiacriticsFromIds($htmlDocument);
 $htmlHelper->replaceDiacriticsFromAnchorHashes($htmlDocument);
 $htmlHelper->addAnchorsToIds($htmlDocument);
 $htmlHelper->hideCovered($htmlDocument);
+$htmlHelper->markRemoteLinksByClass($htmlDocument);
+$htmlHelper->remoteLinksTargetToBlank($htmlDocument);
 $updated = $htmlDocument->saveHTML();
 $pageCache->cacheContent($updated);
 return $updated;

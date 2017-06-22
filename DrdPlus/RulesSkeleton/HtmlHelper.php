@@ -277,4 +277,24 @@ class HtmlHelper extends StrictObject
 
         return false;
     }
+
+    public function markRemoteLinksByClass(HTMLDocument $html)
+    {
+        /** @var Element $anchor */
+        foreach ($html->getElementsByTagName('a') as $anchor) {
+            if (preg_match('~^(https?:)?//((?!#).)~', $anchor->getAttribute('href'))) {
+                $anchor->classList->add('external-url');
+            }
+        }
+    }
+
+    public function remoteLinksTargetToBlank(HTMLDocument $html)
+    {
+        /** @var Element $anchor */
+        foreach ($html->getElementsByClassName('external-url') as $anchor) {
+            if (!$anchor->getAttribute('target')) {
+                $anchor->setAttribute('target', '_blank');
+            }
+        }
+    }
 }

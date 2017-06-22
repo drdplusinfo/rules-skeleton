@@ -1,0 +1,16 @@
+a, a.external-url:visited {
+    color: #0a1c27;
+}
+
+a, a.on-hover {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a.external-url, a.on-hover:hover {
+    color: #0f293a;
+    text-decoration: underline;
+}
