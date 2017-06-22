@@ -1,8 +1,4 @@
 <?php
-if (!empty($_POST['buy'])) {
-    header('Location: http://obchod.altar.cz', true, 302);
-    exit;
-}
 if (!empty($_POST['confirm'])) {
     $usagePolicy->confirmOwnershipOfVisitor();
 
@@ -13,7 +9,6 @@ if (!empty($_POST['confirm'])) {
 <html lang="cs">
 <head>
     <title>Drd+ <?= basename($documentRoot) ?></title>
-    <!--suppress HtmlUnknownTarget -->
     <link rel="shortcut icon" href="favicon.ico">
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -92,6 +87,7 @@ if (!empty($_POST['confirm'])) {
         <div class="horizontal-centered-wrapper">
             <div class="horizontal-centered">
                 <div class="content">
+                    <div class="background-image"></div>
                     <div>
                         <h1>Prohlášení</h1>
                         <?php if (is_readable($documentRoot . '/name.txt')) {
