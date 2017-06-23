@@ -79,7 +79,7 @@ if (!empty($_POST['confirm'])) {
             margin-top: 2em;
             font-style: italic;
         }
-    </style
+    </style>
 </head>
 <body>
 <div class="vertical-centered-wrapper">
@@ -126,14 +126,13 @@ if (!empty($_POST['confirm'])) {
                                         href="http://www.altar.cz/">ALTAR</a>.</p>
                             <p>Hledáš-li živou komunitu kolem RPG, mrkni na <a
                                         href="https://rpgforum.cz">rpgforum.cz</a>, nebo rovnou na
-                                <a href="https://rpgforum.cz/forum/viewforum.php?f=238&sid=a8a110335d3b47d604ad0ab10b630ba4">
+                                <a href="https://rpgforum.cz/forum/viewforum.php?f=238">
                                     sekci pro DrD+.
                                 </a>
                             </p>
 
                             <div>Pokud nevlastníš pravidla DrD+, prosím, <a href="http://obchod.altar.cz">kup si je</a>
-                                - podpoříš autory a
-                                budoucnost DrD. Děkujeme.
+                                - podpoříš autory a budoucnost DrD. Děkujeme!
                             </div>
                         </div>
                     </div>

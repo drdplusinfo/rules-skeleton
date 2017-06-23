@@ -72,7 +72,7 @@ $htmlHelper->hideCovered($htmlDocument);
 $htmlHelper->markExternalLinksByClass($htmlDocument);
 $htmlHelper->externalLinksTargetToBlank($htmlDocument);
 $htmlHelper->injectIframesWithRemoteTables($htmlDocument);
-if (preg_match('~drdplus\.loc~', $_SERVER['HTTP_HOST'])) {
+if (!empty($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], '~drdplus\.loc~')) {
     $htmlHelper->makeExternalLinksLocal($htmlDocument);
 }
 $updated = $htmlDocument->saveHTML();

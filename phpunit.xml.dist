@@ -1,7 +1,7 @@
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.0/phpunit.xsd"
-        bootstrap="./tests/tests_bootstrap.php"
+        bootstrap="./Tests/tests_bootstrap.php"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
@@ -12,7 +12,7 @@
 >
     <testsuites>
         <testsuite name="all">
-            <directory>./tests</directory>
+            <directory>./Tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>

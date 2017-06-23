@@ -1,24 +1,14 @@
 <?php
-namespace DrdPlus\Tests\Rules;
+namespace Tests\DrdPlus\RulesSkeleton;
 
-use PHPUnit\Framework\TestCase;
-
-class SourceCodeLinksTest extends TestCase
+class SourceCodeLinksTest extends AbstractContentTest
 {
-    protected function setUp()
-    {
-        if (!defined('DRD_PLUS_RULES_DIR_TO_TEST')) {
-            self::markTestSkipped('Missing constant \'DRD_PLUS_RULES_DIR_TO_TEST\'');
-        }
-    }
-
     /**
      * @test
      */
-    public function I_can_follow_linked_sources()
+    public function I_can_follow_linked_source_code()
     {
         $sourceUrls = $this->getSourceUrls();
-        self::assertNotEmpty($sourceUrls);
         foreach ($sourceUrls as $sourceUrl) {
             $localFile = $this->toLocalPath($sourceUrl);
             $toLocalFile = '';
@@ -43,20 +33,8 @@ class SourceCodeLinksTest extends TestCase
     private function getSourceUrls(): array
     {
         $sourceUrls = [];
-        foreach (new \DirectoryIterator(DRD_PLUS_RULES_DIR_TO_TEST) as $file) {
-            if ($file->isDot()) {
-                continue;
-            }
-            if ($file->isDir()) {
-                continue;
-            }
-            if ($file->getExtension() !== 'html') {
-                continue;
-            }
-            $content = file_get_contents($file->getPathname());
-            foreach ($this->parseSourceUrls($content) as $sourceUrl) {
-                $sourceUrls[] = $sourceUrl;
-            }
+        foreach ($this->parseSourceUrls($this->getRulesContentForDev()) as $sourceUrl) {
+            $sourceUrls[] = $sourceUrl;
         }
 
         return $sourceUrls;
@@ -66,7 +44,7 @@ class SourceCodeLinksTest extends TestCase
      * @param string $html
      * @return array|string[]
      */
-    private function parseSourceUrls($html): array
+    private function parseSourceUrls(string $html): array
     {
         preg_match_all('~data-source-code="(?<links>[^"]+)"~', $html, $matches);
 
@@ -78,7 +56,7 @@ class SourceCodeLinksTest extends TestCase
      *     https://github.com/jaroslavtyc/drd-plus-professions/blob/master/DrdPlus/Professions/Priest.php
      * @return string
      */
-    private function toLocalPath($link): string
+    private function toLocalPath(string $link): string
     {
         $withoutWebRoot = str_replace('https://github.com/jaroslavtyc/', '', $link);
         $withoutGithubSpecifics = preg_replace('~(?<type>blob|tree)/master/~', '', $withoutWebRoot);

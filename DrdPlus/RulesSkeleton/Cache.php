@@ -68,9 +68,11 @@ abstract class Cache extends StrictObject
 
     public function cacheContent(string $content)
     {
-        file_put_contents($this->getCacheFileName(), $content);
-        if ($this->cachingHasSense()) {
-            $this->clearOldCache();
+        if (PHP_SAPI !== 'cli') {
+            file_put_contents($this->getCacheFileName(), $content);
+            if ($this->cachingHasSense()) {
+                $this->clearOldCache();
+            }
         }
     }
 

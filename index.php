@@ -28,7 +28,7 @@ if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { /
 $usagePolicy = new \DrdPlus\RulesSkeleton\UsagePolicy(basename($documentRoot));
 $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership();
 if (!$visitorHasConfirmedOwnership) {
-    require __DIR__ . '/visitorLicenceOwningConfirmation.php';
+    require __DIR__ . '/licence_owning_confirmation.php';
     $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership(); // could changed
 }
 
