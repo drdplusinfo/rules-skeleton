@@ -11,16 +11,18 @@ $documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']),
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
 
-if (($_SERVER['QUERY_STRING'] === 'pdf' || !file_exists($documentRoot . '/html'))
+if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !file_exists($documentRoot . '/html'))
     && file_exists($documentRoot . '/pdf') && glob($documentRoot . '/pdf/*.pdf')
 ) {
     echo include __DIR__ . '/get_pdf.php';
-    exit;
+
+    return;
 }
 
 if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     echo include __DIR__ . '/get_tables.php';
-    exit;
+
+    return;
 }
 
 $usagePolicy = new \DrdPlus\RulesSkeleton\UsagePolicy(basename($documentRoot));
@@ -31,8 +33,7 @@ if (!$visitorHasConfirmedOwnership) {
 }
 
 if (!$visitorHasConfirmedOwnership) {
-    exit;
+    return;
 }
 
 echo require __DIR__ . '/content.php';
-exit;
