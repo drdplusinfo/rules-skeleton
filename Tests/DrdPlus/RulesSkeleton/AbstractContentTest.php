@@ -2,6 +2,7 @@
 namespace Tests\DrdPlus\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\UsagePolicy;
+use Gt\Dom\HTMLDocument;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractContentTest extends TestCase
@@ -10,6 +11,8 @@ abstract class AbstractContentTest extends TestCase
     private $ownershipConfirmationContent;
     /** @var string */
     private $rulesContent;
+    /** @var HTMLDocument */
+    private $rulesHtmlDocument;
     /** @var string */
     private $rulesContentForDev;
     /** @var string */
@@ -76,6 +79,15 @@ abstract class AbstractContentTest extends TestCase
     private function removeOwnerShipConfirmation()
     {
         unset($_COOKIE[$this->getCookieNameForOwnershipConfirmation()]);
+    }
+
+    protected function getRulesHtmlDocument(): HTMLDocument
+    {
+        if ($this->rulesHtmlDocument === null) {
+            $this->rulesHtmlDocument = new HTMLDocument($this->getRulesContent());
+        }
+
+        return $this->rulesHtmlDocument;
     }
 
     /**
