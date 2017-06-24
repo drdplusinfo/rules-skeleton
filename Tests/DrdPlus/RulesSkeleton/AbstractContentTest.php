@@ -60,25 +60,33 @@ abstract class AbstractContentTest extends TestCase
 
     private function confirmOwnership()
     {
-        $_COOKIE[$this->getCookieNameForOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
+        $_COOKIE[$this->getCookieNameForSkeletonOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
     }
 
-    private function getCookieNameForOwnershipConfirmation(): string
+    private function getCookieNameForSkeletonOwnershipConfirmation(): string
     {
         if ($this->cookieName === null) {
-            $usagePolicy = new UsagePolicy(basename(dirname(realpath(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST))));
-            $reflectionClass = new \ReflectionClass(UsagePolicy::class);
-            $getCookieName = $reflectionClass->getMethod('getCookieName');
-            $getCookieName->setAccessible(true);
-            $this->cookieName = $getCookieName->invoke($usagePolicy);
+            $this->cookieName = $this->getCookieNameForOwnershipConfirmation(
+                basename(dirname(realpath(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST)))
+            );
         }
 
         return $this->cookieName;
     }
 
+    protected function getCookieNameForOwnershipConfirmation(string $rulesDirBasename): string
+    {
+        $usagePolicy = new UsagePolicy($rulesDirBasename);
+        $reflectionClass = new \ReflectionClass(UsagePolicy::class);
+        $getCookieName = $reflectionClass->getMethod('getCookieName');
+        $getCookieName->setAccessible(true);
+
+        return $getCookieName->invoke($usagePolicy);
+    }
+
     private function removeOwnerShipConfirmation()
     {
-        unset($_COOKIE[$this->getCookieNameForOwnershipConfirmation()]);
+        unset($_COOKIE[$this->getCookieNameForSkeletonOwnershipConfirmation()]);
     }
 
     protected function getRulesHtmlDocument(): HTMLDocument
