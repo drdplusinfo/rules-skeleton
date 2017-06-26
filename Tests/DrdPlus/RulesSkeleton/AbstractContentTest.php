@@ -8,15 +8,15 @@ use PHPUnit\Framework\TestCase;
 abstract class AbstractContentTest extends TestCase
 {
     /** @var string */
-    private $ownershipConfirmationContent;
+    private static $ownershipConfirmationContent;
     /** @var string */
-    private $rulesContent;
+    private static $rulesContent;
     /** @var HTMLDocument */
-    private $rulesHtmlDocument;
+    private static $rulesHtmlDocument;
     /** @var string */
-    private $rulesContentForDev;
+    private static $rulesContentForDev;
     /** @var string */
-    private $cookieName;
+    private static $cookieName;
 
     protected function setUp()
     {
@@ -30,14 +30,14 @@ abstract class AbstractContentTest extends TestCase
      */
     protected function getOwnershipConfirmationContent(): string
     {
-        if ($this->ownershipConfirmationContent === null) {
+        if (self::$ownershipConfirmationContent === null) {
             ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            $this->ownershipConfirmationContent = ob_get_clean();
+            self::$ownershipConfirmationContent = ob_get_clean();
         }
 
-        return $this->ownershipConfirmationContent;
+        return self::$ownershipConfirmationContent;
     }
 
     /**
@@ -45,17 +45,17 @@ abstract class AbstractContentTest extends TestCase
      */
     protected function getRulesContent(): string
     {
-        if ($this->rulesContent === null) {
+        if (self::$rulesContent === null) {
             $this->confirmOwnership();
             ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            $this->rulesContent = ob_get_clean();
+            self::$rulesContent = ob_get_clean();
             $this->removeOwnerShipConfirmation();
-            self::assertNotSame($this->getOwnershipConfirmationContent(), $this->rulesContent);
+            self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContent);
         }
 
-        return $this->rulesContent;
+        return self::$rulesContent;
     }
 
     private function confirmOwnership()
@@ -65,13 +65,13 @@ abstract class AbstractContentTest extends TestCase
 
     private function getCookieNameForLocalOwnershipConfirmation(): string
     {
-        if ($this->cookieName === null) {
-            $this->cookieName = $this->getCookieNameForOwnershipConfirmation(
+        if (self::$cookieName === null) {
+            self::$cookieName = $this->getCookieNameForOwnershipConfirmation(
                 basename($this->getDirName(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST))
             );
         }
 
-        return $this->cookieName;
+        return self::$cookieName;
     }
 
     private function getDirName(string $fileName): string
@@ -110,11 +110,11 @@ abstract class AbstractContentTest extends TestCase
 
     protected function getRulesHtmlDocument(): HTMLDocument
     {
-        if ($this->rulesHtmlDocument === null) {
-            $this->rulesHtmlDocument = new HTMLDocument($this->getRulesContent());
+        if (self::$rulesHtmlDocument === null) {
+            self::$rulesHtmlDocument = new HTMLDocument($this->getRulesContent());
         }
 
-        return $this->rulesHtmlDocument;
+        return self::$rulesHtmlDocument;
     }
 
     /**
@@ -122,18 +122,18 @@ abstract class AbstractContentTest extends TestCase
      */
     protected function getRulesContentForDev(): string
     {
-        if ($this->rulesContentForDev === null) {
+        if (self::$rulesContentForDev === null) {
             $this->confirmOwnership();
             $_GET['mode'] = 'dev';
             ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            $this->rulesContentForDev = ob_get_clean();
+            self::$rulesContentForDev = ob_get_clean();
             $this->removeOwnerShipConfirmation();
-            self::assertNotSame($this->getOwnershipConfirmationContent(), $this->rulesContentForDev);
+            self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDev);
         }
 
-        return $this->rulesContentForDev;
+        return self::$rulesContentForDev;
     }
 
 }

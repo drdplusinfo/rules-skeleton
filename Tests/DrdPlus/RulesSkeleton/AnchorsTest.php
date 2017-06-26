@@ -6,6 +6,12 @@ use Gt\Dom\HTMLDocument;
 
 class AnchorsTest extends AbstractContentTest
 {
+
+    /**
+     * @var HTMLDocument[]|array
+     */
+    private static $externalHtmlDocuments;
+
     /**
      * @test
      */
@@ -132,11 +138,6 @@ class AnchorsTest extends AbstractContentTest
     }
 
     /**
-     * @var HTMLDocument[]|array
-     */
-    private $externalHtmlDocuments;
-
-    /**
      * @return array|Element[]
      */
     private function getExternalAnchorsWithHash(): array
@@ -154,7 +155,7 @@ class AnchorsTest extends AbstractContentTest
     private function getExternalHtmlDocument(string $href): HTMLDocument
     {
         $link = substr($href, 0, strpos($href, '#') ?: null);
-        if (($this->externalHtmlDocuments[$link] ?? null) === null) {
+        if ((self::$externalHtmlDocuments[$link] ?? null) === null) {
             $curl = curl_init($link);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
@@ -166,17 +167,17 @@ class AnchorsTest extends AbstractContentTest
             $content = curl_exec($curl);
             curl_close($curl);
             self::assertNotEmpty($content, 'Nothing has been fetched from URL ' . $link);
-            $this->externalHtmlDocuments[$link] = @new HTMLDocument($content);
+            self::$externalHtmlDocuments[$link] = @new HTMLDocument($content);
             if (strpos($link, 'drdplus.loc') !== false || strpos($link, 'drdplus.info') !== false) {
                 self::assertCount(
                     0,
-                    $this->externalHtmlDocuments[$link]->getElementsByTagName('form'),
+                    self::$externalHtmlDocuments[$link]->getElementsByTagName('form'),
                     'Seems we have not passed ownership check for ' . $href
                 );
             }
         }
 
-        return $this->externalHtmlDocuments[$link];
+        return self::$externalHtmlDocuments[$link];
     }
 
 }
