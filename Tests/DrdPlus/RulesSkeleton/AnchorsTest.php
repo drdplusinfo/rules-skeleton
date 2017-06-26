@@ -53,9 +53,19 @@ class AnchorsTest extends AbstractContentTest
             /** @var Element $target */
             $target = $html->getElementById($expectedId);
             self::assertNotEmpty($target, 'No element found by ID ' . $expectedId);
+            foreach ($this->classesAllowingInnerLinksTobeHidden() as $classAllowingInnerLinksTobeHidden) {
+                if ($target->classList->contains($classAllowingInnerLinksTobeHidden)) {
+                    return;
+                }
+            }
             self::assertNotContains('hidden', $target->className, "Inner link of ID $expectedId should not be hidden");
             self::assertNotRegExp('~(display:\s*none|visibility:\s*hidden)~', $target->getAttribute('style'));
         }
+    }
+
+    protected function classesAllowingInnerLinksTobeHidden(): array
+    {
+        return [];
     }
 
     /**
