@@ -60,18 +60,37 @@ abstract class AbstractContentTest extends TestCase
 
     private function confirmOwnership()
     {
-        $_COOKIE[$this->getCookieNameForSkeletonOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
+        $_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
     }
 
-    private function getCookieNameForSkeletonOwnershipConfirmation(): string
+    private function getCookieNameForLocalOwnershipConfirmation(): string
     {
         if ($this->cookieName === null) {
             $this->cookieName = $this->getCookieNameForOwnershipConfirmation(
-                basename(dirname(realpath(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST)))
+                basename($this->getDirName(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST))
             );
         }
 
         return $this->cookieName;
+    }
+
+    private function getDirName(string $fileName): string
+    {
+        $dirName = $fileName;
+        while (basename($dirName) === '.' || basename($dirName) === '..' || !is_dir($dirName)) {
+            $dirName = dirname(
+                $dirName,
+                basename($dirName) === '.' || !is_dir($dirName)
+                    ? 1
+                    : 2 // ..
+            );
+            if ($dirName === '/') {
+                throw new \RuntimeException("Could not find name of dir by $fileName");
+            }
+        }
+
+
+        return $dirName;
     }
 
     protected function getCookieNameForOwnershipConfirmation(string $rulesDirBasename): string
@@ -86,7 +105,7 @@ abstract class AbstractContentTest extends TestCase
 
     private function removeOwnerShipConfirmation()
     {
-        unset($_COOKIE[$this->getCookieNameForSkeletonOwnershipConfirmation()]);
+        unset($_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()]);
     }
 
     protected function getRulesHtmlDocument(): HTMLDocument
