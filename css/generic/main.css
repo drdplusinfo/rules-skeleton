@@ -126,10 +126,8 @@ p.result {
     font-family: monospace;
 }
 
-.calculation table {
-    font-weight: bold;
-    min-width: inherit;
-    margin: 0;
+.calculation .result {
+    margin-left: 2em;
 }
 
 .example .calculation {
@@ -352,3 +350,4 @@ ol ul {
 .rules-authors .altar {
     margin-top: 1em;
 }
+

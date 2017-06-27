@@ -391,8 +391,10 @@ table.grid td {
     min-width: 0.9em;
 }
 
-.calculation table.result {
-    margin-left: 2em;
+.calculation table {
+    font-weight: bold;
+    min-width: inherit;
+    margin: 0;
 }
 
 .calculation table.result td:first-child {
