@@ -14,3 +14,10 @@ body {
     height: 100%;
     z-index: -2;
 }
+
+.delimiter {
+    margin: 1em auto;
+    display: block;
+    width: 30em;
+    max-width: 100%;
+}
