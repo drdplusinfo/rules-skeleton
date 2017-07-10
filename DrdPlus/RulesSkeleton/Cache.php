@@ -24,20 +24,6 @@ abstract class Cache extends StrictObject
         return !empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] !== '127.0.0.1';
     }
 
-    private function getCurrentCommitHash(): string
-    {
-        $gitHeadFile = trim(preg_replace('~ref:\s*~', '', file_get_contents($this->documentRoot . '/.git/HEAD')));
-        $gitHeadFilePath = $this->documentRoot . '/.git/' . $gitHeadFile;
-        if (!is_readable($gitHeadFilePath)) {
-            throw new \RuntimeException(
-                "Could not read $gitHeadFilePath, in that dir are files "
-                . implode(',', scandir(dirname($gitHeadFilePath), SCANDIR_SORT_NONE))
-            );
-        }
-
-        return trim(file_get_contents($gitHeadFilePath));
-    }
-
     /**
      * @return string
      */
@@ -64,6 +50,20 @@ abstract class Cache extends StrictObject
     private function getCacheFileName(): string
     {
         return $this->cacheRoot . "/{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getCurrentGetHash()}_{$this->cachingHasSense()}.html";
+    }
+
+    private function getCurrentCommitHash(): string
+    {
+        $gitHeadFile = trim(preg_replace('~ref:\s*~', '', file_get_contents($this->documentRoot . '/.git/HEAD')));
+        $gitHeadFilePath = $this->documentRoot . '/.git/' . $gitHeadFile;
+        if (!is_readable($gitHeadFilePath)) {
+            throw new \RuntimeException(
+                "Could not read $gitHeadFilePath, in that dir are files "
+                . implode(',', scandir(dirname($gitHeadFilePath), SCANDIR_SORT_NONE))
+            );
+        }
+
+        return trim(file_get_contents($gitHeadFilePath));
     }
 
     abstract protected function getCachePrefix(): string;
