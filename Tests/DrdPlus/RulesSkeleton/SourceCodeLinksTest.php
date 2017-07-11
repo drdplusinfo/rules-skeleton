@@ -61,7 +61,7 @@ class SourceCodeLinksTest extends AbstractContentTest
         $withoutWebRoot = str_replace('https://github.com/jaroslavtyc/', '', $link);
         $withoutGithubSpecifics = preg_replace('~(?<type>blob|tree)/master/~', '', $withoutWebRoot);
         $withLocalSubDirs = preg_replace_callback(
-            '~^drd-plus-(?<projectName>[^/]+)~',
+            '~^drd-(?:plus-)?(?<projectName>[^/]+)~',
             function (array $matches) {
                 return 'drd-plus/' . $matches['projectName'];
             },
