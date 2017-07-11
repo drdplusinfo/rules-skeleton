@@ -129,7 +129,11 @@ class AnchorsTest extends AbstractContentTest
      */
     public function External_anchors_with_hashes_point_to_existing_ids()
     {
-        foreach ($this->getExternalAnchorsWithHash() as $anchor) {
+        $externalAnchorsWithHash = $this->getExternalAnchorsWithHash();
+        if (defined('NO_EXTERNAL_ANCHORS_WITH_HASH_EXPECTED') && NO_EXTERNAL_ANCHORS_WITH_HASH_EXPECTED) {
+            self::assertCount(0, $externalAnchorsWithHash);
+        }
+        foreach ($externalAnchorsWithHash as $anchor) {
             $link = $anchor->getAttribute('href');
             if (strpos($link, 'drdplus.info') > 0) {
                 $link = str_replace(['drdplus.info', 'https'], ['drdplus.loc', 'http'], $link); // turn link into local version
