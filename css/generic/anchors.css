@@ -4,13 +4,16 @@ a, a.external-url:visited {
 
 a, a.on-hover {
     text-decoration: none;
+    color: #141414;
+    border-bottom: dotted 1px #9d9d9d;
 }
 
 a:hover {
-    text-decoration: underline;
+    border-bottom: solid 1px #9d9d9d;
 }
 
 a.external-url, a.on-hover:hover {
     color: #0f293a;
     text-decoration: underline;
+    border-bottom: none;
 }
