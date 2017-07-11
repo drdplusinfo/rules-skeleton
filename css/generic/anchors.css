@@ -6,6 +6,10 @@ a, a.on-hover {
     text-decoration: none;
     color: #141414;
     border-bottom: dotted 1px #9d9d9d;
+    display: inline-block;
+    /* moving dots up to be tight to text */
+    height: 1em;
+    margin-bottom: 0.1em
 }
 
 a:hover {
