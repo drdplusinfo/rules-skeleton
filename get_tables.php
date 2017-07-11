@@ -40,7 +40,8 @@ $rawContent = require __DIR__ . '/content.php';
     ob_clean();
     $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
         !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
-        !empty($_GET['hide']) && trim($_GET['hide']) === 'covered'
+        !empty($_GET['hide']) && trim($_GET['hide']) === 'covered',
+        false /* we do not care about introductions */
     );
     $tables = $htmlHelper->findTablesWithIds(
         new \Gt\Dom\HTMLDocument($rawContent),

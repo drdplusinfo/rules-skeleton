@@ -2,6 +2,7 @@
 if (empty($visitorHasConfirmedOwnership)) {
     header('HTTP/1.0 403 Forbidden');
     echo '403 Forbidden (that does not means you are doomed, though)';
+
     return;
 }
 
@@ -60,15 +61,16 @@ $content .= ob_get_clean();
 
 $htmlDocument = new \Gt\Dom\HTMLDocument($content);
 $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
-    !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
-    !empty($_GET['hide']) && trim($_GET['hide']) === 'covered'
+    !empty($_GET['mode']) && strpos(trim($_GET['mode']), 'dev') === 0,
+    !empty($_GET['hide']) && strpos(trim($_GET['hide']), 'cover') === 0,
+    !empty($_GET['show']) && strpos(trim($_GET['show']), 'intro') === 0
 );
 $htmlHelper->prepareSourceCodeLinks($htmlDocument);
 $htmlHelper->addIdsToTablesAndHeadings($htmlDocument);
 $htmlHelper->replaceDiacriticsFromIds($htmlDocument);
 $htmlHelper->replaceDiacriticsFromAnchorHashes($htmlDocument);
 $htmlHelper->addAnchorsToIds($htmlDocument);
-$htmlHelper->hideCovered($htmlDocument);
+$htmlHelper->resolveDisplayMode($htmlDocument);
 $htmlHelper->markExternalLinksByClass($htmlDocument);
 $htmlHelper->externalLinksTargetToBlank($htmlDocument);
 $htmlHelper->injectIframesWithRemoteTables($htmlDocument);

@@ -11,16 +11,19 @@ use Gt\Dom\Node;
 class HtmlHelper extends StrictObject
 {
     /** @var bool */
-    private $devMode;
+    private $inDevMode;
     /** @var bool */
     private $shouldHideCovered;
     /** @var bool */
+    private $showIntroductionOnly;
+    /** @var bool */
     private $externalUrlsMarked = false;
 
-    public function __construct(bool $devMode, bool $shouldHideCovered)
+    public function __construct(bool $inDevMode, bool $shouldHideCovered, bool $showIntroductionOnly)
     {
-        $this->devMode = $devMode;
+        $this->inDevMode = $inDevMode;
         $this->shouldHideCovered = $shouldHideCovered;
+        $this->showIntroductionOnly = $showIntroductionOnly;
     }
 
     /**
@@ -28,7 +31,7 @@ class HtmlHelper extends StrictObject
      */
     public function prepareSourceCodeLinks(HTMLDocument $html)
     {
-        if (!$this->devMode) {
+        if (!$this->inDevMode) {
             foreach ($html->getElementsByClassName('source-code-title') as $withSourceCode) {
                 $withSourceCode->className = str_replace('source-code-title', 'hidden', $withSourceCode->className);
                 $withSourceCode->removeAttribute('data-source-code');
@@ -198,14 +201,26 @@ class HtmlHelper extends StrictObject
     /**
      * @param HTMLDocument $html
      */
-    public function hideCovered(HTMLDocument $html)
+    public function resolveDisplayMode(HTMLDocument $html)
     {
-        if (!$this->devMode || !$this->shouldHideCovered) {
-            foreach ($html->children as $child) {
-                $this->removeClassesAboutCodeCoverage($child);
+        if (!$this->inDevMode) {
+            foreach ($html->getElementsByTagName('body') as $body) {
+                $this->removeClassesAboutCodeCoverage($body);
             }
 
             return;
+        }
+        if ($this->showIntroductionOnly) {
+            foreach ($html->getElementsByTagName('body') as $body) {
+                $this->hideNonIntroduction($body);
+            }
+
+            return;
+        }
+        if (!$this->shouldHideCovered) {
+            foreach ($html->children as $child) {
+                $this->removeClassesAboutCodeCoverage($child);
+            }
         }
         /** @var Node $image */
         foreach ($html->getElementsByTagName('img') as $image) {
@@ -217,6 +232,21 @@ class HtmlHelper extends StrictObject
                 $nodeToHide->className = str_replace($classToHide, 'hidden', $nodeToHide->className);
             }
         }
+    }
+
+    private function hideNonIntroduction(Element $html)
+    {
+        do {
+            $somethingRemoved = false;
+            foreach ($html->children as $child) {
+                if (!$child->classList->contains('introduction')) {
+                    $html->removeChild($child);
+                    $somethingRemoved = true;
+                }
+                // introduction is expected only as direct descendant of the given element (body)
+            }
+            // do not know why, but some nodes are simply skipped on first removal so have to remove them again
+        } while ($somethingRemoved);
     }
 
     private function removeClassesAboutCodeCoverage(Element $html)
