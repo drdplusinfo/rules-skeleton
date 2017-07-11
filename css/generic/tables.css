@@ -41,7 +41,7 @@ table.content td:first-child {
     padding-left: 24px;
 }
 
-table.content td.main {
+table.content tr.main td:first-child, table.content td.main {
     padding-left: 12px;
 }
 
