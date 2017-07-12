@@ -81,7 +81,7 @@ p.result {
     font-style: italic;
 }
 
-.introduction {
+span.introduction, div.introduction {
     font-style: italic;
     font-size: 0.9em;
     text-indent: 1em;
