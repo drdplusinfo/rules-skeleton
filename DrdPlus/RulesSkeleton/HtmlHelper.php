@@ -7,6 +7,7 @@ use Gt\Dom\Element;
 use Gt\Dom\HTMLCollection;
 use Gt\Dom\HTMLDocument;
 use Gt\Dom\Node;
+use Gt\Dom\ParentNode;
 
 class HtmlHelper extends StrictObject
 {
@@ -222,14 +223,24 @@ class HtmlHelper extends StrictObject
                 $this->removeClassesAboutCodeCoverage($child);
             }
         }
-        /** @var Node $image */
-        foreach ($html->getElementsByTagName('img') as $image) {
-            $html->removeChild($image);
-        }
+        $this->removeImages($html->getElementsByTagName('body')[0]);
+
         $classesToHide = ['covered-by-code', 'introduction', 'quote', 'generic', 'note', 'excluded'];
         foreach ($classesToHide as $classToHide) {
             foreach ($html->getElementsByClassName($classToHide) as $nodeToHide) {
                 $nodeToHide->className = str_replace($classToHide, 'hidden', $nodeToHide->className);
+            }
+        }
+    }
+
+    private function removeImages(Element $html)
+    {
+        /** @var Element $child */
+        foreach ($html->children as $child) {
+            if ($child->nodeName === 'img') {
+                $html->removeChild($child);
+            } else {
+                $this->removeImages($child);
             }
         }
     }
