@@ -27,12 +27,12 @@ h2 {
 h3 {
     font-weight: 600;
     font-size: 1.55em;
-    margin: 1em 0 0 0;
+    margin: 1em 0 .4em 0;
 }
 
 h4 {
     font-weight: 600;
-    margin: 1em 0 0 0;
+    margin: 1em 0 .3em 0;
     font-style: italic;
     font-size: 1.25em;
     text-indent: 0;
@@ -40,7 +40,7 @@ h4 {
 
 h5 {
     font-size: 1em;
-    margin: 1em 0 0 0;
+    margin: 1em 0 .2em 0;
 }
 
 h5 + .paragraph {
@@ -54,7 +54,7 @@ h5.title {
 h6 {
     font-style: italic;
     text-indent: 0;
-    margin: 1em 0 0 0;
+    margin: 1em 0 .1em 0;
     font-weight: normal;
     font-size: 100%;
 }
@@ -85,11 +85,20 @@ span.introduction, div.introduction {
     font-style: italic;
     font-size: 0.9em;
     text-indent: 1em;
-    margin-bottom: 1em;
+    margin: 1em 0;
+}
+
+h1 + .introduction, h2 + .introduction, h3 + .introduction, h4 + .introduction, h5 + .introduction, h6 + .introduction {
+    margin-top: 0;
 }
 
 .quote {
+    margin-top: 1em;
     display: table;
+}
+
+h1 + .quote, h2 + .quote, h3 + .quote, h4 + .quote, h5 + .quote, h6 + .quote {
+    margin-top: 0;
 }
 
 .quote .title {
@@ -98,16 +107,7 @@ span.introduction, div.introduction {
     margin-bottom: 0.5em;
 }
 
-.quote.content {
-    border: 1px solid black;
-    padding: 0.4em;
-    font-style: italic;
-    text-indent: 1em;
-    margin-bottom: 0.5em;
-    display: table;
-}
-
-.quote .content {
+.quote .content, .quote.content {
     border: 1px solid black;
     padding: 0.4em;
     font-style: italic;
@@ -350,4 +350,3 @@ ol ul {
 .rules-authors .altar {
     margin-top: 1em;
 }
-
