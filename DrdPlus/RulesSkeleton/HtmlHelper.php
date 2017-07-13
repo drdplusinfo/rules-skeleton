@@ -260,7 +260,7 @@ class HtmlHelper extends StrictObject
 
     private function removeClassesAboutCodeCoverage(Element $html)
     {
-        $classesToRemove = ['covered-by-code', 'generic', 'note', 'excluded'];
+        $classesToRemove = ['covered-by-code', 'generic', 'excluded'];
         foreach ($html->children as $child) {
             foreach ($classesToRemove as $classToRemove) {
                 $child->classList->remove($classToRemove);
