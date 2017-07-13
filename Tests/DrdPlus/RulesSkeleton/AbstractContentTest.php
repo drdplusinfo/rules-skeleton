@@ -16,6 +16,8 @@ abstract class AbstractContentTest extends TestCase
     /** @var string */
     private static $rulesContentForDev;
     /** @var string */
+    private static $rulesContentForDevWithHiddenCovered;
+    /** @var string */
     private static $cookieName;
 
     protected function setUp()
@@ -89,7 +91,6 @@ abstract class AbstractContentTest extends TestCase
             }
         }
 
-
         return $dirName;
     }
 
@@ -131,6 +132,26 @@ abstract class AbstractContentTest extends TestCase
             self::$rulesContentForDev = ob_get_clean();
             $this->removeOwnerShipConfirmation();
             self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDev);
+        }
+
+        return self::$rulesContentForDev;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRulesContentForDevWithHiddenCovered(): string
+    {
+        if (self::$rulesContentForDevWithHiddenCovered === null) {
+            $this->confirmOwnership();
+            $_GET['mode'] = 'dev';
+            $_GET['hide'] = 'covered';
+            ob_start();
+            /** @noinspection PhpIncludeInspection */
+            include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
+            self::$rulesContentForDev = ob_get_clean();
+            $this->removeOwnerShipConfirmation();
+            self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDevWithHiddenCovered);
         }
 
         return self::$rulesContentForDev;

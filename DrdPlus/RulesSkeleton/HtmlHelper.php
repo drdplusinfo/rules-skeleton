@@ -6,8 +6,6 @@ use Granam\String\StringTools;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLCollection;
 use Gt\Dom\HTMLDocument;
-use Gt\Dom\Node;
-use Gt\Dom\ParentNode;
 
 class HtmlHelper extends StrictObject
 {
@@ -225,7 +223,7 @@ class HtmlHelper extends StrictObject
         }
         $this->removeImages($html->getElementsByTagName('body')[0]);
 
-        $classesToHide = ['covered-by-code', 'introduction', 'quote', 'generic', 'note', 'excluded'];
+        $classesToHide = ['covered-by-code', 'introduction', 'quote', 'generic', 'note', 'excluded', 'rules-authors'];
         foreach ($classesToHide as $classToHide) {
             foreach ($html->getElementsByClassName($classToHide) as $nodeToHide) {
                 $nodeToHide->className = str_replace($classToHide, 'hidden', $nodeToHide->className);
