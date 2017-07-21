@@ -142,44 +142,23 @@ class HtmlHelper extends StrictObject
         $this->addAnchorsToChildrenWithIds($html->body->children);
     }
 
-    public function addAnchorsToChildrenWithIds(HTMLCollection $children)
+    private function addAnchorsToChildrenWithIds(HTMLCollection $children)
     {
         foreach ($children as $child) {
+            if ($child->id) {
+                $innerHtml = $child->innerHTML;
+                $child->innerHTML = '';
+                $anchorToSelf = new Element('a');
+                $child->appendChild($anchorToSelf);
+                $anchorToSelf->innerHTML = $innerHtml;
+                $anchorToSelf->setAttribute('href', '#' . $child->id);
+            }
             // recursion
             $this->addAnchorsToChildrenWithIds($child->children);
-            if ($child->id) {
-                $anchorToChildItself = false;
-                /** @var \DOMNode $childNode */
-                foreach ($child->childNodes as $childNode) {
-                    if ($childNode->nodeType === XML_TEXT_NODE) {
-                        $anchorToChildItself = new Element('a');
-                        $child->replaceChild($anchorToChildItself, $childNode);
-                        $anchorToChildItself->nodeValue = $childNode->nodeValue;
-                        break;
-                    }
-                }
-                if (!$anchorToChildItself) {
-                    continue;
-                }
-                $anchorToChildItself->setAttribute('href', '#' . $child->id);
-                foreach ($child->childNodes as $childNode) {
-                    if ($childNode === $anchorToChildItself) {
-                        continue;
-                    }
-                    if (($childNode->nodeType !== XML_TEXT_NODE && $childNode->nodeName !== 'span')
-                        || !$this->containsOnlySpans($childNode)
-                    ) {
-                        break; // only text and span nodes BEFORE others are used as anchor content
-                    }
-                    // only span can be inside anchor
-                    $child->removeChild($childNode);
-                    $anchorToChildItself->appendChild($childNode);
-                }
-            }
         }
     }
 
-    private function containsOnlySpans(\DOMNode $element): bool
+    private function containsOnlyTextAndSpans(\DOMNode $element): bool
     {
         if (!$element->hasChildNodes()) {
             return true;
@@ -189,7 +168,7 @@ class HtmlHelper extends StrictObject
             if ($childNode->nodeName !== 'span' && $childNode->nodeType !== XML_TEXT_NODE) {
                 return false;
             }
-            if (!$this->containsOnlySpans($childNode)) {
+            if (!$this->containsOnlyTextAndSpans($childNode)) {
                 return false;
             }
         }
