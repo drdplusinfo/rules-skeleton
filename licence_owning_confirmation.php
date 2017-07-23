@@ -87,7 +87,7 @@ if (!empty($_POST['confirm'])) {
         <div class="horizontal-centered-wrapper">
             <div class="horizontal-centered">
                 <div class="content">
-                    <div class="background-image"></div>
+                    <div class="background-image locked"></div>
                     <div>
                         <h1>Prohlášení</h1>
                         <?php if (is_readable($documentRoot . '/name.txt')) {

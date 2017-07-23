@@ -15,6 +15,10 @@ body {
     z-index: -2;
 }
 
+.locked.background-image {
+    background-image: url(/images/rules-full.png);
+}
+
 .delimiter {
     margin: 1em auto;
     display: block;
