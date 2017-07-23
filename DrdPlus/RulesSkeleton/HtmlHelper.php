@@ -95,9 +95,9 @@ class HtmlHelper extends StrictObject
                 continue;
             }
             $child->setAttribute('data-original-id', $id);
-            $child->setAttribute('id', $idWithoutDiacritics);
+            $child->setAttribute('id', urlencode($idWithoutDiacritics));
             $child->appendChild($invisibleId = new Element('span'));
-            $invisibleId->setAttribute('id', $id);
+            $invisibleId->setAttribute('id', urlencode($id));
             $invisibleId->className = 'invisible-id';
         }
     }
