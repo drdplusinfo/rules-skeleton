@@ -9,6 +9,8 @@ use Gt\Dom\HTMLDocument;
 
 class HtmlHelper extends StrictObject
 {
+    const INVISIBLE_ID = 'invisible-id';
+
     /** @var bool */
     private $inDevMode;
     /** @var bool */
@@ -98,7 +100,7 @@ class HtmlHelper extends StrictObject
             $child->setAttribute('id', urlencode($idWithoutDiacritics));
             $child->appendChild($invisibleId = new Element('span'));
             $invisibleId->setAttribute('id', urlencode($id));
-            $invisibleId->className = 'invisible-id';
+            $invisibleId->className = self::INVISIBLE_ID;
         }
     }
 
@@ -145,7 +147,9 @@ class HtmlHelper extends StrictObject
     private function addAnchorsToChildrenWithIds(HTMLCollection $children)
     {
         foreach ($children as $child) {
-            if ($child->id && $child->getElementsByTagName('a')->length === 0) {
+            if ($child->id && !$child->classList->contains(self::INVISIBLE_ID)
+                && $child->getElementsByTagName('a')->length === 0
+            ) {
                 $innerHtml = $child->innerHTML;
                 $child->innerHTML = '';
                 $anchorToSelf = new Element('a');

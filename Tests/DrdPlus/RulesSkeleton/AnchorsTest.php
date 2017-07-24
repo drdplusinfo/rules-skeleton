@@ -1,6 +1,7 @@
 <?php
 namespace Tests\DrdPlus\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\String\StringTools;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
@@ -215,6 +216,19 @@ class AnchorsTest extends AbstractContentTest
         /** @var \DOMElement $link */
         foreach ($links as $link) {
             self::assertNotSame($idLink, $link->getAttribute('href'), "No anchor pointing to ID self expected: $idLink");
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function Original_ids_do_not_have_links_to_self()
+    {
+        $document = $this->getRulesHtmlDocument();
+        $originalIds = $document->getElementsByClassName(HtmlHelper::INVISIBLE_ID);
+        self::assertNotEmpty($originalIds);
+        foreach ($originalIds as $originalId) {
+            self::assertSame('', $originalId->innerHTML);
         }
     }
 
