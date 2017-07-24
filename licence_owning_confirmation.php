@@ -13,73 +13,7 @@ if (!empty($_POST['confirm'])) {
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/css/generic/graphics.css">
-    <style type="text/css">
-        body {
-            font-size: 20px;
-            font-family: "Times New Roman", Times, serif;
-        }
-
-        input[type=submit] {
-            font-size: inherit;
-        }
-
-        .vertical-centered-wrapper {
-            position: absolute;
-            width: 98%;
-            height: 98%;
-            display: table;
-        }
-
-        .vertical-centered {
-            display: table-cell;
-            vertical-align: middle;
-        }
-
-        .horizontal-centered-wrapper {
-            text-align: center;
-        }
-
-        .horizontal-centered {
-            display: inline-block;
-            text-align: left;
-        }
-
-        .content {
-            padding: 1em;
-        }
-
-        h1 {
-            font-style: italic;
-        }
-
-        .manifest a {
-            color: black;
-        }
-
-        input[type=submit], label {
-            cursor: pointer;
-        }
-
-        label:hover {
-            text-shadow: 1px 1px 3px #424242;
-        }
-
-        label:hover input[type=submit] {
-            text-shadow: 1px 1px 3px #424242;
-        }
-
-        .upper-index {
-            position: relative;
-            top: -0.5em;
-            font-size: 80%;
-        }
-
-        .footer {
-            font-size: 15px;
-            margin-top: 2em;
-            font-style: italic;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/generic/licence.css">
 </head>
 <body>
 <div class="vertical-centered-wrapper">
@@ -87,7 +21,7 @@ if (!empty($_POST['confirm'])) {
         <div class="horizontal-centered-wrapper">
             <div class="horizontal-centered">
                 <div class="content">
-                    <div class="background-image locked"></div>
+                    <div class="background-image"></div>
                     <div>
                         <h1>Prohlášení</h1>
                         <?php if (is_readable($documentRoot . '/name.txt')) {
@@ -96,11 +30,11 @@ if (!empty($_POST['confirm'])) {
                             $name = basename($documentRoot);
                         }
                         $eShop = 'http://obchod.altar.cz';
-                        if (is_readable($documentRoot . '/eshop.txt')) {
-                            $eShop = file_get_contents($documentRoot . '/eshop.txt');
+                        if (is_readable($documentRoot . '/eshop_url.txt')) {
+                            $eShop = file_get_contents($documentRoot . '/eshop_url.txt');
                         }
                         ?>
-                        <form class="manifest" action="<?= $eShop ?>" method="get">
+                        <form class="manifest" action="<?= $eShop ?>">
                             <p>
                                 <label>
                                     <input type="submit" name="buy" value="Koupím <?= $name ?>">
