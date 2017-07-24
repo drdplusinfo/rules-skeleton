@@ -145,7 +145,7 @@ class HtmlHelper extends StrictObject
     private function addAnchorsToChildrenWithIds(HTMLCollection $children)
     {
         foreach ($children as $child) {
-            if ($child->id) {
+            if ($child->id && $child->getElementsByTagName('a')->length === 0) {
                 $innerHtml = $child->innerHTML;
                 $child->innerHTML = '';
                 $anchorToSelf = new Element('a');

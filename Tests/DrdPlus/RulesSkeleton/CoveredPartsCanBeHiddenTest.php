@@ -14,6 +14,13 @@ class CoveredPartsCanBeHiddenTest extends AbstractContentTest
         $html = $this->getRulesContentForDevWithHiddenCovered();
         $document = new HTMLDocument($html);
         $coveredElements = $document->getElementsByClassName('this_contains_covered_only');
+        if (!$coveredElements
+            && strpos($document->head->getElementsByClassName('title')->current()->innerHTML, 'skeleton') === false
+        ) {
+            self::assertFalse(false, 'Nothing to test here');
+
+            return;
+        }
         self::assertNotEmpty($coveredElements);
         foreach ($coveredElements as $covered) {
             self::assertTrue($covered->hasChildNodes());

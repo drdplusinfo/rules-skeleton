@@ -1,6 +1,7 @@
 <?php
 namespace Tests\DrdPlus\RulesSkeleton;
 
+use Granam\String\StringTools;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 
@@ -192,6 +193,29 @@ class AnchorsTest extends AbstractContentTest
         }
 
         return self::$externalHtmlDocuments[$link];
+    }
+
+    /**
+     * @test
+     */
+    public function Anchor_to_ID_self_is_not_created_if_contains_anchor_element()
+    {
+        $document = $this->getRulesHtmlDocument();
+        $noAnchorsForMe = $document->getElementById(StringTools::toConstant('no-anchor-for-me'));
+        if (!$noAnchorsForMe
+            && strpos($document->head->getElementsByClassName('title')->current()->innerHTML, 'skeleton') === false
+        ) {
+            self::assertFalse(false, 'Nothing to test here');
+
+            return;
+        }
+        $links = $noAnchorsForMe->getElementsByTagName('a');
+        self::assertNotEmpty($links);
+        $idLink = '#' . $noAnchorsForMe->getAttribute('id');
+        /** @var \DOMElement $link */
+        foreach ($links as $link) {
+            self::assertNotSame($idLink, $link->getAttribute('href'), "No anchor pointing to ID self expected: $idLink");
+        }
     }
 
 }
