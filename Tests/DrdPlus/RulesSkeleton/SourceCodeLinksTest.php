@@ -9,6 +9,9 @@ class SourceCodeLinksTest extends AbstractContentTest
     public function I_can_follow_linked_source_code()
     {
         $sourceUrls = $this->getSourceUrls();
+        if (count($sourceUrls) === 0) {
+            self::assertFalse(false, 'Nothing to test here');
+        }
         foreach ($sourceUrls as $sourceUrl) {
             $localFile = $this->toLocalPath($sourceUrl);
             $toLocalFile = '';
