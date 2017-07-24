@@ -157,4 +157,9 @@ abstract class AbstractContentTest extends TestCase
         return self::$rulesContentForDev;
     }
 
+    protected function checkingSkeleton(HTMLDocument $document): bool
+    {
+        return strpos($document->head->getElementsByTagName('title')->item(0)->nodeValue, 'skeleton') === false;
+    }
+
 }

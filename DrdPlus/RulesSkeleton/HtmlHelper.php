@@ -146,16 +146,27 @@ class HtmlHelper extends StrictObject
 
     private function addAnchorsToChildrenWithIds(HTMLCollection $children)
     {
+        /** @var Element $child */
         foreach ($children as $child) {
             if ($child->id && !$child->classList->contains(self::INVISIBLE_ID)
                 && $child->getElementsByTagName('a')->length === 0
             ) {
-                $innerHtml = $child->innerHTML;
-                $child->innerHTML = '';
                 $anchorToSelf = new Element('a');
-                $child->appendChild($anchorToSelf);
-                $anchorToSelf->innerHTML = $innerHtml;
-                $anchorToSelf->setAttribute('href', '#' . $child->id);
+                $toMove = [];
+                /** @var \DOMElement $grandChildNode */
+                foreach ($child->childNodes as $grandChildNode) {
+                    if (!in_array($grandChildNode->nodeName, ['span', 'strong', 'b', 'i', '#text'], true)) {
+                        break;
+                    }
+                    $toMove[] = $grandChildNode;
+                }
+                if (count($toMove) > 0) {
+                    $child->replaceChild($anchorToSelf, $toMove[0]); // pairs anchor with parent element
+                    $anchorToSelf->setAttribute('href', '#' . $child->id);
+                    foreach ($toMove as $index => $item) {
+                        $anchorToSelf->appendChild($item);
+                    }
+                }
             }
             // recursion
             $this->addAnchorsToChildrenWithIds($child->children);

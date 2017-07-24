@@ -203,8 +203,7 @@ class AnchorsTest extends AbstractContentTest
     {
         $document = $this->getRulesHtmlDocument();
         $noAnchorsForMe = $document->getElementById(StringTools::toConstant('no-anchor-for-me'));
-        if (!$noAnchorsForMe
-            && strpos($document->head->getElementsByTagName('title')->item(0)->nodeValue, 'skeleton') === false
+        if (!$noAnchorsForMe && !$this->checkingSkeleton($document)
         ) {
             self::assertFalse(false, 'Nothing to test here');
 
@@ -229,6 +228,21 @@ class AnchorsTest extends AbstractContentTest
         self::assertNotEmpty($originalIds);
         foreach ($originalIds as $originalId) {
             self::assertSame('', $originalId->innerHTML);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function Only_allowed_elements_are_moved_into_injected_link()
+    {
+        $document = $this->getRulesHtmlDocument();
+        $elements = $document->getElementsByClassName('with-allowed-elements-only');
+        if (count($elements) === 0 && !$this->checkingSkeleton($document)) {
+            self::assertFalse(false, 'Nothing to test here');
+        }
+        foreach ($elements as $element) {
+            self::assertContains($element->nodeName, ['#text', 'span', 'b', 'strong', 'i']);
         }
     }
 
