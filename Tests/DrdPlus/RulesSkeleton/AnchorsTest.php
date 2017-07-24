@@ -204,7 +204,7 @@ class AnchorsTest extends AbstractContentTest
         $document = $this->getRulesHtmlDocument();
         $noAnchorsForMe = $document->getElementById(StringTools::toConstant('no-anchor-for-me'));
         if (!$noAnchorsForMe
-            && strpos($document->head->getElementsByClassName('title')->current()->innerHTML, 'skeleton') === false
+            && strpos($document->head->getElementsByTagName('title')->item(0)->nodeValue, 'skeleton') === false
         ) {
             self::assertFalse(false, 'Nothing to test here');
 
