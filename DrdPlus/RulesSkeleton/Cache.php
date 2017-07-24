@@ -73,6 +73,18 @@ abstract class Cache extends StrictObject
         return file_get_contents($this->getCacheFileName());
     }
 
+    public function saveUnmodifiedContent(string $content)
+    {
+        if (PHP_SAPI !== 'cli') {
+            file_put_contents($this->getUnmodifiedFileName(), $content);
+        }
+    }
+
+    private function getUnmodifiedFileName(): string
+    {
+        return $this->cacheRoot . "/unmodified_{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getCurrentGetHash()}_{$this->cachingHasSense()}.html";
+    }
+
     public function cacheContent(string $content)
     {
         if (PHP_SAPI !== 'cli') {

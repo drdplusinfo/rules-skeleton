@@ -58,7 +58,7 @@ ob_start();
     </html>
 <?php
 $content .= ob_get_clean();
-
+$pageCache->saveUnmodifiedContent($content); // for debugging purpose
 $htmlDocument = new \Gt\Dom\HTMLDocument($content);
 $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
     !empty($_GET['mode']) && strpos(trim($_GET['mode']), 'dev') === 0,
