@@ -26,7 +26,7 @@ class CssFiles extends StrictObject implements \IteratorAggregate
     /**
      * @return array|string[]
      */
-    private function getConfirmedStyleSheets()
+    private function getConfirmedStyleSheets(): array
     {
         return $this->scanForCssFiles($this->dirWithCss);
     }
@@ -40,19 +40,19 @@ class CssFiles extends StrictObject implements \IteratorAggregate
     {
         $cssFiles = [];
         $cssRelativeRoot = rtrim($cssRelativeRoot, '\/');
-        foreach (scandir($directory) as $folder) {
+        foreach (scandir($directory, SCANDIR_SORT_NONE) as $folder) {
             $folderPath = $directory . '/' . $folder;
             if (is_dir($folderPath)) {
-                if ($folder === '.' || $folder === '..' || $folder === '.gitignore') {
+                if ($folder === '.' || $folder === '..' || $folder === '.gitignore' || $folder === 'ignore') {
                     continue;
                 }
-                $cssFiles = array_merge(
-                    $cssFiles,
-                    $this->scanForCssFiles(
-                        $folderPath,
-                        ($cssRelativeRoot !== '' ? ($cssRelativeRoot . '/') : '') . $folder
-                    )
+                $anotherCssFiles = $this->scanForCssFiles(
+                    $folderPath,
+                    ($cssRelativeRoot !== '' ? ($cssRelativeRoot . '/') : '') . $folder
                 );
+                foreach ($anotherCssFiles as $anotherCssFile) {
+                    $cssFiles[] = $anotherCssFile;
+                }
             } else if (is_file($folderPath) && strpos($folder, '.css') !== false) {
                 $cssFiles[] = ($cssRelativeRoot !== '' ? ($cssRelativeRoot . '/') : '') . $folder; // intentionally relative path
             }

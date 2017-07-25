@@ -13,7 +13,7 @@ if (!empty($_POST['confirm'])) {
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/css/generic/graphics.css">
-    <link rel="stylesheet" href="/css/generic/licence.css">
+    <link rel="stylesheet" href="/css/generic/ignore/licence.css">
 </head>
 <body>
 <div class="vertical-centered-wrapper">
