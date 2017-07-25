@@ -9,6 +9,7 @@ use Gt\Dom\HTMLDocument;
 class AnchorsTest extends AbstractContentTest
 {
 
+    const ID_WITH_ALLOWED_ELEMENTS_ONLY = 'with_allowed_elements_only';
     /**
      * @var HTMLDocument[]|array
      */
@@ -238,12 +239,17 @@ class AnchorsTest extends AbstractContentTest
     public function Only_allowed_elements_are_moved_into_injected_link()
     {
         $document = $this->getRulesHtmlDocument();
-        $elements = $document->getElementsByClassName('with-allowed-elements-only');
-        if (count($elements) === 0 && !$this->checkingSkeleton($document)) {
+        $withAllowedElementsOnly = $document->getElementById(self::ID_WITH_ALLOWED_ELEMENTS_ONLY);
+        if (!$withAllowedElementsOnly && !$this->checkingSkeleton($document)) {
             self::assertFalse(false, 'Nothing to test here');
         }
-        foreach ($elements as $element) {
-            self::assertContains($element->nodeName, ['#text', 'span', 'b', 'strong', 'i']);
+        self::assertNotEmpty($withAllowedElementsOnly);
+        $anchors = $withAllowedElementsOnly->getElementsByTagName('a');
+        self::assertCount(1, $anchors);
+        $anchor = $anchors->item(0);
+        self::assertSame('#' . self::ID_WITH_ALLOWED_ELEMENTS_ONLY, $anchor->getAttribute('href'));
+        foreach ($anchor->childNodes as $childNode) {
+            self::assertContains($childNode->nodeName, ['#text', 'span', 'b', 'strong', 'i']);
         }
     }
 

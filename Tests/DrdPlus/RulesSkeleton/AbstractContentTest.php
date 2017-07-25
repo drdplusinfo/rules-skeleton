@@ -159,7 +159,7 @@ abstract class AbstractContentTest extends TestCase
 
     protected function checkingSkeleton(HTMLDocument $document): bool
     {
-        return strpos($document->head->getElementsByTagName('title')->item(0)->nodeValue, 'skeleton') === false;
+        return strpos($document->head->getElementsByTagName('title')->item(0)->nodeValue, 'skeleton') !== false;
     }
 
 }
