@@ -162,4 +162,9 @@ abstract class AbstractContentTest extends TestCase
         return strpos($document->head->getElementsByTagName('title')->item(0)->nodeValue, 'skeleton') !== false;
     }
 
+    protected function getDocumentRoot(): string
+    {
+        return dirname(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST);
+    }
+
 }
