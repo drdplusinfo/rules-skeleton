@@ -11,6 +11,8 @@ class SourceCodeLinksTest extends AbstractContentTest
         $sourceUrls = $this->getSourceUrls();
         if (count($sourceUrls) === 0) {
             self::assertFalse(false, 'Nothing to test here');
+
+            return;
         }
         foreach ($sourceUrls as $sourceUrl) {
             $localFile = $this->toLocalPath($sourceUrl);

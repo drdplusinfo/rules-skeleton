@@ -242,6 +242,8 @@ class AnchorsTest extends AbstractContentTest
         $withAllowedElementsOnly = $document->getElementById(self::ID_WITH_ALLOWED_ELEMENTS_ONLY);
         if (!$withAllowedElementsOnly && !$this->checkingSkeleton($document)) {
             self::assertFalse(false, 'Nothing to test here');
+
+            return;
         }
         self::assertNotEmpty($withAllowedElementsOnly);
         $anchors = $withAllowedElementsOnly->getElementsByTagName('a');
