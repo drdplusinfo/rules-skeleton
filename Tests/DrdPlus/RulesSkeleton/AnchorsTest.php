@@ -209,6 +209,7 @@ class AnchorsTest extends AbstractContentTest
 
             return;
         }
+        self::assertNotEmpty($noAnchorsForMe);
         $links = $noAnchorsForMe->getElementsByTagName('a');
         self::assertNotEmpty($links);
         $idLink = '#' . $noAnchorsForMe->getAttribute('id');
