@@ -31,7 +31,7 @@ if (!empty($_POST['confirm'])) {
                         }
                         $eShop = 'http://obchod.altar.cz';
                         if (is_readable($documentRoot . '/eshop_url.txt')) {
-                            $eShop = file_get_contents($documentRoot . '/eshop_url.txt');
+                            $eShop = trim(file_get_contents($documentRoot . '/eshop_url.txt')) ?: $eShop;
                         }
                         ?>
                         <form class="manifest" action="<?= $eShop ?>">
