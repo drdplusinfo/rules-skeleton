@@ -1,6 +1,8 @@
 <?php
 namespace Tests\DrdPlus\RulesSkeleton;
 
+use Gt\Dom\Element;
+
 class ContentTest extends AbstractContentTest
 {
     /**
@@ -10,9 +12,33 @@ class ContentTest extends AbstractContentTest
     {
         self::assertSame(
             0,
-            preg_match('~.{0,10}2k6\s*(?!<span class="upper-index">\+</span>).{0,20}\+~', $this->getRulesContent(), $matches),
+            preg_match(
+                '~.{0,10}2k6\s*(?!<span class="upper-index">\+</span>).{0,20}\+~',
+                $this->getRulesContentWithoutIds(),
+                $matches
+            ),
             var_export($matches, true)
         );
+    }
+
+    private function getRulesContentWithoutIds(): string
+    {
+        $document = clone $this->getRulesHtmlDocument();
+        /** @var Element $body */
+        $body = $document->getElementsByTagName('body')[0];
+        $this->removeIds($body);
+
+        return $document->saveHTML();
+    }
+
+    private function removeIds(Element $element)
+    {
+        if ($element->hasAttribute('id')) {
+            $element->removeAttribute('id');
+        }
+        foreach ($element->children as $child) {
+            $this->removeIds($child);
+        }
     }
 
     /**
