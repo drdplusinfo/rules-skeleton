@@ -255,4 +255,37 @@ class AnchorsTest extends AbstractContentTest
         }
     }
 
+    /**
+     * @test
+     */
+    public function I_can_go_directly_to_eshop_item_page()
+    {
+        self::assertFileExists($this->getEshopFileName());
+        $eshopUrl = trim(file_get_contents($this->getEshopFileName()));
+        self::assertRegExp(
+            '~^http://obchod\.altar\.cz/[^/]+\.html$~',
+            $eshopUrl
+        );
+        $rulesAuthors = $this->getRulesHtmlDocument()->getElementsByClassName('rules-authors');
+        self::assertNotEmpty($rulesAuthors, 'Missing \'rules-authors\'');
+        self::assertCount(1, $rulesAuthors, 'Expecte');
+        /** @var Element $rulesAuthors */
+        $rulesAuthors = $rulesAuthors[0];
+        $titles = $rulesAuthors->getElementsByClassName('title');
+        self::assertNotEmpty($titles, 'Missing a \'title\' in \'rules-authors\'');
+        self::assertCount(1, $titles);
+        /** @var Element $title */
+        $title = $titles[0];
+        $rulesLinks = $title->getElementsByTagName('a');
+        self::assertNotEmpty($rulesLinks, 'Missing a link to rules in \'rules-authors\'');
+        self::assertCount(1, $rulesLinks);
+        /** @var Element $link */
+        $link = $rulesLinks[0];
+        self::assertSame(
+            $eshopUrl,
+            $link->getAttribute('href'),
+            'Link to rules in eshop in \'rules-authors\' differs from that in ' . basename($this->getEshopFileName())
+        );
+    }
+
 }

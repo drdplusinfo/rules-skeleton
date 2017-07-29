@@ -167,4 +167,9 @@ abstract class AbstractContentTest extends TestCase
         return dirname(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST);
     }
 
+    protected function getEshopFileName(): string
+    {
+        return $this->getDocumentRoot() . '/eshop_url.txt';
+    }
+
 }
