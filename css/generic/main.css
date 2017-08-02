@@ -350,3 +350,31 @@ ol ul {
 .rules-authors .altar {
     margin-top: 1em;
 }
+
+.reversed-paragraph {
+    text-indent: -1em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.reversed-paragraph div {
+    text-indent: 0;
+}
+
+.reversed-paragraph div.calculation {
+    margin-left: -1em;
+}
+
+.reversed-paragraph table {
+    text-indent: 0;
+    margin-left: 0;
+}
+
+.reversed-paragraph table.basic {
+    margin-left: -1em;
+}
+
+.reversed-paragraph .preview table {
+    margin: 0;
+    padding: 0;
+}
