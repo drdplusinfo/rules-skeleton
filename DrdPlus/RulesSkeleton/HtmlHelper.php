@@ -205,18 +205,18 @@ class HtmlHelper extends StrictObject
         }
         if ($this->showIntroductionOnly) {
             foreach ($html->getElementsByTagName('body') as $body) {
-                $this->hideNonIntroduction($body);
+                $this->removeNonIntroduction($body);
             }
 
             return;
         }
-        if (!$this->shouldHideCovered) {
-            foreach ($html->children as $child) {
-                $this->removeClassesAboutCodeCoverage($child);
-            }
+        foreach ($html->getElementsByTagName('body') as $body) {
+            $this->removeImages($body);
         }
-        $this->removeImages($html->getElementsByTagName('body')[0]);
 
+        if (!$this->shouldHideCovered) {
+            return;
+        }
         $classesToHide = ['covered-by-code', 'introduction', 'quote', 'generic', 'note', 'excluded', 'rules-authors'];
         foreach ($classesToHide as $classToHide) {
             foreach ($html->getElementsByClassName($classToHide) as $nodeToHide) {
@@ -237,13 +237,17 @@ class HtmlHelper extends StrictObject
         }
     }
 
-    private function hideNonIntroduction(Element $html)
+    private function removeNonIntroduction(Element $html)
     {
         do {
             $somethingRemoved = false;
-            foreach ($html->children as $child) {
-                if (!$child->classList->contains('introduction')) {
-                    $html->removeChild($child);
+            /** @var \DOMNode $childNode */
+            foreach ($html->childNodes as $childNode) {
+                if ($childNode->nodeType === XML_TEXT_NODE
+                    || !($childNode instanceof \DOMElement)
+                    || !preg_match('~\s*introduction\s*~', $childNode->getAttribute('class'))
+                ) {
+                    $html->removeChild($childNode);
                     $somethingRemoved = true;
                 }
                 // introduction is expected only as direct descendant of the given element (body)

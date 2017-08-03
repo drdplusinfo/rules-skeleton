@@ -7,7 +7,7 @@
         convertWarningsToExceptions="true"
         stopOnFailure="false"
         processIsolation="false"
-        backupGlobals="false"
+        backupGlobals="true"
         colors="true"
 >
     <testsuites>

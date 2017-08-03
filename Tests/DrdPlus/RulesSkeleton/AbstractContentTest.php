@@ -13,8 +13,8 @@ abstract class AbstractContentTest extends TestCase
     private static $rulesContent;
     /** @var HTMLDocument */
     private static $rulesHtmlDocument;
-    /** @var string */
-    private static $rulesContentForDev;
+    /** @var array|string[] */
+    private static $rulesContentForDev = [];
     /** @var string */
     private static $rulesContentForDevWithHiddenCovered;
     /** @var string */
@@ -119,22 +119,26 @@ abstract class AbstractContentTest extends TestCase
     }
 
     /**
+     * @param string $show = ''
      * @return string
      */
-    protected function getRulesContentForDev(): string
+    protected function getRulesContentForDev(string $show = ''): string
     {
-        if (self::$rulesContentForDev === null) {
+        if (!array_key_exists($show, self::$rulesContentForDev)) {
             $this->confirmOwnership();
             $_GET['mode'] = 'dev';
+            if ($show !== '') {
+                $_GET['show'] = $show;
+            }
             ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            self::$rulesContentForDev = ob_get_clean();
+            self::$rulesContentForDev[$show] = ob_get_clean();
             $this->removeOwnerShipConfirmation();
-            self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDev);
+            self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDev[$show]);
         }
 
-        return self::$rulesContentForDev;
+        return self::$rulesContentForDev[$show];
     }
 
     /**
@@ -149,12 +153,12 @@ abstract class AbstractContentTest extends TestCase
             ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            self::$rulesContentForDev = ob_get_clean();
+            self::$rulesContentForDevWithHiddenCovered = ob_get_clean();
             $this->removeOwnerShipConfirmation();
             self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDevWithHiddenCovered);
         }
 
-        return self::$rulesContentForDev;
+        return self::$rulesContentForDevWithHiddenCovered;
     }
 
     protected function checkingSkeleton(HTMLDocument $document): bool
