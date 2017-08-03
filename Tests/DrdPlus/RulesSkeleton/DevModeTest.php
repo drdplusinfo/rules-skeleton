@@ -34,10 +34,16 @@ class DevModeTest extends AbstractContentTest
             self::assertGreaterThan(0, $body->children->length, 'No introduction found');
             foreach ($body->children as $child) {
                 self::assertTrue(
-                    $child->classList->contains('introduction'),
+                    $child->classList->contains('introduction')
+                    || $child->classList->contains('background-image'),
                     'This does not have "introduction" class: ' . $child->innerHTML
                 );
             }
         }
+        self::assertGreaterThan(
+            0,
+            $html->getElementsByClassName('background-image')->count(),
+            'Background image should not be removed in "introduction" mode'
+        );
     }
 }
