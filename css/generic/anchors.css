@@ -2,18 +2,22 @@ a, a.external-url:visited {
     color: #0a1c27;
 }
 
-a, a.on-hover {
+a {
     text-decoration: none;
     color: #141414;
     border-bottom: dotted 1px #9d9d9d;
 }
 
 a:hover {
-    border-bottom: solid 1px #9d9d9d;
+    text-shadow: 0 0 1px #7f7f7f;
 }
 
-a.external-url, a.on-hover:hover {
+a.external-url {
     color: #0f293a;
     text-decoration: underline;
     border-bottom: none;
+}
+
+a.external-url:hover {
+    text-shadow: 1px 0 1px #424242;
 }
