@@ -38,7 +38,8 @@ class DevModeTest extends AbstractContentTest
             foreach ($body->children as $child) {
                 self::assertTrue(
                     $child->classList->contains('introduction')
-                    || $child->classList->contains('background-image'),
+                    || $child->classList->contains('background-image')
+                    || $child->classList->contains('quote'),
                     'This does not have "introduction" class: ' . $child->innerHTML
                 );
             }

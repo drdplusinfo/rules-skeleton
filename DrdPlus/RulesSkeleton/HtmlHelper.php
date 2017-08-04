@@ -245,7 +245,7 @@ class HtmlHelper extends StrictObject
             foreach ($html->childNodes as $childNode) {
                 if ($childNode->nodeType === XML_TEXT_NODE
                     || !($childNode instanceof \DOMElement)
-                    || !preg_match('~\s*(introduction|background-image)\s*~', $childNode->getAttribute('class'))
+                    || !preg_match('~\s*(introduction|quote|background-image)\s*~', $childNode->getAttribute('class'))
                 ) {
                     $html->removeChild($childNode);
                     $somethingRemoved = true;
