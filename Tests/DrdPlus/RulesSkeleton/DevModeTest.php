@@ -14,6 +14,9 @@ class DevModeTest extends AbstractContentTest
     {
         $content = $this->getRulesContentForDev();
         $html = new HTMLDocument($content);
+        if (!$this->checkingSkeleton($html)) {
+            self::assertFalse(false, 'Intended for skeleton only');
+        }
         self::assertGreaterThan(0, $html->getElementsByClassName('covered-by-code')->count());
         self::assertGreaterThan(0, $html->getElementsByClassName('generic')->count());
         self::assertGreaterThan(0, $html->getElementsByClassName('excluded')->count());
