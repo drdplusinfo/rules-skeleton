@@ -44,6 +44,9 @@ class DevModeTest extends AbstractContentTest
                 );
             }
         }
+        self::assertSame(0, $html->getElementsByClassName('covered-by-code')->count());
+        self::assertSame(0, $html->getElementsByClassName('generic')->count(), 'Class "generic" would be already hidden.');
+        self::assertSame(0, $html->getElementsByClassName('excluded')->count());
         self::assertGreaterThan(
             0,
             $html->getElementsByClassName('background-image')->count(),

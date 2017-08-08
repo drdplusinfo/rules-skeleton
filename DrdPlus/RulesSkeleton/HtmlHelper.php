@@ -6,6 +6,7 @@ use Granam\String\StringTools;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLCollection;
 use Gt\Dom\HTMLDocument;
+use Gt\Dom\Node;
 
 class HtmlHelper extends StrictObject
 {
@@ -251,6 +252,9 @@ class HtmlHelper extends StrictObject
                     $somethingRemoved = true;
                 }
                 // introduction is expected only as direct descendant of the given element (body)
+                if ($childNode instanceof Element) {
+                    $childNode->classList->remove('generic');
+                }
             }
             // do not know why, but some nodes are simply skipped on first removal so have to remove them again
         } while ($somethingRemoved);
