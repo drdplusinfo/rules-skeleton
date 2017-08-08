@@ -39,14 +39,15 @@ class DevModeTest extends AbstractContentTest
                 self::assertTrue(
                     $child->classList->contains('introduction')
                     || $child->classList->contains('background-image')
-                    || $child->classList->contains('quote'),
+                    || $child->classList->contains('quote')
+                    || $child->nodeName === 'img',
                     'This does not have "introduction" class: ' . $child->innerHTML
                 );
             }
         }
         self::assertSame(0, $html->getElementsByClassName('covered-by-code')->count());
         self::assertSame(0, $html->getElementsByClassName('generic')->count(), 'Class "generic" would be already hidden.');
-        self::assertSame(0, $html->getElementsByClassName('excluded')->count());
+        self::assertGreaterThan(0, $html->getElementsByTagName('img')->length, 'Expected some image in introduction-only mode');
         self::assertGreaterThan(
             0,
             $html->getElementsByClassName('background-image')->count(),

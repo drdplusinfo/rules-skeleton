@@ -6,7 +6,6 @@ use Granam\String\StringTools;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLCollection;
 use Gt\Dom\HTMLDocument;
-use Gt\Dom\Node;
 
 class HtmlHelper extends StrictObject
 {
@@ -246,7 +245,9 @@ class HtmlHelper extends StrictObject
             foreach ($html->childNodes as $childNode) {
                 if ($childNode->nodeType === XML_TEXT_NODE
                     || !($childNode instanceof \DOMElement)
-                    || !preg_match('~\s*(introduction|quote|background-image)\s*~', $childNode->getAttribute('class'))
+                    || ($childNode->nodeName !== 'img'
+                        && !preg_match('~\s*(introduction|quote|background-image)\s*~', $childNode->getAttribute('class'))
+                    )
                 ) {
                     $html->removeChild($childNode);
                     $somethingRemoved = true;
