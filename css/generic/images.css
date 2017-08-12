@@ -17,6 +17,7 @@ img.float-right {
 img.centered {
     margin: 1em auto;
     display: block;
+    max-height: 60em;
 }
 
 .long-image {
