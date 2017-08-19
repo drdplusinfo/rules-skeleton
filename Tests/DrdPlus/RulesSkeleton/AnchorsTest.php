@@ -88,6 +88,8 @@ class AnchorsTest extends AbstractContentTest
         return $localAnchors;
     }
 
+    private static $checkedExternalAnchors = [];
+
     /**
      * @test
      */
@@ -95,6 +97,9 @@ class AnchorsTest extends AbstractContentTest
     {
         foreach ($this->getExternalAnchors() as $anchor) {
             $link = $anchor->getAttribute('href');
+            if (in_array($link, self::$checkedExternalAnchors, true)) {
+                continue;
+            }
             $curl = curl_init($link);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
@@ -107,6 +112,7 @@ class AnchorsTest extends AbstractContentTest
                 $responseHttpCode >= 200 && $responseHttpCode < 300,
                 "Could not reach $link, got response code $responseHttpCode"
             );
+            $checkedExternalAnchors[] = $link;
         }
     }
 
