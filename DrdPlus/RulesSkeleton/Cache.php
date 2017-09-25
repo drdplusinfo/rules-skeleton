@@ -54,6 +54,10 @@ abstract class Cache extends StrictObject
 
     private function getCurrentCommitHash(): string
     {
+        $head = file_get_contents($this->documentRoot . '/.git/HEAD');
+        if (preg_match('~^[[:alnum:]]{40,}$~', $head)) {
+            return $head; // the HEAD file contained the has itself
+        }
         $gitHeadFile = trim(preg_replace('~ref:\s*~', '', file_get_contents($this->documentRoot . '/.git/HEAD')));
         $gitHeadFilePath = $this->documentRoot . '/.git/' . $gitHeadFile;
         if (!is_readable($gitHeadFilePath)) {
