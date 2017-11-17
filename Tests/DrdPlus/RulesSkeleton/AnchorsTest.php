@@ -9,7 +9,7 @@ use Gt\Dom\HTMLDocument;
 class AnchorsTest extends AbstractContentTest
 {
 
-    const ID_WITH_ALLOWED_ELEMENTS_ONLY = 'with_allowed_elements_only';
+    private const ID_WITH_ALLOWED_ELEMENTS_ONLY = 'with_allowed_elements_only';
     /**
      * @var HTMLDocument[]|array
      */
@@ -182,10 +182,11 @@ class AnchorsTest extends AbstractContentTest
             $curl = curl_init($link);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-
+            $cookieName = null;
             if (strpos($link, 'drdplus.loc') !== false || strpos($link, 'drdplus.info') !== false) {
                 self::assertNotEmpty(preg_match('~//(?<prefix>[^.]+)\.drdplus\.~', $link, $matches));
-                curl_setopt($curl, CURLOPT_COOKIE, $this->getCookieNameForOwnershipConfirmation($matches['prefix']) . '=1');
+                $cookieName = $this->getCookieNameForOwnershipConfirmation($matches['prefix']);
+                curl_setopt($curl, CURLOPT_COOKIE, $cookieName . '=1');
             }
             $content = curl_exec($curl);
             curl_close($curl);
@@ -195,7 +196,7 @@ class AnchorsTest extends AbstractContentTest
                 self::assertCount(
                     0,
                     self::$externalHtmlDocuments[$link]->getElementsByTagName('form'),
-                    'Seems we have not passed ownership check for ' . $href
+                    'Seems we have not passed ownership check for ' . $href . ' by using cookie of name ' . var_export($cookieName, true)
                 );
             }
         }
