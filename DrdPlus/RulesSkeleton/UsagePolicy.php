@@ -36,7 +36,7 @@ class UsagePolicy extends StrictObject
      */
     private function getCookieName(): string
     {
-        return 'confirmedOwnershipOf' . ucfirst($this->articleNameToConfirmOwnership);
+        return str_replace('.', '_', 'confirmedOwnershipOf' . ucfirst($this->articleNameToConfirmOwnership));
     }
 
     /**

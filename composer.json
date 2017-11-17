@@ -16,7 +16,7 @@
     }
   },
   "require": {
-    "php": ">=7.0",
+    "php": ">=7.1",
     "roave/security-advisories": "dev-master",
     "granam/string": "dev-master",
     "phpgt/dom": "^1.0"
