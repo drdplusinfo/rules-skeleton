@@ -40,7 +40,7 @@ class AnchorsTest extends AbstractContentTest
      */
     private function parseInvalidAnchors(string $content): array
     {
-        preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?!#|http|/).)+[^>]+>)~', $content, $matches);
+        preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?!#|https?|/).)+[^>]+>)~', $content, $matches);
 
         return $matches['invalidAnchors'];
     }
@@ -270,7 +270,7 @@ class AnchorsTest extends AbstractContentTest
         self::assertFileExists($this->getEshopFileName());
         $eshopUrl = trim(file_get_contents($this->getEshopFileName()));
         self::assertRegExp(
-            '~^http://obchod\.altar\.cz/[^/]+\.html$~',
+            '~^https://obchod\.altar\.cz/[^/]+\.html$~',
             $eshopUrl
         );
         $rulesAuthors = $this->getRulesHtmlDocument()->getElementsByClassName('rules-authors');

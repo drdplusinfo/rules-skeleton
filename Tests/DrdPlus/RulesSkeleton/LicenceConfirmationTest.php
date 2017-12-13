@@ -27,13 +27,13 @@ class LicenceConfirmationTest extends AbstractContentTest
 
     private function I_can_buy_licence(Element $buyForm)
     {
-        self::assertStringStartsWith('http://obchod.altar.cz', $buyForm->getAttribute('action'));
+        self::assertStringStartsWith('https://obchod.altar.cz', $buyForm->getAttribute('action'));
         self::assertRegExp(
-            '~^' . preg_quote('http://obchod.altar.cz/', '~') . '\w+~',
+            '~^' . preg_quote('https://obchod.altar.cz/', '~') . '\w+~',
             $buyForm->getAttribute('action'),
             'Missing direct link to current article in e-shop, (put it into eshop_url.txt file)'
         );
-        self::assertTrue(in_array($buyForm->getAttribute('method'), ['' /* get as default */, 'get'], true));
+        self::assertTrue(\in_array($buyForm->getAttribute('method'), ['' /* get as default */, 'get'], true));
         self::assertEmpty($buyForm->getAttribute('onsubmit'), 'No confirmation should be required to access e-shop');
     }
 

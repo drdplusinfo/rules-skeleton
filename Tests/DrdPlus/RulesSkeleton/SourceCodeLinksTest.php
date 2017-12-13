@@ -72,7 +72,7 @@ class SourceCodeLinksTest extends AbstractContentTest
             },
             $withoutGithubSpecifics
         );
-        $localProjectsRootDir = '/home/jaroslav/Dropbox/Projects';
+        $localProjectsRootDir = '/home/jaroslav/Projects';
 
         $localPath = $localProjectsRootDir . '/' . $withLocalSubDirs;
         if (file_exists($localPath) && preg_match('~(?<type>blob|tree)/master/~', $withoutWebRoot, $matches)) {
