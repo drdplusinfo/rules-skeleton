@@ -9,7 +9,8 @@ use Gt\Dom\HTMLDocument;
 
 class HtmlHelper extends StrictObject
 {
-    const INVISIBLE_ID = 'invisible-id';
+    public const INVISIBLE_ID_CLASS = 'invisible-id';
+    public const CALCULATION_CLASS = 'calculation';
 
     /** @var bool */
     private $inDevMode;
@@ -34,7 +35,7 @@ class HtmlHelper extends StrictObject
     {
         if (!$this->inDevMode) {
             foreach ($html->getElementsByClassName('source-code-title') as $withSourceCode) {
-                $withSourceCode->className = str_replace('source-code-title', 'hidden', $withSourceCode->className);
+                $withSourceCode->className = \str_replace('source-code-title', 'hidden', $withSourceCode->className);
                 $withSourceCode->removeAttribute('data-source-code');
             }
         } else {
@@ -59,14 +60,14 @@ class HtmlHelper extends StrictObject
                 if ($headerCell->getAttribute('id')) {
                     continue;
                 }
-                if ($elementName === 'th' && strpos(trim($headerCell->textContent), 'Tabulka') === false) {
+                if ($elementName === 'th' && \strpos(\trim($headerCell->textContent), 'Tabulka') === false) {
                     continue;
                 }
                 $id = false;
                 /** @var \DOMNode $childNode */
                 foreach ($headerCell->childNodes as $childNode) {
                     if ($childNode->nodeType === XML_TEXT_NODE) {
-                        $id = trim($childNode->nodeValue);
+                        $id = \trim($childNode->nodeValue);
                         break;
                     }
                 }
@@ -97,10 +98,10 @@ class HtmlHelper extends StrictObject
                 continue;
             }
             $child->setAttribute('data-original-id', $id);
-            $child->setAttribute('id', urlencode($idWithoutDiacritics));
+            $child->setAttribute('id', \urlencode($idWithoutDiacritics));
             $child->appendChild($invisibleId = new Element('span'));
-            $invisibleId->setAttribute('id', urlencode($id));
-            $invisibleId->className = self::INVISIBLE_ID;
+            $invisibleId->setAttribute('id', \urlencode($id));
+            $invisibleId->className = self::INVISIBLE_ID_CLASS;
         }
     }
 
@@ -119,7 +120,7 @@ class HtmlHelper extends StrictObject
             if (!$href) {
                 continue;
             }
-            $hashPosition = strpos($href, '#');
+            $hashPosition = \strpos($href, '#');
             if ($hashPosition === false) {
                 continue;
             }
@@ -148,19 +149,19 @@ class HtmlHelper extends StrictObject
     {
         /** @var Element $child */
         foreach ($children as $child) {
-            if ($child->id && !$child->classList->contains(self::INVISIBLE_ID)
+            if ($child->id && !$child->classList->contains(self::INVISIBLE_ID_CLASS)
                 && $child->getElementsByTagName('a')->length === 0
             ) {
                 $anchorToSelf = new Element('a');
                 $toMove = [];
                 /** @var \DOMElement $grandChildNode */
                 foreach ($child->childNodes as $grandChildNode) {
-                    if (!in_array($grandChildNode->nodeName, ['span', 'strong', 'b', 'i', '#text'], true)) {
+                    if (!\in_array($grandChildNode->nodeName, ['span', 'strong', 'b', 'i', '#text'], true)) {
                         break;
                     }
                     $toMove[] = $grandChildNode;
                 }
-                if (count($toMove) > 0) {
+                if (\count($toMove) > 0) {
                     $child->replaceChild($anchorToSelf, $toMove[0]); // pairs anchor with parent element
                     $anchorToSelf->setAttribute('href', '#' . $child->id);
                     foreach ($toMove as $index => $item) {
@@ -292,11 +293,11 @@ class HtmlHelper extends StrictObject
                 $tablesWithIds[$childId] = $table;
             }
         }
-        if (count($requiredIds) === 0) {
+        if (\count($requiredIds) === 0) {
             return $tablesWithIds;
         }
 
-        return array_intersect_key($tablesWithIds, array_fill_keys($requiredIds, true));
+        return \array_intersect_key($tablesWithIds, \array_fill_keys($requiredIds, true));
     }
 
     /**
@@ -322,7 +323,7 @@ class HtmlHelper extends StrictObject
     {
         /** @var Element $anchor */
         foreach ($html->getElementsByTagName('a') as $anchor) {
-            if (preg_match('~^(https?:)?//[^#]~', $anchor->getAttribute('href'))) {
+            if (\preg_match('~^(https?:)?//[^#]~', $anchor->getAttribute('href'))) {
                 $anchor->classList->add('external-url');
             }
         }
@@ -350,12 +351,12 @@ class HtmlHelper extends StrictObject
         $remoteDrdPlusLinks = [];
         /** @var Element $anchor */
         foreach ($html->getElementsByClassName('external-url') as $anchor) {
-            if (!preg_match('~(?:https?:)?//(?<host>[[:alpha:]]+\.drdplus\.info)/[^#]*#(?<tableId>tabulka_\w+)~', $anchor->getAttribute('href'), $matches)) {
+            if (!\preg_match('~(?:https?:)?//(?<host>[[:alpha:]]+\.drdplus\.info)/[^#]*#(?<tableId>tabulka_\w+)~', $anchor->getAttribute('href'), $matches)) {
                 continue;
             }
             $remoteDrdPlusLinks[$matches['host']][] = $matches['tableId'];
         }
-        if (count($remoteDrdPlusLinks) === 0) {
+        if (\count($remoteDrdPlusLinks) === 0) {
             return;
         }
         /** @var Element $body */
@@ -364,7 +365,7 @@ class HtmlHelper extends StrictObject
             $iFrame = $html->createElement('iframe');
             $body->appendChild($iFrame);
             $iFrame->setAttribute('id', $remoteDrdPlusHost); // we will target that iframe via JS by remote host name
-            $iFrame->setAttribute('src', "https://{$remoteDrdPlusHost}/?tables=" . htmlspecialchars(implode(',', $tableIds)));
+            $iFrame->setAttribute('src', "https://{$remoteDrdPlusHost}/?tables=" . \htmlspecialchars(\implode(',', $tableIds)));
             $iFrame->setAttribute('style', 'display:none');
         }
     }
@@ -380,12 +381,12 @@ class HtmlHelper extends StrictObject
         /** @var Element $iFrame */
         foreach ($html->getElementsByTagName('iframe') as $iFrame) {
             $iFrame->setAttribute('src', $this->makeDrdPlusHostLocal($iFrame->getAttribute('src')));
-            $iFrame->setAttribute('id', str_replace('drdplus.info', 'drdplus.loc', $iFrame->getAttribute('id')));
+            $iFrame->setAttribute('id', \str_replace('drdplus.info', 'drdplus.loc', $iFrame->getAttribute('id')));
         }
     }
 
     private function makeDrdPlusHostLocal(string $linkWithRemoteDrdPlusHost): string
     {
-        return preg_replace('~(?:https?:)?//([[:alpha:]]+)\.drdplus\.info/~', 'http://$1.drdplus.loc/', $linkWithRemoteDrdPlusHost);
+        return \preg_replace('~(?:https?:)?//([[:alpha:]]+)\.drdplus\.info/~', 'http://$1.drdplus.loc/', $linkWithRemoteDrdPlusHost);
     }
 }

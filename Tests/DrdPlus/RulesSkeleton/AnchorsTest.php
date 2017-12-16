@@ -10,9 +10,8 @@ class AnchorsTest extends AbstractContentTest
 {
 
     private const ID_WITH_ALLOWED_ELEMENTS_ONLY = 'with_allowed_elements_only';
-    /**
-     * @var HTMLDocument[]|array
-     */
+
+    /** @var HTMLDocument[]|array */
     private static $externalHtmlDocuments;
 
     /**
@@ -80,7 +79,7 @@ class AnchorsTest extends AbstractContentTest
         $localAnchors = [];
         /** @var Element $anchor */
         foreach ($html->getElementsByTagName('a') as $anchor) {
-            if (strpos($anchor->getAttribute('href'), '#') === 0) {
+            if (\strpos($anchor->getAttribute('href'), '#') === 0) {
                 $localAnchors[] = $anchor;
             }
         }
@@ -97,7 +96,7 @@ class AnchorsTest extends AbstractContentTest
     {
         foreach ($this->getExternalAnchors() as $anchor) {
             $link = $anchor->getAttribute('href');
-            if (in_array($link, self::$checkedExternalAnchors, true)) {
+            if (\in_array($link, self::$checkedExternalAnchors, true)) {
                 continue;
             }
             $curl = curl_init($link);
@@ -125,7 +124,7 @@ class AnchorsTest extends AbstractContentTest
         $externalAnchors = [];
         /** @var Element $anchor */
         foreach ($html->getElementsByTagName('a') as $anchor) {
-            if (preg_match('~^(http|//)~', $anchor->getAttribute('href'))) {
+            if (\preg_match('~^(http|//)~', $anchor->getAttribute('href'))) {
                 $externalAnchors[] = $anchor;
             }
         }
@@ -139,16 +138,16 @@ class AnchorsTest extends AbstractContentTest
     public function External_anchors_with_hashes_point_to_existing_ids()
     {
         $externalAnchorsWithHash = $this->getExternalAnchorsWithHash();
-        if (defined('NO_EXTERNAL_ANCHORS_WITH_HASH_EXPECTED') && NO_EXTERNAL_ANCHORS_WITH_HASH_EXPECTED) {
+        if (\defined('NO_EXTERNAL_ANCHORS_WITH_HASH_EXPECTED') && NO_EXTERNAL_ANCHORS_WITH_HASH_EXPECTED) {
             self::assertCount(0, $externalAnchorsWithHash);
         }
         foreach ($externalAnchorsWithHash as $anchor) {
             $link = $anchor->getAttribute('href');
-            if (strpos($link, 'drdplus.info') > 0) {
-                $link = str_replace(['drdplus.info', 'https'], ['drdplus.loc', 'http'], $link); // turn link into local version
+            if (\strpos($link, 'drdplus.info') > 0) {
+                $link = \str_replace(['drdplus.info', 'https'], ['drdplus.loc', 'http'], $link); // turn link into local version
             }
             $html = $this->getExternalHtmlDocument($link);
-            $expectedId = substr($link, strpos($link, '#') + 1); // just remove leading #
+            $expectedId = \substr($link, \strpos($link, '#') + 1); // just remove leading #
             /** @var Element $target */
             $target = $html->getElementById($expectedId);
             self::assertNotEmpty(
@@ -167,7 +166,7 @@ class AnchorsTest extends AbstractContentTest
     {
         $externalAnchorsWithHash = [];
         foreach ($this->getExternalAnchors() as $anchor) {
-            if (strpos($anchor->getAttribute('href'), '#') > 0) {
+            if (\strpos($anchor->getAttribute('href'), '#') > 0) {
                 $externalAnchorsWithHash[] = $anchor;
             }
         }
@@ -233,7 +232,7 @@ class AnchorsTest extends AbstractContentTest
     public function Original_ids_do_not_have_links_to_self()
     {
         $document = $this->getRulesHtmlDocument();
-        $originalIds = $document->getElementsByClassName(HtmlHelper::INVISIBLE_ID);
+        $originalIds = $document->getElementsByClassName(HtmlHelper::INVISIBLE_ID_CLASS);
         self::assertNotEmpty($originalIds);
         foreach ($originalIds as $originalId) {
             self::assertSame('', $originalId->innerHTML);
@@ -268,7 +267,7 @@ class AnchorsTest extends AbstractContentTest
     public function I_can_go_directly_to_eshop_item_page()
     {
         self::assertFileExists($this->getEshopFileName());
-        $eshopUrl = trim(file_get_contents($this->getEshopFileName()));
+        $eshopUrl = \trim(\file_get_contents($this->getEshopFileName()));
         self::assertRegExp(
             '~^https://obchod\.altar\.cz/[^/]+\.html$~',
             $eshopUrl
@@ -291,8 +290,26 @@ class AnchorsTest extends AbstractContentTest
         self::assertSame(
             $eshopUrl,
             $link->getAttribute('href'),
-            'Link to rules in eshop in \'rules-authors\' differs from that in ' . basename($this->getEshopFileName())
+            'Link to rules in eshop in \'rules-authors\' differs from that in ' . \basename($this->getEshopFileName())
         );
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_navigate_to_every_calculation_as_it_has_its_id_with_anchor()
+    {
+        $document = $this->getRulesHtmlDocument();
+        $calculations = $document->getElementsByClassName(HtmlHelper::CALCULATION_CLASS);
+        if (!$this->checkingSkeleton($document) && \count($calculations) === 0) {
+            self::assertFalse(false, 'No calculations in current document');
+
+            return;
+        }
+        self::assertNotEmpty($calculations);
+        foreach ($calculations as $calculation) {
+            self::assertNotEmpty($calculation->id);
+        }
     }
 
 }

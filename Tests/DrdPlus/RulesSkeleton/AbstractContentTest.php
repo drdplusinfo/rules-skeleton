@@ -22,7 +22,7 @@ abstract class AbstractContentTest extends TestCase
 
     protected function setUp()
     {
-        if (!defined('DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST')) {
+        if (!\defined('DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST')) {
             self::markTestSkipped('Missing constant \'DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST\'');
         }
     }
@@ -33,10 +33,10 @@ abstract class AbstractContentTest extends TestCase
     protected function getOwnershipConfirmationContent(): string
     {
         if (self::$ownershipConfirmationContent === null) {
-            ob_start();
+            \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            self::$ownershipConfirmationContent = ob_get_clean();
+            self::$ownershipConfirmationContent = \ob_get_clean();
         }
 
         return self::$ownershipConfirmationContent;
@@ -49,10 +49,10 @@ abstract class AbstractContentTest extends TestCase
     {
         if (self::$rulesContent === null) {
             $this->confirmOwnership();
-            ob_start();
+            \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            self::$rulesContent = ob_get_clean();
+            self::$rulesContent = \ob_get_clean();
             $this->removeOwnerShipConfirmation();
             self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContent);
         }
@@ -69,7 +69,7 @@ abstract class AbstractContentTest extends TestCase
     {
         if (self::$cookieName === null) {
             self::$cookieName = $this->getCookieNameForOwnershipConfirmation(
-                basename($this->getDirName(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST))
+                \basename($this->getDirName(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST))
             );
         }
 
@@ -79,10 +79,10 @@ abstract class AbstractContentTest extends TestCase
     private function getDirName(string $fileName): string
     {
         $dirName = $fileName;
-        while (basename($dirName) === '.' || basename($dirName) === '..' || !is_dir($dirName)) {
-            $dirName = dirname(
+        while (\basename($dirName) === '.' || \basename($dirName) === '..' || !\is_dir($dirName)) {
+            $dirName = \dirname(
                 $dirName,
-                basename($dirName) === '.' || !is_dir($dirName)
+                \basename($dirName) === '.' || !\is_dir($dirName)
                     ? 1
                     : 2 // ..
             );
@@ -124,16 +124,16 @@ abstract class AbstractContentTest extends TestCase
      */
     protected function getRulesContentForDev(string $show = ''): string
     {
-        if (!array_key_exists($show, self::$rulesContentForDev)) {
+        if (!\array_key_exists($show, self::$rulesContentForDev)) {
             $this->confirmOwnership();
             $_GET['mode'] = 'dev';
             if ($show !== '') {
                 $_GET['show'] = $show;
             }
-            ob_start();
+            \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            self::$rulesContentForDev[$show] = ob_get_clean();
+            self::$rulesContentForDev[$show] = \ob_get_clean();
             $this->removeOwnerShipConfirmation();
             self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDev[$show]);
         }
@@ -150,10 +150,10 @@ abstract class AbstractContentTest extends TestCase
             $this->confirmOwnership();
             $_GET['mode'] = 'dev';
             $_GET['hide'] = 'covered';
-            ob_start();
+            \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            self::$rulesContentForDevWithHiddenCovered = ob_get_clean();
+            self::$rulesContentForDevWithHiddenCovered = \ob_get_clean();
             $this->removeOwnerShipConfirmation();
             self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDevWithHiddenCovered);
         }
@@ -163,12 +163,12 @@ abstract class AbstractContentTest extends TestCase
 
     protected function checkingSkeleton(HTMLDocument $document): bool
     {
-        return strpos($document->head->getElementsByTagName('title')->item(0)->nodeValue, 'skeleton') !== false;
+        return \strpos($document->head->getElementsByTagName('title')->item(0)->nodeValue, 'skeleton') !== false;
     }
 
     protected function getDocumentRoot(): string
     {
-        return dirname(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST);
+        return \dirname(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST);
     }
 
     protected function getEshopFileName(): string
