@@ -308,7 +308,7 @@ class AnchorsTest extends AbstractContentTest
         }
         self::assertNotEmpty($calculations);
         foreach ($calculations as $calculation) {
-            self::assertNotEmpty($calculation->id);
+            self::assertNotEmpty($calculation->id, 'Missing ID for calculation: ' . $calculation->innerHTML);
         }
     }
 
