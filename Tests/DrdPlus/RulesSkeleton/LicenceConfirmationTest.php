@@ -42,4 +42,14 @@ class LicenceConfirmationTest extends AbstractContentTest
         self::assertSame('post', $confirmForm->getAttribute('method'));
         self::assertStringStartsWith('return window.confirm', $confirmForm->getAttribute('onsubmit'));
     }
+
+    /**
+     * @test
+     */
+    public function I_can_confirm_ownership()
+    {
+        $html = new HTMLDocument($this->getRulesContentViaHttp()); // includes confirmation via cookie
+        $forms = $html->getElementsByTagName('form');
+        self::assertCount(0, $forms, 'No forms expected in confirmed content');
+    }
 }

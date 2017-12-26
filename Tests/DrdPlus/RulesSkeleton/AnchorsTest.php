@@ -219,6 +219,7 @@ class AnchorsTest extends AbstractContentTest
         self::assertNotEmpty($noAnchorsForMe);
         $links = $noAnchorsForMe->getElementsByTagName('a');
         self::assertNotEmpty($links);
+        /** @var \DOMElement $noAnchorsForMe */
         $idLink = '#' . $noAnchorsForMe->getAttribute('id');
         /** @var \DOMElement $link */
         foreach ($links as $link) {
@@ -255,6 +256,7 @@ class AnchorsTest extends AbstractContentTest
         $anchors = $withAllowedElementsOnly->getElementsByTagName('a');
         self::assertCount(1, $anchors);
         $anchor = $anchors->item(0);
+        self::assertNotNull($anchor);
         self::assertSame('#' . self::ID_WITH_ALLOWED_ELEMENTS_ONLY, $anchor->getAttribute('href'));
         foreach ($anchor->childNodes as $childNode) {
             self::assertContains($childNode->nodeName, ['#text', 'span', 'b', 'strong', 'i']);

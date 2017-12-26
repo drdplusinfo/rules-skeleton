@@ -7,10 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractContentTest extends TestCase
 {
-    /** @var string */
-    private static $ownershipConfirmationContent;
-    /** @var string */
-    private static $rulesContent;
     /** @var HTMLDocument */
     private static $rulesHtmlDocument;
     /** @var array|string[] */
@@ -32,14 +28,15 @@ abstract class AbstractContentTest extends TestCase
      */
     protected function getOwnershipConfirmationContent(): string
     {
-        if (self::$ownershipConfirmationContent === null) {
+        static $ownershipConfirmationContent;
+        if ($ownershipConfirmationContent === null) {
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            self::$ownershipConfirmationContent = \ob_get_clean();
+            $ownershipConfirmationContent = \ob_get_clean();
         }
 
-        return self::$ownershipConfirmationContent;
+        return $ownershipConfirmationContent;
     }
 
     /**
@@ -47,17 +44,18 @@ abstract class AbstractContentTest extends TestCase
      */
     protected function getRulesContent(): string
     {
-        if (self::$rulesContent === null) {
+        static $rulesContent;
+        if ($rulesContent === null) {
             $this->confirmOwnership();
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            self::$rulesContent = \ob_get_clean();
+            $rulesContent = \ob_get_clean();
             $this->removeOwnerShipConfirmation();
-            self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContent);
+            self::assertNotSame($this->getOwnershipConfirmationContent(), $rulesContent);
         }
 
-        return self::$rulesContent;
+        return $rulesContent;
     }
 
     private function confirmOwnership()
