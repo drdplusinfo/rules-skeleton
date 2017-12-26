@@ -48,7 +48,7 @@ class LicenceConfirmationTest extends AbstractContentTest
      */
     public function I_can_confirm_ownership()
     {
-        $html = new HTMLDocument($this->getRulesContentViaHttp()); // includes confirmation via cookie
+        $html = new HTMLDocument($this->getRulesContent()); // includes confirmation via cookie
         $forms = $html->getElementsByTagName('form');
         self::assertCount(0, $forms, 'No forms expected in confirmed content');
     }
