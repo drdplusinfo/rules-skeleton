@@ -7,9 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractContentTest extends TestCase
 {
-    /** @var array|HTMLDocument[] */
-    private static $rulesContentForDev = [];
-
     protected function setUp()
     {
         if (!\defined('DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST')) {
@@ -119,7 +116,8 @@ abstract class AbstractContentTest extends TestCase
      */
     protected function getRulesContentForDev(string $show = '', string $hide = ''): string
     {
-        if (!\array_key_exists($show, self::$rulesContentForDev)) {
+        static $rulesContentForDev = [];
+        if (!\array_key_exists($show, $rulesContentForDev)) {
             $this->confirmOwnership();
             $_GET['mode'] = 'dev';
             if ($show !== '') {
@@ -131,13 +129,13 @@ abstract class AbstractContentTest extends TestCase
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            self::$rulesContentForDev[$show] = \ob_get_clean();
+            $rulesContentForDev[$show] = \ob_get_clean();
             unset($_GET['mode'], $_GET['show'], $_GET['hide']);
             $this->removeOwnerShipConfirmation();
-            self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDev[$show]);
+            self::assertNotSame($this->getOwnershipConfirmationContent(), $rulesContentForDev[$show]);
         }
 
-        return self::$rulesContentForDev[$show];
+        return $rulesContentForDev[$show];
     }
 
     /**
