@@ -7,14 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractContentTest extends TestCase
 {
-    /** @var HTMLDocument */
-    private static $rulesHtmlDocument;
-    /** @var array|string[] */
+    /** @var array|HTMLDocument[] */
     private static $rulesContentForDev = [];
-    /** @var string */
-    private static $rulesContentForDevWithHiddenCovered;
-    /** @var string */
-    private static $cookieName;
 
     protected function setUp()
     {
@@ -65,13 +59,14 @@ abstract class AbstractContentTest extends TestCase
 
     private function getCookieNameForLocalOwnershipConfirmation(): string
     {
-        if (self::$cookieName === null) {
-            self::$cookieName = $this->getCookieNameForOwnershipConfirmation(
+        static $cookieName;
+        if ($cookieName === null) {
+            $cookieName = $this->getCookieNameForOwnershipConfirmation(
                 \basename($this->getDirName(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST))
             );
         }
 
-        return self::$cookieName;
+        return $cookieName;
     }
 
     private function getDirName(string $fileName): string
@@ -109,18 +104,20 @@ abstract class AbstractContentTest extends TestCase
 
     protected function getRulesHtmlDocument(): HTMLDocument
     {
-        if (self::$rulesHtmlDocument === null) {
-            self::$rulesHtmlDocument = new HTMLDocument($this->getRulesContent());
+        static $rulesHtmlDocument;
+        if ($rulesHtmlDocument === null) {
+            $rulesHtmlDocument = new HTMLDocument($this->getRulesContent());
         }
 
-        return self::$rulesHtmlDocument;
+        return $rulesHtmlDocument;
     }
 
     /**
      * @param string $show = ''
+     * @param string $hide = ''
      * @return string
      */
-    protected function getRulesContentForDev(string $show = ''): string
+    protected function getRulesContentForDev(string $show = '', string $hide = ''): string
     {
         if (!\array_key_exists($show, self::$rulesContentForDev)) {
             $this->confirmOwnership();
@@ -128,10 +125,14 @@ abstract class AbstractContentTest extends TestCase
             if ($show !== '') {
                 $_GET['show'] = $show;
             }
+            if ($hide !== '') {
+                $_GET['hide'] = $hide;
+            }
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
             self::$rulesContentForDev[$show] = \ob_get_clean();
+            unset($_GET['mode'], $_GET['show'], $_GET['hide']);
             $this->removeOwnerShipConfirmation();
             self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDev[$show]);
         }
@@ -144,19 +145,7 @@ abstract class AbstractContentTest extends TestCase
      */
     protected function getRulesContentForDevWithHiddenCovered(): string
     {
-        if (self::$rulesContentForDevWithHiddenCovered === null) {
-            $this->confirmOwnership();
-            $_GET['mode'] = 'dev';
-            $_GET['hide'] = 'covered';
-            \ob_start();
-            /** @noinspection PhpIncludeInspection */
-            include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            self::$rulesContentForDevWithHiddenCovered = \ob_get_clean();
-            $this->removeOwnerShipConfirmation();
-            self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDevWithHiddenCovered);
-        }
-
-        return self::$rulesContentForDevWithHiddenCovered;
+        return $this->getRulesContentForDev('', 'covered');
     }
 
     protected function checkingSkeleton(HTMLDocument $document): bool
