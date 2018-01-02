@@ -197,16 +197,14 @@ class HtmlHelper extends StrictObject
      */
     public function resolveDisplayMode(HTMLDocument $html)
     {
-        if (!$this->inDevMode) {
-            foreach ($html->getElementsByTagName('body') as $body) {
-                $this->removeClassesAboutCodeCoverage($body);
-            }
-
-            return;
-        }
         if ($this->showIntroductionOnly) {
             foreach ($html->getElementsByTagName('body') as $body) {
                 $this->removeNonIntroduction($body);
+            }
+        }
+        if (!$this->inDevMode) {
+            foreach ($html->getElementsByTagName('body') as $body) {
+                $this->removeClassesAboutCodeCoverage($body);
             }
 
             return;
