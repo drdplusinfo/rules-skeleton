@@ -14,12 +14,14 @@ require_once $documentRoot . '/vendor/autoload.php';
 if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !file_exists($documentRoot . '/html'))
     && file_exists($documentRoot . '/pdf') && glob($documentRoot . '/pdf/*.pdf')
 ) {
+    /** @see vendor/drd-plus/rules-html-skeleton/get_pdf.php */
     echo include __DIR__ . '/get_pdf.php';
 
     return;
 }
 
 if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
+    /** @see vendor/drd-plus/rules-html-skeleton/get_tables.php */
     echo include __DIR__ . '/get_tables.php';
 
     return;
@@ -28,6 +30,7 @@ if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { /
 $usagePolicy = new \DrdPlus\RulesSkeleton\UsagePolicy(basename($documentRoot));
 $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership();
 if (!$visitorHasConfirmedOwnership) {
+    /** @see vendor/drd-plus/rules-html-skeleton/licence_owning_confirmation.php */
     require __DIR__ . '/licence_owning_confirmation.php';
     $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership(); // could changed
 }
@@ -36,4 +39,5 @@ if (!$visitorHasConfirmedOwnership) {
     return;
 }
 
+/** @see vendor/drd-plus/rules-html-skeleton/content.php */
 echo require __DIR__ . '/content.php';
