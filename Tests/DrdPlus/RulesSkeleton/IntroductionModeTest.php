@@ -29,7 +29,7 @@ class IntroductionModeTest extends AbstractContentTest
                         || $child->classList->contains('background-image')
                         || $child->classList->contains('quote')
                         || $child->nodeName === 'img',
-                        "This does not have 'introduction' class in {$mode} mode: " . $child->innerHTML
+                        "Only an element with classes 'introduction', 'background-image' and 'quote' or the <img> element is expected in {$mode} mode, got : " . $child->outerHTML
                     );
                 }
             }
