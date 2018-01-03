@@ -31,18 +31,23 @@ abstract class AbstractContentTest extends TestCase
     }
 
     /**
+     * @param string $show
      * @return string
      */
-    protected function getRulesContent(): string
+    protected function getRulesContent(string $show = ''): string
     {
-        static $rulesContent;
-        if ($rulesContent === null) {
+        static $rulesContent = [];
+        if (($rulesContent[$show] ?? null) === null) {
+            if ($show !== '') {
+                $_GET['show'] = $show;
+            }
             $this->confirmOwnership();
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
             $rulesContent = \ob_get_clean();
             $this->removeOwnerShipConfirmation();
+            unset($_GET['show']);
             self::assertNotSame($this->getOwnershipConfirmationContent(), $rulesContent);
         }
 
