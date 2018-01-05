@@ -33,13 +33,28 @@ class IntroductionModeTest extends AbstractContentTest
                     );
                 }
             }
-            self::assertSame(0, $html->getElementsByClassName('covered-by-code')->count());
-            self::assertSame(0, $html->getElementsByClassName('generic')->count(), 'Class "generic" would be already hidden.');
-            self::assertGreaterThan(0, $html->getElementsByTagName('img')->length, 'Expected some image in introduction-only mode');
+            self::assertSame(
+                0,
+                $html->body->getElementsByClassName('generic')->count(),
+                "Class 'generic' would be already hidden id mode='$mode' and show='introduction'."
+            );
+            if ($mode === 'standard') {
+                self::assertGreaterThan(
+                    0,
+                    $html->body->getElementsByTagName('img')->count(),
+                    "Expected some image in mode='$mode' and show='introduction'"
+                );
+            } else {
+                self::assertSame(
+                    0,
+                    $html->body->getElementsByTagName('img')->count(),
+                    "No image expected in mode='$mode' and show='introduction'"
+                );
+            }
             self::assertGreaterThan(
                 0,
                 $html->getElementsByClassName('background-image')->count(),
-                'Background image should not be removed in "introduction" show mode'
+                "Background image should not be removed in mode='$mode' and show='introduction'"
             );
         }
     }
