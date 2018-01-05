@@ -226,14 +226,17 @@ class HtmlHelper extends StrictObject
 
     private function removeImages(Element $html)
     {
-        /** @var Element $child */
-        foreach ($html->children as $child) {
-            if ($child->nodeName === 'img') {
-                $html->removeChild($child);
-            } else {
-                $this->removeImages($child);
+        do {
+            $somethingRemoved = false;
+            /** @var Element $child */
+            foreach ($html->children as $child) {
+                if ($child->nodeName === 'img') {
+                    $html->removeChild($child);
+                } else {
+                    $this->removeImages($child);
+                }
             }
-        }
+        } while ($somethingRemoved); // do not know why, but some nodes are simply skipped on first removal so have to remove them again
     }
 
     private function removeNonIntroduction(Element $html)
@@ -256,8 +259,7 @@ class HtmlHelper extends StrictObject
                     $childNode->classList->remove('generic');
                 }
             }
-            // do not know why, but some nodes are simply skipped on first removal so have to remove them again
-        } while ($somethingRemoved);
+        } while ($somethingRemoved); // do not know why, but some nodes are simply skipped on first removal so have to remove them again
     }
 
     private function removeClassesAboutCodeCoverage(Element $html)
