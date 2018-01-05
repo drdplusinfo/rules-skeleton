@@ -45,13 +45,13 @@ abstract class AbstractContentTest extends TestCase
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            $rulesContent = \ob_get_clean();
+            $rulesContent[$show] = \ob_get_clean();
             $this->removeOwnerShipConfirmation();
             unset($_GET['show']);
             self::assertNotSame($this->getOwnershipConfirmationContent(), $rulesContent);
         }
 
-        return $rulesContent;
+        return $rulesContent[$show];
     }
 
     private function confirmOwnership()
