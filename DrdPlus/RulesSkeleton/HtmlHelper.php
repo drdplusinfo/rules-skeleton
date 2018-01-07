@@ -197,26 +197,27 @@ class HtmlHelper extends StrictObject
      */
     public function resolveDisplayMode(HTMLDocument $html)
     {
+        if ($this->inDevMode) {
+            foreach ($html->getElementsByTagName('body') as $body) {
+                $this->removeImages($body);
+            }
+        } else {
+            foreach ($html->getElementsByTagName('body') as $body) {
+                $this->removeClassesAboutCodeCoverage($body);
+            }
+        }
         if ($this->showIntroductionOnly) {
             foreach ($html->getElementsByTagName('body') as $body) {
                 $this->removeNonIntroduction($body);
             }
         }
-        if (!$this->inDevMode) {
-            foreach ($html->getElementsByTagName('body') as $body) {
-                $this->removeClassesAboutCodeCoverage($body);
-            }
-
+        if (!$this->inDevMode || !$this->shouldHideCovered) {
             return;
         }
-        foreach ($html->getElementsByTagName('body') as $body) {
-            $this->removeImages($body);
+        $classesToHide = ['covered-by-code', 'quote', 'generic', 'note', 'excluded', 'rules-authors'];
+        if (!$this->showIntroductionOnly) {
+            $classesToHide[] = 'introduction';
         }
-
-        if (!$this->shouldHideCovered) {
-            return;
-        }
-        $classesToHide = ['covered-by-code', 'introduction', 'quote', 'generic', 'note', 'excluded', 'rules-authors'];
         foreach ($classesToHide as $classToHide) {
             foreach ($html->getElementsByClassName($classToHide) as $nodeToHide) {
                 $nodeToHide->className = str_replace($classToHide, 'hidden', $nodeToHide->className);

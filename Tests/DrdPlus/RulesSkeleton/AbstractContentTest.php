@@ -114,14 +114,14 @@ abstract class AbstractContentTest extends TestCase
         unset($_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()]);
     }
 
-    protected function getRulesHtmlDocument(): HTMLDocument
+    protected function getRulesHtmlDocument(string $show = ''): HTMLDocument
     {
-        static $rulesHtmlDocument;
-        if ($rulesHtmlDocument === null) {
-            $rulesHtmlDocument = new HTMLDocument($this->getRulesContent());
+        static $rulesHtmlDocument = [];
+        if (empty($rulesHtmlDocument[$show])) {
+            $rulesHtmlDocument[$show] = new HTMLDocument($this->getRulesContent($show));
         }
 
-        return $rulesHtmlDocument;
+        return $rulesHtmlDocument[$show];
     }
 
     /**
@@ -132,7 +132,7 @@ abstract class AbstractContentTest extends TestCase
     protected function getRulesContentForDev(string $show = '', string $hide = ''): string
     {
         static $rulesContentForDev = [];
-        if (!\array_key_exists($show, $rulesContentForDev)) {
+        if (empty($rulesContentForDev[$show][$hide])) {
             $this->confirmOwnership();
             $_GET['mode'] = 'dev';
             if ($show !== '') {
@@ -144,13 +144,23 @@ abstract class AbstractContentTest extends TestCase
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            $rulesContentForDev[$show] = \ob_get_clean();
+            $rulesContentForDev[$show][$hide] = \ob_get_clean();
             unset($_GET['mode'], $_GET['show'], $_GET['hide']);
             $this->removeOwnerShipConfirmation();
             self::assertNotSame($this->getOwnershipConfirmationContent(), $rulesContentForDev[$show]);
         }
 
-        return $rulesContentForDev[$show];
+        return $rulesContentForDev[$show][$hide];
+    }
+
+    protected function getRulesForDevHtmlDocument(string $show = '', string $hide = '')
+    {
+        static $rulesForDevHtmlDocument = [];
+        if (empty($rulesForDevHtmlDocument[$show][$hide])) {
+            $rulesForDevHtmlDocument[$show][$hide] = new HTMLDocument($this->getRulesContentForDev($show, $hide));
+        }
+
+        return $rulesForDevHtmlDocument[$show][$hide];
     }
 
     /**
