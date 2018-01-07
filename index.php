@@ -11,15 +11,6 @@ $documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']),
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
 
-if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !file_exists($documentRoot . '/html'))
-    && file_exists($documentRoot . '/pdf') && glob($documentRoot . '/pdf/*.pdf')
-) {
-    /** @see vendor/drd-plus/rules-html-skeleton/get_pdf.php */
-    echo include __DIR__ . '/get_pdf.php';
-
-    return;
-}
-
 if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     /** @see vendor/drd-plus/rules-html-skeleton/get_tables.php */
     echo include __DIR__ . '/get_tables.php';
@@ -36,6 +27,15 @@ if (!$visitorHasConfirmedOwnership) {
 }
 
 if (!$visitorHasConfirmedOwnership) {
+    return;
+}
+
+if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !file_exists($documentRoot . '/html'))
+    && file_exists($documentRoot . '/pdf') && glob($documentRoot . '/pdf/*.pdf')
+) {
+    /** @see vendor/drd-plus/rules-html-skeleton/get_pdf.php */
+    echo include __DIR__ . '/get_pdf.php';
+
     return;
 }
 
