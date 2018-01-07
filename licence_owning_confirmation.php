@@ -29,7 +29,7 @@ if (!empty($_POST['confirm'])) {
                         } else {
                             $name = basename($documentRoot);
                         }
-                        $eShop = 'http://obchod.altar.cz';
+                        $eShop = 'https://obchod.altar.cz';
                         if (is_readable($documentRoot . '/eshop_url.txt')) {
                             $eShop = trim(file_get_contents($documentRoot . '/eshop_url.txt')) ?: $eShop;
                         }
@@ -65,7 +65,7 @@ if (!empty($_POST['confirm'])) {
                                 </a>
                             </p>
 
-                            <div>Pokud nevlastníš pravidla DrD+, prosím, <a href="http://obchod.altar.cz">kup si je</a>
+                            <div>Pokud nevlastníš pravidla DrD+, prosím, <a href="https://obchod.altar.cz">kup si je</a>
                                 - podpoříš autory a budoucnost DrD. Děkujeme!
                             </div>
                         </div>
