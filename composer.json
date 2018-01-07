@@ -19,7 +19,8 @@
     "php": ">=7.1",
     "roave/security-advisories": "dev-master",
     "granam/string": "dev-master",
-    "phpgt/dom": "^1.0"
+    "phpgt/dom": "^1.0",
+    "piwik/device-detector": "^3.9"
   },
   "require-dev": {
     "phpunit/phpunit": "~6.0"

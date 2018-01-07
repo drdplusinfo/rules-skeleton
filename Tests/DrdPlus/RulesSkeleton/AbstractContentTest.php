@@ -15,19 +15,29 @@ abstract class AbstractContentTest extends TestCase
     }
 
     /**
+     * @param bool $notCached
      * @return string
      */
-    protected function getOwnershipConfirmationContent(): string
+    protected function getOwnershipConfirmationContent(bool $notCached = false): string
     {
+        if ($notCached) {
+            return $this->fetchRulesContent();
+        }
         static $ownershipConfirmationContent;
         if ($ownershipConfirmationContent === null) {
-            \ob_start();
-            /** @noinspection PhpIncludeInspection */
-            include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            $ownershipConfirmationContent = \ob_get_clean();
+            $ownershipConfirmationContent = $this->fetchRulesContent();
         }
 
         return $ownershipConfirmationContent;
+    }
+
+    private function fetchRulesContent(): string
+    {
+        \ob_start();
+        /** @noinspection PhpIncludeInspection */
+        include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
+
+        return \ob_get_clean();
     }
 
     /**

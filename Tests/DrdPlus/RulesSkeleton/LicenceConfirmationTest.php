@@ -52,4 +52,20 @@ class LicenceConfirmationTest extends AbstractContentTest
         $forms = $html->getElementsByTagName('form');
         self::assertCount(0, $forms, 'No forms expected in confirmed content');
     }
+
+    /**
+     * @test
+     * @backupGlobals
+     */
+    public function Crawlers_can_pass_without_licence_owning_confirmation()
+    {
+        foreach (RequestTest::getCrawlerUserAgents() as $crawlerUserAgent) {
+            $_SERVER['HTTP_USER_AGENT'] = $crawlerUserAgent;
+            self::assertSame(
+                $this->getOwnershipConfirmationContent(true /* not cached */),
+                $this->getRulesContent(),
+                'Expected rules content for a crawler, skipping ownership confirmation page'
+            );
+        }
+    }
 }

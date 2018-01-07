@@ -1,5 +1,5 @@
 <?php
-if (empty($visitorHasConfirmedOwnership)) {
+if (empty($isVisitorBot) && empty($visitorHasConfirmedOwnership)) {
     header('HTTP/1.0 403 Forbidden');
     echo '403 Forbidden (that does not means you are doomed, though)';
 
