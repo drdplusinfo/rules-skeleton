@@ -266,18 +266,22 @@ class HtmlHelper extends StrictObject
 
     private function removeFollowingImageDelimiters(Element $html)
     {
-        /** @var Element $child */
         $followingDelimiter = false;
-        foreach ($html->childNodes as $child) {
-            if ($child->nodeName === 'img' && $child->classList->contains('delimiter')) {
-                if ($followingDelimiter) {
-                    $html->removeChild($child);
+        do {
+            $somethingRemoved = false;
+            /** @var Element $child */
+            foreach ($html->childNodes as $child) {
+                if ($child->nodeName === 'img' && $child->classList->contains('delimiter')) {
+                    if ($followingDelimiter) {
+                        $html->removeChild($child);
+                        $somethingRemoved = true;
+                    }
+                    $followingDelimiter = true;
+                } else {
+                    $followingDelimiter = false;
                 }
-                $followingDelimiter = true;
-            } else {
-                $followingDelimiter = false;
             }
-        }
+        } while ($somethingRemoved);
     }
 
     private function removeClassesAboutCodeCoverage(Element $html)
