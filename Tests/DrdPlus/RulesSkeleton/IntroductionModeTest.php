@@ -86,4 +86,17 @@ class IntroductionModeTest extends AbstractContentTest
             $this->guardNoChildIntroduction($grandChild);
         }
     }
+
+    /**
+     * @test
+     */
+    public function I_see_only_single_delimiter_of_blocks()
+    {
+        $content = $this->getRulesContent('introduction');
+        self::assertNotRegExp(
+            '~(\s*<img [^>]*class="delimiter"[^>]*>){2,}~',
+            $content,
+            'Only single delimiter expected "in a row"'
+        );
+    }
 }

@@ -209,6 +209,7 @@ class HtmlHelper extends StrictObject
         if ($this->showIntroductionOnly) {
             foreach ($html->getElementsByTagName('body') as $body) {
                 $this->removeNonIntroduction($body);
+                $this->removeFollowingImageDelimiters($body);
             }
         }
         if (!$this->inDevMode || !$this->shouldHideCovered) {
@@ -261,6 +262,22 @@ class HtmlHelper extends StrictObject
                 }
             }
         } while ($somethingRemoved); // do not know why, but some nodes are simply skipped on first removal so have to remove them again
+    }
+
+    private function removeFollowingImageDelimiters(Element $html)
+    {
+        /** @var Element $child */
+        $followingDelimiter = false;
+        foreach ($html->childNodes as $child) {
+            if ($child->nodeName === 'img' && $child->classList->contains('delimiter')) {
+                if ($followingDelimiter) {
+                    $html->removeChild($child);
+                }
+                $followingDelimiter = true;
+            } else {
+                $followingDelimiter = false;
+            }
+        }
     }
 
     private function removeClassesAboutCodeCoverage(Element $html)
