@@ -19,7 +19,7 @@ ob_start();
         <title><?= is_readable($documentRoot . '/name.txt') ? file_get_contents($documentRoot . '/name.txt') : ('Drd+ ' . basename($documentRoot)) ?></title>
         <link rel="shortcut icon" href="favicon.ico">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
         <?php
         /** @var array|string[] $cssFiles */
         $jsRoot = $documentRoot . '/js';
