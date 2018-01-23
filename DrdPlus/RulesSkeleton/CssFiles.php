@@ -58,7 +58,7 @@ class CssFiles extends StrictObject implements \IteratorAggregate
             } elseif (is_file($folderPath) && strpos($folder, '.css') !== false) {
                 $cssFiles[] = ($cssRelativeRoot !== '' ? ($cssRelativeRoot . '/') : '') . $folder; // intentionally relative path
             }
-            if ($cssRelativeRoot === 'generic') {
+            if ($folder === 'generic') {
                 foreach ($cssFiles as $cssFile) {
                     $genericCssFiles[] = $cssFile;
                 }
