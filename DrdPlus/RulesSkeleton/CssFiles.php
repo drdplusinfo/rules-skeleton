@@ -38,9 +38,11 @@ class CssFiles extends StrictObject implements \IteratorAggregate
      */
     private function scanForCssFiles(string $directory, string $cssRelativeRoot = ''): array
     {
-        $cssFiles = [];
+        $genericCssFiles = [];
+        $nonGenericCssFiles = [];
         $cssRelativeRoot = rtrim($cssRelativeRoot, '\/');
         foreach (scandir($directory, SCANDIR_SORT_NONE) as $folder) {
+            $cssFiles = [];
             $folderPath = $directory . '/' . $folder;
             if (is_dir($folderPath)) {
                 if ($folder === '.' || $folder === '..' || $folder === '.gitignore' || $folder === 'ignore') {
@@ -53,11 +55,20 @@ class CssFiles extends StrictObject implements \IteratorAggregate
                 foreach ($anotherCssFiles as $anotherCssFile) {
                     $cssFiles[] = $anotherCssFile;
                 }
-            } else if (is_file($folderPath) && strpos($folder, '.css') !== false) {
+            } elseif (is_file($folderPath) && strpos($folder, '.css') !== false) {
                 $cssFiles[] = ($cssRelativeRoot !== '' ? ($cssRelativeRoot . '/') : '') . $folder; // intentionally relative path
+            }
+            if ($cssRelativeRoot === 'generic') {
+                foreach ($cssFiles as $cssFile) {
+                    $genericCssFiles[] = $cssFile;
+                }
+            } else {
+                foreach ($cssFiles as $cssFile) {
+                    $nonGenericCssFiles[] = $cssFile;
+                }
             }
         }
 
-        return $cssFiles;
+        return array_merge($genericCssFiles, $nonGenericCssFiles); // generic CSS files first to allow their overwrite
     }
 }
