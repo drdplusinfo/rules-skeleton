@@ -34,41 +34,47 @@ class CssFiles extends StrictObject implements \IteratorAggregate
     /**
      * @param string $directory
      * @param string $cssRelativeRoot
-     * @return array|string[]
+     * @param int $level
+     * @return array|string[]|string[][]
      */
-    private function scanForCssFiles(string $directory, string $cssRelativeRoot = ''): array
+    private function scanForCssFiles(string $directory, string $cssRelativeRoot = '', int $level = 1): array
     {
-        $genericCssFiles = [];
-        $nonGenericCssFiles = [];
-        $cssRelativeRoot = rtrim($cssRelativeRoot, '\/');
-        foreach (scandir($directory, SCANDIR_SORT_NONE) as $folder) {
-            $cssFiles = [];
+        $cssRelativeRoot = \rtrim($cssRelativeRoot, '\/');
+        /** @var array|string[][] $cssFiles */
+        $cssFiles = [];
+        foreach (\scandir($directory, SCANDIR_SORT_NONE) as $folder) {
+            if ($folder === '.' || $folder === '..' || $folder === '.gitignore') {
+                continue;
+            }
             $folderPath = $directory . '/' . $folder;
-            if (is_dir($folderPath)) {
-                if ($folder === '.' || $folder === '..' || $folder === '.gitignore' || $folder === 'ignore') {
+            if (\is_dir($folderPath)) {
+                if ($folder === 'ignore') {
                     continue;
                 }
                 $anotherCssFiles = $this->scanForCssFiles(
                     $folderPath,
-                    ($cssRelativeRoot !== '' ? ($cssRelativeRoot . '/') : '') . $folder
+                    ($cssRelativeRoot !== '' ? ($cssRelativeRoot . '/') : '') . $folder,
+                    $level + 1
                 );
-                foreach ($anotherCssFiles as $anotherCssFile) {
-                    $cssFiles[] = $anotherCssFile;
+                foreach ($anotherCssFiles as $iteratedLevel => $sameLevelAnotherCssFiles) {
+                    /** @var array $sameLevelAnotherCssFiles */
+                    foreach ($sameLevelAnotherCssFiles as $sameLevelAnotherCssFile) {
+                        $cssFiles[$iteratedLevel][] = $sameLevelAnotherCssFile;
+                    }
                 }
-            } elseif (is_file($folderPath) && strpos($folder, '.css') !== false) {
-                $cssFiles[] = ($cssRelativeRoot !== '' ? ($cssRelativeRoot . '/') : '') . $folder; // intentionally relative path
-            }
-            if ($folder === 'generic') {
-                foreach ($cssFiles as $cssFile) {
-                    $genericCssFiles[] = $cssFile;
-                }
-            } else {
-                foreach ($cssFiles as $cssFile) {
-                    $nonGenericCssFiles[] = $cssFile;
-                }
+            } elseif (\is_file($folderPath) && \preg_match('~[.]css$~', $folder)) {
+                $cssFiles[$level][] = ($cssRelativeRoot !== '' ? ($cssRelativeRoot . '/') : '') . $folder; // intentionally relative path
             }
         }
+        if ($level > 1) {
+            return $cssFiles;
+        }
+        \krsort($cssFiles); // deeper means more generic and goes first
+        $flattenedCss = [];
+        foreach ($cssFiles as $sameLevelCssFiles) {
+            $flattenedCss = \array_merge($flattenedCss, $sameLevelCssFiles); // deeper files can be overloaded by shallow ones
+        }
 
-        return array_merge($genericCssFiles, $nonGenericCssFiles); // generic CSS files first to allow their overwrite
+        return $flattenedCss;
     }
 }
