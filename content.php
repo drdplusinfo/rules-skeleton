@@ -36,7 +36,7 @@ ob_start();
                   href="css/<?php echo "$cssFile?version=" . md5_file($cssRoot . '/' . ltrim($cssFile, '\/')); ?>">
         <?php } ?>
     </head>
-    <body>
+    <body class="container">
     <div class="background-image"></div>
     <?php
     $content = ob_get_contents();
@@ -79,4 +79,5 @@ if (!empty($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], '~drdplus\.lo
 }
 $updated = $htmlDocument->saveHTML();
 $pageCache->cacheContent($updated);
+
 return $updated;
