@@ -3,3 +3,4 @@
 /phpunit_log/
 /composer.lock
 /cache/*
+/composer_install_result.txt
