@@ -59,6 +59,10 @@ h6 {
     font-size: 100%;
 }
 
+caption {
+    caption-side: top;
+}
+
 .float-left {
     float: left;
     margin-right: 1em;
