@@ -544,3 +544,11 @@ table.tab-intended-content th:not(:first-child), table.tab-intended-content td:n
     margin: 0;
     padding: 0;
 }
+
+td {
+    padding-right: 1em;
+}
+
+td:last-child {
+    padding-right: 0;
+}
