@@ -18,17 +18,7 @@ class CssFiles extends AbstractPublicFiles
      */
     public function getIterator(): \Iterator
     {
-        return new \ArrayIterator($this->getConfirmedStyleSheets());
-    }
-
-    /**
-     * @return array|string[]
-     */
-    private function getConfirmedStyleSheets(): array
-    {
-        $cssFiles = $this->scanForCssFiles($this->dirWithCss);
-
-        return $this->addHashesToFileNames($cssFiles, $this->dirWithCss);
+        return new \ArrayIterator($this->scanForCssFiles($this->dirWithCss));
     }
 
     /**
@@ -72,6 +62,7 @@ class CssFiles extends AbstractPublicFiles
         \krsort($cssFiles); // deeper means more generic and goes first
         $flattenedCss = [];
         foreach ($cssFiles as $sameLevelCssFiles) {
+            /** @noinspection SlowArrayOperationsInLoopInspection */
             $flattenedCss = \array_merge($flattenedCss, $sameLevelCssFiles); // deeper files can be overloaded by shallow ones
         }
 

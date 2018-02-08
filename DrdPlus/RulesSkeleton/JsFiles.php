@@ -18,17 +18,7 @@ class JsFiles extends AbstractPublicFiles
      */
     public function getIterator(): \Iterator
     {
-        return new \ArrayIterator($this->getConfirmedJavaScripts());
-    }
-
-    /**
-     * @return array|string[]
-     */
-    private function getConfirmedJavaScripts(): array
-    {
-        $jsFiles = $this->scanForJsFiles($this->dirWithJs);
-
-        return $this->addHashesToFileNames($jsFiles, $this->dirWithJs);
+        return new \ArrayIterator($this->scanForJsFiles($this->dirWithJs));
     }
 
     /**

@@ -20,12 +20,22 @@ class HtmlHelper extends StrictObject
     private $showIntroductionOnly;
     /** @var bool */
     private $externalUrlsMarked = false;
+    /** @var string */
+    private $rootDir;
 
-    public function __construct(bool $inDevMode, bool $shouldHideCovered, bool $showIntroductionOnly)
+    public function __construct(string $rootDir, bool $inDevMode, bool $shouldHideCovered, bool $showIntroductionOnly)
     {
+        $this->rootDir = $this->unifyPath($rootDir);
         $this->inDevMode = $inDevMode;
         $this->shouldHideCovered = $shouldHideCovered;
         $this->showIntroductionOnly = $showIntroductionOnly;
+    }
+
+    private function unifyPath(string $path)
+    {
+        $path = \str_replace('\\', '/', $path);
+
+        return \rtrim($path, '/');
     }
 
     /**
@@ -410,5 +420,41 @@ class HtmlHelper extends StrictObject
     private function makeDrdPlusHostLocal(string $linkWithRemoteDrdPlusHost): string
     {
         return \preg_replace('~(?:https?:)?//([[:alpha:]]+)\.drdplus\.info/~', 'http://$1.drdplus.loc/', $linkWithRemoteDrdPlusHost);
+    }
+
+    public function addVersionHashToAssets(HTMLDocument $html)
+    {
+        foreach ($html->getElementsByTagName('img') as $image) {
+            $this->addVersionToAsset($image, 'src');
+        }
+        foreach ($html->getElementsByTagName('link') as $link) {
+            $this->addVersionToAsset($link, 'href');
+        }
+        foreach ($html->getElementsByTagName('script') as $script) {
+            $this->addVersionToAsset($script, 'src');
+        }
+    }
+
+    private function addVersionToAsset(Element $element, string $attributeName)
+    {
+        $source = $element->getAttribute($attributeName);
+        if (!$source) {
+            return;
+        }
+        $absolutePath = $this->getAbsolutePath($source, $this->rootDir);
+        $hash = $this->getFileHash($absolutePath);
+        $element->setAttribute($attributeName, $source . '?version=' . \urlencode($hash));
+    }
+
+    private function getAbsolutePath(string $relativePath, string $root): string
+    {
+        $relativePath = \ltrim($this->unifyPath($relativePath), '/');
+
+        return $root . '/' . $relativePath;
+    }
+
+    private function getFileHash(string $fileName): string
+    {
+        return \md5_file($fileName) ?: (string)\time(); // time is fallback
     }
 }

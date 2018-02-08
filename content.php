@@ -60,6 +60,7 @@ $content .= ob_get_clean();
 $pageCache->saveUnmodifiedContent($content); // for debugging purpose
 $htmlDocument = new \Gt\Dom\HTMLDocument($content);
 $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
+    $documentRoot,
     !empty($_GET['mode']) && strpos(trim($_GET['mode']), 'dev') === 0,
     !empty($_GET['hide']) && strpos(trim($_GET['hide']), 'cover') === 0,
     !empty($_GET['show']) && strpos(trim($_GET['show']), 'intro') === 0
@@ -73,6 +74,7 @@ $htmlHelper->resolveDisplayMode($htmlDocument);
 $htmlHelper->markExternalLinksByClass($htmlDocument);
 $htmlHelper->externalLinksTargetToBlank($htmlDocument);
 $htmlHelper->injectIframesWithRemoteTables($htmlDocument);
+$htmlHelper->addVersionHashToAssets($htmlDocument);
 if (!empty($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], '~drdplus\.loc~')) {
     $htmlHelper->makeExternalLinksLocal($htmlDocument);
 }
