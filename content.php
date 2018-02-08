@@ -26,14 +26,13 @@ ob_start();
         $jsFiles = new \DrdPlus\RulesSkeleton\JsFiles($jsRoot);
         foreach ($jsFiles as $jsFile) { ?>
             <script type="text/javascript"
-                    src="js/<?php echo "$jsFile?version=" . md5_file($jsRoot . '/' . ltrim($jsFile, '\/')); ?>"></script>
+                    src="js/<?php echo $jsFile ?>"></script>
         <?php }
         /** @var array|string[] $cssFiles */
         $cssRoot = $documentRoot . '/css';
         $cssFiles = new \DrdPlus\RulesSkeleton\CssFiles($cssRoot);
         foreach ($cssFiles as $cssFile) { ?>
-            <link rel="stylesheet" type="text/css"
-                  href="css/<?php echo "$cssFile?version=" . md5_file($cssRoot . '/' . ltrim($cssFile, '\/')); ?>">
+            <link rel="stylesheet" type="text/css" href="css/<?php echo $cssFile ?>">
         <?php } ?>
     </head>
     <body class="container">

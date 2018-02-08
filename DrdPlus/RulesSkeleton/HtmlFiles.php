@@ -12,7 +12,7 @@ class HtmlFiles extends StrictObject implements \IteratorAggregate
 
     public function __construct(string $htmlFilesDir)
     {
-        $this->htmlFilesDir = rtrim($htmlFilesDir, '\/');
+        $this->htmlFilesDir = \rtrim($htmlFilesDir, '\/');
     }
 
     /**
@@ -27,7 +27,9 @@ class HtmlFiles extends StrictObject implements \IteratorAggregate
     {
         $htmlFileNames = $this->getUnsortedHtmlFileNames();
 
-        return $this->sortHtmlFiles($htmlFileNames);
+        $sorted = $this->sortHtmlFiles($htmlFileNames);
+
+        return $this->extendRelativeToFullPath($sorted);
     }
 
     /**
@@ -35,12 +37,12 @@ class HtmlFiles extends StrictObject implements \IteratorAggregate
      */
     private function getUnsortedHtmlFileNames(): array
     {
-        if (!is_dir($this->htmlFilesDir)) {
+        if (!\is_dir($this->htmlFilesDir)) {
             return [];
         }
 
-        return array_filter(scandir($this->htmlFilesDir, SCANDIR_SORT_NONE), function ($file) {
-            return $file !== '.' && $file !== '..' && preg_match('~\.html$~', $file);
+        return \array_filter(\scandir($this->htmlFilesDir, SCANDIR_SORT_NONE), function ($file) {
+            return $file !== '.' && $file !== '..' && \preg_match('~\.html$~', $file);
         });
     }
 
@@ -50,7 +52,7 @@ class HtmlFiles extends StrictObject implements \IteratorAggregate
      */
     private function sortHtmlFiles(array $htmlFileNames): array
     {
-        usort($htmlFileNames, function ($firstName, $secondName) {
+        \usort($htmlFileNames, function ($firstName, $secondName) {
             $firstNameParts = $this->parseNameParts($firstName);
             $secondNameParts = $this->parseNameParts($secondName);
             if (isset($firstNameParts['page'], $secondNameParts['page'])) {
@@ -86,7 +88,7 @@ class HtmlFiles extends StrictObject implements \IteratorAggregate
             return 0;
         });
 
-        return $this->extendRelativeToFullPath($htmlFileNames);
+        return $htmlFileNames;
     }
 
     /**
@@ -95,7 +97,7 @@ class HtmlFiles extends StrictObject implements \IteratorAggregate
      */
     private function parseNameParts(string $name): array
     {
-        preg_match('~^(?<page>\d+)(?<column>\w+)?(?<occurrence>\d+)?\s+~', $name, $matches);
+        \preg_match('~^(?<page>\d+)(?<column>\w+)?(?<occurrence>\d+)?\s+~', $name, $matches);
 
         return $matches;
     }
@@ -106,7 +108,7 @@ class HtmlFiles extends StrictObject implements \IteratorAggregate
      */
     private function extendRelativeToFullPath(array $relativeFileNames): array
     {
-        return array_map(
+        return \array_map(
             function ($htmlFile) {
                 return $this->htmlFilesDir . '/' . $htmlFile;
             },

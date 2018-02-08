@@ -1,9 +1,7 @@
 <?php
 namespace DrdPlus\RulesSkeleton;
 
-use Granam\Strict\Object\StrictObject;
-
-class JsFiles extends StrictObject implements \IteratorAggregate
+class JsFiles extends AbstractPublicFiles
 {
     /**
      * @var string
@@ -28,7 +26,9 @@ class JsFiles extends StrictObject implements \IteratorAggregate
      */
     private function getConfirmedJavaScripts(): array
     {
-        return $this->scanForJsFiles($this->dirWithJs);
+        $jsFiles = $this->scanForJsFiles($this->dirWithJs);
+
+        return $this->addHashesToFileNames($jsFiles, $this->dirWithJs);
     }
 
     /**
@@ -43,10 +43,10 @@ class JsFiles extends StrictObject implements \IteratorAggregate
         }
         $genericJsFiles = [];
         $jsFiles = [];
-        $jsRelativeRoot = rtrim($jsRelativeRoot, '\/');
-        foreach (scandir($directory) as $folder) {
+        $jsRelativeRoot = \rtrim($jsRelativeRoot, '\/');
+        foreach (\scandir($directory, \SCANDIR_SORT_NONE) as $folder) {
             $folderPath = $directory . '/' . $folder;
-            if (is_dir($folderPath)) {
+            if (\is_dir($folderPath)) {
                 if ($folder === '.' || $folder === '..' || $folder === '.gitignore') {
                     continue;
                 }
@@ -63,11 +63,11 @@ class JsFiles extends StrictObject implements \IteratorAggregate
                         $jsFiles[] = $jsFileFromDir;
                     }
                 }
-            } else if (is_file($folderPath) && strpos($folder, '.js') !== false) {
+            } elseif (\is_file($folderPath) && \strpos($folder, '.js') !== false) {
                 $jsFiles[] = ($jsRelativeRoot !== '' ? ($jsRelativeRoot . '/') : '') . $folder; // intentionally relative path
             }
         }
 
-        return array_merge($genericJsFiles, $jsFiles); // generic first
+        return \array_merge($genericJsFiles, $jsFiles); // generic first
     }
 }

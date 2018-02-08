@@ -1,9 +1,7 @@
 <?php
 namespace DrdPlus\RulesSkeleton;
 
-use Granam\Strict\Object\StrictObject;
-
-class CssFiles extends StrictObject implements \IteratorAggregate
+class CssFiles extends AbstractPublicFiles
 {
     /**
      * @var string
@@ -28,7 +26,9 @@ class CssFiles extends StrictObject implements \IteratorAggregate
      */
     private function getConfirmedStyleSheets(): array
     {
-        return $this->scanForCssFiles($this->dirWithCss);
+        $cssFiles = $this->scanForCssFiles($this->dirWithCss);
+
+        return $this->addHashesToFileNames($cssFiles, $this->dirWithCss);
     }
 
     /**
