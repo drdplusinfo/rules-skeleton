@@ -41,27 +41,32 @@ abstract class AbstractContentTest extends TestCase
     }
 
     /**
-     * @param string $show
+     * @param string $show = ''
+     * @param array $get = []
      * @return string
      */
-    protected function getRulesContent(string $show = ''): string
+    protected function getRulesContent(string $show = '', array $get = []): string
     {
         static $rulesContent = [];
-        if (($rulesContent[$show] ?? null) === null) {
+        $key = "$show-" . \serialize($get);
+        if (($rulesContent[$key] ?? null) === null) {
             if ($show !== '') {
                 $_GET['show'] = $show;
+            }
+            if ($get) {
+                $_GET = \array_merge($_GET, $get);
             }
             $this->confirmOwnership();
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST;
-            $rulesContent[$show] = \ob_get_clean();
+            $rulesContent[$key] = \ob_get_clean();
             $this->removeOwnerShipConfirmation();
             unset($_GET['show']);
             self::assertNotSame($this->getOwnershipConfirmationContent(), $rulesContent);
         }
 
-        return $rulesContent[$show];
+        return $rulesContent[$key];
     }
 
     private function confirmOwnership()
@@ -114,14 +119,15 @@ abstract class AbstractContentTest extends TestCase
         unset($_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()]);
     }
 
-    protected function getRulesHtmlDocument(string $show = ''): HTMLDocument
+    protected function getRulesHtmlDocument(string $show = '', array $get = []): HTMLDocument
     {
         static $rulesHtmlDocument = [];
-        if (empty($rulesHtmlDocument[$show])) {
-            $rulesHtmlDocument[$show] = new HTMLDocument($this->getRulesContent($show));
+        $key = "$show-" . \serialize($get);
+        if (empty($rulesHtmlDocument[$key])) {
+            $rulesHtmlDocument[$key] = new HTMLDocument($this->getRulesContent($show, $get));
         }
 
-        return $rulesHtmlDocument[$show];
+        return $rulesHtmlDocument[$key];
     }
 
     /**

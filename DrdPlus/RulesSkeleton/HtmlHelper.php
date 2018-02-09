@@ -328,6 +328,9 @@ class HtmlHelper extends StrictObject
         if (\count($requiredIds) === 0) {
             return $tablesWithIds;
         }
+        if (!$requiredIds) {
+            return $tablesWithIds;
+        }
 
         return \array_intersect_key($tablesWithIds, \array_fill_keys($requiredIds, true));
     }

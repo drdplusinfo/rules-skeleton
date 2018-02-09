@@ -1,13 +1,17 @@
 <?php
-header('Access-Control-Allow-Origin: *', true); // anyone can show content of this page
+if (!headers_sent()) {
+    // anyone can show content of this page
+    header('Access-Control-Allow-Origin: *', true);
+}
 
 $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache($documentRoot);
 if ($tablesCache->cacheIsValid()) {
     return $tablesCache->getCachedContent();
 }
 
-$visitorHasConfirmedOwnership = true; // just a little hack
+$visitorCanAccessContent = true; // just a little hack
 $rawContent = require __DIR__ . '/content.php';
+ob_start();
 ?>
     <!DOCTYPE html>
     <html lang="cs">
@@ -22,7 +26,7 @@ $rawContent = require __DIR__ . '/content.php';
         $cssFiles = new \DrdPlus\RulesSkeleton\CssFiles($cssRoot);
         foreach ($cssFiles as $cssFile) { ?>
             <link rel="stylesheet" type="text/css"
-                  href="css/<?php echo "$cssFile?version=" . md5_file($cssRoot . '/' . ltrim($cssFile, '\/')); ?>">
+                  href="css/<?= $cssFile ?>">
         <?php } ?>
         <style>
             table {
@@ -39,24 +43,24 @@ $rawContent = require __DIR__ . '/content.php';
     $content = ob_get_contents();
     ob_clean();
     $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
+        $documentRoot,
         !empty($_GET['mode']) && preg_match('~^\s*dev~', $_GET['mode']),
         !empty($_GET['hide']) && trim($_GET['hide']) === 'covered',
         false /* we do not care about introductions */
     );
-    $tables = $htmlHelper->findTablesWithIds(
-        new \Gt\Dom\HTMLDocument($rawContent),
-        array_filter(
-            array_map(
-                function (string $id) {
-                    return trim($id);
-                },
-                explode(',', $_GET['tables'] ?? $_GET['tabulky'] ?? '')
-            ),
-            function (string $id) {
-                return $id !== '';
-            }
-        )
+    $wantedTableIds = array_map(
+        function (string $id) {
+            return trim($id);
+        },
+        explode(',', $_GET['tables'] ?? $_GET['tabulky'] ?? '')
     );
+    $wantedTableIds = array_filter(
+        $wantedTableIds,
+        function (string $id) {
+            return $id !== '';
+        }
+    );
+    $tables = $htmlHelper->findTablesWithIds(new \Gt\Dom\HTMLDocument($rawContent), $wantedTableIds);
     foreach ($tables as $table) {
         $content .= $table->outerHTML . "\n";
     }
@@ -66,4 +70,5 @@ $rawContent = require __DIR__ . '/content.php';
 <?php
 $content .= ob_get_clean();
 $tablesCache->cacheContent($content);
+
 return $content;
