@@ -438,7 +438,7 @@ class HtmlHelper extends StrictObject
         }
     }
 
-    private function addVersionToAsset(Element $element, string $attributeName)
+    private function addVersionToAsset(Element $element, string $attributeName): void
     {
         $source = $element->getAttribute($attributeName);
         if (!$source) {
