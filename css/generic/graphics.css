@@ -21,3 +21,9 @@ body {
     width: 30em;
     max-width: 100%;
 }
+
+.sand-glass {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+}

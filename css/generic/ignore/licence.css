@@ -46,6 +46,10 @@ h1 {
     color: black;
 }
 
+.manifest.trial {
+    font-size: small;
+}
+
 input[type=submit], label {
     cursor: pointer;
 }

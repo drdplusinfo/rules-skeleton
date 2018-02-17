@@ -8,19 +8,51 @@ class UsagePolicy extends StrictObject
     /**
      * @var string
      */
-    private $articleNameToConfirmOwnership;
+    private $articleName;
 
     /**
-     * @param string $articleNameToConfirmOwnership
+     * @param string $articleName
      * @throws \LogicException
+     * @throws \RuntimeException
      */
-    public function __construct(string $articleNameToConfirmOwnership)
+    public function __construct(string $articleName)
     {
-        $articleNameToConfirmOwnership = trim($articleNameToConfirmOwnership);
-        if ($articleNameToConfirmOwnership === '') {
+        $articleName = trim($articleName);
+        if ($articleName === '') {
             throw new \LogicException('Name of the article to confirm ownership can not be empty');
         }
-        $this->articleNameToConfirmOwnership = $articleNameToConfirmOwnership;
+        $this->articleName = $articleName;
+        if (!\headers_sent()) {
+            $this->setCookie('ownershipCookieName', $this->getOwnershipCookieName(), null /* expire on session end*/);
+            $this->setCookie('trialCookieName', $this->getTrialCookieName(), null /* expire on session end*/);
+            $this->setCookie('trialExpiredAtName', 'trialExpiredAt', null /* expire on session end*/);
+        }
+    }
+
+    /**
+     * @param string $cookieName
+     * @param string $value
+     * @param \DateTime|null $expiresAt
+     * @return bool
+     * @throws \RuntimeException
+     */
+    private function setCookie(string $cookieName, string $value, ?\DateTime $expiresAt): bool
+    {
+        $cookieSet = \setcookie(
+            $cookieName,
+            $value,
+            $expiresAt ? $expiresAt->getTimestamp() : 0 /* ends with browser session */,
+            '/', // path
+            $_SERVER['SERVER_NAME'], // domain
+            !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', // secure if possible
+            false /* not HTTP only to allow JS to read it */
+        );
+        if (!$cookieSet) {
+            throw new \RuntimeException('Could not set cookie ' . $cookieName);
+        }
+        $_COOKIE[$cookieName] = $value;
+
+        return true;
     }
 
     /**
@@ -28,37 +60,56 @@ class UsagePolicy extends StrictObject
      */
     public function hasVisitorConfirmedOwnership(): bool
     {
-        return !empty($_COOKIE[$this->getCookieName()]);
+        return !empty($_COOKIE[$this->getOwnershipCookieName()]);
     }
 
     /**
      * @return string
      */
-    private function getCookieName(): string
+    private function getOwnershipCookieName(): string
     {
-        return str_replace('.', '_', 'confirmedOwnershipOf' . ucfirst($this->articleNameToConfirmOwnership));
+        return \str_replace('.', '_', 'confirmedOwnershipOf' . ucfirst($this->articleName));
+    }
+
+    /**
+     * @param \DateTime $expiresAt
+     * @return bool
+     * @throws \RuntimeException
+     */
+    public function confirmOwnershipOfVisitor(\DateTime $expiresAt): bool
+    {
+        return $this->setCookie($this->getOwnershipCookieName(), (string)$expiresAt->getTimestamp(), $expiresAt);
     }
 
     /**
      * @return bool
+     */
+    public function isVisitorUsingTrial(): bool
+    {
+        return !empty($_COOKIE[$this->getTrialCookieName()]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrialCookieName(): string
+    {
+        return \str_replace('.', '_', 'trialOf' . ucfirst($this->articleName));
+    }
+
+    /**
+     * @param \DateTime $expiresAt
+     * @return bool
      * @throws \RuntimeException
      */
-    public function confirmOwnershipOfVisitor(): bool
+    public function activateTrial(\DateTime $expiresAt): bool
     {
-        $cookieSet = \setcookie(
-            $this->getCookieName(),
-            '1', // value
-            (new \DateTime('+ 1 year'))->getTimestamp(), // expires at
-            '/', // path
-            $_SERVER['SERVER_NAME'], // domain
-            !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', // secure
-            true // http only
-        );
-        if (!$cookieSet) {
-            throw new \RuntimeException('Could not set acceptance cookie');
-        }
-        $_COOKIE[$this->getCookieName()] = '1';
+        return $this->setCookie($this->getTrialCookieName(), (string)$expiresAt->getTimestamp(), $expiresAt);
+    }
 
-        return true;
+    public function trialJustExpired(): bool
+    {
+        // expired before 5 seconds or less
+        return !empty($_GET['trialExpiredAt']) && ($_GET['trialExpiredAt'] + 5) >= \time();
     }
 }

@@ -32,6 +32,7 @@ class JsFiles extends AbstractPublicFiles
             return [];
         }
         $genericJsFiles = [];
+        $vendorJsFiles = [];
         $jsFiles = [];
         $jsRelativeRoot = \rtrim($jsRelativeRoot, '\/');
         foreach (\scandir($directory, \SCANDIR_SORT_NONE) as $folder) {
@@ -48,6 +49,10 @@ class JsFiles extends AbstractPublicFiles
                     foreach ($jsFilesFromDir as $jsFileFromDir) {
                         $genericJsFiles[] = $jsFileFromDir;
                     }
+                } elseif ($folder === 'vendor') {
+                    foreach ($jsFilesFromDir as $jsFileFromDir) {
+                        $vendorJsFiles[] = $jsFileFromDir;
+                    }
                 } else {
                     foreach ($jsFilesFromDir as $jsFileFromDir) {
                         $jsFiles[] = $jsFileFromDir;
@@ -58,6 +63,6 @@ class JsFiles extends AbstractPublicFiles
             }
         }
 
-        return \array_merge($genericJsFiles, $jsFiles); // generic first
+        return \array_merge($vendorJsFiles, $genericJsFiles, $jsFiles); // vendor first, generic second, custom last
     }
 }

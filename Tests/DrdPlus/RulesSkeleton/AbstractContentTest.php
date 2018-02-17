@@ -69,7 +69,7 @@ abstract class AbstractContentTest extends TestCase
         return $rulesContent[$key];
     }
 
-    private function confirmOwnership()
+    private function confirmOwnership(): void
     {
         $_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
     }
@@ -108,13 +108,13 @@ abstract class AbstractContentTest extends TestCase
     {
         $usagePolicy = new UsagePolicy($rulesDirBasename);
         $reflectionClass = new \ReflectionClass(UsagePolicy::class);
-        $getCookieName = $reflectionClass->getMethod('getCookieName');
+        $getCookieName = $reflectionClass->getMethod('getOwnershipCookieName');
         $getCookieName->setAccessible(true);
 
         return $getCookieName->invoke($usagePolicy);
     }
 
-    private function removeOwnerShipConfirmation()
+    private function removeOwnerShipConfirmation():void
     {
         unset($_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()]);
     }

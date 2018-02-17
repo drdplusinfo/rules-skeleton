@@ -1,9 +1,12 @@
 <?php
+/** @var \DrdPlus\RulesSkeleton\UsagePolicy $usagePolicy */
 if (!empty($_POST['confirm'])) {
-    $usagePolicy->confirmOwnershipOfVisitor();
-
-    return true;
+    return $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
 }
+if (!empty($_POST['trial'])) {
+    return $usagePolicy->activateTrial(new \DateTime('+4 minutes'));
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="cs">
@@ -13,6 +16,7 @@ if (!empty($_POST['confirm'])) {
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/css/generic/graphics.css">
+    <link rel="stylesheet" href="/css/generic/flash_messages.css">
     <link rel="stylesheet" href="/css/generic/ignore/licence.css">
 </head>
 <body>
@@ -22,6 +26,9 @@ if (!empty($_POST['confirm'])) {
             <div class="horizontal-centered">
                 <div class="content">
                     <div class="background-image"></div>
+                    <?php if ($usagePolicy->trialJustExpired()) { ?>
+                        <div class="message warning">Čas tvého testování se naplnil ⌛</div><?php
+                    } ?>
                     <div>
                         <h1>Prohlášení</h1>
                         <?php if (is_readable($documentRoot . '/name.txt')) {
@@ -50,6 +57,14 @@ if (!empty($_POST['confirm'])) {
                                     <input type="submit" name="confirm" value="Vlastním <?= $name ?>">
                                     Prohlašuji na svou čest, že vlastním
                                     legální kopii <a href="<?= $eShop ?>"><strong><?= $name ?></strong></a>
+                                </label>
+                            </p>
+                        </form>
+                        <form class="manifest trial" action="" method="post">
+                            <p>
+                                <label>
+                                    <input type="submit" name="trial" value="Mrknu na <?= $name ?>">
+                                    Chci se na <?= $name ?> jen na chvíli podívat, ať vím, o co jde (na 4 minuty)
                                 </label>
                             </p>
                         </form>

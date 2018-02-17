@@ -5,7 +5,6 @@ if (empty($visitorCanAccessContent)) {
 
     return;
 }
-
 $pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot);
 
 if ($pageCache->cacheIsValid()) {

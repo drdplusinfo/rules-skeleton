@@ -13,7 +13,7 @@ class LicenceConfirmationTest extends AbstractContentTest
     {
         $html = new HTMLDocument($this->getOwnershipConfirmationContent());
         $forms = $html->getElementsByTagName('form');
-        self::assertCount(2, $forms);
+        self::assertCount(3, $forms);
         foreach ($forms as $index => $form) {
             switch ($index) {
                 case 0:
@@ -21,6 +21,9 @@ class LicenceConfirmationTest extends AbstractContentTest
                     break;
                 case 1:
                     $this->I_can_continue_after_confirmation_of_owning($form);
+                    break;
+                case 2:
+                    $this->I_can_continue_with_trial($form);
             }
         }
     }
@@ -34,13 +37,22 @@ class LicenceConfirmationTest extends AbstractContentTest
             'Missing direct link to current article in e-shop, (put it into eshop_url.txt file)'
         );
         self::assertTrue(\in_array($buyForm->getAttribute('method'), ['' /* get as default */, 'get'], true));
+        self::assertSame('buy', $buyForm->getElementsByTagName('input')->current()->getAttribute('name'));
         self::assertEmpty($buyForm->getAttribute('onsubmit'), 'No confirmation should be required to access e-shop');
     }
 
     private function I_can_continue_after_confirmation_of_owning(Element $confirmForm)
     {
         self::assertSame('post', $confirmForm->getAttribute('method'));
+        self::assertSame('confirm', $confirmForm->getElementsByTagName('input')->current()->getAttribute('name'));
         self::assertStringStartsWith('return window.confirm', $confirmForm->getAttribute('onsubmit'));
+    }
+
+    private function I_can_continue_with_trial(Element $trialForm)
+    {
+        self::assertSame('post', $trialForm->getAttribute('method'));
+        self::assertSame('trial', $trialForm->getElementsByTagName('input')->current()->getAttribute('name'));
+        self::assertEmpty($trialForm->getAttribute('onsubmit'), 'No confirmation should be required for trial access');
     }
 
     /**

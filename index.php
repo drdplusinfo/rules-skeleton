@@ -18,17 +18,24 @@ if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { /
     return;
 }
 
-if (empty($visitorCanAccessContent)) {
+if (empty($visitorCanAccessContent)) { // can be defined externally by including script
     $visitorCanAccessContent = false;
+    $visitorIsUsingTrial = false;
     $request = new \DrdPlus\RulesSkeleton\Request();
     $visitorCanAccessContent = $isVisitorBot = $request->isVisitorBot();
     if (!$isVisitorBot) {
         $usagePolicy = new \DrdPlus\RulesSkeleton\UsagePolicy(basename($documentRoot));
         $visitorCanAccessContent = $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership();
-        if (!$visitorHasConfirmedOwnership) {
+        if (!$visitorCanAccessContent) {
+            $visitorCanAccessContent = $visitorIsUsingTrial = $usagePolicy->isVisitorUsingTrial();
+        }
+        if (!$visitorCanAccessContent) {
             /** @see vendor/drd-plus/rules-html-skeleton/licence_owning_confirmation.php */
             require __DIR__ . '/licence_owning_confirmation.php';
-            $visitorCanAccessContent = $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership(); // could changed
+            $visitorCanAccessContent = $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership(); // may changed
+            if (!$visitorCanAccessContent) {
+                $visitorCanAccessContent = $visitorIsUsingTrial = $usagePolicy->isVisitorUsingTrial(); // may changed
+            }
         }
     }
 }
