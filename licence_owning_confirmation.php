@@ -41,6 +41,14 @@ if (!empty($_POST['trial'])) {
                             $eShop = trim(file_get_contents($documentRoot . '/eshop_url.txt')) ?: $eShop;
                         }
                         ?>
+                        <form class="manifest trial" action="" method="post">
+                            <p>
+                                <label>
+                                    <input type="submit" name="trial" value="Mrknu na <?= $name ?>">
+                                    Chci se na <?= $name ?> jen na chvíli podívat, ať vím, o co jde (na 4 minuty)
+                                </label>
+                            </p>
+                        </form>
                         <form class="manifest" action="<?= $eShop ?>">
                             <p>
                                 <label>
@@ -50,21 +58,13 @@ if (!empty($_POST['trial'])) {
                                 </label>
                             </p>
                         </form>
-                        <form class="manifest" action="" method="post"
+                        <form class="manifest owning" action="" method="post"
                               onsubmit="return window.confirm('A klidně to potvrdím dvakrát')">
                             <p>
                                 <label>
                                     <input type="submit" name="confirm" value="Vlastním <?= $name ?>">
                                     Prohlašuji na svou čest, že vlastním
                                     legální kopii <a href="<?= $eShop ?>"><strong><?= $name ?></strong></a>
-                                </label>
-                            </p>
-                        </form>
-                        <form class="manifest trial" action="" method="post">
-                            <p>
-                                <label>
-                                    <input type="submit" name="trial" value="Mrknu na <?= $name ?>">
-                                    Chci se na <?= $name ?> jen na chvíli podívat, ať vím, o co jde (na 4 minuty)
                                 </label>
                             </p>
                         </form>
