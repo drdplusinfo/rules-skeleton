@@ -45,7 +45,7 @@ if (!empty($_POST['trial'])) {
                             <p>
                                 <label>
                                     <input type="submit" name="trial" value="Mrknu na <?= $name ?>">
-                                    Chci se na <?= $name ?> jen na chvíli podívat, ať vím, o co jde (na 4 minuty)
+                                    Chci se na <?= $name ?> jen na chvíli podívat, ať vím, o co jde
                                 </label>
                             </p>
                         </form>
