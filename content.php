@@ -74,7 +74,7 @@ $htmlHelper->markExternalLinksByClass($htmlDocument);
 $htmlHelper->externalLinksTargetToBlank($htmlDocument);
 $htmlHelper->injectIframesWithRemoteTables($htmlDocument);
 $htmlHelper->addVersionHashToAssets($htmlDocument);
-if (!empty($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], '~drdplus\.loc~')) {
+if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1') || PHP_SAPI === 'cli') {
     $htmlHelper->makeExternalLinksLocal($htmlDocument);
 }
 $updated = $htmlDocument->saveHTML();

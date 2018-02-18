@@ -31,7 +31,7 @@ class HtmlHelper extends StrictObject
         $this->showIntroductionOnly = $showIntroductionOnly;
     }
 
-    private function unifyPath(string $path)
+    private function unifyPath(string $path): string
     {
         $path = \str_replace('\\', '/', $path);
 
@@ -41,7 +41,7 @@ class HtmlHelper extends StrictObject
     /**
      * @param HTMLDocument $html
      */
-    public function prepareSourceCodeLinks(HTMLDocument $html)
+    public function prepareSourceCodeLinks(HTMLDocument $html): void
     {
         if (!$this->inDevMode) {
             foreach ($html->getElementsByClassName('source-code-title') as $withSourceCode) {
@@ -60,7 +60,7 @@ class HtmlHelper extends StrictObject
     /**
      * @param HTMLDocument $html
      */
-    public function addIdsToTablesAndHeadings(HTMLDocument $html)
+    public function addIdsToTablesAndHeadings(HTMLDocument $html): void
     {
         $elementNames = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'th'];
         foreach ($elementNames as $elementName) {
@@ -89,12 +89,12 @@ class HtmlHelper extends StrictObject
         }
     }
 
-    public function replaceDiacriticsFromIds(HTMLDocument $html)
+    public function replaceDiacriticsFromIds(HTMLDocument $html): void
     {
         $this->replaceDiacriticsFromChildrenIds($html->body->children);
     }
 
-    private function replaceDiacriticsFromChildrenIds(HTMLCollection $children)
+    private function replaceDiacriticsFromChildrenIds(HTMLCollection $children): void
     {
         foreach ($children as $child) {
             // recursion
@@ -103,6 +103,7 @@ class HtmlHelper extends StrictObject
             if (!$id) {
                 continue;
             }
+            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $idWithoutDiacritics = StringTools::toConstant($id);
             if ($idWithoutDiacritics === $id) {
                 continue;
@@ -115,12 +116,12 @@ class HtmlHelper extends StrictObject
         }
     }
 
-    public function replaceDiacriticsFromAnchorHashes(HTMLDocument $html)
+    public function replaceDiacriticsFromAnchorHashes(HTMLDocument $html): void
     {
         $this->replaceDiacriticsFromChildrenAnchorHashes($html->getElementsByTagName('a'));
     }
 
-    private function replaceDiacriticsFromChildrenAnchorHashes(\Traversable $children)
+    private function replaceDiacriticsFromChildrenAnchorHashes(\Traversable $children): void
     {
         /** @var Element $child */
         foreach ($children as $child) {
@@ -138,6 +139,7 @@ class HtmlHelper extends StrictObject
             if ($hash === '') {
                 continue;
             }
+            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $hashWithoutDiacritics = StringTools::toConstant($hash);
             if ($hashWithoutDiacritics === $hash) {
                 continue;
@@ -150,12 +152,12 @@ class HtmlHelper extends StrictObject
     /**
      * @param HTMLDocument $html
      */
-    public function addAnchorsToIds(HTMLDocument $html)
+    public function addAnchorsToIds(HTMLDocument $html): void
     {
         $this->addAnchorsToChildrenWithIds($html->body->children);
     }
 
-    private function addAnchorsToChildrenWithIds(HTMLCollection $children)
+    private function addAnchorsToChildrenWithIds(HTMLCollection $children): void
     {
         /** @var Element $child */
         foreach ($children as $child) {
@@ -205,7 +207,7 @@ class HtmlHelper extends StrictObject
     /**
      * @param HTMLDocument $html
      */
-    public function resolveDisplayMode(HTMLDocument $html)
+    public function resolveDisplayMode(HTMLDocument $html): void
     {
         if ($this->inDevMode) {
             foreach ($html->getElementsByTagName('body') as $body) {
@@ -236,7 +238,7 @@ class HtmlHelper extends StrictObject
         }
     }
 
-    private function removeImages(Element $html)
+    private function removeImages(Element $html): void
     {
         do {
             $somethingRemoved = false;
@@ -251,7 +253,7 @@ class HtmlHelper extends StrictObject
         } while ($somethingRemoved); // do not know why, but some nodes are simply skipped on first removal so have to remove them again
     }
 
-    private function removeNonIntroduction(Element $html)
+    private function removeNonIntroduction(Element $html): void
     {
         do {
             $somethingRemoved = false;
@@ -274,7 +276,7 @@ class HtmlHelper extends StrictObject
         } while ($somethingRemoved); // do not know why, but some nodes are simply skipped on first removal so have to remove them again
     }
 
-    private function removeFollowingImageDelimiters(Element $html)
+    private function removeFollowingImageDelimiters(Element $html): void
     {
         $followingDelimiter = false;
         do {
@@ -294,7 +296,7 @@ class HtmlHelper extends StrictObject
         } while ($somethingRemoved);
     }
 
-    private function removeClassesAboutCodeCoverage(Element $html)
+    private function removeClassesAboutCodeCoverage(Element $html): void
     {
         $classesToRemove = ['covered-by-code', 'generic', 'excluded'];
         foreach ($html->children as $child) {
@@ -354,7 +356,7 @@ class HtmlHelper extends StrictObject
         return false;
     }
 
-    public function markExternalLinksByClass(HTMLDocument $html)
+    public function markExternalLinksByClass(HTMLDocument $html): void
     {
         /** @var Element $anchor */
         foreach ($html->getElementsByTagName('a') as $anchor) {
@@ -365,10 +367,14 @@ class HtmlHelper extends StrictObject
         $this->externalUrlsMarked = true;
     }
 
-    public function externalLinksTargetToBlank(HTMLDocument $html)
+    /**
+     * @param HTMLDocument $html
+     * @throws \LogicException
+     */
+    public function externalLinksTargetToBlank(HTMLDocument $html): void
     {
         if (!$this->externalUrlsMarked) {
-            throw new \LogicException('External links have to marked first, use markExternalLinksByClass method for that');
+            throw new \LogicException('External links have to be marked first, use markExternalLinksByClass method for that');
         }
         /** @var Element $anchor */
         foreach ($html->getElementsByClassName('external-url') as $anchor) {
@@ -378,10 +384,14 @@ class HtmlHelper extends StrictObject
         }
     }
 
-    public function injectIframesWithRemoteTables(HTMLDocument $html)
+    /**
+     * @param HTMLDocument $html
+     * @throws \LogicException
+     */
+    public function injectIframesWithRemoteTables(HTMLDocument $html): void
     {
         if (!$this->externalUrlsMarked) {
-            throw new \LogicException('External links have to marked first, use markExternalLinksByClass method for that');
+            throw new \LogicException('External links have to be marked first, use markExternalLinksByClass method for that');
         }
         $remoteDrdPlusLinks = [];
         /** @var Element $anchor */
@@ -408,7 +418,7 @@ class HtmlHelper extends StrictObject
     /**
      * @param HTMLDocument $html
      */
-    public function makeExternalLinksLocal(HTMLDocument $html)
+    public function makeExternalLinksLocal(HTMLDocument $html): void
     {
         foreach ($html->getElementsByClassName('external-url') as $anchor) {
             $anchor->setAttribute('href', $this->makeDrdPlusHostLocal($anchor->getAttribute('href')));
@@ -425,7 +435,7 @@ class HtmlHelper extends StrictObject
         return \preg_replace('~(?:https?:)?//([[:alpha:]]+)\.drdplus\.info/~', 'http://$1.drdplus.loc/', $linkWithRemoteDrdPlusHost);
     }
 
-    public function addVersionHashToAssets(HTMLDocument $html)
+    public function addVersionHashToAssets(HTMLDocument $html): void
     {
         foreach ($html->getElementsByTagName('img') as $image) {
             $this->addVersionToAsset($image, 'src');
