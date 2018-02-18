@@ -91,9 +91,12 @@ ob_start();
                 </div>
             </div>
         </div>
+    </div>
     </body>
     </html>
 <?php $content = ob_get_clean();
+$passCache = new \DrdPlus\RulesSkeleton\PassCache($documentRoot);
+$passCache->saveUnmodifiedContent($content); // for debugging purpose
 $htmlDocument = new \Gt\Dom\HTMLDocument($content);
 $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper($documentRoot, false, false, false);
 $htmlHelper->addVersionHashToAssets($htmlDocument);
@@ -101,4 +104,6 @@ if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1')
     $htmlHelper->makeExternalLinksLocal($htmlDocument);
 }
 $updated = $htmlDocument->saveHTML();
+$passCache->cacheContent($updated);
+
 echo $updated;

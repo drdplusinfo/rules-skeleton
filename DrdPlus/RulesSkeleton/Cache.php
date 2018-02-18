@@ -121,7 +121,7 @@ abstract class Cache extends StrictObject
      * @param string $content
      * @throws \RuntimeException
      */
-    public function cacheContent(string $content)
+    public function cacheContent(string $content): void
     {
         if (PHP_SAPI !== 'cli') {
             \file_put_contents($this->getCacheFileName(), $content);
@@ -134,7 +134,7 @@ abstract class Cache extends StrictObject
     /**
      * @throws \RuntimeException
      */
-    private function clearOldCache()
+    private function clearOldCache(): void
     {
         $currentCommitHash = $this->getCurrentCommitHash();
         $cachingHasSense = $this->cachingHasSense();

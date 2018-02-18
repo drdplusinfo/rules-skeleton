@@ -30,8 +30,8 @@ if (empty($visitorCanAccessContent)) { // can be defined externally by including
             $visitorCanAccessContent = $visitorIsUsingTrial = $usagePolicy->isVisitorUsingTrial();
         }
         if (!$visitorCanAccessContent) {
-            /** @see vendor/drd-plus/rules-html-skeleton/licence_owning_confirmation.php */
-            require __DIR__ . '/licence_owning_confirmation.php';
+            /** @see vendor/drd-plus/rules-html-skeleton/pass.php */
+            require __DIR__ . '/pass.php';
             $visitorCanAccessContent = $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership(); // may changed
             if (!$visitorCanAccessContent) {
                 $visitorCanAccessContent = $visitorIsUsingTrial = $usagePolicy->isVisitorUsingTrial(); // may changed
