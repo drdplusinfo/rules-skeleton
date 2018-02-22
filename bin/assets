@@ -1,0 +1,59 @@
+#!/usr/bin/env php
+<?php
+
+foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php'] as $file) {
+    if (file_exists($file)) {
+        require_once $file;
+    }
+    unset($file);
+}
+
+$options = getopt('cwd::f::r::', ['css', 'html', 'dir::', 'file::', 'root-dir::']);
+
+if (empty($options['dir']) && empty($options['d']) && empty($options['file']) && empty($options['f'])) {
+    echo <<<TEXT
+Options are (at least one of dir or file are required):
+--dir=foo (-d=foo) directory to scan for files (all supported types if not limited) recursively
+--css (-c) for CSS files "only" (can be combined with other types), identified by *.css name
+--js (-j) for JS files "only" (can be combined with other types), identified by *.js name
+--html (-w) for HTML files "only" (can be combined with other types), identified by *.html and *.htm name
+--file=bar (-f=bar) file to transpile to scan for files (all supported types if not limited) recursively, ignores file-type filters and accepts any file, regardless on file suffix
+--root-dir=baz (-r=baz) document root dir to search linked assets against, if not set, then current working dir is used as default
+
+For example
+`assets --css --dir=. --file=index.php`
+will scan current directory (that is the dot meaning) recursively for *.css files, will add index.php field to that list and then edits all linked assets (css, js, images, ico) in those files by adding version=md5 to their names
+
+TEXT;
+
+    exit;
+}
+
+$scanForHtml = null;
+if (isset($options['w']) || isset($options['html'])) {
+    $scanForHtml = true;
+}
+$scanForCss = null;
+if (isset($options['c']) || isset($options['css'])) {
+    $scanForCss = true;
+}
+$assetsVersion = new \DrdPlus\RulesSkeleton\AssetsVersion($scanForCss, $scanForHtml);
+$assetsRootDir = $options['root-dir'] ?? $options['r'] ?? null;
+if ((string)$assetsRootDir === '') {
+    $assetsRootDir = getcwd();
+}
+$dirsToScan = [];
+if (!empty($options['dir'])) {
+    $dirsToScan = array_merge((array)$options['dir'], $dirsToScan);
+}
+if (!empty($options['d'])) {
+    $dirsToScan = array_merge((array)$options['d'], $dirsToScan);
+}
+$filesToTranspile = [];
+if (!empty($options['file'])) {
+    $filesToTranspile = array_merge((array)$options['file'], $filesToTranspile);
+}
+if (!empty($options['f'])) {
+    $filesToTranspile = array_merge((array)$options['f'], $filesToTranspile);
+}
+$assetsVersion->addVersionsToAssetLinks($assetsRootDir, array_unique($dirsToScan), array_unique($filesToTranspile));
