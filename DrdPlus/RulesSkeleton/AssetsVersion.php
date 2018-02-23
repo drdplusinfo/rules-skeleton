@@ -26,15 +26,26 @@ class AssetsVersion extends StrictObject
         }
     }
 
-    public function addVersionsToAssetLinks(string $documentRootDir, array $dirsToScan, array $filesToEdit)
+    // TODO exclude dirs, like css/generic/vendor
+    public function addVersionsToAssetLinks(string $documentRootDir, array $dirsToScan, array $filesToEdit): int
     {
+        $changedFileCount = 0;
         $confirmedFilesToEdit = $this->getConfirmedFilesToEdit($dirsToScan, $filesToEdit);
         foreach ($confirmedFilesToEdit as $confirmedFileToEdit) {
             $content = \file_get_contents($confirmedFileToEdit);
             if ($content) { // TODO warning
                 $replacedContent = $this->addVersionsToAssetLinksInContent($content, $documentRootDir);
+                if ($replacedContent === $content) {
+                    continue;
+                }
+                // TODO warnings
+                if (\file_put_contents($confirmedFileToEdit, $replacedContent)) {
+                    $changedFileCount++;
+                }
             }
         }
+
+        return $changedFileCount;
     }
 
     private function getConfirmedFilesToEdit(array $dirsToScan, array $filesToEdit): array
@@ -47,7 +58,7 @@ class AssetsVersion extends StrictObject
         if ($this->scanDirsForHtml) {
             $wantedFileExtensions[] = 'html';
         }
-        $wantedFileExtensionsRegexp = \implode('|', $wantedFileExtensions);
+        $wantedFileExtensionsRegexp = '(' . \implode('|', $wantedFileExtensions) . ')';
         foreach ($dirsToScan as $dirToScan) {
             $directoryIterator = new \RecursiveDirectoryIterator(
                 $dirToScan,
@@ -55,38 +66,103 @@ class AssetsVersion extends StrictObject
                 | \RecursiveDirectoryIterator::SKIP_DOTS
                 | \RecursiveDirectoryIterator::UNIX_PATHS
                 | \RecursiveDirectoryIterator::KEY_AS_FILENAME
-                | \RecursiveDirectoryIterator::CURRENT_AS_PATHNAME
+                | \RecursiveDirectoryIterator::CURRENT_AS_SELF
             );
-            /** @var  $folder */
-            foreach (new \RecursiveIteratorIterator($directoryIterator) as $folderBaseName => $folderFullPath) {
-                if (\preg_match('~' . $wantedFileExtensionsRegexp . '$', $folderBaseName)) {
-                    $confirmedFilesToEdit[] = $folderBaseName;
+            /** @var \FilesystemIterator $folder */
+            foreach (new \RecursiveIteratorIterator($directoryIterator) as $folderName => $folder) {
+                if (\preg_match('~[.]' . $wantedFileExtensionsRegexp . '$~', $folderName)) {
+                    $confirmedFilesToEdit[] = $folder->getPathname();
                 }
             }
         }
         foreach ($filesToEdit as $fileToEdit) {
             // TODO warnings
-            // TODO relative paths
             if (\is_file($fileToEdit) && \is_readable($fileToEdit)) {
-                $fileToEditRealPath = \realpath($fileToEdit);
-                if ($fileToEditRealPath) {
-                    $confirmedFilesToEdit[] = $fileToEditRealPath;
-                }
+                $confirmedFilesToEdit[] = $fileToEdit;
             }
         }
 
-        return $confirmedFilesToEdit;
+        return \array_unique($confirmedFilesToEdit);
     }
 
     private function addVersionsToAssetLinksInContent(string $content, string $documentRootDir): string
     {
-        $srcFound = preg_match('~(?<src>(?:src="[^"]+"|src=\'[^\']+\'))~', $content, $srcMatches);
-        $urlFound = preg_match('~(?<url>(?:url\([^)]+\)|url\("[^)]+"\)|url\(\'[^)]+\'\)))~', $content, $urlMatches);
+        $srcFound = \preg_match_all('~(?<sources>(?:src="[^"]+"|src=\'[^\']+\'))~', $content, $sourceMatches);
+        $urlFound = \preg_match_all('~(?<urls>(?:url\((?:(?<!data:)[^)])+\)|url\("(?:(?<!data:)[^)])+"\)|url\(\'(?:(?!data:)[^)])+\'\)))~', $content, $urlMatches);
         if (!$srcFound && !$urlFound) {
             return $content; // nothing to change
         }
-        foreach ($srcMatches as $srcMatch) {
-
+        $stringsWithLinks = \array_merge($sourceMatches['sources'] ?? [], $urlMatches['urls'] ?? []);
+        $replacedContent = $content;
+        foreach ($stringsWithLinks as $stringWithLink) {
+            $maybeQuotedLink = \preg_replace('~src|url\(([^)]+)\)~', '$1', $stringWithLink);
+            $link = \trim($maybeQuotedLink, '"\'');
+            $md5 = $this->getFileMd5($link, $documentRootDir);
+            if (!$md5) {
+                continue;
+            }
+            $versionedLink = $this->appendVersionHashToLink($link, $md5);
+            if ($versionedLink === $link) {
+                continue; // nothing changed for current link
+            }
+            $stringWithVersionedLink = \str_replace($link, $versionedLink, $stringWithLink);
+            // do NOT replace link directly in content to avoid misleading replacement on places without wrapping url or src
+            $replacedContent = \str_replace($stringWithLink, $stringWithVersionedLink, $replacedContent);
         }
+
+        return $replacedContent;
+    }
+
+    private function getFileMd5(string $link, string $documentRootDir): ?string
+    {
+        $parts = \parse_url($link);
+        $localPath = $parts['path'] ?? '';
+        if ($localPath === '') {
+            return null; // TODO warning
+        }
+        $file = $documentRootDir . '/' . $localPath;
+        if (!\is_readable($file)) {
+            return null; // TODO warning
+        }
+
+        return \md5_file($file);
+    }
+
+    private function appendVersionHashToLink(string $link, string $version): string
+    {
+        $parsed = \parse_url($link);
+        $queryString = \urldecode((string)($parsed['query'] ?? ''));
+        $queryChunks = explode('&', $queryString);
+        $queryParts = [];
+        foreach ($queryChunks as $queryChunk) {
+            if ($queryChunk === '') {
+                continue;
+            }
+            [$name, $value] = \explode('=', $queryChunk);
+            $queryParts[$name] = $value;
+        }
+        if (!empty($queryParts['version'] && $queryParts['version'] === $version)) {
+            return $link; // nothing to change
+        }
+        $queryParts['version'] = $version;
+        $newQueryChunks = [];
+        foreach ($queryParts as $name => $value) {
+            $newQueryChunks[] = \urlencode($name) . '=' . \urlencode($value);
+        }
+        $versionedQuery = \implode('&', $newQueryChunks);
+        $fragment = '';
+        if ((string)($parsed['fragment'] ?? '') !== '') {
+            $fragment .= '#' . $parsed['fragment'];
+        }
+        if ($fragment !== '') {
+            $versionedQuery .= '#' . $fragment;
+        }
+        $withoutQuery = $link;
+        $queryStartsAt = \strpos($link, '?');
+        if ($queryStartsAt !== false) {
+            $withoutQuery = \substr($link, 0, $queryStartsAt);
+        }
+
+        return $withoutQuery . '?' . $versionedQuery;
     }
 }
