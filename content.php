@@ -10,6 +10,7 @@ $pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot);
 if ($pageCache->cacheIsValid()) {
     return $pageCache->getCachedContent();
 }
+$previousMemoryLimit = \ini_set('memory_limit', '1G');
 ob_start();
 ?>
     <!DOCTYPE html>
@@ -79,5 +80,9 @@ if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1')
 }
 $updated = $htmlDocument->saveHTML();
 $pageCache->cacheContent($updated);
+
+if ($previousMemoryLimit !== false) {
+    \ini_set('memory_limit', $previousMemoryLimit);
+}
 
 return $updated;
