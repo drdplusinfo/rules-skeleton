@@ -8,12 +8,13 @@ foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', 
     unset($file);
 }
 
-$options = getopt('cwd::f::r::', ['css', 'html', 'dir::', 'file::', 'root-dir::']);
+$options = getopt('cwdx::f::r::', ['css', 'html', 'dir::', 'exclude-dir::', 'file::', 'root-dir::']);
 
 if (empty($options['dir']) && empty($options['d']) && empty($options['file']) && empty($options['f'])) {
     echo <<<TEXT
 Options are (at least one of dir or file are required):
 --dir=foo (-d=foo) directory to scan for files (all supported types if not limited) recursively
+--exclude-dir=foo/vendor (-x=foo/vendor) directory to skip for scan (use relative or absolute path annotation as used for --dir)
 --css (-c) for CSS files "only" (can be combined with other types), identified by *.css name
 --js (-j) for JS files "only" (can be combined with other types), identified by *.js name
 --html (-w) for HTML files "only" (can be combined with other types), identified by *.html and *.htm name
@@ -49,6 +50,13 @@ if (!empty($options['dir'])) {
 if (!empty($options['d'])) {
     $dirsToScan = array_merge((array)$options['d'], $dirsToScan);
 }
+$dirsToExclude = [];
+if (!empty($options['exclude-dir'])) {
+    $dirsToExclude = array_merge((array)$options['exclude-dir'], $dirsToExclude);
+}
+if (!empty($options['x'])) {
+    $dirsToExclude = array_merge((array)$options['x'], $dirsToExclude);
+}
 $filesToTranspile = [];
 if (!empty($options['file'])) {
     $filesToTranspile = array_merge((array)$options['file'], $filesToTranspile);
@@ -56,4 +64,4 @@ if (!empty($options['file'])) {
 if (!empty($options['f'])) {
     $filesToTranspile = array_merge((array)$options['f'], $filesToTranspile);
 }
-$assetsVersion->addVersionsToAssetLinks($assetsRootDir, array_unique($dirsToScan), array_unique($filesToTranspile));
+$assetsVersion->addVersionsToAssetLinks($assetsRootDir, array_unique($dirsToScan), array_unique($dirsToExclude), array_unique($filesToTranspile));

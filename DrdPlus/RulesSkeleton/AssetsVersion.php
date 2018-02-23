@@ -26,11 +26,15 @@ class AssetsVersion extends StrictObject
         }
     }
 
-    // TODO exclude dirs, like css/generic/vendor
-    public function addVersionsToAssetLinks(string $documentRootDir, array $dirsToScan, array $filesToEdit): int
+    public function addVersionsToAssetLinks(
+        string $documentRootDir,
+        array $dirsToScan,
+        array $excludeDirs,
+        array $filesToEdit
+    ): int
     {
         $changedFileCount = 0;
-        $confirmedFilesToEdit = $this->getConfirmedFilesToEdit($dirsToScan, $filesToEdit);
+        $confirmedFilesToEdit = $this->getConfirmedFilesToEdit($dirsToScan, $excludeDirs, $filesToEdit);
         foreach ($confirmedFilesToEdit as $confirmedFileToEdit) {
             $content = \file_get_contents($confirmedFileToEdit);
             if ($content) { // TODO warning
@@ -48,7 +52,7 @@ class AssetsVersion extends StrictObject
         return $changedFileCount;
     }
 
-    private function getConfirmedFilesToEdit(array $dirsToScan, array $filesToEdit): array
+    private function getConfirmedFilesToEdit(array $dirsToScan, array $excludeDirs, array $filesToEdit): array
     {
         $confirmedFilesToEdit = [];
         $wantedFileExtensions = [];
@@ -58,6 +62,7 @@ class AssetsVersion extends StrictObject
         if ($this->scanDirsForHtml) {
             $wantedFileExtensions[] = 'html';
         }
+        $excludeDirs = $this->unifyFolderNames($excludeDirs);
         $wantedFileExtensionsRegexp = '(' . \implode('|', $wantedFileExtensions) . ')';
         foreach ($dirsToScan as $dirToScan) {
             $directoryIterator = new \RecursiveDirectoryIterator(
@@ -70,8 +75,15 @@ class AssetsVersion extends StrictObject
             );
             /** @var \FilesystemIterator $folder */
             foreach (new \RecursiveIteratorIterator($directoryIterator) as $folderName => $folder) {
+                $pathName = $folder->getPathname();
+                $dirPath = \dirname($pathName);
+                foreach ($excludeDirs as $excludeDir) {
+                    if ($dirPath === $excludeDir || \strpos($dirPath, $excludeDir . '/') === 0) {
+                        continue;
+                    }
+                }
                 if (\preg_match('~[.]' . $wantedFileExtensionsRegexp . '$~', $folderName)) {
-                    $confirmedFilesToEdit[] = $folder->getPathname();
+                    $confirmedFilesToEdit[] = $pathName;
                 }
             }
         }
@@ -83,6 +95,13 @@ class AssetsVersion extends StrictObject
         }
 
         return \array_unique($confirmedFilesToEdit);
+    }
+
+    private function unifyFolderNames(array $folders): array
+    {
+        return \array_map(function (string $folder) {
+            return \rtrim(\str_replace('\\', '/', $folder), '/');
+        }, $folders);
     }
 
     private function addVersionsToAssetLinksInContent(string $content, string $documentRootDir): string
