@@ -5,11 +5,21 @@ if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1')
 } else {
     ini_set('display_errors', '0');
 }
-
 $documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']), '\/') : getcwd();
 
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
+
+\Tracy\Debugger::setLogger(
+    new \DrdPlus\RulesSkeleton\TracyLogger(
+        '/var/log/php/tracy',
+        'info@drdplus.info',
+        new \Tracy\BlueScreen(),
+        new \PHPMailer\PHPMailer\PHPMailer(),
+        \DrdPlus\RulesSkeleton\TracyLogger::WARNING
+    )
+);
+\Tracy\Debugger::enable();
 
 if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     /** @see vendor/drd-plus/rules-html-skeleton/get_tables.php */
