@@ -17,6 +17,7 @@ ob_start();
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         <link rel="stylesheet" href="/css/generic/graphics.css">
         <link rel="stylesheet" href="/css/generic/flash_messages.css">
+        <link rel="stylesheet" href="/css/generic/contacts.css">
         <link rel="stylesheet" href="/css/generic/ignore/licence.css">
     </head>
     <body>
@@ -26,7 +27,10 @@ ob_start();
                 <div class="horizontal-centered">
                     <div class="content">
                         <div class="background-image"></div>
-                        <?php if ($usagePolicy->trialJustExpired()) { ?>
+                        <?php
+                        $contactsAlwaysVisible = true;
+                        include __DIR__ . '/contact.php';
+                        if ($usagePolicy->trialJustExpired()) { ?>
                             <div class="message warning">Čas tvého testování se naplnil ⌛</div><?php
                         } ?>
                         <div>

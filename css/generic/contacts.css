@@ -1,0 +1,69 @@
+.contacts {
+    text-align: right;
+}
+
+.contacts a.external-url {
+    text-decoration: none;
+}
+
+.contacts:hover {
+    background-color: rgba(32, 30, 28, 0.47);
+}
+
+.contacts.hover {
+    background-color: rgba(32, 30, 28, 0.47);
+}
+
+.contacts.visible {
+    background-color: rgba(32, 30, 28, 0.47);
+}
+
+.contact {
+    margin-right: 1em;
+    padding: 3px;
+    color: rgba(255, 255, 255, 0);
+}
+
+.contacts.visible .contact {
+    color: whitesmoke;
+}
+
+.contact a {
+    color: transparent;
+    border-bottom: none;
+}
+
+.contacts.visible .contact a {
+    color: whitesmoke;
+}
+
+.contact a.external-url {
+    color: transparent;
+    border-bottom: none;
+}
+
+.contacts:hover .contact {
+    color: whitesmoke;
+    text-shadow: 0 1px 1px #c5c5c5, 2px 2px 7px #dddddd;
+}
+
+.contacts.hover .contact {
+    color: whitesmoke;
+    text-shadow: 0 1px 1px #c5c5c5, 2px 2px 7px #dddddd;
+}
+
+.contacts:hover .contact a {
+    color: whitesmoke;
+}
+
+.contacts.hover .contact a {
+    color: whitesmoke;
+}
+
+.fixed-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+}

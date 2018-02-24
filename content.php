@@ -38,6 +38,7 @@ ob_start();
     <body class="container">
     <div class="background-image"></div>
     <?php
+    include __DIR__ . '/contact.php';
     $content = ob_get_contents();
     ob_clean();
 
