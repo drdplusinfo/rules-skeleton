@@ -23,7 +23,7 @@ require_once $documentRoot . '/vendor/autoload.php';
 
 if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     /** @see vendor/drd-plus/rules-html-skeleton/get_tables.php */
-    echo include __DIR__ . '/get_tables.php';
+    echo include __DIR__ . '/parts/get_tables.php';
 
     return;
 }
@@ -41,7 +41,7 @@ if (empty($visitorCanAccessContent)) { // can be defined externally by including
         }
         if (!$visitorCanAccessContent) {
             /** @see vendor/drd-plus/rules-html-skeleton/pass.php */
-            require __DIR__ . '/pass.php';
+            require __DIR__ . '/parts/pass.php';
             $visitorCanAccessContent = $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership(); // may changed
             if (!$visitorCanAccessContent) {
                 $visitorCanAccessContent = $visitorIsUsingTrial = $usagePolicy->isVisitorUsingTrial(); // may changed
@@ -58,10 +58,10 @@ if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !file_exists($documentRoot
     && file_exists($documentRoot . '/pdf') && glob($documentRoot . '/pdf/*.pdf')
 ) {
     /** @see vendor/drd-plus/rules-html-skeleton/get_pdf.php */
-    echo include __DIR__ . '/get_pdf.php';
+    echo include __DIR__ . '/parts/get_pdf.php';
 
     return;
 }
 
 /** @see vendor/drd-plus/rules-html-skeleton/content.php */
-echo require __DIR__ . '/content.php';
+echo require __DIR__ . '/parts/content.php';

@@ -17,7 +17,7 @@ ob_start();
     <html lang="cs">
     <head>
         <title>Tabulky pro Drd+ <?= basename($documentRoot) ?></title>
-        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="shortcut icon" href="../favicon.ico">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         <?php
