@@ -11,10 +11,6 @@
     background-color: rgba(32, 30, 28, 0.47);
 }
 
-.contacts.hover {
-    background-color: rgba(32, 30, 28, 0.47);
-}
-
 .contacts.visible {
     background-color: rgba(32, 30, 28, 0.47);
 }
@@ -25,20 +21,12 @@
     color: rgba(255, 255, 255, 0);
 }
 
-.contacts.visible .contact {
-    color: whitesmoke;
-}
-
 .contact a {
     color: transparent;
     border-bottom: none;
     line-height: initial;
     height: initial;
     display: inline;
-}
-
-.contacts.visible .contact a {
-    color: whitesmoke;
 }
 
 .contact a.external-url {
@@ -51,7 +39,7 @@
     text-shadow: 0 1px 1px #c5c5c5, 2px 2px 7px #dddddd;
 }
 
-.contacts.hover .contact {
+.contacts.visible .contact {
     color: whitesmoke;
     text-shadow: 0 1px 1px #c5c5c5, 2px 2px 7px #dddddd;
 }
@@ -60,7 +48,7 @@
     color: whitesmoke;
 }
 
-.contacts.hover .contact a {
+.contacts.visible .contact a {
     color: whitesmoke;
 }
 

@@ -28,7 +28,7 @@ ob_start();
                     <div class="content">
                         <div class="background-image"></div>
                         <?php
-                        $contactsAlwaysVisible = true;
+                        $contactsPermanent = true;
                         include __DIR__ . '/contact.php';
                         if ($usagePolicy->trialJustExpired()) { ?>
                             <div class="message warning">Čas tvého testování se naplnil ⌛</div><?php

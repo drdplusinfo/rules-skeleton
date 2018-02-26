@@ -1,18 +1,28 @@
 document.addEventListener('DOMContentLoaded', function () {
     var contacts = document.getElementById('contacts');
-    var lastScrollAt;
-    var hideAfterSecond = function () {
-        if (lastScrollAt + 999 < Date.now()) {
-            contacts.classList.remove('hover');
-        } else {
-            setTimeout(hideAfterSecond, 1000);
+    if (contacts.classList.contains('permanent')) {
+        return;
+    }
+    var timeoutSet = false;
+    var hideContactsAt = function (at) {
+        if (at <= Date.now()) {
+            contacts.classList.remove('visible');
+            timeoutSet = false;
+        } else if (!timeoutSet && contacts.classList.contains('visible')) {
+            timeoutSet = true;
+            setTimeout(
+                function () {
+                    hideContactsAt(at);
+                },
+                at - Date.now() + 1 /* to get relative time one millisecond after */
+            );
         }
     };
     window.addEventListener('scroll', function () {
-        lastScrollAt = Date.now();
-        if (!contacts.classList.contains('hover')) {
-            contacts.classList.add('hover');
-            setTimeout(hideAfterSecond, 1000);
+        if (!contacts.classList.contains('visible')) {
+            contacts.classList.add('visible');
+            hideContactsAt(Date.now() + 1000);
         }
     });
+    hideContactsAt(Date.now() + 1000);
 });
