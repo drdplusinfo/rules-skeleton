@@ -5,7 +5,6 @@ if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1')
 } else {
     ini_set('display_errors', '0');
 }
-ini_set('memory_limit', '512M'); // for HtmlDocument on page build
 $documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']), '\/') : getcwd();
 
 /** @noinspection PhpIncludeInspection */
