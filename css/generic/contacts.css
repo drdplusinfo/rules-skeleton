@@ -59,3 +59,16 @@
     left: 0;
     z-index: 1030;
 }
+
+.fixed-top {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+.contacts-placeholder {
+    display: block;
+    height: 0.5em; /* to match bottom of static contacts even if placeholder is moved by Bootstrap */
+}

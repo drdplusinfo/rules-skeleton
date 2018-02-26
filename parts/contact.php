@@ -6,3 +6,8 @@
         <span class="contact"><a target="_blank" href="https://facebook.com/drdplus.info">Facebook</a></span>
     </div>
 </div>
+<?php if (!empty($contactsTop)) { ?>
+    <div class="contacts-placeholder invisible">
+        Placeholder for contacts
+    </div>
+<?php } ?>
