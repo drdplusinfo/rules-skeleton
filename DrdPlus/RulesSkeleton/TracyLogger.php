@@ -192,9 +192,9 @@ class TracyLogger implements ILogger
      * @param string|\Exception|\Throwable
      * @param string $severity
      * @param null|string $logFile
-     * @return void
+     * @return bool
      */
-    private function sendEmail($message, string $severity, ?string $logFile): void
+    private function sendEmail($message, string $severity, ?string $logFile): bool
     {
         $snooze = \is_numeric($this->emailSnooze)
             ? $this->emailSnooze
@@ -207,8 +207,11 @@ class TracyLogger implements ILogger
             )
         ) {
             $email = \implode(', ', (array)$this->email);
-            $this->sendEmailMessage($message, $email, $severity, $logFile);
+
+            return $this->sendEmailMessage($message, $email, $severity, $logFile);
         }
+
+        return false;
     }
 
     /**

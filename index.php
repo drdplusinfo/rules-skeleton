@@ -16,7 +16,7 @@ require_once $documentRoot . '/vendor/autoload.php';
         'info@drdplus.info',
         new \Tracy\BlueScreen(),
         new \PHPMailer\PHPMailer\PHPMailer(),
-        \DrdPlus\RulesSkeleton\TracyLogger::WARNING
+        \DrdPlus\RulesSkeleton\TracyLogger::INFO // includes deprecated
     )
 );
 \Tracy\Debugger::enable();
