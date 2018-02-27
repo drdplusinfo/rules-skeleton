@@ -15,7 +15,7 @@ if (!empty($contactsFixed)) {
             <span class="contact"><a target="_blank" href="https://facebook.com/drdplus.info">Facebook</a></span>
         </div>
     </div>
-<?php if (!empty($contactsTop)) { ?>
+<?php if (empty($contactsBottom) /* contacts are top */ && !empty($contactsFixed)) { ?>
     <div class="contacts-placeholder invisible">
         Placeholder for contacts
     </div>
