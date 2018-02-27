@@ -58,11 +58,23 @@
     border-bottom: none;
 }
 
-.contact .rpgforum-contact {
+.contact a.external-url:visited {
+    color: whitesmoke;
+}
+
+.contact a.rpgforum-contact {
     color: rgb(255, 202, 228);
 }
 
-.contact .facebook-contact {
+.contact a.rpgforum-contact:visited {
+    color: rgb(255, 202, 228);
+}
+
+.contact a.facebook-contact {
+    color: rgb(221, 222, 255);
+}
+
+.contact a.facebook-contact:visited {
     color: rgb(221, 222, 255);
 }
 
