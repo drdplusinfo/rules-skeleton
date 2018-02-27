@@ -38,6 +38,8 @@ ob_start();
     <body class="container">
     <div class="background-image"></div>
     <?php
+    // $contactsFixed bool (default is on heap)
+    // $contactsBottom bool (default is top)
     include __DIR__ . '/contact.php';
     $content = ob_get_contents();
     ob_clean();
