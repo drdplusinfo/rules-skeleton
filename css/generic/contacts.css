@@ -1,6 +1,6 @@
 .contacts {
     text-align: right;
-    min-font-size: 16px;
+    font-size: inherit;
     right: 0;
     left: 0;
     z-index: 1030;
