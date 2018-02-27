@@ -28,8 +28,9 @@ ob_start();
                     <div class="content">
                         <div class="background-image"></div>
                         <?php
-                        $contactsPermanent = true;
-                        include __DIR__ . '/contact.php';
+                        $contactsFixed = true; // (default is on top or bottom of the content)
+                        $contactsBottom = true; // (default is top)
+                        include __DIR__ . '/contacts.php';
                         if ($usagePolicy->trialJustExpired()) { ?>
                             <div class="message warning">Čas tvého testování se naplnil ⌛</div><?php
                         } ?>
