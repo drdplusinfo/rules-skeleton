@@ -62,6 +62,10 @@
     color: whitesmoke;
 }
 
+.menu a.internal {
+    border-bottom: none;
+}
+
 .contact a.rpgforum-contact {
     color: rgb(255, 202, 228);
 }
