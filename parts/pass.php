@@ -14,7 +14,8 @@ ob_start();
         <title>Drd+ <?= basename($documentRoot) ?></title>
         <link rel="shortcut icon" href="/favicon.ico">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+        <link rel="stylesheet" href="/css/generic/vendor/bootstrap/bootstrap.min.css">
         <link rel="stylesheet" href="/css/generic/graphics.css">
         <link rel="stylesheet" href="/css/generic/flash_messages.css">
         <link rel="stylesheet" href="/css/generic/contacts.css">
@@ -29,7 +30,7 @@ ob_start();
                         <div class="background-image"></div>
                         <?php
                         $contactsFixed = true; // (default is on top or bottom of the content)
-                        $contactsBottom = true; // (default is top)
+                        // $contactsBottom = true; // (default is top)
                         include __DIR__ . '/contacts.php';
                         if ($usagePolicy->trialJustExpired()) { ?>
                             <div class="message warning">Čas tvého testování se naplnil ⌛</div><?php

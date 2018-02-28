@@ -21,3 +21,7 @@ a.external-url {
 a.external-url:hover {
     text-shadow: 1px 0 1px #424242;
 }
+
+a.internal {
+    text-decoration: none;
+}

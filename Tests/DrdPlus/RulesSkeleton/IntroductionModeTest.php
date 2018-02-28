@@ -4,6 +4,7 @@ declare(strict_types=1); // on PHP 7+ are standard PHP methods strict to types o
 namespace Tests\DrdPlus\RulesSkeleton;
 
 use Gt\Dom\Element;
+use Gt\Dom\HTMLDocument;
 
 class IntroductionModeTest extends AbstractContentTest
 {
@@ -11,9 +12,13 @@ class IntroductionModeTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_get_introduction_only()
+    public function I_can_get_introduction_only(): void
     {
         $documents = ['standard' => $this->getRulesHtmlDocument('introduction'), 'dev' => $this->getRulesForDevHtmlDocument('introduction')];
+        /**
+         * @var string $mode
+         * @var HTMLDocument $document
+         */
         foreach ($documents as $mode => $document) {
             self::assertGreaterThan(0, $document->children->count());
             $bodies = $document->getElementsByTagName('body');
@@ -44,10 +49,24 @@ class IntroductionModeTest extends AbstractContentTest
                     "Expected some image in mode='$mode' and show='introduction'"
                 );
             } else {
-                self::assertSame(
+                $imagesList = $document->body->getElementsByTagName('img');
+                $images = [];
+                foreach ($imagesList as $image) {
+                    $images[] = $image;
+                }
+                self::assertCount(
                     0,
-                    $document->body->getElementsByTagName('img')->count(),
-                    "No image expected in mode='$mode' and show='introduction'"
+                    $images,
+                    "No image expected in mode='$mode' and show='introduction', got images\n"
+                    . \implode(
+                        "\n",
+                        \array_map(
+                            function (Element $image) {
+                                return $image->outerHTML;
+                            },
+                            $images
+                        )
+                    )
                 );
             }
             self::assertGreaterThan(
@@ -61,7 +80,7 @@ class IntroductionModeTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Every_introduction_is_direct_child_of_body()
+    public function Every_introduction_is_direct_child_of_body(): void
     {
         $html = $this->getRulesHtmlDocument('introduction');
         self::assertGreaterThan(0, $html->children->count());
@@ -76,7 +95,7 @@ class IntroductionModeTest extends AbstractContentTest
         }
     }
 
-    public function guardNoChildIntroduction(Element $child)
+    public function guardNoChildIntroduction(Element $child): void
     {
         foreach ($child->children as $grandChild) {
             self::assertFalse(
@@ -90,7 +109,7 @@ class IntroductionModeTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_see_only_single_delimiter_of_blocks()
+    public function I_see_only_single_delimiter_of_blocks(): void
     {
         $content = $this->getRulesContent('introduction');
         self::assertNotRegExp(

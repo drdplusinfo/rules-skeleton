@@ -242,13 +242,10 @@ class HtmlHelper extends StrictObject
     {
         do {
             $somethingRemoved = false;
-            /** @var Element $child */
-            foreach ($html->children as $child) {
-                if ($child->nodeName === 'img') {
-                    $html->removeChild($child);
-                } else {
-                    $this->removeImages($child);
-                }
+            /** @var Element $image */
+            foreach ($html->getElementsByTagName('img') as $image) {
+                $image->remove();
+                $somethingRemoved = true;
             }
         } while ($somethingRemoved); // do not know why, but some nodes are simply skipped on first removal so have to remove them again
     }
@@ -360,7 +357,9 @@ class HtmlHelper extends StrictObject
     {
         /** @var Element $anchor */
         foreach ($html->getElementsByTagName('a') as $anchor) {
-            if (\preg_match('~^(https?:)?//[^#]~', $anchor->getAttribute('href'))) {
+            if (!$anchor->classList->contains('internal')
+                && \preg_match('~^(https?:)?//[^#]~', $anchor->getAttribute('href'))
+            ) {
                 $anchor->classList->add('external-url');
             }
         }

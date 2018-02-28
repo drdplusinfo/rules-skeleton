@@ -17,7 +17,7 @@ class AnchorsTest extends AbstractContentTest
     /**
      * @test
      */
-    public function All_anchors_point_to_syntactically_valid_links()
+    public function All_anchors_point_to_syntactically_valid_links(): void
     {
         $invalidAnchors = $this->parseInvalidAnchors($this->getOwnershipConfirmationContent());
         self::assertCount(
@@ -39,7 +39,7 @@ class AnchorsTest extends AbstractContentTest
      */
     private function parseInvalidAnchors(string $content): array
     {
-        preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?!#|https?|/).)+[^>]+>)~', $content, $matches);
+        preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?!#|https?|/|mailto).)+[^>]+>)~', $content, $matches);
 
         return $matches['invalidAnchors'];
     }
@@ -47,7 +47,7 @@ class AnchorsTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Local_anchors_with_hashes_point_to_existing_ids()
+    public function Local_anchors_with_hashes_point_to_existing_ids(): void
     {
         $html = $this->getRulesHtmlDocument();
         foreach ($this->getLocalAnchors() as $localAnchor) {
@@ -104,12 +104,14 @@ class AnchorsTest extends AbstractContentTest
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
             curl_setopt($curl, CURLOPT_HEADER, 1);
             curl_setopt($curl, CURLOPT_NOBODY, 1); // to get headers only
+            curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'); // to get headers only
             curl_exec($curl);
             $responseHttpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $redirectUrl = curl_getinfo($curl, CURLINFO_REDIRECT_URL);
             curl_close($curl);
             self::assertTrue(
                 $responseHttpCode >= 200 && $responseHttpCode < 300,
-                "Could not reach $link, got response code $responseHttpCode"
+                "Could not reach $link, got response code $responseHttpCode and redirect URL '$redirectUrl'"
             );
             $checkedExternalAnchors[] = $link;
         }
