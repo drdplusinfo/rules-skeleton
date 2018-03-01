@@ -8,7 +8,7 @@ foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', 
     unset($file);
 }
 
-$options = getopt('cwdx::f::r::', ['css', 'html', 'dir::', 'exclude-dir::', 'file::', 'root-dir::']);
+$options = getopt('d::x::cwf::r::n::', ['dir::', 'exclude-dir::', 'css', 'html', 'file::', 'root-dir::', 'dry-run::']);
 
 if (empty($options['dir']) && empty($options['d']) && empty($options['file']) && empty($options['f'])) {
     echo <<<TEXT
@@ -16,10 +16,10 @@ Options are (at least one of dir or file are required):
 --dir=foo (-d=foo) directory to scan for files (all supported types if not limited) recursively
 --exclude-dir=foo/vendor (-x=foo/vendor) directory to skip for scan (use relative or absolute path annotation as used for --dir)
 --css (-c) for CSS files "only" (can be combined with other types), identified by *.css name
---js (-j) for JS files "only" (can be combined with other types), identified by *.js name
 --html (-w) for HTML files "only" (can be combined with other types), identified by *.html and *.htm name
 --file=bar (-f=bar) file to transpile to scan for files (all supported types if not limited) recursively, ignores file-type filters and accepts any file, regardless on file suffix
 --root-dir=baz (-r=baz) document root dir to search linked assets against, if not set, then current working dir is used as default
+--dry-run (-n) just test count of files to change, without changing them
 
 For example
 `assets --css --dir=. --file=index.php`
@@ -64,4 +64,6 @@ if (!empty($options['file'])) {
 if (!empty($options['f'])) {
     $filesToTranspile = array_merge((array)$options['f'], $filesToTranspile);
 }
-$assetsVersion->addVersionsToAssetLinks($assetsRootDir, array_unique($dirsToScan), array_unique($dirsToExclude), array_unique($filesToTranspile));
+$dryRun = !empty($options['dry-run']) || !empty($dryRun['n']);
+$countOfChangedFiles = $assetsVersion->addVersionsToAssetLinks($assetsRootDir, array_unique($dirsToScan), array_unique($dirsToExclude), array_unique($filesToTranspile), $dryRun);
+echo 'Changed ' . count($countOfChangedFiles) . ' files' . PHP_EOL;

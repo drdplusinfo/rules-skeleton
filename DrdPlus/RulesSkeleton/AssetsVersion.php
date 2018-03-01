@@ -26,30 +26,50 @@ class AssetsVersion extends StrictObject
         }
     }
 
+    /**
+     * @param string $documentRootDir
+     * @param array $dirsToScan
+     * @param array $excludeDirs
+     * @param array $filesToEdit
+     * @param bool $dryRun Want just count of files to change, without changing them in fact?
+     * @return array list of changed files
+     */
     public function addVersionsToAssetLinks(
         string $documentRootDir,
         array $dirsToScan,
         array $excludeDirs,
-        array $filesToEdit
-    ): int
+        array $filesToEdit,
+        bool $dryRun
+    ): array
     {
-        $changedFileCount = 0;
+        $changedFiles = [];
         $confirmedFilesToEdit = $this->getConfirmedFilesToEdit($dirsToScan, $excludeDirs, $filesToEdit);
         foreach ($confirmedFilesToEdit as $confirmedFileToEdit) {
             $content = \file_get_contents($confirmedFileToEdit);
-            if ($content) { // TODO warning
-                $replacedContent = $this->addVersionsToAssetLinksInContent($content, $documentRootDir);
-                if ($replacedContent === $content) {
-                    continue;
-                }
-                // TODO warnings
-                if (\file_put_contents($confirmedFileToEdit, $replacedContent)) {
-                    $changedFileCount++;
-                }
+            if ($content === false) {
+                \trigger_error("File {$confirmedFileToEdit} is not readable, has to skip it", E_USER_WARNING);
+                continue;
             }
+            if ($content === '') {
+                \trigger_error("File {$confirmedFileToEdit} is empty", E_USER_WARNING);
+                continue;
+            }
+            $replacedContent = $this->addVersionsToAssetLinksInContent($content, $documentRootDir);
+            if ($replacedContent === $content) {
+                continue;
+            }
+            if ($dryRun) {
+                $changedFiles[] = $confirmedFileToEdit;
+                continue;
+            }
+            if (!\file_put_contents($confirmedFileToEdit, $replacedContent)) {
+                \trigger_error("Can not write to {$confirmedFileToEdit}", E_USER_WARNING);
+                continue;
+            }
+            $changedFiles[] = $confirmedFileToEdit;
         }
 
-        return $changedFileCount;
+        return $changedFiles;
     }
 
     private function getConfirmedFilesToEdit(array $dirsToScan, array $excludeDirs, array $filesToEdit): array
@@ -88,10 +108,15 @@ class AssetsVersion extends StrictObject
             }
         }
         foreach ($filesToEdit as $fileToEdit) {
-            // TODO warnings
-            if (\is_file($fileToEdit) && \is_readable($fileToEdit)) {
-                $confirmedFilesToEdit[] = $fileToEdit;
+            if (!\is_file($fileToEdit)) {
+                \trigger_error("A file does not exists: {$fileToEdit}", E_USER_WARNING);
+                continue;
             }
+            if (!\is_readable($fileToEdit)) {
+                \trigger_error("A file can not be read: {$fileToEdit}", E_USER_WARNING);
+                continue;
+            }
+            $confirmedFilesToEdit[] = $fileToEdit;
         }
 
         return \array_unique($confirmedFilesToEdit);
@@ -137,11 +162,15 @@ class AssetsVersion extends StrictObject
         $parts = \parse_url($link);
         $localPath = $parts['path'] ?? '';
         if ($localPath === '') {
-            return null; // TODO warning
+            \trigger_error("Can not parse URL from link '{$link}", E_USER_WARNING);
+
+            return null;
         }
         $file = $documentRootDir . '/' . $localPath;
         if (!\is_readable($file)) {
-            return null; // TODO warning
+            \trigger_error("Can not read asset file {$file} figured from link '{$parts['path']}", E_USER_WARNING);
+
+            return null;
         }
 
         return \md5_file($file);
