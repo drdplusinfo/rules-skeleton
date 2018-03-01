@@ -39,7 +39,8 @@ ob_start();
     <div class="background-image"></div>
     <?php
     // $contactsFixed = true; // (default is on top or bottom of the content)
-    // $contactsBottom = true; // (default is top
+    // $contactsBottom = true; // (default is top)
+    // $hideHomeButton = true; // (default is to show)
     include __DIR__ . '/contacts.php';
     $content = ob_get_contents();
     ob_clean();
