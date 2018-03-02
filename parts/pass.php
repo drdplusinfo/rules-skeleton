@@ -102,7 +102,7 @@ ob_start();
     </html>
 <?php $content = ob_get_clean();
 $passCache = new \DrdPlus\RulesSkeleton\PassCache($documentRoot);
-$passCache->saveUnmodifiedContent($content); // for debugging purpose
+$passCache->saveContentForDebug($content); // for debugging purpose
 $htmlDocument = new \Gt\Dom\HTMLDocument($content);
 $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper($documentRoot, false, false, false);
 $htmlHelper->addVersionHashToAssets($htmlDocument);

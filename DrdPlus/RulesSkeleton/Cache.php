@@ -41,9 +41,29 @@ abstract class Cache extends StrictObject
         return \md5(\serialize($_GET));
     }
 
-    private function cachingHasSense(): bool
+    private function getGitStamp(): bool
     {
-        return $this->inProduction() || \exec('git status --short | wc -l') === '0'; // count of changed files, tracked by GIT or not
+        if ($this->inProduction()) {
+            return 'production';
+        }
+        // GIT status is same for any working dir, if it sub-dir of GIT project root
+        \exec('git status --porcelain', $changedFiles, $return);
+        if ($return !== 0) {
+            throw new Exceptions\CanNotGetGitStatus(
+                'Can not run `git status --porcelain`, got result code ' . $return
+            );
+        }
+        if (\count($changedFiles) === 0) {
+            return 'unchanged';
+        }
+        $allStamp = '';
+        foreach ((array)$changedFiles as $changedFile) {
+            $changedFileRelativeName = \preg_replace('~^\s*\S+\s+~', '', $changedFile);
+            $changedFileName = $this->getDocumentRoot() . '/' . $changedFileRelativeName;
+            $allStamp .= \md5_file($changedFileName);
+        }
+
+        return \md5($allStamp);
     }
 
     /**
@@ -52,7 +72,7 @@ abstract class Cache extends StrictObject
      */
     public function cacheIsValid(): bool
     {
-        return \is_readable($this->getCacheFileName()) && $this->cachingHasSense();
+        return \is_readable($this->getCacheFileName());
     }
 
     /**
@@ -61,7 +81,7 @@ abstract class Cache extends StrictObject
      */
     private function getCacheFileName(): string
     {
-        return $this->cacheRoot . "/{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getCurrentGetHash()}_{$this->cachingHasSense()}.html";
+        return $this->cacheRoot . "/{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getGitStamp()}_{$this->getCurrentGetHash()}.html";
     }
 
     /**
@@ -101,10 +121,10 @@ abstract class Cache extends StrictObject
      * @param string $content
      * @throws \RuntimeException
      */
-    public function saveUnmodifiedContent(string $content)
+    public function saveContentForDebug(string $content): void
     {
         if (PHP_SAPI !== 'cli') {
-            \file_put_contents($this->getUnmodifiedFileName(), $content);
+            \file_put_contents($this->getDebuggingFileName(), $content);
         }
     }
 
@@ -112,9 +132,9 @@ abstract class Cache extends StrictObject
      * @return string
      * @throws \RuntimeException
      */
-    private function getUnmodifiedFileName(): string
+    private function getDebuggingFileName(): string
     {
-        return $this->cacheRoot . "/unmodified_{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getCurrentGetHash()}_{$this->cachingHasSense()}.html";
+        return $this->cacheRoot . '/debug_' . \basename($this->getCacheFileName());
     }
 
     /**
@@ -125,9 +145,7 @@ abstract class Cache extends StrictObject
     {
         if (PHP_SAPI !== 'cli') {
             \file_put_contents($this->getCacheFileName(), $content);
-            if ($this->cachingHasSense()) {
-                $this->clearOldCache();
-            }
+            $this->clearOldCache();
         }
     }
 
@@ -137,12 +155,11 @@ abstract class Cache extends StrictObject
     private function clearOldCache(): void
     {
         $currentCommitHash = $this->getCurrentCommitHash();
-        $cachingHasSense = $this->cachingHasSense();
         foreach (\scandir($this->cacheRoot, SCANDIR_SORT_NONE) as $folder) {
             if (\in_array($folder, ['.', '..', '.gitignore'], true)) {
                 continue;
             }
-            if (!$cachingHasSense || \strpos($folder, $currentCommitHash) === false) {
+            if (\strpos($folder, $currentCommitHash) === false) {
                 \unlink($this->cacheRoot . '/' . $folder);
             }
         }

@@ -61,7 +61,7 @@ ob_start();
     </html>
 <?php
 $content .= ob_get_clean();
-$pageCache->saveUnmodifiedContent($content); // for debugging purpose
+$pageCache->saveContentForDebug($content); // for debugging purpose
 $htmlDocument = new \Gt\Dom\HTMLDocument($content);
 $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
     $documentRoot,
