@@ -66,7 +66,8 @@ abstract class Cache extends StrictObject
         $allStamp = '';
         foreach ((array)$changedFiles as $changedFile) {
             $changedFileRelativeName = \preg_replace('~^\s*\S+\s+~', '', $changedFile);
-            $changedFileName = $this->getDocumentRoot() . '/' . $changedFileRelativeName;
+            // double quotes trimmed as files with spaces in name are "double quoted" by GIT status
+            $changedFileName = $this->getDocumentRoot() . '/' . \trim($changedFileRelativeName, '"');
             $allStamp .= \md5_file($changedFileName);
         }
 
