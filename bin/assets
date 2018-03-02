@@ -1,12 +1,21 @@
 #!/usr/bin/env php
 <?php
 
-foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php'] as $file) {
-    if (file_exists($file)) {
-        require_once $file;
+$dirToScanForAutoloader = __DIR__ . '/..';
+do {
+    foreach (scandir($dirToScanForAutoloader, SCANDIR_SORT_NONE) as $folder) {
+        if ($folder === 'vendor') {
+            $autoloadFile = $dirToScanForAutoloader . '/vendor/autoload.php';
+            if (file_exists($autoloadFile)) {
+                require_once $autoloadFile;
+                break 2;
+            }
+            unset($autoloadFile);
+        }
     }
-    unset($file);
-}
+    $dirToScanForAutoloader .= '/..';
+} while (is_readable($dirToScanForAutoloader));
+unset($dirToScanForAutoloader);
 
 $options = getopt('d::x::cwf::r::n::', ['dir::', 'exclude-dir::', 'css', 'html', 'file::', 'root-dir::', 'dry-run::']);
 
