@@ -161,14 +161,17 @@ abstract class Cache extends StrictObject
      */
     private function clearOldCache(): void
     {
-        $currentCommitHash = $this->getCurrentCommitHash();
+        $foldersToSkip = ['.', '..', '.gitignore'];
+        $fileFullPathsToKeep = [$this->getCacheFileName(), $this->getDebuggingFileName()];
         foreach (\scandir($this->cacheRoot, SCANDIR_SORT_NONE) as $folder) {
-            if (\in_array($folder, ['.', '..', '.gitignore'], true)) {
+            if (\in_array($folder, $foldersToSkip, true)) {
                 continue;
             }
-            if (\strpos($folder, $currentCommitHash) === false) {
-                \unlink($this->cacheRoot . '/' . $folder);
+            $folderFullPath = $this->cacheRoot . '/' . $folder;
+            if (\in_array($folderFullPath, $fileFullPathsToKeep, true)) {
+                continue;
             }
+            \unlink($this->cacheRoot . '/' . $folder);
         }
     }
 }
