@@ -43,7 +43,7 @@ abstract class Cache extends StrictObject
 
     private function cachingHasSense(): bool
     {
-        return $this->inProduction() || exec('git diff-index HEAD | wc -l') === '0';
+        return $this->inProduction() || \exec('git status --short | wc -l') === '0'; // count of changed files, tracked by GIT or not
     }
 
     /**
