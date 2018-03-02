@@ -92,7 +92,7 @@ class AnchorsTest extends AbstractContentTest
     /**
      * @test
      */
-    public function All_external_anchors_can_be_reached()
+    public function All_external_anchors_can_be_reached(): void
     {
         foreach ($this->getExternalAnchors() as $anchor) {
             $link = $anchor->getAttribute('href');
@@ -208,7 +208,7 @@ class AnchorsTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Anchor_to_ID_self_is_not_created_if_contains_anchor_element()
+    public function Anchor_to_ID_self_is_not_created_if_contains_anchor_element(): void
     {
         $document = $this->getRulesHtmlDocument();
         $noAnchorsForMe = $document->getElementById(StringTools::toConstant('no-anchor-for-me'));
@@ -232,7 +232,7 @@ class AnchorsTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Original_ids_do_not_have_links_to_self()
+    public function Original_ids_do_not_have_links_to_self(): void
     {
         $document = $this->getRulesHtmlDocument();
         $originalIds = $document->getElementsByClassName(HtmlHelper::INVISIBLE_ID_CLASS);
@@ -245,7 +245,7 @@ class AnchorsTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Only_allowed_elements_are_moved_into_injected_link()
+    public function Only_allowed_elements_are_moved_into_injected_link(): void
     {
         $document = $this->getRulesHtmlDocument();
         $withAllowedElementsOnly = $document->getElementById(self::ID_WITH_ALLOWED_ELEMENTS_ONLY);
@@ -304,7 +304,7 @@ class AnchorsTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_navigate_to_every_calculation_as_it_has_its_id_with_anchor()
+    public function I_can_navigate_to_every_calculation_as_it_has_its_id_with_anchor(): void
     {
         $document = $this->getRulesHtmlDocument();
         $calculations = $document->getElementsByClassName(HtmlHelper::CALCULATION_CLASS);
@@ -318,6 +318,34 @@ class AnchorsTest extends AbstractContentTest
             self::assertNotEmpty($calculation->id, 'Missing ID for calculation: ' . \trim($calculation->innerHTML));
             self::assertRegExp('~^(Hod na|Hod proti|Výpočet) ~u', $calculation->getAttribute('data-original-id'));
             self::assertRegExp('~^(hod_na|hod_proti|vypocet)_~u', $calculation->id);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function Links_to_altar_uses_https(): void
+    {
+        foreach ($this->getExternalAnchors() as $anchor) {
+            $link = $anchor->getAttribute('href');
+            if (!\strpos($link, 'altar.cz')) {
+                continue;
+            }
+            self::assertStringStartsWith('https', $link, "Every link to Altar should be via https: '$link'");
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function Links_to_vukogvazd_uses_https(): void
+    {
+        foreach ($this->getExternalAnchors() as $anchor) {
+            $link = $anchor->getAttribute('href');
+            if (!\strpos($link, 'vukogvazd.cz')) {
+                continue;
+            }
+            self::assertStringStartsWith('https', $link, "Every link to vukogvazd should be via https: '$link'");
         }
     }
 }
