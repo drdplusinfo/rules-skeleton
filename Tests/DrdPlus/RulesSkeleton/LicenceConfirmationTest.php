@@ -13,6 +13,8 @@ class LicenceConfirmationTest extends AbstractContentTest
     {
         if (\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING) {
             self::assertFalse(false, 'Text-only content is accessible for anyone and licence need not to be confirmed');
+
+            return;
         }
         $html = new HTMLDocument($this->getOwnershipConfirmationContent());
         $forms = $html->getElementsByTagName('form');

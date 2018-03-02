@@ -11,12 +11,13 @@ class TablesTest extends AbstractContentTest
      */
     public function I_can_get_tables_only(): void
     {
-        if (\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING) {
-            self::assertFalse(false, 'Text-only content does not have tables');
-        }
         $withTables = $this->getRulesHtmlDocument('', ['tables' => '' /* all of them */]);
         $body = $withTables->getElementsByTagName('body')[0];
         $tables = $body->getElementsByTagName('table');
-        self::assertGreaterThan(0, \count($tables), 'Expected some tables');
+        if (\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING) {
+            self::assertCount(0, $tables, 'Text-only content does not have tables');
+        } else {
+            self::assertGreaterThan(0, \count($tables), 'Expected some tables');
+        }
     }
 }

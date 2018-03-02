@@ -142,6 +142,8 @@ class AnchorsTest extends AbstractContentTest
         $externalAnchorsWithHash = $this->getExternalAnchorsWithHash();
         if (\defined('NO_EXTERNAL_ANCHORS_WITH_HASH_EXPECTED') && NO_EXTERNAL_ANCHORS_WITH_HASH_EXPECTED) {
             self::assertCount(0, $externalAnchorsWithHash);
+
+            return;
         }
         foreach ($externalAnchorsWithHash as $anchor) {
             $link = $anchor->getAttribute('href');
@@ -271,7 +273,12 @@ class AnchorsTest extends AbstractContentTest
     public function I_can_go_directly_to_eshop_item_page(): void
     {
         if (\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING) {
-            self::assertFalse(false, 'Text-only content is accessible for anyone and can not be bought');
+            self::assertFileNotExists(
+                $this->getEshopFileName(),
+                'Text-only content is accessible for anyone and can not be bought'
+            );
+
+            return;
         }
         self::assertFileExists($this->getEshopFileName());
         $eshopUrl = \trim(\file_get_contents($this->getEshopFileName()));
