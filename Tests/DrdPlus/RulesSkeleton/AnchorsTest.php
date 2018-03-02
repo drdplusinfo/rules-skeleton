@@ -347,12 +347,19 @@ class AnchorsTest extends AbstractContentTest
      */
     public function Links_to_vukogvazd_uses_https(): void
     {
+        $linksToVukogvazd = [];
         foreach ($this->getExternalAnchors() as $anchor) {
             $link = $anchor->getAttribute('href');
-            if (!\strpos($link, 'vukogvazd.cz')) {
-                continue;
+            if (\strpos($link, 'vukogvazd.cz')) {
+                $linksToVukogvazd[] = $link;
             }
-            self::assertStringStartsWith('https', $link, "Every link to vukogvazd should be via https: '$link'");
+        }
+        if (\count($linksToVukogvazd) === 0) {
+            self::assertFalse(false, 'No links to Vukogvazd have been found');
+        } else {
+            foreach ($linksToVukogvazd as $linkToVukogvazd) {
+                self::assertStringStartsWith('https', $linkToVukogvazd, "Every link to vukogvazd should be via https: '$linkToVukogvazd'");
+            }
         }
     }
 }
