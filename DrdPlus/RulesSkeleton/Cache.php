@@ -88,7 +88,12 @@ abstract class Cache extends StrictObject
      */
     private function getCacheFileName(): string
     {
-        return $this->cacheRoot . "/{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getGitStamp()}_{$this->getCurrentGetHash()}.html";
+        return $this->cacheRoot . "/{$this->getCacheFileBaseNamePartWithoutGet()}_{$this->getCurrentGetHash()}.html";
+    }
+
+    private function getCacheFileBaseNamePartWithoutGet(): string
+    {
+        return "{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getGitStamp()}";
     }
 
     /**
@@ -131,7 +136,7 @@ abstract class Cache extends StrictObject
     public function saveContentForDebug(string $content): void
     {
         if (PHP_SAPI !== 'cli') {
-            \file_put_contents($this->getDebuggingFileName(), $content);
+            \file_put_contents($this->getCacheDebugFileName(), $content);
         }
     }
 
@@ -139,9 +144,14 @@ abstract class Cache extends StrictObject
      * @return string
      * @throws \RuntimeException
      */
-    private function getDebuggingFileName(): string
+    private function getCacheDebugFileName(): string
     {
-        return $this->cacheRoot . '/debug_' . \basename($this->getCacheFileName());
+        return $this->cacheRoot . "/{$this->geCacheDebugFileBaseNamePartWithoutGet()}_{$this->getCurrentGetHash()}.html";
+    }
+
+    private function geCacheDebugFileBaseNamePartWithoutGet(): string
+    {
+        return 'debug_' . $this->getCacheFileBaseNamePartWithoutGet();
     }
 
     /**
@@ -162,14 +172,15 @@ abstract class Cache extends StrictObject
     private function clearOldCache(): void
     {
         $foldersToSkip = ['.', '..', '.gitignore'];
-        $fileFullPathsToKeep = [$this->getCacheFileName(), $this->getDebuggingFileName()];
+        $prefixesOfFilesToKeep = [$this->getCacheFileBaseNamePartWithoutGet(), $this->geCacheDebugFileBaseNamePartWithoutGet()];
         foreach (\scandir($this->cacheRoot, SCANDIR_SORT_NONE) as $folder) {
             if (\in_array($folder, $foldersToSkip, true)) {
                 continue;
             }
-            $folderFullPath = $this->cacheRoot . '/' . $folder;
-            if (\in_array($folderFullPath, $fileFullPathsToKeep, true)) {
-                continue;
+            foreach ($prefixesOfFilesToKeep as $prefixOfFileToKeep) {
+                if (\strpos($folder, $prefixOfFileToKeep) === 0) {
+                    continue 2;
+                }
             }
             \unlink($this->cacheRoot . '/' . $folder);
         }
