@@ -1,4 +1,7 @@
 <?php
+declare(strict_types=1);
+/** be strict for parameter types, https://www.quora.com/Are-strict_types-in-PHP-7-not-a-bad-idea */
+
 namespace DrdPlus\RulesSkeleton;
 
 use Granam\Strict\Object\StrictObject;
@@ -41,7 +44,11 @@ abstract class Cache extends StrictObject
         return \md5(\serialize($_GET));
     }
 
-    private function getGitStamp(): bool
+    /**
+     * @return string
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
+     */
+    private function getGitStamp(): string
     {
         if ($this->inProduction()) {
             return 'production';
