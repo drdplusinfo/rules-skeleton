@@ -187,8 +187,11 @@ class AnchorsTest extends AbstractContentTest
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
             $cookieName = null;
             if (strpos($link, 'drdplus.loc') !== false || strpos($link, 'drdplus.info') !== false) {
-                self::assertNotEmpty(preg_match('~//(?<prefix>[^.]+)\.drdplus\.~', $link, $matches));
-                $cookieName = $this->getCookieNameForOwnershipConfirmation($matches['prefix']);
+                self::assertNotEmpty(
+                    preg_match('~//(?<subDomain>[^.]+([.][^.]+)*)\.drdplus\.~', $link, $matches),
+                    "Expected some sub-domain in link $link"
+                );
+                $cookieName = $this->getCookieNameForOwnershipConfirmation($matches['subDomain']);
                 curl_setopt($curl, CURLOPT_COOKIE, $cookieName . '=1');
             }
             $content = curl_exec($curl);
