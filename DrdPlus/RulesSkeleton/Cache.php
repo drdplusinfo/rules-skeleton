@@ -38,7 +38,7 @@ abstract class Cache extends StrictObject
 
     private function getCurrentGetHash(): string
     {
-        return md5(serialize($_GET));
+        return \md5(\serialize($_GET));
     }
 
     private function cachingHasSense(): bool
@@ -52,7 +52,7 @@ abstract class Cache extends StrictObject
      */
     public function cacheIsValid(): bool
     {
-        return is_readable($this->getCacheFileName()) && $this->cachingHasSense();
+        return \is_readable($this->getCacheFileName()) && $this->cachingHasSense();
     }
 
     /**
