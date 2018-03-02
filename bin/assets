@@ -74,5 +74,17 @@ if (!empty($options['f'])) {
     $filesToTranspile = array_merge((array)$options['f'], $filesToTranspile);
 }
 $dryRun = !empty($options['dry-run']) || !empty($dryRun['n']);
-$countOfChangedFiles = $assetsVersion->addVersionsToAssetLinks($assetsRootDir, array_unique($dirsToScan), array_unique($dirsToExclude), array_unique($filesToTranspile), $dryRun);
-echo 'Changed ' . count($countOfChangedFiles) . ' files' . PHP_EOL;
+$changedFiles = $assetsVersion->addVersionsToAssetLinks($assetsRootDir, array_unique($dirsToScan), array_unique($dirsToExclude), array_unique($filesToTranspile), $dryRun);
+if (count($changedFiles) === 0) {
+    echo 'No files changed at all' . PHP_EOL;
+} else {
+    echo 'Changed ' . count($changedFiles) . ' files' . PHP_EOL
+        . implode(
+            array_map(
+                function (string $changedFile) {
+                    return '- ' . $changedFile . PHP_EOL;
+                },
+                $changedFiles
+            )
+        );
+}
