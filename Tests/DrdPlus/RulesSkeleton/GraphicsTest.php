@@ -8,17 +8,7 @@ class GraphicsTest extends AbstractContentTest
      */
     public function Licence_page_has_colored_background_image(): void
     {
-        if (\defined('FREE_ACCESS') && FREE_ACCESS) {
-            self::assertFileNotExists(
-                $this->getDocumentRoot() . '/images/rules-full.png',
-                'Content with free access does not need colored background image for licence page'
-            );
-        } else {
-            self::assertFileExists(
-                $this->getDocumentRoot() . '/images/rules-full.png',
-                'Licenced content need colored background image for licence page'
-            );
-        }
+        self::assertFileExists($this->getDocumentRoot() . '/images/rules-full.png');
     }
 
     /**
