@@ -43,6 +43,7 @@ class AssetsVersion extends StrictObject
     ): array
     {
         $changedFiles = [];
+        $documentRootDir = \ltrim($documentRootDir, '/');
         $confirmedFilesToEdit = $this->getConfirmedFilesToEdit($dirsToScan, $excludeDirs, $filesToEdit);
         foreach ($confirmedFilesToEdit as $confirmedFileToEdit) {
             $content = \file_get_contents($confirmedFileToEdit);
