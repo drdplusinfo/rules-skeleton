@@ -13,5 +13,10 @@ if (is_readable(__DIR__ . '/tests_config.php')) {
     // const JUST_TEXT_TESTING = true;
     // const NO_EXTERNAL_ANCHORS_WITH_HASH_EXPECTED = true;
     include_once __DIR__ . '/tests_config.php';
+    if (\defined('JUST_TEXT_TESTING') && !\defined('FREE_ACCESS')) {
+        // free access is a subset of 'just a text'
+        define('FREE_ACCESS', JUST_TEXT_TESTING);
+    }
+
 }
 const DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST = __DIR__ . '/../index.php';

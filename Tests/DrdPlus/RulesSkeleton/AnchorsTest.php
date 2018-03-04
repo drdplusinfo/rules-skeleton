@@ -275,9 +275,7 @@ class AnchorsTest extends AbstractContentTest
      */
     public function I_can_go_directly_to_eshop_item_page(): void
     {
-        if ((\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING)
-            || (\defined('FREE_ACCESS') && FREE_ACCESS)
-        ) {
+        if (\defined('FREE_ACCESS') && FREE_ACCESS) {
             self::assertFileNotExists(
                 $this->getEshopFileName(),
                 'Text-only and free content is accessible for anyone and can not be bought'

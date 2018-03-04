@@ -11,9 +11,7 @@ class LicenceConfirmationTest extends AbstractContentTest
      */
     public function I_have_to_confirm_owning_of_a_licence_first(): void
     {
-        if ((\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING)
-            || (\defined('FREE_ACCESS') && FREE_ACCESS)
-        ) {
+        if (\defined('FREE_ACCESS') && FREE_ACCESS) {
             self::assertFalse(
                 false,
                 'Text-only and free content is accessible for anyone and licence need not to be confirmed'
