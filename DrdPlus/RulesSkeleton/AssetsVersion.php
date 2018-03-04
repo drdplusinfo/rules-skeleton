@@ -43,7 +43,7 @@ class AssetsVersion extends StrictObject
     ): array
     {
         $changedFiles = [];
-        $documentRootDir = \ltrim($documentRootDir, '/');
+        $documentRootDir = \rtrim($documentRootDir, '/');
         $confirmedFilesToEdit = $this->getConfirmedFilesToEdit($dirsToScan, $excludeDirs, $filesToEdit);
         foreach ($confirmedFilesToEdit as $confirmedFileToEdit) {
             $content = \file_get_contents($confirmedFileToEdit);
@@ -167,7 +167,7 @@ class AssetsVersion extends StrictObject
 
             return null;
         }
-        $file = $documentRootDir . '/' . $localPath;
+        $file = $documentRootDir . '/' . \ltrim($localPath, '/');
         if (!\is_readable($file)) {
             \trigger_error("Can not read asset file {$file} figured from link '{$parts['path']}", E_USER_WARNING);
 
