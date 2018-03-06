@@ -33,7 +33,7 @@ ob_start();
                         // $contactsBottom = true; // (default is top)
                         include __DIR__ . '/contacts.php';
                         if ($usagePolicy->trialJustExpired()) { ?>
-                            <div class="message warning">Čas tvého testování se naplnil ⌛</div><?php
+                            <div class="message warning">⌛ Čas tvého testování se naplnil ⌛</div><?php
                         } ?>
                         <div>
                             <h1>Prohlášení</h1>
