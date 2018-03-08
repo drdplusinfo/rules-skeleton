@@ -22,8 +22,11 @@ abstract class Cache extends StrictObject
     {
         $this->documentRoot = $documentRoot;
         $this->cacheRoot = "{$this->getDocumentRoot()}/cache/" . (PHP_SAPI === 'cli' ? 'cli' : 'web');
-        if (!\file_exists($this->cacheRoot) && !@\mkdir($this->cacheRoot, 0775, true /* recursive */) && !\is_dir($this->cacheRoot)) {
-            throw new \RuntimeException('Can not create directory for page cache ' . $this->cacheRoot);
+        if (!\file_exists($this->cacheRoot)) {
+            if (!@\mkdir($this->cacheRoot, 0775, true /* recursive */) && !\is_dir($this->cacheRoot)) {
+                throw new \RuntimeException('Can not create directory for page cache ' . $this->cacheRoot);
+            }
+            \chmod($this->cacheRoot, 0775); // because mkdir mode does not work...
         }
     }
 
