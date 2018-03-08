@@ -143,7 +143,8 @@ abstract class Cache extends StrictObject
      */
     public function saveContentForDebug(string $content): void
     {
-        \file_put_contents($this->getCacheDebugFileName(), $content);
+        \file_put_contents($this->getCacheDebugFileName(), $content, \LOCK_EX);
+        \chmod($this->getCacheDebugFileName(), 0664);
     }
 
     /**
