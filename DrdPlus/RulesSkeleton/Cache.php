@@ -21,7 +21,7 @@ abstract class Cache extends StrictObject
     public function __construct(string $documentRoot)
     {
         $this->documentRoot = $documentRoot;
-        $this->cacheRoot = "{$this->getDocumentRoot()}/cache/pages";
+        $this->cacheRoot = "{$this->getDocumentRoot()}/cache/" . (PHP_SAPI === 'cli' ? 'cli' : 'web');
         if (!\file_exists($this->cacheRoot) && !@\mkdir($this->cacheRoot, 0775, true /* recursive */) && !\is_dir($this->cacheRoot)) {
             throw new \RuntimeException('Can not create directory for page cache ' . $this->cacheRoot);
         }
@@ -138,9 +138,7 @@ abstract class Cache extends StrictObject
      */
     public function saveContentForDebug(string $content): void
     {
-        if (PHP_SAPI !== 'cli') {
-            \file_put_contents($this->getCacheDebugFileName(), $content);
-        }
+        \file_put_contents($this->getCacheDebugFileName(), $content);
     }
 
     /**
@@ -163,10 +161,8 @@ abstract class Cache extends StrictObject
      */
     public function cacheContent(string $content): void
     {
-        if (PHP_SAPI !== 'cli') {
-            \file_put_contents($this->getCacheFileName(), $content);
-            $this->clearOldCache();
-        }
+        \file_put_contents($this->getCacheFileName(), $content);
+        $this->clearOldCache();
     }
 
     /**
@@ -175,15 +171,13 @@ abstract class Cache extends StrictObject
     private function clearOldCache(): void
     {
         $foldersToSkip = ['.', '..', '.gitignore'];
-        $prefixesOfFilesToKeep = [$this->getCacheFileBaseNamePartWithoutGet(), $this->geCacheDebugFileBaseNamePartWithoutGet()];
+        $currentCacheStamp = $this->getCurrentCommitHash();
         foreach (\scandir($this->cacheRoot, SCANDIR_SORT_NONE) as $folder) {
             if (\in_array($folder, $foldersToSkip, true)) {
                 continue;
             }
-            foreach ($prefixesOfFilesToKeep as $prefixOfFileToKeep) {
-                if (\strpos($folder, $prefixOfFileToKeep) === 0) {
-                    continue 2;
-                }
+            if (\strpos($folder, $currentCacheStamp) !== false) {
+                continue;
             }
             \unlink($this->cacheRoot . '/' . $folder);
         }

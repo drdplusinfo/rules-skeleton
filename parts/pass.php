@@ -32,6 +32,7 @@ ob_start();
                         $contactsFixed = true; // (default is on top or bottom of the content)
                         // $contactsBottom = true; // (default is top)
                         include __DIR__ . '/contacts.php';
+                        unset($contactsFixed);
                         if ($usagePolicy->trialJustExpired()) { ?>
                             <div class="message warning">⌛ Čas tvého testování se naplnil ⌛</div><?php
                         } ?>
@@ -101,6 +102,7 @@ ob_start();
     </body>
     </html>
 <?php $content = ob_get_clean();
+unset($name);
 $passCache = new \DrdPlus\RulesSkeleton\PassCache($documentRoot);
 $passCache->saveContentForDebug($content); // for debugging purpose
 $htmlDocument = new \Gt\Dom\HTMLDocument($content);
@@ -113,3 +115,4 @@ $updated = $htmlDocument->saveHTML();
 $passCache->cacheContent($updated);
 
 echo $updated;
+unset($updated);
