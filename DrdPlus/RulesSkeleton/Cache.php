@@ -161,7 +161,8 @@ abstract class Cache extends StrictObject
      */
     public function cacheContent(string $content): void
     {
-        \file_put_contents($this->getCacheFileName(), $content);
+        \file_put_contents($this->getCacheFileName(), $content, \LOCK_EX);
+        \chmod($this->getCacheFileName(), 0664);
         $this->clearOldCache();
     }
 
