@@ -26,7 +26,7 @@ abstract class Cache extends StrictObject
             if (!@\mkdir($this->cacheRoot, 0775, true /* recursive */) && !\is_dir($this->cacheRoot)) {
                 throw new \RuntimeException('Can not create directory for page cache ' . $this->cacheRoot);
             }
-            \chmod($this->cacheRoot, 0775); // because mkdir mode does not work...
+            \chmod($this->cacheRoot, 0775); // because umask could suppress it
         }
     }
 
