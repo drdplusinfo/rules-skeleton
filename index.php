@@ -10,12 +10,23 @@ $documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']),
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
 
+$mailer = new \PHPMailer\PHPMailer\PHPMailer();
+if (is_readable('/etc/php/smtp/config.ini')) {
+    $smtpConfig = parse_ini_file('/etc/php/smtp/config.ini');
+    if ($smtpConfig) {
+        $mailer->isSMTP(); // set mailer to SMTP in fact
+        $mailer->Host = $smtpConfig['host'];
+        $mailer->Port = $smtpConfig['port'];
+        $mailer->Username = $smtpConfig['username'];
+        $mailer->Password = $smtpConfig['password'];
+    }
+}
 \Tracy\Debugger::setLogger(
     new \DrdPlus\RulesSkeleton\TracyLogger(
         '/var/log/php/tracy',
         'info@drdplus.info',
         new \Tracy\BlueScreen(),
-        new \PHPMailer\PHPMailer\PHPMailer(),
+        $mailer,
         \DrdPlus\RulesSkeleton\TracyLogger::INFO // includes deprecated
     )
 );
