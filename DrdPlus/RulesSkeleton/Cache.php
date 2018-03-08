@@ -66,11 +66,16 @@ abstract class Cache extends StrictObject
         }
         $allStamp = '';
         foreach ((array)$changedFiles as $changedFile) {
-            $changedFileRelativeName = \preg_replace('~^\s*\S+\s+~', '', $changedFile);
-            $changedFileRelativeName = StringTools::octalToUtf8($changedFileRelativeName);
+            \preg_match('~^\s*(?<change>\S+)\s+(?<relativeFileName>.+)$~', $changedFile, $matches);
+            ['change' => $change, 'relativeFileName' => $changedRelativeFileName] = $matches;
+            $changedRelativeFileName = StringTools::octalToUtf8($changedRelativeFileName);
             // double quotes trimmed as files with spaces in name are "double quoted" by GIT status
-            $changedFileName = $this->getDocumentRoot() . '/' . \trim($changedFileRelativeName, '"');
-            $allStamp .= \md5_file($changedFileName);
+            $changedFileName = $this->getDocumentRoot() . '/' . \trim($changedRelativeFileName, '"');
+            if ($change === 'D') { // file was deleted, so we can not get MD5 of its content
+                $allStamp .= '0';
+            } else {
+                $allStamp .= \md5_file($changedFileName);
+            }
         }
 
         return \md5($allStamp);
