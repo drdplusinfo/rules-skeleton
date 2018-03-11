@@ -472,4 +472,11 @@ class HtmlHelper extends StrictObject
     {
         return \md5_file($fileName) ?: (string)\time(); // time is fallback
     }
+
+    public function getPageTitle(): string
+    {
+        return \is_readable($this->rootDir . '/name.txt')
+            ? \file_get_contents($this->rootDir . '/name.txt')
+            : ('Drd+ ' . \basename($this->rootDir));
+    }
 }

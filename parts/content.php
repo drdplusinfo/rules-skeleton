@@ -11,12 +11,18 @@ if ($pageCache->cacheIsValid()) {
     return $pageCache->getCachedContent();
 }
 $previousMemoryLimit = \ini_set('memory_limit', '1G');
+$htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
+    $documentRoot,
+    !empty($_GET['mode']) && strpos(trim($_GET['mode']), 'dev') === 0,
+    !empty($_GET['hide']) && strpos(trim($_GET['hide']), 'cover') === 0,
+    !empty($_GET['show']) && strpos(trim($_GET['show']), 'intro') === 0
+);
 ob_start();
 ?>
     <!DOCTYPE html>
     <html lang="cs">
     <head>
-        <title><?= is_readable($documentRoot . '/name.txt') ? file_get_contents($documentRoot . '/name.txt') : ('Drd+ ' . basename($documentRoot)) ?></title>
+        <title><?= $htmlHelper->getPageTitle() ?></title>
         <link rel="shortcut icon" href="/favicon.ico">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
@@ -63,12 +69,6 @@ ob_start();
 $content .= ob_get_clean();
 $pageCache->saveContentForDebug($content); // for debugging purpose
 $htmlDocument = new \Gt\Dom\HTMLDocument($content);
-$htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper(
-    $documentRoot,
-    !empty($_GET['mode']) && strpos(trim($_GET['mode']), 'dev') === 0,
-    !empty($_GET['hide']) && strpos(trim($_GET['hide']), 'cover') === 0,
-    !empty($_GET['show']) && strpos(trim($_GET['show']), 'intro') === 0
-);
 $htmlHelper->prepareSourceCodeLinks($htmlDocument);
 $htmlHelper->addIdsToTablesAndHeadings($htmlDocument);
 $htmlHelper->replaceDiacriticsFromIds($htmlDocument);

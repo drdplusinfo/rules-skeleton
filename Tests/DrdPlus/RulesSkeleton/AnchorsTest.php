@@ -403,4 +403,56 @@ class AnchorsTest extends AbstractContentTest
             );
         }
     }
+
+    /**
+     * @test
+     */
+    public function Journal_comes_from_drdplus_info(): void
+    {
+        $linksToJournal = [];
+        foreach ($this->getExternalAnchors() as $anchor) {
+            $link = $anchor->getAttribute('href');
+            $link = $this->turnToLocalLink($link);
+            if (\preg_match('~/denik_\w+\.pdf$~', $link)) {
+                $linksToJournal[] = $link;
+            }
+        }
+        if (\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING && \count($linksToJournal) === 0) {
+            self::assertFalse(false, 'No links to PDF journal have been found');
+
+            return;
+        }
+        self::assertGreaterThan(
+            0,
+            \count($linksToJournal),
+            'PDF journal is missing, expected link to ' . $this->getExpectedLinkToJournal()
+        );
+        $expectedOriginalLink = $this->getExpectedLinkToJournal();
+        $expectedLink = $this->turnToLocalLink($expectedOriginalLink);
+        foreach ($linksToJournal as $linkToJournal) {
+            self::assertSame(
+                $expectedLink,
+                $linkToJournal,
+                "Every link to PDF journal should lead to $expectedOriginalLink"
+            );
+        }
+    }
+
+    private function getExpectedLinkToJournal(): string
+    {
+        return 'https://www.drdplus.info/pdf/deniky/denik_' . StringTools::toConstant($this->getProfessionName()) . '.pdf';
+    }
+
+    private function getProfessionName(): string
+    {
+        $pageTitle = $this->getPageTitle();
+        self::assertSame(
+            1,
+            \preg_match('~\s(?<lastWord>\w+)$~u', $pageTitle, $matches),
+            "No last word found in '$pageTitle'"
+        );
+        $lastWord = $matches['lastWord'];
+
+        return \rtrim($lastWord, 'aeiouy');
+    }
 }

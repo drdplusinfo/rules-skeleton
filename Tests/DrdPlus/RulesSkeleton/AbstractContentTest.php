@@ -1,6 +1,7 @@
 <?php
 namespace Tests\DrdPlus\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use Gt\Dom\HTMLDocument;
 use PHPUnit\Framework\TestCase;
@@ -107,14 +108,19 @@ abstract class AbstractContentTest extends TestCase
     protected function getCookieNameForOwnershipConfirmation(string $rulesDirBasename): string
     {
         $usagePolicy = new UsagePolicy($rulesDirBasename);
-        $reflectionClass = new \ReflectionClass(UsagePolicy::class);
+        try {
+            $reflectionClass = new \ReflectionClass(UsagePolicy::class);
+        } catch (\ReflectionException $reflectionException) {
+            self::fail($reflectionException->getMessage());
+            exit;
+        }
         $getCookieName = $reflectionClass->getMethod('getOwnershipCookieName');
         $getCookieName->setAccessible(true);
 
         return $getCookieName->invoke($usagePolicy);
     }
 
-    private function removeOwnerShipConfirmation():void
+    private function removeOwnerShipConfirmation(): void
     {
         unset($_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()]);
     }
@@ -190,6 +196,11 @@ abstract class AbstractContentTest extends TestCase
     protected function getEshopFileName(): string
     {
         return $this->getDocumentRoot() . '/eshop_url.txt';
+    }
+
+    protected function getPageTitle(): string
+    {
+        return (new HtmlHelper($this->getDocumentRoot(), false, false, false))->getPageTitle();
     }
 
 }
