@@ -39,7 +39,7 @@ class AnchorsTest extends AbstractContentTest
      */
     private function parseInvalidAnchors(string $content): array
     {
-        preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?!#|https?|/|mailto).)+[^>]+>)~', $content, $matches);
+        preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?!#|https?|[.]?/|mailto).)+[^>]+>)~', $content, $matches);
 
         return $matches['invalidAnchors'];
     }
@@ -51,7 +51,7 @@ class AnchorsTest extends AbstractContentTest
     {
         $html = $this->getRulesHtmlDocument();
         foreach ($this->getLocalAnchors() as $localAnchor) {
-            $expectedId = substr($localAnchor->getAttribute('href'), 1); // just remove leading #
+            $expectedId = \substr($localAnchor->getAttribute('href'), 1); // just remove leading #
             /** @var Element $target */
             $target = $html->getElementById($expectedId);
             self::assertNotEmpty($target, 'No element found by ID ' . $expectedId);
@@ -147,9 +147,7 @@ class AnchorsTest extends AbstractContentTest
         }
         foreach ($externalAnchorsWithHash as $anchor) {
             $link = $anchor->getAttribute('href');
-            if (\strpos($link, 'drdplus.info') > 0) {
-                $link = \str_replace(['drdplus.info', 'https'], ['drdplus.loc', 'http'], $link); // turn link into local version
-            }
+            $link = $this->turnToLocalLink($link);
             $html = $this->getExternalHtmlDocument($link);
             $expectedId = \substr($link, \strpos($link, '#') + 1); // just remove leading #
             /** @var Element $target */
@@ -161,6 +159,15 @@ class AnchorsTest extends AbstractContentTest
             );
             self::assertNotRegExp('~(display:\s*none|visibility:\s*hidden)~', $target->getAttribute('style'));
         }
+    }
+
+    private function turnToLocalLink(string $link): string
+    {
+        if (\strpos($link, 'drdplus.info') === false) {
+            return $link;
+        }
+
+        return \str_replace(['drdplus.info', 'https'], ['drdplus.loc', 'http'], $link); // turn link into local version
     }
 
     /**
@@ -180,15 +187,15 @@ class AnchorsTest extends AbstractContentTest
 
     private function getExternalHtmlDocument(string $href): HTMLDocument
     {
-        $link = substr($href, 0, strpos($href, '#') ?: null);
+        $link = \substr($href, 0, \strpos($href, '#') ?: null);
         if ((self::$externalHtmlDocuments[$link] ?? null) === null) {
             $curl = curl_init($link);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
             $cookieName = null;
-            if (strpos($link, 'drdplus.loc') !== false || strpos($link, 'drdplus.info') !== false) {
+            if (\strpos($link, 'drdplus.loc') !== false || \strpos($link, 'drdplus.info') !== false) {
                 self::assertNotEmpty(
-                    preg_match('~//(?<subDomain>[^.]+([.][^.]+)*)\.drdplus\.~', $link, $matches),
+                    \preg_match('~//(?<subDomain>[^.]+([.][^.]+)*)\.drdplus\.~', $link, $matches),
                     "Expected some sub-domain in link $link"
                 );
                 $cookieName = $this->getCookieNameForOwnershipConfirmation($matches['subDomain']);
@@ -198,11 +205,12 @@ class AnchorsTest extends AbstractContentTest
             curl_close($curl);
             self::assertNotEmpty($content, 'Nothing has been fetched from URL ' . $link);
             self::$externalHtmlDocuments[$link] = @new HTMLDocument($content);
-            if (strpos($link, 'drdplus.loc') !== false || strpos($link, 'drdplus.info') !== false) {
+            if (\strpos($link, 'drdplus.loc') !== false || \strpos($link, 'drdplus.info') !== false) {
                 self::assertCount(
                     0,
                     self::$externalHtmlDocuments[$link]->getElementsByTagName('form'),
-                    'Seems we have not passed ownership check for ' . $href . ' by using cookie of name ' . var_export($cookieName, true)
+                    'Seems we have not passed ownership check for ' . $href . ' by using cookie of name '
+                    . \var_export($cookieName, true)
                 );
             }
         }
@@ -363,6 +371,36 @@ class AnchorsTest extends AbstractContentTest
             foreach ($linksToVukogvazd as $linkToVukogvazd) {
                 self::assertStringStartsWith('https', $linkToVukogvazd, "Every link to vukogvazd should be via https: '$linkToVukogvazd'");
             }
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function Character_sheet_comes_from_drdplus_info(): void
+    {
+        $linksToCharacterSheet = [];
+        foreach ($this->getExternalAnchors() as $anchor) {
+            $link = $anchor->getAttribute('href');
+            $link = $this->turnToLocalLink($link);
+            if (\strpos($link, 'charakternik.pdf')) {
+                $linksToCharacterSheet[] = $link;
+            }
+        }
+        if (\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING && \count($linksToCharacterSheet) === 0) {
+            self::assertFalse(false, 'No links to PDF character sheet have been found');
+
+            return;
+        }
+        self::assertGreaterThan(0, \count($linksToCharacterSheet), 'PDF character sheet is missing');
+        $expectedOriginalLink = 'https://www.drdplus.info/pdf/charakternik.pdf';
+        $expectedLink = $this->turnToLocalLink($expectedOriginalLink);
+        foreach ($linksToCharacterSheet as $linkToCharacterSheet) {
+            self::assertSame(
+                $expectedLink,
+                $linkToCharacterSheet,
+                "Every link to PDF character sheet should lead to $expectedOriginalLink"
+            );
         }
     }
 }
