@@ -387,7 +387,11 @@ class AnchorsTest extends AbstractContentTest
                 $linksToCharacterSheet[] = $link;
             }
         }
-        if (\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING && \count($linksToCharacterSheet) === 0) {
+        if (((\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING)
+                || (\defined('NOT_FOR_PLAYERS') && NOT_FOR_PLAYERS)
+            )
+            && \count($linksToCharacterSheet) === 0
+        ) {
             self::assertFalse(false, 'No links to PDF character sheet have been found');
 
             return;
@@ -417,7 +421,11 @@ class AnchorsTest extends AbstractContentTest
                 $linksToJournal[] = $link;
             }
         }
-        if (\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING && \count($linksToJournal) === 0) {
+        if (((\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING)
+                || (\defined('NOT_FOR_PLAYERS') && NOT_FOR_PLAYERS)
+            )
+            || \count($linksToJournal) === 0
+        ) {
             self::assertFalse(false, 'No links to PDF journal have been found');
 
             return;
