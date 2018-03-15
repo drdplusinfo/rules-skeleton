@@ -25,7 +25,7 @@ class TracyDebugger extends StrictObject
                 self::getPhpMailer(),
                 TracyLogger::INFO, // includes deprecated
                 -1, // no snooze at all (but very same error is NOT reported twice)
-                'error.drdplus.info@email.cz' // from
+                'noreply@drdplus.info' // from
             );
         Debugger::setLogger($tracyLogger);
         Debugger::enable($inProductionMode);
