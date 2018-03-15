@@ -10,27 +10,7 @@ $documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']),
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
 
-$mailer = new \PHPMailer\PHPMailer\PHPMailer();
-if (is_readable('/etc/php/smtp/config.ini')) {
-    $smtpConfig = parse_ini_file('/etc/php/smtp/config.ini');
-    if ($smtpConfig) {
-        $mailer->isSMTP(); // set mailer to SMTP in fact
-        $mailer->Host = $smtpConfig['host'];
-        $mailer->Port = $smtpConfig['port'];
-        $mailer->Username = $smtpConfig['username'];
-        $mailer->Password = $smtpConfig['password'];
-    }
-}
-\Tracy\Debugger::setLogger(
-    new \DrdPlus\RulesSkeleton\TracyLogger(
-        '/var/log/php/tracy',
-        'info@drdplus.info',
-        new \Tracy\BlueScreen(),
-        $mailer,
-        \DrdPlus\RulesSkeleton\TracyLogger::INFO // includes deprecated
-    )
-);
-\Tracy\Debugger::enable();
+\DrdPlus\RulesSkeleton\TracyDebugger::enable(true);
 
 if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     /** @see vendor/drd-plus/rules-html-skeleton/get_tables.php */
