@@ -251,7 +251,7 @@ class TracyLogger implements ILogger
             try {
                 $this->mailer->setFrom("noreply@$host");
             } catch (\Exception $exception) {
-                $this->logEmailFailed($parts['subject']);
+                $this->logEmailFailed($parts['subject'], $exception);
 
                 return false;
             }
@@ -286,7 +286,7 @@ class TracyLogger implements ILogger
         try {
             $sent = $this->mailer->send();
             if (!$sent) {
-                $this->logEmailFailed($parts['subject']);
+                $this->logEmailFailed($parts['subject'], new \RuntimeException('Just has not been sent'));
             } else {
                 $this->logEmailSent($parts['subject']);
             }
@@ -297,15 +297,18 @@ class TracyLogger implements ILogger
                 $this->logToFile($exception, self::WARNING);
             } catch (\RuntimeException $runtimeException) {
             }
-            $this->logEmailFailed($parts['subject']);
+            $this->logEmailFailed($parts['subject'], $exception);
 
             return false;
         }
     }
 
-    private function logEmailFailed(string $emailSubject): bool
+    private function logEmailFailed(string $emailSubject, \Exception $exception): bool
     {
-        return (bool)@\file_put_contents($this->logDirectory . '/email_failed.log', \date(\DATE_ATOM) . ' ' . $emailSubject);
+        return (bool)@\file_put_contents(
+            $this->logDirectory . '/email_failed.log',
+            \date(\DATE_ATOM) . ' ' . $emailSubject . ': ' . $exception->getMessage() . '; ' . $exception->getTraceAsString()
+        );
     }
 
     private function logEmailSent(string $emailSubject): bool
