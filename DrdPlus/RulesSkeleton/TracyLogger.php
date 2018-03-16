@@ -286,7 +286,7 @@ class TracyLogger implements ILogger
         try {
             $sent = $this->mailer->send();
             if (!$sent) {
-                $this->logEmailFailed($parts['subject'], new \RuntimeException('Just has not been sent'));
+                $this->logEmailFailed($parts['subject'], new \RuntimeException($this->mailer->ErrorInfo));
             } else {
                 $this->logEmailSent($parts['subject']);
             }
