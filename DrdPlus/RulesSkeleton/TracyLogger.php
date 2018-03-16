@@ -251,11 +251,9 @@ class TracyLogger implements ILogger
             try {
                 $this->mailer->setFrom("noreply@$host");
             } catch (\Exception $exception) {
-                try {
-                    $this->mailer->setFrom('noreply@example.com');
-                } catch (\Exception $exception) {
-                    return false;
-                }
+                $this->logEmailFailed($parts['subject']);
+
+                return false;
             }
         }
         $this->mailer->addAddress($emailTo);
@@ -286,15 +284,33 @@ class TracyLogger implements ILogger
         }
 
         try {
-            return $this->mailer->send();
+            $sent = $this->mailer->send();
+            if (!$sent) {
+                $this->logEmailFailed($parts['subject']);
+            } else {
+                $this->logEmailSent($parts['subject']);
+            }
+
+            return $sent;
         } catch (\Exception $exception) {
             try {
                 $this->logToFile($exception, self::WARNING);
             } catch (\RuntimeException $runtimeException) {
             }
+            $this->logEmailFailed($parts['subject']);
 
             return false;
         }
+    }
+
+    private function logEmailFailed(string $emailSubject): bool
+    {
+        return (bool)@\file_put_contents($this->logDirectory . '/email_failed.log', \date(\DATE_ATOM) . ' ' . $emailSubject);
+    }
+
+    private function logEmailSent(string $emailSubject): bool
+    {
+        return (bool)@\file_put_contents($this->logDirectory . '/email_sent.log', \date(\DATE_ATOM) . ' ' . $emailSubject);
     }
 
     /**
