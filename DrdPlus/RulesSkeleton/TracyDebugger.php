@@ -23,9 +23,7 @@ class TracyDebugger extends StrictObject
                 'info@drdplus.info',
                 new BlueScreen(),
                 self::getPhpMailer(),
-                TracyLogger::INFO, // includes deprecated
-                -1, // no snooze at all (but very same error is NOT reported twice)
-                'noreply@drdplus.info' // from
+                TracyLogger::INFO // includes deprecated
             );
         Debugger::setLogger($tracyLogger);
         Debugger::enable($inProductionMode);
