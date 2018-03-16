@@ -71,6 +71,24 @@ class TracyLogger implements ILogger
      */
     public function log($message, $severity = self::INFO): ?string
     {
+        $exceptionFile = $this->logToFile($message, $severity);
+        if ($this->lowestSeverityToSendEmail
+            && $this->severityToNumber($severity) >= $this->severityToNumber($this->lowestSeverityToSendEmail)
+        ) {
+            $this->sendEmail($message, $severity, $exceptionFile);
+        }
+
+        return $exceptionFile;
+    }
+
+    /**
+     * @param $message
+     * @param string $severity
+     * @return null|string
+     * @throws \RuntimeException
+     */
+    private function logToFile($message, string $severity): ?string
+    {
         $exceptionFile = $message instanceof \Throwable
             ? $this->getExceptionFile($message)
             : null;
@@ -87,11 +105,6 @@ class TracyLogger implements ILogger
         }
         if ($exceptionFile) {
             $this->logExceptionToFile($message, $exceptionFile);
-        }
-        if ($this->lowestSeverityToSendEmail
-            && $this->severityToNumber($severity) >= $this->severityToNumber($this->lowestSeverityToSendEmail)
-        ) {
-            $this->sendEmail($message, $severity, $exceptionFile);
         }
 
         return $exceptionFile;
@@ -275,6 +288,11 @@ class TracyLogger implements ILogger
         try {
             return $this->mailer->send();
         } catch (\Exception $exception) {
+            try {
+                $this->logToFile($exception, self::WARNING);
+            } catch (\RuntimeException $runtimeException) {
+            }
+
             return false;
         }
     }
