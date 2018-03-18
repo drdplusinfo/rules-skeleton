@@ -63,6 +63,12 @@ ob_start();
     foreach ($sortedHtmlFiles as $htmlFile) {
         $content .= file_get_contents($htmlFile);
     } ?>
+    <script type="text/javascript">
+        $(document).on('click', '.lightbox', function (event) {
+            event.preventDefault();
+            $(this).ekkoLightbox();
+        });
+    </script>
     </body>
     </html>
 <?php
