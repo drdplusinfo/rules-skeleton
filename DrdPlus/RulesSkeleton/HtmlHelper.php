@@ -8,7 +8,6 @@ use Granam\Strict\Object\StrictObject;
 use Granam\String\StringTools;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLCollection;
-use Gt\Dom\HTMLDocument;
 
 class HtmlHelper extends StrictObject
 {
@@ -42,9 +41,9 @@ class HtmlHelper extends StrictObject
     }
 
     /**
-     * @param HTMLDocument $html
+     * @param HtmlDocument $html
      */
-    public function prepareSourceCodeLinks(HTMLDocument $html): void
+    public function prepareSourceCodeLinks(HtmlDocument $html): void
     {
         if (!$this->inDevMode) {
             foreach ($html->getElementsByClassName('source-code-title') as $withSourceCode) {
@@ -61,9 +60,9 @@ class HtmlHelper extends StrictObject
     }
 
     /**
-     * @param HTMLDocument $html
+     * @param HtmlDocument $html
      */
-    public function addIdsToTablesAndHeadings(HTMLDocument $html): void
+    public function addIdsToTablesAndHeadings(HtmlDocument $html): void
     {
         $elementNames = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'th'];
         foreach ($elementNames as $elementName) {
@@ -92,7 +91,7 @@ class HtmlHelper extends StrictObject
         }
     }
 
-    public function replaceDiacriticsFromIds(HTMLDocument $html): void
+    public function replaceDiacriticsFromIds(HtmlDocument $html): void
     {
         $this->replaceDiacriticsFromChildrenIds($html->body->children);
     }
@@ -119,7 +118,7 @@ class HtmlHelper extends StrictObject
         }
     }
 
-    public function replaceDiacriticsFromAnchorHashes(HTMLDocument $html): void
+    public function replaceDiacriticsFromAnchorHashes(HtmlDocument $html): void
     {
         $this->replaceDiacriticsFromChildrenAnchorHashes($html->getElementsByTagName('a'));
     }
@@ -153,9 +152,9 @@ class HtmlHelper extends StrictObject
     }
 
     /**
-     * @param HTMLDocument $html
+     * @param HtmlDocument $html
      */
-    public function addAnchorsToIds(HTMLDocument $html): void
+    public function addAnchorsToIds(HtmlDocument $html): void
     {
         $this->addAnchorsToChildrenWithIds($html->body->children);
     }
@@ -208,9 +207,9 @@ class HtmlHelper extends StrictObject
     }
 
     /**
-     * @param HTMLDocument $html
+     * @param HtmlDocument $html
      */
-    public function resolveDisplayMode(HTMLDocument $html): void
+    public function resolveDisplayMode(HtmlDocument $html): void
     {
         if ($this->inDevMode) {
             foreach ($html->getElementsByTagName('body') as $body) {
@@ -309,11 +308,11 @@ class HtmlHelper extends StrictObject
     }
 
     /**
-     * @param HTMLDocument $html
+     * @param HtmlDocument $html
      * @param array|string[] $requiredIds filter of required tables by their IDs
      * @return array|Element[]
      */
-    public function findTablesWithIds(HTMLDocument $html, array $requiredIds = []): array
+    public function findTablesWithIds(HtmlDocument $html, array $requiredIds = []): array
     {
         $tablesWithIds = [];
         /** @var Element $table */
@@ -356,7 +355,7 @@ class HtmlHelper extends StrictObject
         return false;
     }
 
-    public function markExternalLinksByClass(HTMLDocument $html): void
+    public function markExternalLinksByClass(HtmlDocument $html): void
     {
         /** @var Element $anchor */
         foreach ($html->getElementsByTagName('a') as $anchor) {
@@ -370,10 +369,10 @@ class HtmlHelper extends StrictObject
     }
 
     /**
-     * @param HTMLDocument $html
+     * @param HtmlDocument $html
      * @throws \LogicException
      */
-    public function externalLinksTargetToBlank(HTMLDocument $html): void
+    public function externalLinksTargetToBlank(HtmlDocument $html): void
     {
         if (!$this->externalUrlsMarked) {
             throw new \LogicException('External links have to be marked first, use markExternalLinksByClass method for that');
@@ -387,10 +386,10 @@ class HtmlHelper extends StrictObject
     }
 
     /**
-     * @param HTMLDocument $html
+     * @param HtmlDocument $html
      * @throws \LogicException
      */
-    public function injectIframesWithRemoteTables(HTMLDocument $html): void
+    public function injectIframesWithRemoteTables(HtmlDocument $html): void
     {
         if (!$this->externalUrlsMarked) {
             throw new \LogicException('External links have to be marked first, use markExternalLinksByClass method for that');
@@ -418,9 +417,9 @@ class HtmlHelper extends StrictObject
     }
 
     /**
-     * @param HTMLDocument $html
+     * @param HtmlDocument $html
      */
-    public function makeExternalLinksLocal(HTMLDocument $html): void
+    public function makeExternalLinksLocal(HtmlDocument $html): void
     {
         foreach ($html->getElementsByClassName('external-url') as $anchor) {
             $anchor->setAttribute('href', $this->makeDrdPlusHostLocal($anchor->getAttribute('href')));
@@ -437,7 +436,7 @@ class HtmlHelper extends StrictObject
         return \preg_replace('~(?:https?:)?//([[:alpha:]]+)\.drdplus\.info/~', 'http://$1.drdplus.loc/', $linkWithRemoteDrdPlusHost);
     }
 
-    public function addVersionHashToAssets(HTMLDocument $html): void
+    public function addVersionHashToAssets(HtmlDocument $html): void
     {
         foreach ($html->getElementsByTagName('img') as $image) {
             $this->addVersionToAsset($image, 'src');

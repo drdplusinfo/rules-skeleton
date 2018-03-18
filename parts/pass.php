@@ -105,7 +105,7 @@ ob_start();
 unset($name);
 $passCache = new \DrdPlus\RulesSkeleton\PassCache($documentRoot);
 $passCache->saveContentForDebug($content); // for debugging purpose
-$htmlDocument = new \Gt\Dom\HTMLDocument($content);
+$htmlDocument = new \DrdPlus\RulesSkeleton\HtmlDocument($content);
 $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper($documentRoot, false, false, false);
 $htmlHelper->addVersionHashToAssets($htmlDocument);
 if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1') || PHP_SAPI === 'cli') {

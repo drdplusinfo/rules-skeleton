@@ -60,7 +60,7 @@ ob_start();
             return $id !== '';
         }
     );
-    $tables = $htmlHelper->findTablesWithIds(new \Gt\Dom\HTMLDocument($rawContent), $wantedTableIds);
+    $tables = $htmlHelper->findTablesWithIds(new \DrdPlus\RulesSkeleton\HtmlDocument($rawContent), $wantedTableIds);
     foreach ($tables as $table) {
         $content .= $table->outerHTML . "\n";
     }

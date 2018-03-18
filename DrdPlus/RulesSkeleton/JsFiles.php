@@ -66,6 +66,23 @@ class JsFiles extends AbstractPublicFiles
             }
         }
 
+        \usort($vendorJsFiles, function (string $someJs, string $anotherJs) {
+            if (\strpos($someJs, 'jquery') !== false) {
+                return -1;
+            }
+            if (\strpos($anotherJs, 'jquery') !== false) {
+                return 1;
+            }
+            if (\strpos($someJs, 'bootstrap') !== false) {
+                return -1;
+            }
+            if (\strpos($anotherJs, 'bootstrap') !== false) {
+                return 1;
+            }
+
+            return $someJs <=> $anotherJs;
+        });
+
         return \array_merge($vendorJsFiles, $genericJsFiles, $jsFiles); // vendor first, generic second, custom last
     }
 }

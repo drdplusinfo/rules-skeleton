@@ -68,7 +68,7 @@ ob_start();
 <?php
 $content .= ob_get_clean();
 $pageCache->saveContentForDebug($content); // for debugging purpose
-$htmlDocument = new \Gt\Dom\HTMLDocument($content);
+$htmlDocument = new \DrdPlus\RulesSkeleton\HtmlDocument($content);
 $htmlHelper->prepareSourceCodeLinks($htmlDocument);
 $htmlHelper->addIdsToTablesAndHeadings($htmlDocument);
 $htmlHelper->replaceDiacriticsFromIds($htmlDocument);
