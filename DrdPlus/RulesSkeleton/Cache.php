@@ -21,10 +21,13 @@ abstract class Cache extends StrictObject
     public function __construct(string $documentRoot)
     {
         $this->documentRoot = $documentRoot;
-        $this->cacheRoot = "{$this->getDocumentRoot()}/cache/{$this->getCurrentVersion()}/" . (PHP_SAPI === 'cli' ? 'cli' : 'web');
+        $this->cacheRoot = "{$this->getDocumentRoot()}/cache/" . (PHP_SAPI === 'cli' ? 'cli' : 'web') . "/{$this->getCurrentVersion()}";
         if (!\file_exists($this->cacheRoot)) {
             if (!@\mkdir($this->cacheRoot, 0775, true /* recursive */) && !\is_dir($this->cacheRoot)) {
                 throw new \RuntimeException('Can not create directory for page cache ' . $this->cacheRoot);
+            }
+            if (PHP_SAPI === 'cli') {
+                \chgrp($this->cacheRoot, 'www-data');
             }
             \chmod($this->cacheRoot, 0775); // because umask could suppress it
         }
