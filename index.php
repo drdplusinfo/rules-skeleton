@@ -10,7 +10,7 @@ $documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']),
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
 
-\DrdPlus\RulesSkeleton\TracyDebugger::enable(true);
+\DrdPlus\RulesSkeleton\TracyDebugger::enable();
 
 if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     /** @see vendor/drd-plus/rules-html-skeleton/get_tables.php */
