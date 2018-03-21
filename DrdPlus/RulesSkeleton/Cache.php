@@ -21,12 +21,62 @@ abstract class Cache extends StrictObject
     public function __construct(string $documentRoot)
     {
         $this->documentRoot = $documentRoot;
-        $this->cacheRoot = "{$this->getDocumentRoot()}/cache/" . (PHP_SAPI === 'cli' ? 'cli' : 'web');
+        $this->cacheRoot = "{$this->getDocumentRoot()}/cache/{$this->getCurrentVersion()}/" . (PHP_SAPI === 'cli' ? 'cli' : 'web');
         if (!\file_exists($this->cacheRoot)) {
             if (!@\mkdir($this->cacheRoot, 0775, true /* recursive */) && !\is_dir($this->cacheRoot)) {
                 throw new \RuntimeException('Can not create directory for page cache ' . $this->cacheRoot);
             }
             \chmod($this->cacheRoot, 0775); // because umask could suppress it
+        }
+    }
+
+    /**
+     * Intentionally are versions taken from branch only, not tags, to lower amount of versions to switch into.
+     *
+     * @return string
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
+     */
+    private function getCurrentVersion(): string
+    {
+        $version = $this->execute('git branch | grep -P \'v?\d+\.\d+\.\d+\' --only-matching | sort --version-sort | tail -n 1');
+        if ($version === '') {
+            return 'master';
+        }
+
+        return $version;
+    }
+
+    /**
+     * @param string $command
+     * @return string
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
+     */
+    private function execute(string $command): string
+    {
+        $returnCode = 0;
+        $output = [];
+        $result = \exec($command, $output, $returnCode);
+        $this->guardCommandWithoutError($returnCode, $command, $output);
+
+        return $result;
+    }
+
+    /**
+     * @param int $returnCode
+     * @param string $command
+     * @param array $output
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
+     */
+    private function guardCommandWithoutError(int $returnCode, string $command, ?array $output): void
+    {
+        if ($returnCode !== 0) {
+            throw new Exceptions\ExecutingCommandFailed(
+                "Error while executing '$command', expected return '0', got '$returnCode'"
+                . ($output !== null ?
+                    ("with output: '" . \implode("\n", $output) . "'")
+                    : ''
+                )
+            );
         }
     }
 
@@ -95,13 +145,19 @@ abstract class Cache extends StrictObject
 
     /**
      * @return string
-     * @throws \RuntimeException
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotReadGitHead
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
      */
     private function getCacheFileName(): string
     {
         return $this->cacheRoot . "/{$this->getCacheFileBaseNamePartWithoutGet()}_{$this->getCurrentGetHash()}.html";
     }
 
+    /**
+     * @return string
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotReadGitHead
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
+     */
     private function getCacheFileBaseNamePartWithoutGet(): string
     {
         return "{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getGitStamp()}";
@@ -109,7 +165,7 @@ abstract class Cache extends StrictObject
 
     /**
      * @return string
-     * @throws \RuntimeException
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotReadGitHead
      */
     private function getCurrentCommitHash(): string
     {
@@ -120,7 +176,7 @@ abstract class Cache extends StrictObject
         $gitHeadFile = \trim(\preg_replace('~ref:\s*~', '', \file_get_contents($this->documentRoot . '/.git/HEAD')));
         $gitHeadFilePath = $this->documentRoot . '/.git/' . $gitHeadFile;
         if (!\is_readable($gitHeadFilePath)) {
-            throw new \RuntimeException(
+            throw new Exceptions\CanNotReadGitHead(
                 "Could not read $gitHeadFilePath, in that dir are files "
                 . \implode(',', \scandir(\dirname($gitHeadFilePath), SCANDIR_SORT_NONE))
             );
@@ -159,6 +215,11 @@ abstract class Cache extends StrictObject
         return $this->cacheRoot . "/{$this->geCacheDebugFileBaseNamePartWithoutGet()}_{$this->getCurrentGetHash()}.html";
     }
 
+    /**
+     * @return string
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotReadGitHead
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
+     */
     private function geCacheDebugFileBaseNamePartWithoutGet(): string
     {
         return 'debug_' . $this->getCacheFileBaseNamePartWithoutGet();
