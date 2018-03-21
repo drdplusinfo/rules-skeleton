@@ -2,6 +2,10 @@
 <?php
 
 $dirToScanForAutoloader = __DIR__ . '/..';
+$currentDir = str_replace('\\', '/', __DIR__);
+if (strpos($currentDir, '/vendor/') !== false) {
+    $dirToScanForAutoloader = substr($currentDir, 0, strpos($currentDir, '/vendor/'));
+}
 do {
     foreach (scandir($dirToScanForAutoloader, SCANDIR_SORT_NONE) as $folder) {
         if ($folder === 'vendor') {
