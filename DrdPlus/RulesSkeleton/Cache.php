@@ -13,15 +13,18 @@ abstract class Cache extends StrictObject
     private $documentRoot;
     /** @var string */
     private $cacheRoot;
+    /** @var RulesVersions */
+    private $rulesVersions;
 
     /**
      * @param string $documentRoot
+     * @param RulesVersions $rulesVersions
      * @throws \RuntimeException
      */
-    public function __construct(string $documentRoot)
+    public function __construct(string $documentRoot, RulesVersions $rulesVersions)
     {
         $this->documentRoot = $documentRoot;
-        $this->cacheRoot = "{$this->getDocumentRoot()}/cache/" . (PHP_SAPI === 'cli' ? 'cli' : 'web') . "/{$this->getCurrentVersion()}";
+        $this->cacheRoot = "{$this->getDocumentRoot()}/cache/" . (PHP_SAPI === 'cli' ? 'cli' : 'web') . "/{$rulesVersions->getCurrentVersion()}";
         if (!\file_exists($this->cacheRoot)) {
             if (!@\mkdir($this->cacheRoot, 0775, true /* recursive */) && !\is_dir($this->cacheRoot)) {
                 throw new \RuntimeException('Can not create directory for page cache ' . $this->cacheRoot);
@@ -31,56 +34,7 @@ abstract class Cache extends StrictObject
             }
             \chmod($this->cacheRoot, 0775); // because umask could suppress it
         }
-    }
-
-    /**
-     * Intentionally are versions taken from branch only, not tags, to lower amount of versions to switch into.
-     *
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
-     */
-    private function getCurrentVersion(): string
-    {
-        $version = $this->execute('git branch | grep -P \'v?\d+\.\d+\.\d+\' --only-matching | sort --version-sort | tail -n 1');
-        if ($version === '') {
-            return 'master';
-        }
-
-        return $version;
-    }
-
-    /**
-     * @param string $command
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
-     */
-    private function execute(string $command): string
-    {
-        $returnCode = 0;
-        $output = [];
-        $result = \exec($command, $output, $returnCode);
-        $this->guardCommandWithoutError($returnCode, $command, $output);
-
-        return $result;
-    }
-
-    /**
-     * @param int $returnCode
-     * @param string $command
-     * @param array $output
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
-     */
-    private function guardCommandWithoutError(int $returnCode, string $command, ?array $output): void
-    {
-        if ($returnCode !== 0) {
-            throw new Exceptions\ExecutingCommandFailed(
-                "Error while executing '$command', expected return '0', got '$returnCode'"
-                . ($output !== null ?
-                    ("with output: '" . \implode("\n", $output) . "'")
-                    : ''
-                )
-            );
-        }
+        $this->rulesVersions = $rulesVersions;
     }
 
     public function inProduction(): bool
@@ -150,6 +104,7 @@ abstract class Cache extends StrictObject
      * @return string
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotReadGitHead
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
      */
     private function getCacheFileName(): string
     {
@@ -160,32 +115,11 @@ abstract class Cache extends StrictObject
      * @return string
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotReadGitHead
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
      */
     private function getCacheFileBaseNamePartWithoutGet(): string
     {
-        return "{$this->getCachePrefix()}_{$this->getCurrentCommitHash()}_{$this->getGitStamp()}";
-    }
-
-    /**
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotReadGitHead
-     */
-    private function getCurrentCommitHash(): string
-    {
-        $head = \file_get_contents($this->documentRoot . '/.git/HEAD');
-        if (\preg_match('~^[[:alnum:]]{40,}$~', $head)) {
-            return $head; // the HEAD file contained the has itself
-        }
-        $gitHeadFile = \trim(\preg_replace('~ref:\s*~', '', \file_get_contents($this->documentRoot . '/.git/HEAD')));
-        $gitHeadFilePath = $this->documentRoot . '/.git/' . $gitHeadFile;
-        if (!\is_readable($gitHeadFilePath)) {
-            throw new Exceptions\CanNotReadGitHead(
-                "Could not read $gitHeadFilePath, in that dir are files "
-                . \implode(',', \scandir(\dirname($gitHeadFilePath), SCANDIR_SORT_NONE))
-            );
-        }
-
-        return \trim(\file_get_contents($gitHeadFilePath));
+        return "{$this->rulesVersions->getCurrentVersion()}_{$this->getCachePrefix()}_{$this->rulesVersions->getCurrentCommitHash()}_{$this->getGitStamp()}";
     }
 
     abstract protected function getCachePrefix(): string;
@@ -222,6 +156,7 @@ abstract class Cache extends StrictObject
      * @return string
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotReadGitHead
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
      */
     private function geCacheDebugFileBaseNamePartWithoutGet(): string
     {
@@ -245,12 +180,16 @@ abstract class Cache extends StrictObject
     private function clearOldCache(): void
     {
         $foldersToSkip = ['.', '..', '.gitignore'];
-        $currentCacheStamp = $this->getCurrentCommitHash();
+        $currentCacheStamp = $this->rulesVersions->getCurrentCommitHash();
+        $currentVersion = $this->rulesVersions->getCurrentVersion();
         foreach (\scandir($this->cacheRoot, SCANDIR_SORT_NONE) as $folder) {
             if (\in_array($folder, $foldersToSkip, true)) {
                 continue;
             }
-            if (\strpos($folder, $currentCacheStamp) !== false) {
+            if (\strpos($folder, $currentVersion) === false) { // we will clear old cache only of currently selected version
+                continue;
+            }
+            if (\strpos($folder, $currentCacheStamp) !== false) { // that file is valid
                 continue;
             }
             \unlink($this->cacheRoot . '/' . $folder);

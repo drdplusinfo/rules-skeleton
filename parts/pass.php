@@ -103,7 +103,8 @@ ob_start();
     </html>
 <?php $content = ob_get_clean();
 unset($name);
-$passCache = new \DrdPlus\RulesSkeleton\PassCache($documentRoot);
+$rulesVersions = new \DrdPlus\RulesSkeleton\RulesVersions($documentRoot);
+$passCache = new \DrdPlus\RulesSkeleton\PassCache($documentRoot, $rulesVersions);
 $passCache->saveContentForDebug($content); // for debugging purpose
 $htmlDocument = new \DrdPlus\RulesSkeleton\HtmlDocument($content);
 $htmlHelper = new \DrdPlus\RulesSkeleton\HtmlHelper($documentRoot, false, false, false);

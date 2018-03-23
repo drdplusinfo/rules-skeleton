@@ -5,7 +5,9 @@ if (empty($visitorCanAccessContent)) {
 
     return;
 }
-$pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot);
+$rulesVersions = new \DrdPlus\RulesSkeleton\RulesVersions($documentRoot);
+$rulesVersionSwitcher = new \DrdPlus\RulesSkeleton\RulesVersionSwitcher($rulesVersions);
+$pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot, $rulesVersions);
 
 if ($pageCache->cacheIsValid()) {
     return $pageCache->getCachedContent();
