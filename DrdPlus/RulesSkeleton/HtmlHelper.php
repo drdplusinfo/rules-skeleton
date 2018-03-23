@@ -474,8 +474,15 @@ class HtmlHelper extends StrictObject
 
     public function getPageTitle(): string
     {
-        return \is_readable($this->rootDir . '/name.txt')
+        $title = \is_readable($this->rootDir . '/name.txt')
             ? \file_get_contents($this->rootDir . '/name.txt')
             : ('Drd+ ' . \basename($this->rootDir));
+        $smiley = \is_readable($this->rootDir . '/title_smiley.txt')
+            ? \file_get_contents($this->rootDir . '/title_smiley.txt')
+            : '';
+
+        return ($smiley !== '')
+            ? ($smiley . ' ' . $title)
+            : $title;
     }
 }
