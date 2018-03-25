@@ -190,7 +190,7 @@ class AssetsVersion extends StrictObject
             [$name, $value] = \explode('=', $queryChunk);
             $queryParts[$name] = $value;
         }
-        if (!empty($queryParts['version'] && $queryParts['version'] === $version)) {
+        if (!empty($queryParts['version']) && $queryParts['version'] === $version) {
             return $link; // nothing to change
         }
         $queryParts['version'] = $version;
