@@ -9,6 +9,8 @@ use Granam\Strict\Object\StrictObject;
 class RulesVersions extends StrictObject
 {
 
+    public const LATEST_VERSION = 'master';
+
     /**
      * @var string
      */
@@ -26,12 +28,12 @@ class RulesVersions extends StrictObject
      */
     public function getAllVersions(): array
     {
-        $versions = $this->executeArray(
-            'cd ' . \escapeshellarg($this->documentRoot) . ' && git branch | grep -P \'v?\d+\.\d+\.\d+\' --only-matching | sort --version-sort --reverse'
+        $branches = $this->executeArray(
+            'cd ' . \escapeshellarg($this->documentRoot) . ' && git branch | grep -P \'v?\d+\.\d+\' --only-matching | sort --version-sort --reverse'
         );
-        $versions[] = 'master';
+        \array_unshift($branches, self::LATEST_VERSION);
 
-        return $versions;
+        return $branches;
     }
 
     /**
@@ -58,17 +60,6 @@ class RulesVersions extends StrictObject
         $versions = $this->getAllVersions();
 
         return \end($versions);
-    }
-
-    /**
-     * @return array|string[]
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
-     */
-    public function getPublicVersions(): array
-    {
-        return array_filter($this->getAllVersions(), function (string $version) {
-            return \preg_match('~^v?\d+[.]\d+[.]\d+$~', $version);
-        });
     }
 
     /**
@@ -125,6 +116,11 @@ class RulesVersions extends StrictObject
         $this->guardCommandWithoutError($returnCode, $command, $output);
 
         return $lastRow;
+    }
+
+    public function getVersionName(string $version): string
+    {
+        return $version !== self::LATEST_VERSION ? "verze $version" : 'nejnovější';
     }
 
     /**
