@@ -27,7 +27,7 @@ class RulesVersions extends StrictObject
     public function getAllVersions(): array
     {
         $versions = $this->executeArray(
-            'cd ' . \escapeshellarg($this->documentRoot) . ' && git branch | grep -P \'v?\d+\.\d+\.\d+\' | sort --version-sort --reverse'
+            'cd ' . \escapeshellarg($this->documentRoot) . ' && git branch | grep -P \'v?\d+\.\d+\.\d+\' --only-matching | sort --version-sort --reverse'
         );
         $versions[] = 'master';
 
@@ -67,7 +67,7 @@ class RulesVersions extends StrictObject
     public function getPublicVersions(): array
     {
         return array_filter($this->getAllVersions(), function (string $version) {
-            return \preg_match('~^v?\d+[.]\d+[.]\d+[.]?$~', $version);
+            return \preg_match('~^v?\d+[.]\d+[.]\d+$~', $version);
         });
     }
 
