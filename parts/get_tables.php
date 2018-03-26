@@ -4,7 +4,6 @@ if (!headers_sent()) {
     header('Access-Control-Allow-Origin: *', true);
 }
 
-$rulesVersions = new \DrdPlus\RulesSkeleton\RulesVersions($documentRoot);
 $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache($documentRoot, $rulesVersions);
 if ($tablesCache->cacheIsValid()) {
     return $tablesCache->getCachedContent();

@@ -12,6 +12,15 @@ require_once $documentRoot . '/vendor/autoload.php';
 
 \DrdPlus\RulesSkeleton\TracyDebugger::enable();
 
+$rulesVersions = new \DrdPlus\RulesSkeleton\RulesVersions($documentRoot);
+$rulesVersionSwitcher = new \DrdPlus\RulesSkeleton\RulesVersionSwitcher($rulesVersions);
+$request = new \DrdPlus\RulesSkeleton\Request();
+try {
+    $rulesVersionSwitcher->switchToVersion($_GET['version'] ?? $_COOKIE['version'] ?? $rulesVersions->getLastVersion());
+} catch (\DrdPlus\RulesSkeleton\Exceptions\Exception $exception) {
+    \trigger_error($exception->getMessage() . '; ' . $exception->getTraceAsString(), E_USER_WARNING);
+}
+
 if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     /** @see vendor/drd-plus/rules-html-skeleton/get_tables.php */
     echo include __DIR__ . '/parts/get_tables.php';
@@ -22,7 +31,6 @@ if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { /
 if (empty($visitorCanAccessContent)) { // can be defined externally by including script
     $visitorCanAccessContent = false;
     $visitorIsUsingTrial = false;
-    $request = new \DrdPlus\RulesSkeleton\Request();
     $visitorCanAccessContent = $isVisitorBot = $request->isVisitorBot();
     if (!$isVisitorBot) {
         $usagePolicy = new \DrdPlus\RulesSkeleton\UsagePolicy(basename($documentRoot));

@@ -5,8 +5,8 @@ if (empty($visitorCanAccessContent)) {
 
     return;
 }
-$rulesVersions = new \DrdPlus\RulesSkeleton\RulesVersions($documentRoot);
-$rulesVersionSwitcher = new \DrdPlus\RulesSkeleton\RulesVersionSwitcher($rulesVersions);
+
+// switch to version has to be BEFORE cache
 $pageCache = new \DrdPlus\RulesSkeleton\PageCache($documentRoot, $rulesVersions);
 
 if ($pageCache->cacheIsValid()) {

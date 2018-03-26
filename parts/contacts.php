@@ -16,6 +16,18 @@ if (!empty($contactsFixed)) {
                     </a>
                 </span>
             <?php } ?>
+            <span class="version">
+                <?php /** @var \DrdPlus\RulesSkeleton\RulesVersions $rulesVersions */
+                $currentVersion = $rulesVersions->getCurrentVersion(); ?>
+                verze <?= $currentVersion ?>
+                <ul class="versions">
+                    <?php /** @var \DrdPlus\RulesSkeleton\RulesVersions $rulesVersions */
+                    /** @var \DrdPlus\RulesSkeleton\Request $request */
+                    foreach ($rulesVersions->getPublicVersions() as $publicVersion) { ?>
+                        <li><a href="<?= $request->getCurrentUrl(['version' => $publicVersion]) ?>"><?= $publicVersion ?></a></li>
+                    <?php } ?>
+                </ul>
+            </span>
             <span class="contact"><a href="mailto:info@drdplus.info">info@drdplus.info</a></span>
             <span class="contact"><a target="_blank" class="rpgforum-contact"
                                      href="https://rpgforum.cz/forum/viewtopic.php?f=238&t=14870">RPG fórum</a></span>

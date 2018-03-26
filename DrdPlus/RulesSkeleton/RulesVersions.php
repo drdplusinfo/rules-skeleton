@@ -61,6 +61,17 @@ class RulesVersions extends StrictObject
     }
 
     /**
+     * @return array|string[]
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
+     */
+    public function getPublicVersions(): array
+    {
+        return array_filter($this->getAllVersions(), function (string $version) {
+            return \preg_match('~^v?\d+[.]\d+[.]\d+[.]?$~', $version);
+        });
+    }
+
+    /**
      * @param int $returnCode
      * @param string $command
      * @param array $output

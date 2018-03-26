@@ -47,4 +47,12 @@ class Request extends StrictObject
         return (bool)$botParser->parse();
     }
 
+    public function getCurrentUrl(array $parameters): string
+    {
+        $url = \rtrim($_SERVER['REQUEST_URI'], '/') . '/';
+        $queryParameters = \array_merge($_GET, $parameters);
+
+        return \http_build_url($url, $queryParameters);
+    }
+
 }
