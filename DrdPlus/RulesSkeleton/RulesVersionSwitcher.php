@@ -27,6 +27,9 @@ class RulesVersionSwitcher extends StrictObject
      */
     public function switchToVersion(string $version): void
     {
+        if ($version === $this->rulesVersions->getCurrentVersion()) {
+            return;
+        }
         if (!$this->rulesVersions->hasVersion($version)) {
             throw new Exceptions\InvalidVersionToSwitchInto("Required version {$version} does not exist");
         }
