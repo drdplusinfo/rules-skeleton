@@ -39,7 +39,7 @@ class AnchorsTest extends AbstractContentTest
      */
     private function parseInvalidAnchors(string $content): array
     {
-        \preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?!#|https?|[.]?/|mailto).)+[^>]+>)~', $content, $matches);
+        \preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?![#?]|https?|[.]?/|mailto).)+[^>]+>)~', $content, $matches);
 
         return $matches['invalidAnchors'];
     }
