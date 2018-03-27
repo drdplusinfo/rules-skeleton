@@ -27,7 +27,7 @@ class VersionSwitchMutexTest extends TestCase
         $message = \exec(<<<'PHP'
 php -r 'include "vendor/autoload.php";
 try {
-    (new DrdPlus\RulesSkeleton\VersionMutex)->lock(0 /* no wait */);
+    (new DrdPlus\RulesSkeleton\VersionSwitchMutex)->lock(0 /* no wait */);
 } catch(\DrdPlus\RulesSkeleton\Exceptions\CanNotLockVersionMutex $exception) {
     echo $exception->getMessage();
     exit(0);
