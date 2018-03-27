@@ -3,6 +3,7 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\RulesVersions;
 use DrdPlus\RulesSkeleton\RulesVersionSwitcher;
+use DrdPlus\RulesSkeleton\VersionSwitchMutex;
 use PHPUnit\Framework\TestCase;
 
 class RulesVersionSwitcherTest extends TestCase
@@ -17,8 +18,13 @@ class RulesVersionSwitcherTest extends TestCase
 
     protected function tearDown()
     {
-        (new RulesVersionSwitcher(new RulesVersions(\dirname(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST))))
-            ->switchToVersion($this->currentVersion);
+        $versionSwitchMutex = new VersionSwitchMutex();
+        $rulesVersionSwitcher = new RulesVersionSwitcher(
+            new RulesVersions(\dirname(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST)),
+            $versionSwitchMutex
+        );
+        $rulesVersionSwitcher->switchToVersion($this->currentVersion);
+        $versionSwitchMutex->unlock(); // we need to unlock it as it is NOT unlocked by itself (intentionally)
         parent::tearDown();
     }
 
@@ -34,17 +40,21 @@ class RulesVersionSwitcherTest extends TestCase
             \count($versions),
             'Expected at least two versions to test, got only ' . \implode($versions)
         );
-        $rulesVersionSwitcher = new RulesVersionSwitcher($rulesVersions);
+        $versionSwitchMutex = new VersionSwitchMutex();
+        $rulesVersionSwitcher = new RulesVersionSwitcher($rulesVersions, $versionSwitchMutex);
         self::assertFalse(
             $rulesVersionSwitcher->switchToVersion($this->currentVersion),
             'Changing version to the same should result into false as nothing changed'
         );
+        $versionSwitchMutex->unlock(); // we need to unlock it as it is NOT unlocked by itself (intentionally)
         $otherVersions = \array_diff($versions, [$this->currentVersion]);
         foreach ($otherVersions as $otherVersion) {
             self::assertTrue(
                 $rulesVersionSwitcher->switchToVersion($otherVersion),
                 'Changing version should result into true as changed'
             );
+            /** @noinspection DisconnectedForeachInstructionInspection */
+            $versionSwitchMutex->unlock(); // we need to unlock it as it is NOT unlocked by itself (intentionally)
         }
     }
 }

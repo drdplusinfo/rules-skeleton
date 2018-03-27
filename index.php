@@ -13,7 +13,10 @@ require_once $documentRoot . '/vendor/autoload.php';
 \DrdPlus\RulesSkeleton\TracyDebugger::enable();
 
 $rulesVersions = new \DrdPlus\RulesSkeleton\RulesVersions($documentRoot);
-$rulesVersionSwitcher = new \DrdPlus\RulesSkeleton\RulesVersionSwitcher($rulesVersions);
+$rulesVersionSwitcher = new \DrdPlus\RulesSkeleton\RulesVersionSwitcher(
+    $rulesVersions,
+    new \DrdPlus\RulesSkeleton\VersionSwitchMutex()
+);
 $request = new \DrdPlus\RulesSkeleton\Request();
 try {
     $rulesVersionSwitcher->switchToVersion($_GET['version'] ?? $_COOKIE['version'] ?? $rulesVersions->getLastVersion());
