@@ -21,14 +21,15 @@ class RulesVersionSwitcher extends StrictObject
 
     /**
      * @param string $version
+     * @return bool
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
      * @throws \DrdPlus\RulesSkeleton\Exceptions\InvalidVersionToSwitchInto
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotSwitchGitVersion
      */
-    public function switchToVersion(string $version): void
+    public function switchToVersion(string $version): bool
     {
         if ($version === $this->rulesVersions->getCurrentVersion()) {
-            return;
+            return false;
         }
         if (!$this->rulesVersions->hasVersion($version)) {
             throw new Exceptions\InvalidVersionToSwitchInto("Required version {$version} does not exist");
@@ -39,5 +40,7 @@ class RulesVersionSwitcher extends StrictObject
                 "Can not switch to required version '{$version}', got return code '{$returnCode}' and output "
                 . \implode("\n", $rows));
         }
+
+        return true;
     }
 }
