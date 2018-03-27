@@ -13,6 +13,7 @@ require_once $documentRoot . '/vendor/autoload.php';
 \DrdPlus\RulesSkeleton\TracyDebugger::enable();
 
 $rulesVersions = new \DrdPlus\RulesSkeleton\RulesVersions($documentRoot);
+$versionSwitchMutex = new \DrdPlus\RulesSkeleton\VersionSwitchMutex();
 $rulesVersionSwitcher = new \DrdPlus\RulesSkeleton\RulesVersionSwitcher(
     $rulesVersions,
     new \DrdPlus\RulesSkeleton\VersionSwitchMutex()
@@ -27,6 +28,7 @@ try {
 if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     /** @see vendor/drd-plus/rules-html-skeleton/get_tables.php */
     echo include __DIR__ . '/parts/get_tables.php';
+    $versionSwitchMutex->unlock();
 
     return;
 }
@@ -53,6 +55,7 @@ if (empty($visitorCanAccessContent)) { // can be defined externally by including
 }
 
 if (!$visitorCanAccessContent) {
+    $versionSwitchMutex->unlock();
     return;
 }
 
@@ -61,9 +64,11 @@ if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !file_exists($documentRoot
 ) {
     /** @see vendor/drd-plus/rules-html-skeleton/get_pdf.php */
     echo include __DIR__ . '/parts/get_pdf.php';
+    $versionSwitchMutex->unlock();
 
     return;
 }
 
 /** @see vendor/drd-plus/rules-html-skeleton/content.php */
 echo require __DIR__ . '/parts/content.php';
+$versionSwitchMutex->unlock();
