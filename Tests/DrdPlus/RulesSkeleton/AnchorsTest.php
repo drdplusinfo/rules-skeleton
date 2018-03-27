@@ -16,7 +16,6 @@ class AnchorsTest extends AbstractContentTest
 
     /**
      * @test
-     * @runInSeparateProcess
      */
     public function All_anchors_point_to_syntactically_valid_links(): void
     {
