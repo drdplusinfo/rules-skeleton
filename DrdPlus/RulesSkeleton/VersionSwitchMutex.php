@@ -6,7 +6,7 @@ namespace DrdPlus\RulesSkeleton;
 
 use Granam\Strict\Object\StrictObject;
 
-class VersionMutex extends StrictObject
+class VersionSwitchMutex extends StrictObject
 {
 
     /**
@@ -72,7 +72,7 @@ class VersionMutex extends StrictObject
 
     private function getLockFileName(): string
     {
-        return $this->lockDir . '/drdplus_rules_version_mutex';
+        return $this->lockDir . '/drdplus_rules_version_switch_mutex';
     }
 
     public function __destruct()

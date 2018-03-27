@@ -1,17 +1,17 @@
 <?php
 namespace Tests\DrdPlus\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\VersionMutex;
+use DrdPlus\RulesSkeleton\VersionSwitchMutex;
 use PHPUnit\Framework\TestCase;
 
-class VersionMutexTest extends TestCase
+class VersionSwitchMutexTest extends TestCase
 {
     /**
      * @test
      */
     public function I_can_get_and_release_lock(): void
     {
-        $mutex = new VersionMutex();
+        $mutex = new VersionSwitchMutex();
         self::assertTrue($mutex->lock(), 'Can not get lock via mutex');
         self::assertTrue($mutex->unlock(), 'Can not unlock mutex');
         self::assertFalse($mutex->unlock(), 'Second unlock in a row should NOT be successful');
@@ -22,7 +22,7 @@ class VersionMutexTest extends TestCase
      */
     public function I_can_not_lock_twice(): void
     {
-        $mutex = new VersionMutex();
+        $mutex = new VersionSwitchMutex();
         $mutex->lock();
         $message = \exec(<<<'PHP'
 php -r 'include "vendor/autoload.php";
