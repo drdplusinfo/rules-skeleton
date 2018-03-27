@@ -12,12 +12,12 @@ class ContentTest extends AbstractContentTest
     {
         self::assertSame(
             0,
-            preg_match(
+            \preg_match(
                 '~.{0,10}2k6\s*(?!<span class="upper-index">\+</span>).{0,20}\+~',
                 $this->getRulesContentWithoutIds(),
                 $matches
             ),
-            var_export($matches, true)
+            \var_export($matches, true)
         );
     }
 
@@ -48,12 +48,12 @@ class ContentTest extends AbstractContentTest
     {
         self::assertSame(
             0,
-            preg_match(
+            \preg_match(
                 '~.{0,10}(?:(?<!<span class="upper-index">)\s*[®™]|[®™]\s*(?!</span>).{0,10})~u',
                 $this->getRulesContent(),
                 $matches
             ),
-            var_export($matches, true)
+            \var_export($matches, true)
         );
     }
 
