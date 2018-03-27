@@ -59,7 +59,7 @@ class RulesVersions extends StrictObject
     {
         $versions = $this->getAllVersions();
 
-        return \end($versions);
+        return \reset($versions);
     }
 
     /**
