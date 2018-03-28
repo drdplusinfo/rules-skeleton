@@ -61,7 +61,7 @@ class VersionSwitchMutex extends StrictObject
     private function getLockFileHandle()
     {
         if (!$this->lockFileHandle) {
-            $this->lockFileHandle = \fopen($this->getLockFileName(), 'ab');
+            $this->lockFileHandle = @\fopen($this->getLockFileName(), 'ab');
             if (!$this->lockFileHandle) {
                 throw new Exceptions\CanNotWriteLockOfVersionMutex(
                     "Can not use {$this->getLockFileName()} as a lock file, can not write to it"

@@ -40,10 +40,22 @@ try {
 }
 exit(1);'
 PHP
-        , $output,
-        $returnCode
-);
+            , $output,
+            $returnCode
+        );
 
         self::assertSame(0, $returnCode, $message);
+        $mutex->unlock();
+    }
+
+    /**
+     * @test
+     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\CanNotWriteLockOfVersionMutex
+     * @expectedExceptionMessageRegExp ~/just/a/small/flash/memory/in/another/universe~
+     */
+    public function I_can_not_get_lock_with_invalid_lock_dir()
+    {
+        $mutex = new VersionSwitchMutex('/just/a/small/flash/memory/in/another/universe');
+        $mutex->lock('foo');
     }
 }
