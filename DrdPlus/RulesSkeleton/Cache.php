@@ -78,6 +78,11 @@ abstract class Cache extends StrictObject
         foreach ((array)$changedFiles as $changedFile) {
             \preg_match('~^\s*(?<change>\S+)\s+(?<relativeFileName>.+)$~', $changedFile, $matches);
             ['change' => $change, 'relativeFileName' => $changedRelativeFileName] = $matches;
+            if ($change === 'RM') { // file has been moved / renamed
+                // something like 'parts/contacts.php -> parts/menu.php'
+                \preg_match('~(?<oldName>(?:.(?!->))+)\s*->\s*(?<newName>(?:(?<!->).)+)~', $changedRelativeFileName, $movedFileMatches);
+                $changedRelativeFileName = \trim($movedFileMatches['newName']);
+            }
             $changedRelativeFileName = StringTools::octalToUtf8($changedRelativeFileName);
             // double quotes trimmed as files with spaces in name are "double quoted" by GIT status
             $changedFileName = $this->getDocumentRoot() . '/' . \trim($changedRelativeFileName, '"');
