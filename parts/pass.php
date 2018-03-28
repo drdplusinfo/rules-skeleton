@@ -31,7 +31,7 @@ ob_start();
                         <?php
                         $contactsFixed = true; // (default is on top or bottom of the content)
                         // $contactsBottom = true; // (default is top)
-                        include __DIR__ . '/contacts.php';
+                        include __DIR__ . '/menu.php';
                         unset($contactsFixed);
                         if ($usagePolicy->trialJustExpired()) { ?>
                             <div class="message warning">⌛ Čas tvého testování se naplnil ⌛</div><?php

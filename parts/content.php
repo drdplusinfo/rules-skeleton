@@ -49,7 +49,7 @@ ob_start();
     // $contactsFixed = true; // (default is on top or bottom of the content)
     // $contactsBottom = true; // (default is top)
     // $hideHomeButton = true; // (default is to show)
-    include __DIR__ . '/contacts.php';
+    include __DIR__ . '/menu.php';
     $content = ob_get_contents();
     ob_clean();
 

@@ -18,20 +18,23 @@ if (!empty($contactsFixed)) {
             <?php } ?>
             <div class="version">
                 <?php /** @var \DrdPlus\RulesSkeleton\RulesVersions $rulesVersions */
-                $currentVersion = $rulesVersions->getCurrentVersion(); ?>
-                <span class="current-version"><?= $rulesVersions->getVersionName($currentVersion) ?></span>
-                <ul class="other-versions">
-                    <?php /** @var \DrdPlus\RulesSkeleton\RulesVersions $rulesVersions */
-                    /** @var \DrdPlus\RulesSkeleton\Request $request */
-                    foreach ($rulesVersions->getAllVersions() as $version) {
-                        if ($version === $currentVersion) {
-                            continue;
-                        } ?>
-                        <li><a href="<?= $request->getCurrentUrl(['version' => $version]) ?>">
-                                <?= $rulesVersions->getVersionName($version) ?>
-                            </a></li>
-                    <?php } ?>
-                </ul>
+                $allVersions = $rulesVersions->getAllVersions();
+                if (count($allVersions) > 1) {
+                    $currentVersion = $rulesVersions->getCurrentVersion(); ?>
+                    <span class="current-version"><?= $rulesVersions->getVersionName($currentVersion) ?></span>
+                    <ul class="other-versions">
+                        <?php /** @var \DrdPlus\RulesSkeleton\RulesVersions $rulesVersions */
+                        /** @var \DrdPlus\RulesSkeleton\Request $request */
+                        foreach ($rulesVersions->getAllVersions() as $version) {
+                            if ($version === $currentVersion) {
+                                continue;
+                            } ?>
+                            <li><a href="<?= $request->getCurrentUrl(['version' => $version]) ?>">
+                                    <?= $rulesVersions->getVersionName($version) ?>
+                                </a></li>
+                        <?php } ?>
+                    </ul>
+                <?php } ?>
             </div>
             <span class="contact"><a href="mailto:info@drdplus.info">info@drdplus.info</a></span>
             <span class="contact"><a target="_blank" class="rpgforum-contact"
