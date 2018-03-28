@@ -15,14 +15,14 @@ class UsagePolicy extends StrictObject
 
     /**
      * @param string $articleName
-     * @throws \LogicException
-     * @throws \RuntimeException
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CookieCanNotBeSet
      */
     public function __construct(string $articleName)
     {
         $articleName = trim($articleName);
         if ($articleName === '') {
-            throw new \LogicException('Name of the article to confirm ownership can not be empty');
+            throw new Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy('Name of the article to confirm ownership can not be empty');
         }
         $this->articleName = $articleName;
         if (!\headers_sent()) {
@@ -37,7 +37,7 @@ class UsagePolicy extends StrictObject
      * @param string $value
      * @param \DateTime|null $expiresAt
      * @return bool
-     * @throws \RuntimeException
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CookieCanNotBeSet
      */
     private function setCookie(string $cookieName, string $value, ?\DateTime $expiresAt): bool
     {
@@ -46,12 +46,12 @@ class UsagePolicy extends StrictObject
             $value,
             $expiresAt ? $expiresAt->getTimestamp() : 0 /* ends with browser session */,
             '/', // path
-            $_SERVER['SERVER_NAME'], // domain
+            $_SERVER['SERVER_NAME'] ?? '', // domain
             !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', // secure if possible
             false /* not HTTP only to allow JS to read it */
         );
         if (!$cookieSet) {
-            throw new \RuntimeException('Could not set cookie ' . $cookieName);
+            throw new Exceptions\CookieCanNotBeSet('Could not set cookie ' . $cookieName);
         }
         $_COOKIE[$cookieName] = $value;
 
