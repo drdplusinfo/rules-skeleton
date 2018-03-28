@@ -24,12 +24,13 @@ class VersionSwitchMutex extends StrictObject
     }
 
     /**
+     * @param string $lockId
      * @param int $wait
      * @return bool
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotWriteLockOfVersionMutex
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotLockVersionMutex
      */
-    public function lock(int $wait = 2): bool
+    public function lock(string $lockId, int $wait = 2): bool
     {
         $waitUntil = \time() + $wait;
         $locked = null;
@@ -46,10 +47,9 @@ class VersionSwitchMutex extends StrictObject
             $this->unlock(); // closes file handle
             throw new Exceptions\CanNotLockVersionMutex(
                 "Even after {$wait} seconds and {$attempts} attempts the lock has not been obtained on file {$this->getLockFileName()}"
-                . file_get_contents($this->getLockFileName())
             );
         }
-        \fwrite($handle, var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true));
+        \fwrite($handle, $lockId);
 
         return true;
     }
@@ -75,6 +75,11 @@ class VersionSwitchMutex extends StrictObject
     private function getLockFileName(): string
     {
         return $this->lockDir . '/drdplus_rules_version_switch_mutex';
+    }
+
+    public function isLockedForId(string $lockId): bool
+    {
+        return \file_exists($this->getLockFileName()) && \file_get_contents($this->getLockFileName()) === $lockId;
     }
 
     public function __destruct()
