@@ -7,7 +7,7 @@ class DevModeTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_see_content_marked_by_development_classes()
+    public function I_see_content_marked_by_development_classes(): void
     {
         $html = $this->getRulesForDevHtmlDocument();
         if (!$this->checkingSkeleton($html)) {

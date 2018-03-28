@@ -31,11 +31,11 @@ class RulesVersionSwitcher extends StrictObject
      */
     public function switchToVersion(string $version): bool
     {
-        $this->versionSwitchMutex->lock();
         // do NOT unlock it as we need the version to be locked until we fill or use the cache (lock will be unlocked automatically on script end)
         if ($version === $this->rulesVersions->getCurrentVersion()) {
             return false;
         }
+        $this->versionSwitchMutex->lock();
         if (!$this->rulesVersions->hasVersion($version)) {
             throw new Exceptions\InvalidVersionToSwitchInto("Required version {$version} does not exist");
         }

@@ -29,7 +29,7 @@ class VersionSwitchMutex extends StrictObject
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotWriteLockOfVersionMutex
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotLockVersionMutex
      */
-    public function lock(int $wait = 10): bool
+    public function lock(int $wait = 2): bool
     {
         $waitUntil = \time() + $wait;
         $locked = null;
@@ -43,11 +43,13 @@ class VersionSwitchMutex extends StrictObject
             $locked = \flock($handle, LOCK_EX | LOCK_NB);
         } while (!$locked && \time() < $waitUntil);
         if (!$locked) {
+            $this->unlock(); // closes file handle
             throw new Exceptions\CanNotLockVersionMutex(
-                "Even after {$wait} seconds and {$attempts} attempts the lock has not been obtained"
+                "Even after {$wait} seconds and {$attempts} attempts the lock has not been obtained on file {$this->getLockFileName()}"
+                . file_get_contents($this->getLockFileName())
             );
         }
-        \fwrite($handle, (string)\time());
+        \fwrite($handle, var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true));
 
         return true;
     }
@@ -59,7 +61,7 @@ class VersionSwitchMutex extends StrictObject
     private function getLockFileHandle()
     {
         if (!$this->lockFileHandle) {
-            $this->lockFileHandle = \fopen($this->getLockFileName(), 'wb');
+            $this->lockFileHandle = \fopen($this->getLockFileName(), 'ab');
             if (!$this->lockFileHandle) {
                 throw new Exceptions\CanNotWriteLockOfVersionMutex(
                     "Can not use {$this->getLockFileName()} as a lock file, can not write to it"
@@ -85,9 +87,12 @@ class VersionSwitchMutex extends StrictObject
         if (!$this->lockFileHandle) {
             return false;
         }
-        $unlocked = \flock($this->lockFileHandle, LOCK_UN | LOCK_NB); // it is no harm to unlock it even if it was not locked
+        $unlocked = \flock($this->lockFileHandle, LOCK_UN); // it is no harm to unlock it even if it was not locked
         \fclose($this->lockFileHandle);
         $this->lockFileHandle = null;
+        if (\file_exists($this->getLockFileName())) {
+            \unlink($this->getLockFileName());
+        }
 
         return $unlocked;
     }

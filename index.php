@@ -45,7 +45,7 @@ if (empty($visitorCanAccessContent)) { // can be defined externally by including
         }
         if (!$visitorCanAccessContent) {
             /** @see vendor/drd-plus/rules-html-skeleton/pass.php */
-            require __DIR__ . '/parts/pass.php';
+            include __DIR__ . '/parts/pass.php';
             $visitorCanAccessContent = $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership(); // may changed
             if (!$visitorCanAccessContent) {
                 $visitorCanAccessContent = $visitorIsUsingTrial = $usagePolicy->isVisitorUsingTrial(); // may changed
@@ -56,6 +56,7 @@ if (empty($visitorCanAccessContent)) { // can be defined externally by including
 
 if (!$visitorCanAccessContent) {
     $versionSwitchMutex->unlock();
+
     return;
 }
 

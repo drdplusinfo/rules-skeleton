@@ -9,7 +9,7 @@ class CoveredPartsCanBeHiddenTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_hide_covered_parts()
+    public function I_can_hide_covered_parts(): void
     {
         $html = $this->getRulesContentForDevWithHiddenCovered();
         $document = new HTMLDocument($html);

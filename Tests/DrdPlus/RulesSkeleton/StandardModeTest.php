@@ -8,7 +8,7 @@ class StandardModeTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_get_notes_styled()
+    public function I_get_notes_styled(): void
     {
         $content = $this->getRulesContent();
         $html = new HTMLDocument($content);
@@ -18,7 +18,7 @@ class StandardModeTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_am_not_distracted_by_development_classes()
+    public function I_am_not_distracted_by_development_classes(): void
     {
         $content = $this->getRulesContent();
         $html = new HTMLDocument($content);
