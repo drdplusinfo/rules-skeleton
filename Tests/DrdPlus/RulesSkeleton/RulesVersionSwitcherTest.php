@@ -35,6 +35,9 @@ class RulesVersionSwitcherTest extends TestCase
     {
         $rulesVersions = new RulesVersions(\dirname(DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST));
         $versions = $rulesVersions->getAllVersions();
+        if (\defined('SINGLE_VERSION_ONLY') && SINGLE_VERSION_ONLY) {
+            self::assertCount(1, 'Only a single version expected due to a config');
+        }
         self::assertGreaterThan(
             1,
             \count($versions),
