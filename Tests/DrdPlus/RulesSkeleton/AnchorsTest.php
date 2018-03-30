@@ -435,6 +435,17 @@ class AnchorsTest extends AbstractContentTest
             \count($linksToJournal),
             'PDF journal is missing, expected link to ' . $this->getExpectedLinkToJournal()
         );
+        if (\defined('WITHOUT_SPECIFIC_JOURNAL') && WITHOUT_SPECIFIC_JOURNAL) {
+            foreach ($linksToJournal as $linkToJournal) {
+                self::assertRegExp(
+                    '~^http://www.drdplus[.]loc/pdf/deniky/denik_\w+[.]pdf$~',
+                    $linkToJournal,
+                    'Every link to PDF journal should lead to https://www.drdplus.info/pdf/deniky/denik_foo.pdf'
+                );
+            }
+
+            return;
+        }
         $expectedOriginalLink = $this->getExpectedLinkToJournal();
         $expectedLink = $this->turnToLocalLink($expectedOriginalLink);
         foreach ($linksToJournal as $linkToJournal) {
