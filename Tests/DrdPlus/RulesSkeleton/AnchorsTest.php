@@ -430,11 +430,7 @@ class AnchorsTest extends AbstractContentTest
 
             return;
         }
-        self::assertGreaterThan(
-            0,
-            \count($linksToJournal),
-            'PDF journal is missing, expected link to ' . $this->getExpectedLinkToJournal()
-        );
+        self::assertGreaterThan(0, \count($linksToJournal), 'PDF journals are missing');
         if (\defined('WITHOUT_SPECIFIC_JOURNAL') && WITHOUT_SPECIFIC_JOURNAL) {
             foreach ($linksToJournal as $linkToJournal) {
                 self::assertRegExp(
