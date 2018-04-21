@@ -1,5 +1,169 @@
 [
     {
+        "name": "roave/security-advisories",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Roave/SecurityAdvisories.git",
+            "reference": "ac23c65d4557f979a152b9868c2ed53d191a26c6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/ac23c65d4557f979a152b9868c2ed53d191a26c6",
+            "reference": "ac23c65d4557f979a152b9868c2ed53d191a26c6",
+            "shasum": ""
+        },
+        "conflict": {
+            "3f/pygmentize": "<1.2",
+            "adodb/adodb-php": "<5.20.6",
+            "amphp/artax": "<1.0.6|>=2,<2.0.6",
+            "amphp/http": "<1.0.1",
+            "asymmetricrypt/asymmetricrypt": ">=0,<9.9.99",
+            "aws/aws-sdk-php": ">=3,<3.2.1",
+            "bugsnag/bugsnag-laravel": ">=2,<2.0.2",
+            "cakephp/cakephp": ">=1.3,<1.3.18|>=2,<2.4.99|>=2.5,<2.5.99|>=2.6,<2.6.12|>=2.7,<2.7.6|>=3,<3.0.15|>=3.1,<3.1.4",
+            "cart2quote/module-quotation": ">=4.1.6,<=4.4.5|>=5,<5.4.4",
+            "cartalyst/sentry": "<=2.1.6",
+            "codeigniter/framework": "<=3.0.6",
+            "composer/composer": "<=1.0.0-alpha11",
+            "contao-components/mediaelement": ">=2.14.2,<2.21.1",
+            "contao/core": ">=2,<3.5.35",
+            "contao/core-bundle": ">=4,<4.4.18|>=4.5,<4.5.8",
+            "contao/listing-bundle": ">=4,<4.4.8",
+            "contao/newsletter-bundle": ">=4,<4.1",
+            "doctrine/annotations": ">=1,<1.2.7",
+            "doctrine/cache": ">=1,<1.3.2|>=1.4,<1.4.2",
+            "doctrine/common": ">=2,<2.4.3|>=2.5,<2.5.1",
+            "doctrine/dbal": ">=2,<2.0.8|>=2.1,<2.1.2",
+            "doctrine/doctrine-bundle": "<1.5.2",
+            "doctrine/doctrine-module": "<=0.7.1",
+            "doctrine/mongodb-odm": ">=1,<1.0.2",
+            "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
+            "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
+            "dompdf/dompdf": ">=0.6,<0.6.2",
+            "drupal/core": ">=7,<7.58|>=8,<8.4.6|>=8.5,<8.5.1",
+            "drupal/drupal": ">=7,<7.58|>=8,<8.4.6|>=8.5,<8.5.1",
+            "erusev/parsedown": "<1.7",
+            "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.3|>=5.4,<5.4.11.3|>=2017.8,<2017.8.1.1|>=2017.12,<2017.12.2.1",
+            "firebase/php-jwt": "<2",
+            "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
+            "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
+            "gree/jose": "<=2.2",
+            "gregwar/rst": "<1.0.3",
+            "guzzlehttp/guzzle": ">=6,<6.2.1|>=4.0.0-rc2,<4.2.4|>=5,<5.3.1",
+            "illuminate/auth": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.10",
+            "illuminate/database": ">=4,<4.0.99|>=4.1,<4.1.29",
+            "illuminate/encryption": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
+            "joomla/session": "<1.3.1",
+            "kreait/firebase-php": ">=3.2,<3.8.1",
+            "laravel/framework": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
+            "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
+            "magento/magento1ce": ">=1.5.0.1,<1.9.3.2",
+            "magento/magento1ee": ">=1.9,<1.14.3.2",
+            "magento/magento2ce": ">=2,<2.2",
+            "monolog/monolog": ">=1.8,<1.12",
+            "namshi/jose": "<2.2",
+            "onelogin/php-saml": "<2.10.4",
+            "oro/crm": ">=1.7,<1.7.4",
+            "oro/platform": ">=1.7,<1.7.4",
+            "padraic/humbug_get_contents": "<1.1.2",
+            "pagarme/pagarme-php": ">=0,<3",
+            "paragonie/random_compat": "<2",
+            "paypal/merchant-sdk-php": "<3.12",
+            "phpmailer/phpmailer": ">=5,<5.2.24",
+            "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
+            "phpxmlrpc/extras": "<0.6.1",
+            "propel/propel": ">=2.0.0-alpha1,<=2.0.0-alpha7",
+            "propel/propel1": ">=1,<=1.7.1",
+            "pusher/pusher-php-server": "<2.2.1",
+            "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
+            "shopware/shopware": "<5.3.7",
+            "silverstripe/cms": ">=3,<=3.0.11|>=3.1,<3.1.11",
+            "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
+            "silverstripe/framework": ">=3,<3.3",
+            "silverstripe/userforms": "<3",
+            "simplesamlphp/saml2": "<1.10.6|>=2,<2.3.8|>=3,<3.1.4",
+            "simplesamlphp/simplesamlphp": "<1.15.2",
+            "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
+            "slim/slim": "<2.6",
+            "socalnick/scn-social-auth": "<1.15.2",
+            "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
+            "stormpath/sdk": ">=0,<9.9.99",
+            "swiftmailer/swiftmailer": ">=4,<5.4.5",
+            "symfony/dependency-injection": ">=2,<2.0.17",
+            "symfony/form": ">=2.3,<2.3.35|>=2.4,<2.6.12|>=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
+            "symfony/framework-bundle": ">=2,<2.3.18|>=2.4,<2.4.8|>=2.5,<2.5.2",
+            "symfony/http-foundation": ">=2,<2.3.27|>=2.4,<2.5.11|>=2.6,<2.6.6",
+            "symfony/http-kernel": ">=2,<2.3.29|>=2.4,<2.5.12|>=2.6,<2.6.8",
+            "symfony/intl": ">=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
+            "symfony/routing": ">=2,<2.0.19",
+            "symfony/security": ">=2,<2.0.25|>=2.1,<2.1.13|>=2.2,<2.2.9|>=2.3,<2.3.37|>=2.4,<2.6.13|>=2.7,<2.7.9|>=2.7.30,<2.7.32|>=2.8.23,<2.8.25|>=3.2.10,<3.2.12|>=3.3.3,<3.3.5",
+            "symfony/security-core": ">=2.4,<2.6.13|>=2.7,<2.7.9|>=2.7.30,<2.7.32|>=2.8,<2.8.6|>=2.8.23,<2.8.25|>=3,<3.0.6|>=3.2.10,<3.2.12|>=3.3.3,<3.3.5",
+            "symfony/security-csrf": ">=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
+            "symfony/security-http": ">=2.3,<2.3.41|>=2.4,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
+            "symfony/serializer": ">=2,<2.0.11",
+            "symfony/symfony": ">=2,<2.3.41|>=2.4,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
+            "symfony/translation": ">=2,<2.0.17",
+            "symfony/validator": ">=2,<2.0.24|>=2.1,<2.1.12|>=2.2,<2.2.5|>=2.3,<2.3.3",
+            "symfony/web-profiler-bundle": ">=2,<2.3.19|>=2.4,<2.4.9|>=2.5,<2.5.4",
+            "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
+            "thelia/backoffice-default-template": ">=2.1,<2.1.2",
+            "thelia/thelia": ">=2.1.0-beta1,<2.1.3|>=2.1,<2.1.2",
+            "titon/framework": ">=0,<9.9.99",
+            "twig/twig": "<1.20",
+            "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.22|>=8,<8.7.5",
+            "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.10|>=3.1,<3.1.7|>=3.2,<3.2.7|>=3.3,<3.3.5",
+            "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4",
+            "willdurand/js-translation-bundle": "<2.1.1",
+            "yiisoft/yii": ">=1.1.14,<1.1.15",
+            "yiisoft/yii2": "<2.0.15",
+            "yiisoft/yii2-bootstrap": "<2.0.4",
+            "yiisoft/yii2-dev": "<2.0.15",
+            "yiisoft/yii2-elasticsearch": "<2.0.5",
+            "yiisoft/yii2-gii": "<2.0.4",
+            "yiisoft/yii2-jui": "<2.0.4",
+            "yiisoft/yii2-redis": "<2.0.8",
+            "zendframework/zend-cache": ">=2.4,<2.4.8|>=2.5,<2.5.3",
+            "zendframework/zend-captcha": ">=2,<2.4.9|>=2.5,<2.5.2",
+            "zendframework/zend-crypt": ">=2,<2.4.9|>=2.5,<2.5.2",
+            "zendframework/zend-db": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.10|>=2.3,<2.3.5",
+            "zendframework/zend-diactoros": ">=1,<1.0.4",
+            "zendframework/zend-form": ">=2,<2.2.7|>=2.3,<2.3.1",
+            "zendframework/zend-http": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.3,<2.3.8|>=2.4,<2.4.1",
+            "zendframework/zend-json": ">=2.1,<2.1.6|>=2.2,<2.2.6",
+            "zendframework/zend-ldap": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.8|>=2.3,<2.3.3",
+            "zendframework/zend-mail": ">=2,<2.4.11|>=2.5,<2.7.2",
+            "zendframework/zend-navigation": ">=2,<2.2.7|>=2.3,<2.3.1",
+            "zendframework/zend-session": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.9|>=2.3,<2.3.4",
+            "zendframework/zend-validator": ">=2.3,<2.3.6",
+            "zendframework/zend-view": ">=2,<2.2.7|>=2.3,<2.3.1",
+            "zendframework/zend-xmlrpc": ">=2.1,<2.1.6|>=2.2,<2.2.6",
+            "zendframework/zendframework": ">=2,<2.4.11|>=2.5,<2.5.1",
+            "zendframework/zendframework1": "<1.12.20",
+            "zendframework/zendopenid": ">=2,<2.0.2",
+            "zendframework/zendxml": ">=1,<1.0.1",
+            "zetacomponents/mail": "<1.8.2",
+            "zf-commons/zfc-user": "<1.2.2",
+            "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
+            "zfr/zfr-oauth2-server-module": "<0.1.2"
+        },
+        "time": "2018-04-20 11:36:48",
+        "type": "metapackage",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Marco Pivetta",
+                "email": "ocramius@gmail.com",
+                "role": "maintainer"
+            }
+        ],
+        "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it"
+    },
+    {
         "name": "granam/tools",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
@@ -156,6 +320,105 @@
         ]
     },
     {
+        "name": "granam/string",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jaroslavtyc/granam-string.git",
+            "reference": "4ea796338556d07dc9d1c65253b18c7a71ef6919"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/4ea796338556d07dc9d1c65253b18c7a71ef6919",
+            "reference": "4ea796338556d07dc9d1c65253b18c7a71ef6919",
+            "shasum": ""
+        },
+        "require": {
+            "granam/scalar": "dev-master",
+            "granam/strict-object": "dev-master",
+            "php": ">=7.0"
+        },
+        "require-dev": {
+            "ext-mbstring": "*",
+            "granam/exceptions-hierarchy": "~4.0",
+            "mockery/mockery": "~1.0",
+            "phpunit/phpunit": "~6.0"
+        },
+        "suggest": {
+            "ext-intl": "*"
+        },
+        "time": "2018-04-18 11:29:39",
+        "type": "project",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Granam\\": "Granam/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jaroslav Týc",
+                "homepage": "https://www.jaroslavtyc.com",
+                "role": "Original author"
+            }
+        ],
+        "description": "Lightweight string wrapper",
+        "homepage": "https://github.com/jaroslavtyc/granam-string",
+        "keywords": [
+            "object",
+            "php",
+            "string"
+        ]
+    },
+    {
+        "name": "granam/exceptions-hierarchy",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy.git",
+            "reference": "a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jaroslavtyc/granam-exceptions-hierarchy/zipball/a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22",
+            "reference": "a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=7.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~6.0"
+        },
+        "time": "2017-02-19 12:25:09",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Granam\\": "Granam/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "The hierarchy skeleton of exceptions in a project",
+        "homepage": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy",
+        "keywords": [
+            "exception",
+            "hierarchy",
+            "logic",
+            "php",
+            "runtime"
+        ]
+    },
+    {
         "name": "symfony/css-selector",
         "version": "v3.2.14",
         "version_normalized": "3.2.14.0",
@@ -211,34 +474,38 @@
         "homepage": "https://symfony.com"
     },
     {
-        "name": "phpgt/dom",
-        "version": "v1.0.1",
-        "version_normalized": "1.0.1.0",
+        "name": "mustangostang/spyc",
+        "version": "0.6.2",
+        "version_normalized": "0.6.2.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/PhpGt/Dom.git",
-            "reference": "865d16dfc91bfb1cdf31a53ccd487b933fa45655"
+            "url": "https://github.com/mustangostang/spyc.git",
+            "reference": "23c35ae854d835f2d7bcc3e3ad743d7e57a8c14d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/PhpGt/Dom/zipball/865d16dfc91bfb1cdf31a53ccd487b933fa45655",
-            "reference": "865d16dfc91bfb1cdf31a53ccd487b933fa45655",
+            "url": "https://api.github.com/repos/mustangostang/spyc/zipball/23c35ae854d835f2d7bcc3e3ad743d7e57a8c14d",
+            "reference": "23c35ae854d835f2d7bcc3e3ad743d7e57a8c14d",
             "shasum": ""
         },
         "require": {
-            "php": ">=7.1.0",
-            "symfony/css-selector": "3.2.*"
+            "php": ">=5.3.1"
         },
         "require-dev": {
-            "phpunit/phpunit": "^6.4"
+            "phpunit/phpunit": "4.3.*@dev"
         },
-        "time": "2017-12-12 22:49:41",
+        "time": "2017-02-24 16:06:33",
         "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.5.x-dev"
+            }
+        },
         "installation-source": "dist",
         "autoload": {
-            "psr-4": {
-                "Gt\\Dom\\": "./src"
-            }
+            "files": [
+                "Spyc.php"
+            ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -246,11 +513,208 @@
         ],
         "authors": [
             {
-                "name": "Greg Bowler",
-                "email": "greg.bowler@g105b.com"
+                "name": "mustangostang",
+                "email": "vlad.andersen@gmail.com"
             }
         ],
-        "description": "The modern DOM API for PHP 7 projects."
+        "description": "A simple YAML loader/dumper class for PHP",
+        "homepage": "https://github.com/mustangostang/spyc/",
+        "keywords": [
+            "spyc",
+            "yaml",
+            "yml"
+        ]
+    },
+    {
+        "name": "piwik/device-detector",
+        "version": "3.10.1",
+        "version_normalized": "3.10.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/matomo-org/device-detector.git",
+            "reference": "76a9e32ac6842239ac66a3877079cbfb84f29789"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/76a9e32ac6842239ac66a3877079cbfb84f29789",
+            "reference": "76a9e32ac6842239ac66a3877079cbfb84f29789",
+            "shasum": ""
+        },
+        "require": {
+            "mustangostang/spyc": "*",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "fabpot/php-cs-fixer": "~1.7",
+            "matthiasmullie/scrapbook": "@stable",
+            "phpunit/phpunit": "^4.8.36",
+            "psr/cache": "^1.0",
+            "psr/simple-cache": "^1.0"
+        },
+        "suggest": {
+            "doctrine/cache": "Can directly be used for caching purpose"
+        },
+        "time": "2018-03-23 15:19:45",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "DeviceDetector\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL-3.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "The Matomo Team",
+                "email": "hello@matomo.org",
+                "homepage": "https://matomo.org/team/"
+            }
+        ],
+        "description": "The Universal Device Detection library, that parses User Agents and detects devices (desktop, tablet, mobile, tv, cars, console, etc.), clients (browsers, media players, mobile apps, feed readers, libraries, etc), operating systems, devices, brands and models.",
+        "homepage": "https://matomo.org",
+        "keywords": [
+            "devicedetection",
+            "parser",
+            "useragent"
+        ]
+    },
+    {
+        "name": "tracy/tracy",
+        "version": "v2.4.13",
+        "version_normalized": "2.4.13.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/tracy.git",
+            "reference": "ead5141731a21cfd0710b092351d923549d2b2ad"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/tracy/zipball/ead5141731a21cfd0710b092351d923549d2b2ad",
+            "reference": "ead5141731a21cfd0710b092351d923549d2b2ad",
+            "shasum": ""
+        },
+        "require": {
+            "ext-json": "*",
+            "ext-session": "*",
+            "php": ">=5.4.4"
+        },
+        "require-dev": {
+            "nette/di": "~2.3",
+            "nette/tester": "~1.7"
+        },
+        "suggest": {
+            "https://nette.org/donate": "Please support Tracy via a donation"
+        },
+        "time": "2018-03-23 17:15:58",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src"
+            ],
+            "files": [
+                "src/shortcuts.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "https://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "https://nette.org/contributors"
+            }
+        ],
+        "description": "😎 Tracy: the addictive tool to ease debugging PHP code for cool developers. Friendly design, logging, profiler, advanced features like debugging AJAX calls or CLI support. You will love it.",
+        "homepage": "https://tracy.nette.org",
+        "keywords": [
+            "Xdebug",
+            "debug",
+            "debugger",
+            "nette",
+            "profiler"
+        ]
+    },
+    {
+        "name": "phpmailer/phpmailer",
+        "version": "v6.0.5",
+        "version_normalized": "6.0.5.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/PHPMailer/PHPMailer.git",
+            "reference": "cb3ea134d4d3729e7857737d5f320cce9caf4d32"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/cb3ea134d4d3729e7857737d5f320cce9caf4d32",
+            "reference": "cb3ea134d4d3729e7857737d5f320cce9caf4d32",
+            "shasum": ""
+        },
+        "require": {
+            "ext-ctype": "*",
+            "ext-filter": "*",
+            "php": ">=5.5.0"
+        },
+        "require-dev": {
+            "doctrine/annotations": "1.2.*",
+            "friendsofphp/php-cs-fixer": "^2.2",
+            "phpdocumentor/phpdocumentor": "2.*",
+            "phpunit/phpunit": "^4.8 || ^5.7",
+            "zendframework/zend-eventmanager": "3.0.*",
+            "zendframework/zend-i18n": "2.7.3",
+            "zendframework/zend-serializer": "2.7.*"
+        },
+        "suggest": {
+            "ext-mbstring": "Needed to send email in multibyte encoding charset",
+            "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
+            "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
+            "psr/log": "For optional PSR-3 debug logging",
+            "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
+            "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
+        },
+        "time": "2018-03-27 13:49:45",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "PHPMailer\\PHPMailer\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL-2.1"
+        ],
+        "authors": [
+            {
+                "name": "Jim Jagielski",
+                "email": "jimjag@gmail.com"
+            },
+            {
+                "name": "Marcus Bointon",
+                "email": "phpmailer@synchromedia.co.uk"
+            },
+            {
+                "name": "Andy Prevost",
+                "email": "codeworxtech@users.sourceforge.net"
+            },
+            {
+                "name": "Brent R. Matzelle"
+            }
+        ],
+        "description": "PHPMailer is a full-featured email creation and transfer class for PHP"
     },
     {
         "name": "sebastian/version",
@@ -721,6 +1185,72 @@
         ]
     },
     {
+        "name": "sebastian/comparator",
+        "version": "2.1.3",
+        "version_normalized": "2.1.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sebastianbergmann/comparator.git",
+            "reference": "34369daee48eafb2651bea869b4b15d75ccc35f9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/34369daee48eafb2651bea869b4b15d75ccc35f9",
+            "reference": "34369daee48eafb2651bea869b4b15d75ccc35f9",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.0",
+            "sebastian/diff": "^2.0 || ^3.0",
+            "sebastian/exporter": "^3.1"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^6.4"
+        },
+        "time": "2018-02-01 13:46:46",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.1.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Jeff Welch",
+                "email": "whatthejeff@gmail.com"
+            },
+            {
+                "name": "Volker Dusch",
+                "email": "github@wallbash.com"
+            },
+            {
+                "name": "Bernhard Schussek",
+                "email": "bschussek@2bepublished.at"
+            },
+            {
+                "name": "Sebastian Bergmann",
+                "email": "sebastian@phpunit.de"
+            }
+        ],
+        "description": "Provides the functionality to compare PHP values for equality",
+        "homepage": "https://github.com/sebastianbergmann/comparator",
+        "keywords": [
+            "comparator",
+            "compare",
+            "equality"
+        ]
+    },
+    {
         "name": "doctrine/instantiator",
         "version": "1.1.0",
         "version_normalized": "1.1.0.0",
@@ -1122,17 +1652,17 @@
     },
     {
         "name": "phpunit/php-code-coverage",
-        "version": "5.3.0",
-        "version_normalized": "5.3.0.0",
+        "version": "5.3.2",
+        "version_normalized": "5.3.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-            "reference": "661f34d0bd3f1a7225ef491a70a020ad23a057a1"
+            "reference": "c89677919c5dd6d3b3852f230a663118762218ac"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/661f34d0bd3f1a7225ef491a70a020ad23a057a1",
-            "reference": "661f34d0bd3f1a7225ef491a70a020ad23a057a1",
+            "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/c89677919c5dd6d3b3852f230a663118762218ac",
+            "reference": "c89677919c5dd6d3b3852f230a663118762218ac",
             "shasum": ""
         },
         "require": {
@@ -1153,7 +1683,7 @@
         "suggest": {
             "ext-xdebug": "^2.5.5"
         },
-        "time": "2017-12-06 09:29:45",
+        "time": "2018-04-06 15:36:58",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1183,6 +1713,58 @@
             "coverage",
             "testing",
             "xunit"
+        ]
+    },
+    {
+        "name": "webmozart/assert",
+        "version": "1.3.0",
+        "version_normalized": "1.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/webmozart/assert.git",
+            "reference": "0df1908962e7a3071564e857d86874dad1ef204a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/webmozart/assert/zipball/0df1908962e7a3071564e857d86874dad1ef204a",
+            "reference": "0df1908962e7a3071564e857d86874dad1ef204a",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.3.3 || ^7.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.6",
+            "sebastian/version": "^1.0.1"
+        },
+        "time": "2018-01-29 19:49:41",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Webmozart\\Assert\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Bernhard Schussek",
+                "email": "bschussek@gmail.com"
+            }
+        ],
+        "description": "Assertions to validate method input/output with nice error messages.",
+        "keywords": [
+            "assert",
+            "check",
+            "validate"
         ]
     },
     {
@@ -1288,6 +1870,124 @@
                 "name": "Mike van Riel",
                 "email": "me@mikevanriel.com"
             }
+        ]
+    },
+    {
+        "name": "phpdocumentor/reflection-docblock",
+        "version": "4.3.0",
+        "version_normalized": "4.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
+            "reference": "94fd0001232e47129dd3504189fa1c7225010d08"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/94fd0001232e47129dd3504189fa1c7225010d08",
+            "reference": "94fd0001232e47129dd3504189fa1c7225010d08",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.0",
+            "phpdocumentor/reflection-common": "^1.0.0",
+            "phpdocumentor/type-resolver": "^0.4.0",
+            "webmozart/assert": "^1.0"
+        },
+        "require-dev": {
+            "doctrine/instantiator": "~1.0.5",
+            "mockery/mockery": "^1.0",
+            "phpunit/phpunit": "^6.4"
+        },
+        "time": "2017-11-30 07:14:17",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "4.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "phpDocumentor\\Reflection\\": [
+                    "src/"
+                ]
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Mike van Riel",
+                "email": "me@mikevanriel.com"
+            }
+        ],
+        "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock."
+    },
+    {
+        "name": "phpspec/prophecy",
+        "version": "1.7.6",
+        "version_normalized": "1.7.6.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phpspec/prophecy.git",
+            "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/phpspec/prophecy/zipball/33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
+            "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/instantiator": "^1.0.2",
+            "php": "^5.3|^7.0",
+            "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0",
+            "sebastian/comparator": "^1.1|^2.0|^3.0",
+            "sebastian/recursion-context": "^1.0|^2.0|^3.0"
+        },
+        "require-dev": {
+            "phpspec/phpspec": "^2.5|^3.2",
+            "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5"
+        },
+        "time": "2018-04-18 13:57:24",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.7.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Prophecy\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Konstantin Kudryashov",
+                "email": "ever.zet@gmail.com",
+                "homepage": "http://everzet.com"
+            },
+            {
+                "name": "Marcello Duarte",
+                "email": "marcello.duarte@gmail.com"
+            }
+        ],
+        "description": "Highly opinionated mocking framework for PHP 5.3+",
+        "homepage": "https://github.com/phpspec/prophecy",
+        "keywords": [
+            "Double",
+            "Dummy",
+            "fake",
+            "mock",
+            "spy",
+            "stub"
         ]
     },
     {
@@ -1444,306 +2144,18 @@
         ]
     },
     {
-        "name": "mustangostang/spyc",
-        "version": "0.6.2",
-        "version_normalized": "0.6.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/mustangostang/spyc.git",
-            "reference": "23c35ae854d835f2d7bcc3e3ad743d7e57a8c14d"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/mustangostang/spyc/zipball/23c35ae854d835f2d7bcc3e3ad743d7e57a8c14d",
-            "reference": "23c35ae854d835f2d7bcc3e3ad743d7e57a8c14d",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.1"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.3.*@dev"
-        },
-        "time": "2017-02-24 16:06:33",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.5.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "Spyc.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "mustangostang",
-                "email": "vlad.andersen@gmail.com"
-            }
-        ],
-        "description": "A simple YAML loader/dumper class for PHP",
-        "homepage": "https://github.com/mustangostang/spyc/",
-        "keywords": [
-            "spyc",
-            "yaml",
-            "yml"
-        ]
-    },
-    {
-        "name": "phpdocumentor/reflection-docblock",
-        "version": "4.3.0",
-        "version_normalized": "4.3.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-            "reference": "94fd0001232e47129dd3504189fa1c7225010d08"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/94fd0001232e47129dd3504189fa1c7225010d08",
-            "reference": "94fd0001232e47129dd3504189fa1c7225010d08",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^7.0",
-            "phpdocumentor/reflection-common": "^1.0.0",
-            "phpdocumentor/type-resolver": "^0.4.0",
-            "webmozart/assert": "^1.0"
-        },
-        "require-dev": {
-            "doctrine/instantiator": "~1.0.5",
-            "mockery/mockery": "^1.0",
-            "phpunit/phpunit": "^6.4"
-        },
-        "time": "2017-11-30 07:14:17",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "4.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "phpDocumentor\\Reflection\\": [
-                    "src/"
-                ]
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Mike van Riel",
-                "email": "me@mikevanriel.com"
-            }
-        ],
-        "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock."
-    },
-    {
-        "name": "sebastian/comparator",
-        "version": "2.1.3",
-        "version_normalized": "2.1.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/sebastianbergmann/comparator.git",
-            "reference": "34369daee48eafb2651bea869b4b15d75ccc35f9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/34369daee48eafb2651bea869b4b15d75ccc35f9",
-            "reference": "34369daee48eafb2651bea869b4b15d75ccc35f9",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^7.0",
-            "sebastian/diff": "^2.0 || ^3.0",
-            "sebastian/exporter": "^3.1"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^6.4"
-        },
-        "time": "2018-02-01 13:46:46",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.1.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Jeff Welch",
-                "email": "whatthejeff@gmail.com"
-            },
-            {
-                "name": "Volker Dusch",
-                "email": "github@wallbash.com"
-            },
-            {
-                "name": "Bernhard Schussek",
-                "email": "bschussek@2bepublished.at"
-            },
-            {
-                "name": "Sebastian Bergmann",
-                "email": "sebastian@phpunit.de"
-            }
-        ],
-        "description": "Provides the functionality to compare PHP values for equality",
-        "homepage": "https://github.com/sebastianbergmann/comparator",
-        "keywords": [
-            "comparator",
-            "compare",
-            "equality"
-        ]
-    },
-    {
-        "name": "webmozart/assert",
-        "version": "1.3.0",
-        "version_normalized": "1.3.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/webmozart/assert.git",
-            "reference": "0df1908962e7a3071564e857d86874dad1ef204a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/webmozart/assert/zipball/0df1908962e7a3071564e857d86874dad1ef204a",
-            "reference": "0df1908962e7a3071564e857d86874dad1ef204a",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^5.3.3 || ^7.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^4.6",
-            "sebastian/version": "^1.0.1"
-        },
-        "time": "2018-01-29 19:49:41",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Webmozart\\Assert\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Bernhard Schussek",
-                "email": "bschussek@gmail.com"
-            }
-        ],
-        "description": "Assertions to validate method input/output with nice error messages.",
-        "keywords": [
-            "assert",
-            "check",
-            "validate"
-        ]
-    },
-    {
-        "name": "phpspec/prophecy",
-        "version": "1.7.5",
-        "version_normalized": "1.7.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/phpspec/prophecy.git",
-            "reference": "dfd6be44111a7c41c2e884a336cc4f461b3b2401"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/phpspec/prophecy/zipball/dfd6be44111a7c41c2e884a336cc4f461b3b2401",
-            "reference": "dfd6be44111a7c41c2e884a336cc4f461b3b2401",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/instantiator": "^1.0.2",
-            "php": "^5.3|^7.0",
-            "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0",
-            "sebastian/comparator": "^1.1|^2.0",
-            "sebastian/recursion-context": "^1.0|^2.0|^3.0"
-        },
-        "require-dev": {
-            "phpspec/phpspec": "^2.5|^3.2",
-            "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5"
-        },
-        "time": "2018-02-19 10:16:54",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.7.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Prophecy\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Konstantin Kudryashov",
-                "email": "ever.zet@gmail.com",
-                "homepage": "http://everzet.com"
-            },
-            {
-                "name": "Marcello Duarte",
-                "email": "marcello.duarte@gmail.com"
-            }
-        ],
-        "description": "Highly opinionated mocking framework for PHP 5.3+",
-        "homepage": "https://github.com/phpspec/prophecy",
-        "keywords": [
-            "Double",
-            "Dummy",
-            "fake",
-            "mock",
-            "spy",
-            "stub"
-        ]
-    },
-    {
         "name": "phpunit/phpunit",
-        "version": "6.5.7",
-        "version_normalized": "6.5.7.0",
+        "version": "6.5.8",
+        "version_normalized": "6.5.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sebastianbergmann/phpunit.git",
-            "reference": "6bd77b57707c236833d2b57b968e403df060c9d9"
+            "reference": "4f21a3c6b97c42952fd5c2837bb354ec0199b97b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6bd77b57707c236833d2b57b968e403df060c9d9",
-            "reference": "6bd77b57707c236833d2b57b968e403df060c9d9",
+            "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4f21a3c6b97c42952fd5c2837bb354ec0199b97b",
+            "reference": "4f21a3c6b97c42952fd5c2837bb354ec0199b97b",
             "shasum": ""
         },
         "require": {
@@ -1782,7 +2194,7 @@
             "ext-xdebug": "*",
             "phpunit/php-invoker": "^1.1"
         },
-        "time": "2018-02-26 07:01:09",
+        "time": "2018-04-10 11:38:34",
         "bin": [
             "phpunit"
         ],
@@ -1818,83 +2230,33 @@
         ]
     },
     {
-        "name": "granam/exceptions-hierarchy",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "name": "phpgt/dom",
+        "version": "v1.0.0",
+        "version_normalized": "1.0.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy.git",
-            "reference": "a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22"
+            "url": "https://github.com/PhpGt/Dom.git",
+            "reference": "c16b9738ab942eb6bef6979aeae0fba56d69bd8c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/granam-exceptions-hierarchy/zipball/a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22",
-            "reference": "a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22",
+            "url": "https://api.github.com/repos/PhpGt/Dom/zipball/c16b9738ab942eb6bef6979aeae0fba56d69bd8c",
+            "reference": "c16b9738ab942eb6bef6979aeae0fba56d69bd8c",
             "shasum": ""
         },
         "require": {
-            "php": ">=7.0"
+            "php": ">=7.0.0",
+            "symfony/css-selector": "3.2.*"
         },
         "require-dev": {
-            "phpunit/phpunit": "~6.0"
+            "phpunit/phpunit": "5.*"
         },
-        "time": "2017-02-19 12:25:09",
+        "time": "2017-05-29 22:19:43",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "Granam\\": "Granam/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "The hierarchy skeleton of exceptions in a project",
-        "homepage": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy",
-        "keywords": [
-            "exception",
-            "hierarchy",
-            "logic",
-            "php",
-            "runtime"
-        ]
-    },
-    {
-        "name": "granam/string",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jaroslavtyc/granam-string.git",
-            "reference": "dd2942317b13a6306ce645bdce4082086ec9913d"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/dd2942317b13a6306ce645bdce4082086ec9913d",
-            "reference": "dd2942317b13a6306ce645bdce4082086ec9913d",
-            "shasum": ""
-        },
-        "require": {
-            "granam/scalar": "dev-master",
-            "granam/strict-object": "dev-master",
-            "php": ">=7.0"
-        },
-        "require-dev": {
-            "ext-mbstring": "*",
-            "granam/exceptions-hierarchy": "~4.0",
-            "mockery/mockery": "~1.0",
-            "phpunit/phpunit": "~6.0"
-        },
-        "suggest": {
-            "ext-intl": "*"
-        },
-        "time": "2018-03-07 11:01:24",
-        "type": "project",
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "Granam\\": "Granam/"
+                "Gt\\Dom\\": "./src"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
@@ -1903,368 +2265,10 @@
         ],
         "authors": [
             {
-                "name": "Jaroslav Týc",
-                "homepage": "https://www.jaroslavtyc.com",
-                "role": "Original author"
+                "name": "Greg Bowler",
+                "email": "greg.bowler@g105b.com"
             }
         ],
-        "description": "Lightweight string wrapper",
-        "homepage": "https://github.com/jaroslavtyc/granam-string",
-        "keywords": [
-            "object",
-            "php",
-            "string"
-        ]
-    },
-    {
-        "name": "piwik/device-detector",
-        "version": "3.10.1",
-        "version_normalized": "3.10.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/matomo-org/device-detector.git",
-            "reference": "76a9e32ac6842239ac66a3877079cbfb84f29789"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/76a9e32ac6842239ac66a3877079cbfb84f29789",
-            "reference": "76a9e32ac6842239ac66a3877079cbfb84f29789",
-            "shasum": ""
-        },
-        "require": {
-            "mustangostang/spyc": "*",
-            "php": ">=5.3.2"
-        },
-        "require-dev": {
-            "fabpot/php-cs-fixer": "~1.7",
-            "matthiasmullie/scrapbook": "@stable",
-            "phpunit/phpunit": "^4.8.36",
-            "psr/cache": "^1.0",
-            "psr/simple-cache": "^1.0"
-        },
-        "suggest": {
-            "doctrine/cache": "Can directly be used for caching purpose"
-        },
-        "time": "2018-03-23 15:19:45",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "DeviceDetector\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "LGPL-3.0-or-later"
-        ],
-        "authors": [
-            {
-                "name": "The Matomo Team",
-                "email": "hello@matomo.org",
-                "homepage": "https://matomo.org/team/"
-            }
-        ],
-        "description": "The Universal Device Detection library, that parses User Agents and detects devices (desktop, tablet, mobile, tv, cars, console, etc.), clients (browsers, media players, mobile apps, feed readers, libraries, etc), operating systems, devices, brands and models.",
-        "homepage": "https://matomo.org",
-        "keywords": [
-            "devicedetection",
-            "parser",
-            "useragent"
-        ]
-    },
-    {
-        "name": "tracy/tracy",
-        "version": "v2.4.13",
-        "version_normalized": "2.4.13.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/nette/tracy.git",
-            "reference": "ead5141731a21cfd0710b092351d923549d2b2ad"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/nette/tracy/zipball/ead5141731a21cfd0710b092351d923549d2b2ad",
-            "reference": "ead5141731a21cfd0710b092351d923549d2b2ad",
-            "shasum": ""
-        },
-        "require": {
-            "ext-json": "*",
-            "ext-session": "*",
-            "php": ">=5.4.4"
-        },
-        "require-dev": {
-            "nette/di": "~2.3",
-            "nette/tester": "~1.7"
-        },
-        "suggest": {
-            "https://nette.org/donate": "Please support Tracy via a donation"
-        },
-        "time": "2018-03-23 17:15:58",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src"
-            ],
-            "files": [
-                "src/shortcuts.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "David Grudl",
-                "homepage": "https://davidgrudl.com"
-            },
-            {
-                "name": "Nette Community",
-                "homepage": "https://nette.org/contributors"
-            }
-        ],
-        "description": "😎 Tracy: the addictive tool to ease debugging PHP code for cool developers. Friendly design, logging, profiler, advanced features like debugging AJAX calls or CLI support. You will love it.",
-        "homepage": "https://tracy.nette.org",
-        "keywords": [
-            "Xdebug",
-            "debug",
-            "debugger",
-            "nette",
-            "profiler"
-        ]
-    },
-    {
-        "name": "phpmailer/phpmailer",
-        "version": "v6.0.5",
-        "version_normalized": "6.0.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/PHPMailer/PHPMailer.git",
-            "reference": "cb3ea134d4d3729e7857737d5f320cce9caf4d32"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/cb3ea134d4d3729e7857737d5f320cce9caf4d32",
-            "reference": "cb3ea134d4d3729e7857737d5f320cce9caf4d32",
-            "shasum": ""
-        },
-        "require": {
-            "ext-ctype": "*",
-            "ext-filter": "*",
-            "php": ">=5.5.0"
-        },
-        "require-dev": {
-            "doctrine/annotations": "1.2.*",
-            "friendsofphp/php-cs-fixer": "^2.2",
-            "phpdocumentor/phpdocumentor": "2.*",
-            "phpunit/phpunit": "^4.8 || ^5.7",
-            "zendframework/zend-eventmanager": "3.0.*",
-            "zendframework/zend-i18n": "2.7.3",
-            "zendframework/zend-serializer": "2.7.*"
-        },
-        "suggest": {
-            "ext-mbstring": "Needed to send email in multibyte encoding charset",
-            "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
-            "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
-            "psr/log": "For optional PSR-3 debug logging",
-            "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
-            "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
-        },
-        "time": "2018-03-27 13:49:45",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "PHPMailer\\PHPMailer\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "LGPL-2.1"
-        ],
-        "authors": [
-            {
-                "name": "Jim Jagielski",
-                "email": "jimjag@gmail.com"
-            },
-            {
-                "name": "Marcus Bointon",
-                "email": "phpmailer@synchromedia.co.uk"
-            },
-            {
-                "name": "Andy Prevost",
-                "email": "codeworxtech@users.sourceforge.net"
-            },
-            {
-                "name": "Brent R. Matzelle"
-            }
-        ],
-        "description": "PHPMailer is a full-featured email creation and transfer class for PHP"
-    },
-    {
-        "name": "roave/security-advisories",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "4a272b63452f4d8ff0d48a759e59db9359a9b5b7"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4a272b63452f4d8ff0d48a759e59db9359a9b5b7",
-            "reference": "4a272b63452f4d8ff0d48a759e59db9359a9b5b7",
-            "shasum": ""
-        },
-        "conflict": {
-            "3f/pygmentize": "<1.2",
-            "adodb/adodb-php": "<5.20.6",
-            "amphp/artax": "<1.0.6|>=2,<2.0.6",
-            "amphp/http": "<1.0.1",
-            "asymmetricrypt/asymmetricrypt": ">=0,<9.9.99",
-            "aws/aws-sdk-php": ">=3,<3.2.1",
-            "bugsnag/bugsnag-laravel": ">=2,<2.0.2",
-            "cakephp/cakephp": ">=1.3,<1.3.18|>=2,<2.4.99|>=2.5,<2.5.99|>=2.6,<2.6.12|>=2.7,<2.7.6|>=3,<3.0.15|>=3.1,<3.1.4",
-            "cart2quote/module-quotation": ">=4.1.6,<=4.4.5|>=5,<5.4.4",
-            "cartalyst/sentry": "<=2.1.6",
-            "codeigniter/framework": "<=3.0.6",
-            "composer/composer": "<=1.0.0-alpha11",
-            "contao-components/mediaelement": ">=2.14.2,<2.21.1",
-            "contao/core": ">=2,<3.5.32",
-            "contao/core-bundle": ">=4,<4.4.8",
-            "contao/listing-bundle": ">=4,<4.4.8",
-            "contao/newsletter-bundle": ">=4,<4.1",
-            "doctrine/annotations": ">=1,<1.2.7",
-            "doctrine/cache": ">=1,<1.3.2|>=1.4,<1.4.2",
-            "doctrine/common": ">=2,<2.4.3|>=2.5,<2.5.1",
-            "doctrine/dbal": ">=2,<2.0.8|>=2.1,<2.1.2",
-            "doctrine/doctrine-bundle": "<1.5.2",
-            "doctrine/doctrine-module": "<=0.7.1",
-            "doctrine/mongodb-odm": ">=1,<1.0.2",
-            "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
-            "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
-            "dompdf/dompdf": ">=0.6,<0.6.2",
-            "drupal/core": ">=8,<8.4.5",
-            "drupal/drupal": ">=8,<8.4.5",
-            "erusev/parsedown": "<1.7",
-            "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.3|>=5.4,<5.4.11.3|>=2017.8,<2017.8.1.1|>=2017.12,<2017.12.2.1",
-            "firebase/php-jwt": "<2",
-            "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
-            "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
-            "gree/jose": "<=2.2",
-            "gregwar/rst": "<1.0.3",
-            "guzzlehttp/guzzle": ">=6,<6.2.1|>=4.0.0-rc2,<4.2.4|>=5,<5.3.1",
-            "illuminate/auth": ">=4,<4.0.99|>=4.1,<4.1.26",
-            "illuminate/database": ">=4,<4.0.99|>=4.1,<4.1.29",
-            "joomla/session": "<1.3.1",
-            "laravel/framework": ">=4,<4.0.99|>=4.1,<4.1.29",
-            "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
-            "magento/magento1ce": ">=1.5.0.1,<1.9.3.2",
-            "magento/magento1ee": ">=1.9,<1.14.3.2",
-            "magento/magento2ce": ">=2,<2.2",
-            "monolog/monolog": ">=1.8,<1.12",
-            "namshi/jose": "<2.2",
-            "onelogin/php-saml": "<2.10.4",
-            "oro/crm": ">=1.7,<1.7.4",
-            "oro/platform": ">=1.7,<1.7.4",
-            "padraic/humbug_get_contents": "<1.1.2",
-            "pagarme/pagarme-php": ">=0,<3",
-            "paragonie/random_compat": "<2",
-            "phpmailer/phpmailer": ">=5,<5.2.24",
-            "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
-            "phpxmlrpc/extras": "<0.6.1",
-            "propel/propel": ">=2.0.0-alpha1,<=2.0.0-alpha7",
-            "propel/propel1": ">=1,<=1.7.1",
-            "pusher/pusher-php-server": "<2.2.1",
-            "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
-            "shopware/shopware": "<5.3.7",
-            "silverstripe/cms": ">=3,<=3.0.11|>=3.1,<3.1.11",
-            "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
-            "silverstripe/framework": ">=3,<3.3",
-            "silverstripe/userforms": "<3",
-            "simplesamlphp/saml2": "<1.10.6|>=2,<2.3.8|>=3,<3.1.4",
-            "simplesamlphp/simplesamlphp": "<1.15.2",
-            "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
-            "socalnick/scn-social-auth": "<1.15.2",
-            "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
-            "stormpath/sdk": ">=0,<9.9.99",
-            "swiftmailer/swiftmailer": ">=4,<5.4.5",
-            "symfony/dependency-injection": ">=2,<2.0.17",
-            "symfony/form": ">=2.3,<2.3.35|>=2.4,<2.6.12|>=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
-            "symfony/framework-bundle": ">=2,<2.3.18|>=2.4,<2.4.8|>=2.5,<2.5.2",
-            "symfony/http-foundation": ">=2,<2.3.27|>=2.4,<2.5.11|>=2.6,<2.6.6",
-            "symfony/http-kernel": ">=2,<2.3.29|>=2.4,<2.5.12|>=2.6,<2.6.8",
-            "symfony/intl": ">=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
-            "symfony/routing": ">=2,<2.0.19",
-            "symfony/security": ">=2,<2.0.25|>=2.1,<2.1.13|>=2.2,<2.2.9|>=2.3,<2.3.37|>=2.4,<2.6.13|>=2.7,<2.7.9|>=2.7.30,<2.7.32|>=2.8.23,<2.8.25|>=3.2.10,<3.2.12|>=3.3.3,<3.3.5",
-            "symfony/security-core": ">=2.4,<2.6.13|>=2.7,<2.7.9|>=2.7.30,<2.7.32|>=2.8,<2.8.6|>=2.8.23,<2.8.25|>=3,<3.0.6|>=3.2.10,<3.2.12|>=3.3.3,<3.3.5",
-            "symfony/security-csrf": ">=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
-            "symfony/security-http": ">=2.3,<2.3.41|>=2.4,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
-            "symfony/serializer": ">=2,<2.0.11",
-            "symfony/symfony": ">=2,<2.3.41|>=2.4,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
-            "symfony/translation": ">=2,<2.0.17",
-            "symfony/validator": ">=2,<2.0.24|>=2.1,<2.1.12|>=2.2,<2.2.5|>=2.3,<2.3.3",
-            "symfony/web-profiler-bundle": ">=2,<2.3.19|>=2.4,<2.4.9|>=2.5,<2.5.4",
-            "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
-            "thelia/backoffice-default-template": ">=2.1,<2.1.2",
-            "thelia/thelia": ">=2.1.0-beta1,<2.1.3|>=2.1,<2.1.2",
-            "titon/framework": ">=0,<9.9.99",
-            "twig/twig": "<1.20",
-            "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.22|>=8,<8.7.5",
-            "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.10|>=3.1,<3.1.7|>=3.2,<3.2.7|>=3.3,<3.3.5",
-            "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4",
-            "willdurand/js-translation-bundle": "<2.1.1",
-            "yiisoft/yii": ">=1.1.14,<1.1.15",
-            "yiisoft/yii2": "<2.0.15",
-            "yiisoft/yii2-bootstrap": "<2.0.4",
-            "yiisoft/yii2-dev": "<2.0.15",
-            "yiisoft/yii2-elasticsearch": "<2.0.5",
-            "yiisoft/yii2-gii": "<2.0.4",
-            "yiisoft/yii2-jui": "<2.0.4",
-            "yiisoft/yii2-redis": "<2.0.8",
-            "zendframework/zend-cache": ">=2.4,<2.4.8|>=2.5,<2.5.3",
-            "zendframework/zend-captcha": ">=2,<2.4.9|>=2.5,<2.5.2",
-            "zendframework/zend-crypt": ">=2,<2.4.9|>=2.5,<2.5.2",
-            "zendframework/zend-db": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.10|>=2.3,<2.3.5",
-            "zendframework/zend-diactoros": ">=1,<1.0.4",
-            "zendframework/zend-form": ">=2,<2.2.7|>=2.3,<2.3.1",
-            "zendframework/zend-http": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.3,<2.3.8|>=2.4,<2.4.1",
-            "zendframework/zend-json": ">=2.1,<2.1.6|>=2.2,<2.2.6",
-            "zendframework/zend-ldap": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.8|>=2.3,<2.3.3",
-            "zendframework/zend-mail": ">=2,<2.4.11|>=2.5,<2.7.2",
-            "zendframework/zend-navigation": ">=2,<2.2.7|>=2.3,<2.3.1",
-            "zendframework/zend-session": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.9|>=2.3,<2.3.4",
-            "zendframework/zend-validator": ">=2.3,<2.3.6",
-            "zendframework/zend-view": ">=2,<2.2.7|>=2.3,<2.3.1",
-            "zendframework/zend-xmlrpc": ">=2.1,<2.1.6|>=2.2,<2.2.6",
-            "zendframework/zendframework": ">=2,<2.4.11|>=2.5,<2.5.1",
-            "zendframework/zendframework1": "<1.12.20",
-            "zendframework/zendopenid": ">=2,<2.0.2",
-            "zendframework/zendxml": ">=1,<1.0.1",
-            "zetacomponents/mail": "<1.8.2",
-            "zf-commons/zfc-user": "<1.2.2",
-            "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
-            "zfr/zfr-oauth2-server-module": "<0.1.2"
-        },
-        "time": "2018-03-22 21:16:54",
-        "type": "metapackage",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Marco Pivetta",
-                "email": "ocramius@gmail.com",
-                "role": "maintainer"
-            }
-        ],
-        "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it"
+        "description": "The modern DOM API for PHP 7 projects."
     }
 ]
