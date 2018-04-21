@@ -20,6 +20,9 @@ Performing DOM manipulation in your server-side code enhances the way dynamic pa
 <a href="https://packagist.org/packages/PhpGt/Dom" target="_blank">
 	<img src="https://img.shields.io/packagist/v/PhpGt/Dom.svg?style=flat-square" alt="Current version" />
 </a>
+<a href="http://www.php.gt/dom" target="_blank">
+	<img src="https://img.shields.io/badge/docs-www.php.gt/dom-26a5e3.svg?style=flat-square" alt="PHP.G/Dom documentation" />
+</a>
 
 ## Example usage: Hello, you!
 
@@ -59,7 +62,7 @@ echo $document->saveHTML();
 
 ## Features at a glance
 
-+ Modern DOM classes available on the server:
++ DOM level 4 classes:
 	+ [`HTMLDocument`][mdn-HTMLDocument]
 	+ [`Element`][mdn-Element]
 	+ [`HTMLCollection`][mdn-HTMLCollection]
@@ -82,20 +85,9 @@ echo $document->saveHTML();
 	+ [`scripts`][mdn-scripts]
 	+ [`title`][mdn-title]
 
-### Non-standard features
+### Page template features
 
-The following features are currently in development and are planned to be released into version 2.0.
-
-+ Server-side WebComponent support:
-	+ `<calendar> <date>1988-04-05</date> <caption>My birthday</caption> </calendar>`
-	+ `<button is="shopping-cart">Add to cart</button>`
-+ Templating to ease dynamic content:
-	+ `<template id="list-item"> <li> Add this many times </li> </template>`
-	+ `<tr data-template="table-row"> <td> Add this many times. </td> </tr>`
-+ Reference an element's children using CSS query selectors via ArrayAccess:
-	+ `$container["h1"][0]->textContent = "Hello, World!";`
-	+ `$document["body>header>nav li a"][0]->href = "/nowhere.html";`
-	+ `foreach($myElement["input[type='checkbox']"] as $checkbox) {`
+This repository is intended to be as accurate to the DOM specification as possible. An extension to the repository is available at https://php.gt/domtemplate which adds page templating through custom elements and template attributes, introducing serverside functionality similar to that of WebComponents.
 
 [mdn-HTMLDocument]: https://developer.mozilla.org/docs/Web/API/HTMLDocument
 [mdn-Element]: https://developer.mozilla.org/docs/Web/API/Element

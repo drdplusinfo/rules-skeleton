@@ -376,49 +376,6 @@
         ]
     },
     {
-        "name": "granam/exceptions-hierarchy",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy.git",
-            "reference": "a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/granam-exceptions-hierarchy/zipball/a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22",
-            "reference": "a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=7.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~6.0"
-        },
-        "time": "2017-02-19 12:25:09",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "Granam\\": "Granam/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "The hierarchy skeleton of exceptions in a project",
-        "homepage": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy",
-        "keywords": [
-            "exception",
-            "hierarchy",
-            "logic",
-            "php",
-            "runtime"
-        ]
-    },
-    {
         "name": "symfony/css-selector",
         "version": "v3.2.14",
         "version_normalized": "3.2.14.0",
@@ -472,6 +429,91 @@
         ],
         "description": "Symfony CssSelector Component",
         "homepage": "https://symfony.com"
+    },
+    {
+        "name": "phpgt/dom",
+        "version": "v1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/PhpGt/Dom.git",
+            "reference": "865d16dfc91bfb1cdf31a53ccd487b933fa45655"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/PhpGt/Dom/zipball/865d16dfc91bfb1cdf31a53ccd487b933fa45655",
+            "reference": "865d16dfc91bfb1cdf31a53ccd487b933fa45655",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=7.1.0",
+            "symfony/css-selector": "3.2.*"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^6.4"
+        },
+        "time": "2017-12-12 22:49:41",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Gt\\Dom\\": "./src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Greg Bowler",
+                "email": "greg.bowler@g105b.com"
+            }
+        ],
+        "description": "The modern DOM API for PHP 7 projects."
+    },
+    {
+        "name": "granam/exceptions-hierarchy",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy.git",
+            "reference": "a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jaroslavtyc/granam-exceptions-hierarchy/zipball/a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22",
+            "reference": "a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=7.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~6.0"
+        },
+        "time": "2017-02-19 12:25:09",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Granam\\": "Granam/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "The hierarchy skeleton of exceptions in a project",
+        "homepage": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy",
+        "keywords": [
+            "exception",
+            "hierarchy",
+            "logic",
+            "php",
+            "runtime"
+        ]
     },
     {
         "name": "mustangostang/spyc",
@@ -2228,47 +2270,5 @@
             "testing",
             "xunit"
         ]
-    },
-    {
-        "name": "phpgt/dom",
-        "version": "v1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/PhpGt/Dom.git",
-            "reference": "c16b9738ab942eb6bef6979aeae0fba56d69bd8c"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/PhpGt/Dom/zipball/c16b9738ab942eb6bef6979aeae0fba56d69bd8c",
-            "reference": "c16b9738ab942eb6bef6979aeae0fba56d69bd8c",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=7.0.0",
-            "symfony/css-selector": "3.2.*"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "5.*"
-        },
-        "time": "2017-05-29 22:19:43",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Gt\\Dom\\": "./src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Greg Bowler",
-                "email": "greg.bowler@g105b.com"
-            }
-        ],
-        "description": "The modern DOM API for PHP 7 projects."
     }
 ]
