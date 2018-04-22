@@ -44,7 +44,7 @@ class LicenceConfirmationTest extends AbstractContentTest
             $buyForm->getAttribute('action'),
             'Missing direct link to current article in e-shop, (put it into eshop_url.txt file)'
         );
-        self::assertTrue(\in_array($buyForm->getAttribute('method'), ['' /* get as default */, 'get'], true));
+        self::assertContains((string)$buyForm->getAttribute('method'), ['' /* get as default */, 'get']);
         self::assertSame('buy', $buyForm->getElementsByTagName('input')->current()->getAttribute('name'));
         self::assertEmpty($buyForm->getAttribute('onsubmit'), 'No confirmation should be required to access e-shop');
     }

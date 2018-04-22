@@ -60,8 +60,8 @@ class AnchorsTest extends AbstractContentTest
                     return;
                 }
             }
-            self::assertNotContains('hidden', $target->className, "Inner link of ID $expectedId should not be hidden");
-            self::assertNotRegExp('~(display:\s*none|visibility:\s*hidden)~', $target->getAttribute('style'));
+            self::assertNotContains('hidden', (string)$target->className, "Inner link of ID $expectedId should not be hidden");
+            self::assertNotRegExp('~(display:\s*none|visibility:\s*hidden)~', (string)$target->getAttribute('style'));
         }
     }
 
@@ -157,7 +157,7 @@ class AnchorsTest extends AbstractContentTest
                 'No element found by ID ' . $expectedId . ' in a document with URL ' . $link
                 . ($link !== $anchor->getAttribute('href') ? ' (originally ' . $anchor->getAttribute('href') . ')' : '')
             );
-            self::assertNotRegExp('~(display:\s*none|visibility:\s*hidden)~', $target->getAttribute('style'));
+            self::assertNotRegExp('~(display:\s*none|visibility:\s*hidden)~', (string)$target->getAttribute('style'));
         }
     }
 

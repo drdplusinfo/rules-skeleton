@@ -20,6 +20,7 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
  * @property string $outerHTML Gets or sets the HTML syntax describing the
  * element and its descendants. It can be set to replace the element with nodes
  * parsed from the given string
+ * @property string $innerText
  */
 class Element extends DOMElement {
 	use LiveProperty, NonDocumentTypeChildNode, ChildNode, ParentNode;
@@ -68,6 +69,15 @@ class Element extends DOMElement {
 		$collection = $this->css($selectors, "ancestor-or-self::");
 
 		return $collection->item(count($collection) - 1);
+	}
+
+	public function getAttribute($name):?string {
+		$value = parent::getAttribute($name);
+		if(strlen($value) === 0) {
+			return null;
+		}
+
+		return $value;
 	}
 
 
@@ -142,6 +152,15 @@ class Element extends DOMElement {
 		$fragment = $this->ownerDocument->createDocumentFragment();
 		$fragment->appendXML($html);
 		$this->replaceWith($fragment);
+	}
+
+	public function prop_get_innerText():string {
+		return $this->textContent;
+	}
+
+	public function prop_set_innerText(string $value):string {
+		$this->textContent = $value;
+		return $this->textContent;
 	}
 
 	protected function getRootDocument():DOMDocument {

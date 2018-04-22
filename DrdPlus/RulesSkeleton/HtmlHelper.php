@@ -163,7 +163,7 @@ class HtmlHelper extends StrictObject
     {
         /** @var Element $child */
         foreach ($children as $child) {
-            if ($child->id && !$child->classList->contains(self::INVISIBLE_ID_CLASS)
+            if ($child->getAttribute('id') && !$child->prop_get_classList()->contains(self::INVISIBLE_ID_CLASS)
                 && $child->getElementsByTagName('a')->length === 0
             ) {
                 $anchorToSelf = new Element('a');
@@ -177,7 +177,7 @@ class HtmlHelper extends StrictObject
                 }
                 if (\count($toMove) > 0) {
                     $child->replaceChild($anchorToSelf, $toMove[0]); // pairs anchor with parent element
-                    $anchorToSelf->setAttribute('href', '#' . $child->id);
+                    $anchorToSelf->setAttribute('href', '#' . $child->getAttribute('id'));
                     foreach ($toMove as $index => $item) {
                         $anchorToSelf->appendChild($item);
                     }
@@ -261,7 +261,7 @@ class HtmlHelper extends StrictObject
                 if ($childNode->nodeType === XML_TEXT_NODE
                     || !($childNode instanceof \DOMElement)
                     || ($childNode->nodeName !== 'img'
-                        && !preg_match('~\s*(introduction|quote|background-image)\s*~', $childNode->getAttribute('class'))
+                        && !preg_match('~\s*(introduction|quote|background-image)\s*~', (string)$childNode->getAttribute('class'))
                     )
                 ) {
                     $html->removeChild($childNode);
@@ -317,8 +317,8 @@ class HtmlHelper extends StrictObject
         $tablesWithIds = [];
         /** @var Element $table */
         foreach ($html->getElementsByTagName('table') as $table) {
-            if ($table->id) {
-                $tablesWithIds[$table->id] = $table;
+            if ($table->getAttribute('id')) {
+                $tablesWithIds[$table->getAttribute('id')] = $table;
                 continue;
             }
             $childId = $this->getChildId($table->children);
@@ -343,8 +343,8 @@ class HtmlHelper extends StrictObject
     private function getChildId(HTMLCollection $children)
     {
         foreach ($children as $child) {
-            if ($child->id) {
-                return $child->id;
+            if ($child->getAttribute('id')) {
+                return $child->getAttribute('id');
             }
             $grandChildId = $this->getChildId($child->children);
             if ($grandChildId !== false) {
