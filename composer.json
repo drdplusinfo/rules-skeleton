@@ -33,11 +33,10 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
-    "post-update-cmd": [
-      "cp ./vendor/drd-plus/frontend-skeleton/index.php .",
-      "find ./cache -mindepth 2 -type f -exec rm {} +"
-    ],
-    "post-install-cmd": [
+    "pre-autoload-dump": [
+      "cp -r ./vendor/drd-plus/frontend-skeleton/images/generic ./images",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/css/generic ./css",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/index.php .",
       "find ./cache -mindepth 2 -type f -exec rm {} +"
     ]
   }

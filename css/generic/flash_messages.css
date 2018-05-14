@@ -4,7 +4,7 @@
     text-align: center;
 }
 
-.message.warning {
+.warning {
     background-color: rgba(205, 170, 160, 0.37);
     color: darkred;
 }
