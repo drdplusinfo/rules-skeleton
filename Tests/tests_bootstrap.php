@@ -20,4 +20,4 @@ if (is_readable(__DIR__ . '/tests_config.php')) {
     }
 
 }
-const DRD_PLUS_RULES_INDEX_FILE_NAME_TO_TEST = __DIR__ . '/../index.php';
+const DRD_PLUS_INDEX_FILE_NAME_TO_TEST = __DIR__ . '/../index.php';

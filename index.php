@@ -10,66 +10,18 @@ $documentRoot = PHP_SAPI !== 'cli' ? rtrim(dirname($_SERVER['SCRIPT_FILENAME']),
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
 
-\DrdPlus\RulesSkeleton\TracyDebugger::enable();
+\DrdPlus\FrontendSkeleton\TracyDebugger::enable();
 
-$rulesVersions = new \DrdPlus\RulesSkeleton\RulesVersions($documentRoot);
-$versionSwitchMutex = new \DrdPlus\RulesSkeleton\VersionSwitchMutex();
-$rulesVersionSwitcher = new \DrdPlus\RulesSkeleton\RulesVersionSwitcher(
-    $rulesVersions,
-    new \DrdPlus\RulesSkeleton\VersionSwitchMutex()
-);
-$request = new \DrdPlus\RulesSkeleton\Request();
+$webVersions = new \DrdPlus\FrontendSkeleton\WebVersions($documentRoot);
+$versionSwitchMutex = new \DrdPlus\FrontendSkeleton\WebVersionSwitchMutex();
+$versionSwitcher = new \DrdPlus\FrontendSkeleton\WebVersionSwitcher($webVersions, $versionSwitchMutex);
+$request = new \DrdPlus\FrontendSkeleton\Request();
 try {
-    $rulesVersionSwitcher->switchToVersion($_GET['version'] ?? $_COOKIE['version'] ?? $rulesVersions->getLastVersion());
-} catch (\DrdPlus\RulesSkeleton\Exceptions\Exception $exception) {
+    $versionSwitcher->switchToVersion($_GET['version'] ?? $_COOKIE['version'] ?? $webVersions->getLastVersion());
+} catch (\DrdPlus\FrontendSkeleton\Exceptions\Exception $exception) {
     \trigger_error($exception->getMessage() . '; ' . $exception->getTraceAsString(), E_USER_WARNING);
-}
-
-if (array_key_exists('tables', $_GET) || array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
-    /** @see vendor/drd-plus/rules-html-skeleton/get_tables.php */
-    echo include __DIR__ . '/parts/get_tables.php';
-    $versionSwitchMutex->unlock();
-
-    return;
-}
-
-if (empty($visitorCanAccessContent)) { // can be defined externally by including script
-    $visitorCanAccessContent = false;
-    $visitorIsUsingTrial = false;
-    $visitorCanAccessContent = $isVisitorBot = $request->isVisitorBot();
-    if (!$isVisitorBot) {
-        $usagePolicy = new \DrdPlus\RulesSkeleton\UsagePolicy(basename($documentRoot));
-        $visitorCanAccessContent = $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership();
-        if (!$visitorCanAccessContent) {
-            $visitorCanAccessContent = $visitorIsUsingTrial = $usagePolicy->isVisitorUsingTrial();
-        }
-        if (!$visitorCanAccessContent) {
-            /** @see vendor/drd-plus/rules-html-skeleton/pass.php */
-            include __DIR__ . '/parts/pass.php';
-            $visitorCanAccessContent = $visitorHasConfirmedOwnership = $usagePolicy->hasVisitorConfirmedOwnership(); // may changed
-            if (!$visitorCanAccessContent) {
-                $visitorCanAccessContent = $visitorIsUsingTrial = $usagePolicy->isVisitorUsingTrial(); // may changed
-            }
-        }
-    }
-}
-
-if (!$visitorCanAccessContent) {
-    $versionSwitchMutex->unlock();
-
-    return;
-}
-
-if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !file_exists($documentRoot . '/html'))
-    && file_exists($documentRoot . '/pdf') && glob($documentRoot . '/pdf/*.pdf')
-) {
-    /** @see vendor/drd-plus/rules-html-skeleton/get_pdf.php */
-    echo include __DIR__ . '/parts/get_pdf.php';
-    $versionSwitchMutex->unlock();
-
-    return;
 }
 
 /** @see vendor/drd-plus/rules-html-skeleton/content.php */
 echo require __DIR__ . '/parts/content.php';
-$versionSwitchMutex->unlock();
+$versionSwitchMutex->unlock(); // unlock even if was not locked, just for sure

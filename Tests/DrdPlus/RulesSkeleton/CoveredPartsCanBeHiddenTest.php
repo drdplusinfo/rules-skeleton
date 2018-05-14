@@ -3,9 +3,12 @@ namespace Tests\DrdPlus\RulesSkeleton;
 
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
+use Tests\DrdPlus\FrontendSkeleton\AbstractContentTest;
 
 class CoveredPartsCanBeHiddenTest extends AbstractContentTest
 {
+    use AbstractContentTestTrait;
+
     /**
      * @test
      */

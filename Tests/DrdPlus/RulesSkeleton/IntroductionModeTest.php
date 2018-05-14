@@ -5,16 +5,18 @@ namespace Tests\DrdPlus\RulesSkeleton;
 
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
+use Tests\DrdPlus\FrontendSkeleton\AbstractContentTest;
 
 class IntroductionModeTest extends AbstractContentTest
 {
+    use AbstractContentTestTrait;
 
     /**
      * @test
      */
     public function I_can_get_introduction_only(): void
     {
-        $documents = ['standard' => $this->getRulesHtmlDocument('introduction'), 'dev' => $this->getRulesForDevHtmlDocument('introduction')];
+        $documents = ['standard' => $this->getHtmlDocument('introduction'), 'dev' => $this->getRulesForDevHtmlDocument('introduction')];
         /**
          * @var string $mode
          * @var HTMLDocument $document
@@ -82,7 +84,7 @@ class IntroductionModeTest extends AbstractContentTest
      */
     public function Every_introduction_is_direct_child_of_body(): void
     {
-        $html = $this->getRulesHtmlDocument('introduction');
+        $html = $this->getHtmlDocument('introduction');
         self::assertGreaterThan(0, $html->children->count());
         $bodies = $html->getElementsByTagName('body');
         self::assertGreaterThan(0, $bodies->length);
@@ -111,7 +113,7 @@ class IntroductionModeTest extends AbstractContentTest
      */
     public function I_see_only_single_delimiter_of_blocks(): void
     {
-        $content = $this->getRulesContent('introduction');
+        $content = $this->getContent('introduction');
         self::assertNotRegExp(
             '~(\s*<img [^>]*class="delimiter"[^>]*>){2,}~',
             $content,

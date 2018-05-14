@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
+use DrdPlus\FrontendSkeleton\Cache;
+
 class PassCache extends Cache
 {
     protected function getCachePrefix(): string

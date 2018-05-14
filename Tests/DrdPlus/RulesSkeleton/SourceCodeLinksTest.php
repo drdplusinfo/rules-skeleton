@@ -1,8 +1,12 @@
 <?php
 namespace Tests\DrdPlus\RulesSkeleton;
 
+use Tests\DrdPlus\FrontendSkeleton\AbstractContentTest;
+
 class SourceCodeLinksTest extends AbstractContentTest
 {
+    use AbstractContentTestTrait;
+
     /**
      * @test
      */
@@ -78,7 +82,7 @@ class SourceCodeLinksTest extends AbstractContentTest
         if (\file_exists($localPath) && \preg_match('~(?<type>blob|tree)/master/~', $withoutWebRoot, $matches)) {
             if (\is_file($localPath)) {
                 self::assertSame('blob', $matches['type'], "File $localPath should be linked as blob, not " . $matches['type']);
-            } else if (\is_dir($localPath)) {
+            } elseif (\is_dir($localPath)) {
                 self::assertSame('tree', $matches['type'], "Dir $localPath should be linked as tree, not " . $matches['type']);
             }
         }
