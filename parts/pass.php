@@ -1,17 +1,11 @@
 <?php
 /** @var \DrdPlus\FrontendSkeleton\UsagePolicy $usagePolicy */
-if (!empty($_POST['confirm'])) {
-    return $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
-}
-if (!empty($_POST['trial'])) {
-    return $usagePolicy->activateTrial(new \DateTime('+4 minutes'));
-}
-ob_start();
+\ob_start();
 ?>
   <!DOCTYPE html>
   <html lang="cs">
     <head>
-      <title>Drd+ <?= basename($documentRoot) ?></title>
+      <title>Drd+ <?= \basename($documentRoot) ?></title>
       <link rel="shortcut icon" href="/favicon.ico">
       <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
@@ -38,14 +32,14 @@ ob_start();
                   } ?>
                 <div>
                   <h1>Prohlášení</h1>
-                    <?php if (is_readable($documentRoot . '/name.txt')) {
-                        $name = file_get_contents($documentRoot . '/name.txt');
+                    <?php if (\file_exists($documentRoot . '/name.txt')) {
+                        $name = \file_get_contents($documentRoot . '/name.txt');
                     } else {
-                        $name = basename($documentRoot);
+                        $name = \basename($documentRoot);
                     }
                     $eShop = 'https://obchod.altar.cz';
-                    if (is_readable($documentRoot . '/eshop_url.txt')) {
-                        $eShop = trim(file_get_contents($documentRoot . '/eshop_url.txt')) ?: $eShop;
+                    if (\file_exists($documentRoot . '/eshop_url.txt')) {
+                        $eShop = \trim(\file_get_contents($documentRoot . '/eshop_url.txt')) ?: $eShop;
                     }
                     ?>
                   <form class="manifest trial" action="" method="post">
@@ -101,14 +95,14 @@ ob_start();
       </div>
     </body>
   </html>
-<?php $passContent = ob_get_clean();
+<?php $passContent = \ob_get_clean();
 unset($name);
-$passCache = new \DrdPlus\RulesSkeleton\PassCache($documentRoot, $webVersions);
+$passCache = new \DrdPlus\RulesSkeleton\PassCache($documentRoot, $webVersions, $htmlHelper->isInProduction());
 $passCache->saveContentForDebug($passContent); // for debugging purpose
 $passHtmlDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($passContent);
 $htmlHelper = new \DrdPlus\FrontendSkeleton\HtmlHelper($documentRoot, false, false, false);
 $htmlHelper->addVersionHashToAssets($passHtmlDocument);
-if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1') || PHP_SAPI === 'cli') {
+if (PHP_SAPI === 'cli' || ($_SERVER['REMOTE_ADDR'] ?? null) === '127.0.0.1') {
     $htmlHelper->makeExternalLinksLocal($passHtmlDocument);
 }
 $updatedPassContent = $passHtmlDocument->saveHTML();

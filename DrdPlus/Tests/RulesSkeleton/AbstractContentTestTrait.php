@@ -1,14 +1,37 @@
 <?php
-namespace Tests\DrdPlus\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\FrontendSkeleton\UsagePolicy;
 use Gt\Dom\HTMLDocument;
 
+/**
+ * @method string getDocumentRoot
+ * @method static assertNotSame($expected, $actual)
+ * @method static fail($message)
+ */
 trait AbstractContentTestTrait
 {
-    protected function passIn(): void
+    private static $rulesContentForDev = [];
+    private static $rulesForDevHtmlDocument = [];
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->passIn();
+    }
+
+    protected function passIn(): bool
     {
         $_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
+        $realDocumentRoot = \realpath($this->getDocumentRoot());
+        $usagePolicy = new UsagePolicy(\basename($realDocumentRoot));
+        self::assertTrue(
+            $usagePolicy->hasVisitorConfirmedOwnership(),
+            "Ownership has not been confirmed by cookie '{$this->getCookieNameForLocalOwnershipConfirmation()}'"
+            . " (with document root {$realDocumentRoot})"
+        );
+
+        return true;
     }
 
     /**
@@ -22,6 +45,7 @@ trait AbstractContentTestTrait
         }
         static $ownershipConfirmationContent;
         if ($ownershipConfirmationContent === null) {
+            $this->removeOwnerShipConfirmation();
             $ownershipConfirmationContent = $this->fetchRulesContent();
         }
 
@@ -49,24 +73,6 @@ trait AbstractContentTestTrait
         return $cookieName;
     }
 
-    private function getDirName(string $fileName): string
-    {
-        $dirName = $fileName;
-        while (\basename($dirName) === '.' || \basename($dirName) === '..' || !\is_dir($dirName)) {
-            $dirName = \dirname(
-                $dirName,
-                \basename($dirName) === '.' || !\is_dir($dirName)
-                    ? 1
-                    : 2 // ..
-            );
-            if ($dirName === '/') {
-                throw new \RuntimeException("Could not find name of dir by $fileName");
-            }
-        }
-
-        return $dirName;
-    }
-
     protected function getCookieNameForOwnershipConfirmation(string $rulesDirBasename): string
     {
         $usagePolicy = new UsagePolicy($rulesDirBasename);
@@ -82,6 +88,26 @@ trait AbstractContentTestTrait
         return $getCookieName->invoke($usagePolicy);
     }
 
+    private function getDirName(string $fileName): string
+    {
+        $dirName = $fileName;
+        $upLevels = 0;
+        while (\basename($dirName) === '.' || \basename($dirName) === '..' || !\is_dir($dirName)) {
+            if (\basename($dirName) === '..') {
+                $upLevels++;
+            }
+            $dirName = \dirname($dirName);
+            if ($dirName === '/') {
+                throw new \RuntimeException("Could not find name of dir by $fileName");
+            }
+        }
+        for ($upLevel = 1; $upLevel <= $upLevels; $upLevel++) {
+            $dirName = $this->getDirName(\dirname($dirName) /* up by a single level */);
+        }
+
+        return $dirName;
+    }
+
     private function removeOwnerShipConfirmation(): void
     {
         unset($_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()]);
@@ -94,8 +120,7 @@ trait AbstractContentTestTrait
      */
     protected function getRulesContentForDev(string $show = '', string $hide = ''): string
     {
-        static $rulesContentForDev = [];
-        if (empty($rulesContentForDev[$show][$hide])) {
+        if (empty(self::$rulesContentForDev[$show][$hide])) {
             $this->passIn();
             $_GET['mode'] = 'dev';
             if ($show !== '') {
@@ -107,23 +132,22 @@ trait AbstractContentTestTrait
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
-            $rulesContentForDev[$show][$hide] = \ob_get_clean();
+            self::$rulesContentForDev[$show][$hide] = \ob_get_clean();
             unset($_GET['mode'], $_GET['show'], $_GET['hide']);
             $this->removeOwnerShipConfirmation();
-            self::assertNotSame($this->getOwnershipConfirmationContent(), $rulesContentForDev[$show]);
+            self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDev[$show]);
         }
 
-        return $rulesContentForDev[$show][$hide];
+        return self::$rulesContentForDev[$show][$hide];
     }
 
-    protected function getRulesForDevHtmlDocument(string $show = '', string $hide = '')
+    protected function getRulesForDevHtmlDocument(string $show = '', string $hide = ''): HTMLDocument
     {
-        static $rulesForDevHtmlDocument = [];
-        if (empty($rulesForDevHtmlDocument[$show][$hide])) {
-            $rulesForDevHtmlDocument[$show][$hide] = new HTMLDocument($this->getRulesContentForDev($show, $hide));
+        if (empty(self::$rulesForDevHtmlDocument[$show][$hide])) {
+            self::$rulesForDevHtmlDocument[$show][$hide] = new HTMLDocument($this->getRulesContentForDev($show, $hide));
         }
 
-        return $rulesForDevHtmlDocument[$show][$hide];
+        return self::$rulesForDevHtmlDocument[$show][$hide];
     }
 
     /**

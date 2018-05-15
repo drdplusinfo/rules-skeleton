@@ -1,9 +1,9 @@
 <?php
-namespace Tests\DrdPlus\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\Tests\FrontendSkeleton\AbstractContentTest;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
-use Tests\DrdPlus\FrontendSkeleton\AbstractContentTest;
 
 class CoveredPartsCanBeHiddenTest extends AbstractContentTest
 {

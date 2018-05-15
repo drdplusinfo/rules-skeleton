@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1); // on PHP 7+ are standard PHP methods strict to types of given parameters
 
-namespace Tests\DrdPlus\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\Tests\FrontendSkeleton\AbstractContentTest;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
-use Tests\DrdPlus\FrontendSkeleton\AbstractContentTest;
 
 class IntroductionModeTest extends AbstractContentTest
 {

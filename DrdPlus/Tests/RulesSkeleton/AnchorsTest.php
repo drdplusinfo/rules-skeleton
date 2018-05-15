@@ -1,10 +1,10 @@
 <?php
-namespace Tests\DrdPlus\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton;
 
 use Granam\String\StringTools;
 use Gt\Dom\Element;
 
-class AnchorsTest extends \Tests\DrdPlus\FrontendSkeleton\AnchorsTest
+class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 {
 
     use AbstractContentTestTrait;
@@ -38,12 +38,25 @@ class AnchorsTest extends \Tests\DrdPlus\FrontendSkeleton\AnchorsTest
         }
         self::assertFileExists($this->getEshopFileName());
         $eshopUrl = \trim(\file_get_contents($this->getEshopFileName()));
-        self::assertRegExp(
-            '~^https://obchod\.altar\.cz/[^/]+\.html$~',
-            $eshopUrl
+        self::assertRegExp('~^https://obchod\.altar\.cz/[^/]+\.html$~', $eshopUrl);
+        $link = $this->getLinkToEshopFromRulesAuthorsBlock();
+
+        self::assertSame(
+            $eshopUrl,
+            $link->getAttribute('href'),
+            'Link to rules in eshop in \'rules-authors\' differs from that in ' . \basename($this->getEshopFileName())
         );
-        $rulesAuthors = $this->getHtmlDocument()->getElementsByClassName('rules-authors');
-        self::assertGreaterThan(0, $rulesAuthors->count(), 'Missing \'rules-authors\' HTML class in rules content');
+    }
+
+    private function getLinkToEshopFromRulesAuthorsBlock(): Element
+    {
+        $body = $this->getHtmlDocument()->body;
+        $rulesAuthors = $body->getElementsByClassName('rules-authors');
+        self::assertGreaterThan(
+            0,
+            $rulesAuthors->count(),
+            'Missing \'rules-authors\' HTML class in rules content ' . \var_export($body->nodeValue, true)
+        );
         /** @var Element $rulesAuthors */
         $rulesAuthors = $rulesAuthors[0];
         $titles = $rulesAuthors->getElementsByClassName('title');
@@ -54,13 +67,8 @@ class AnchorsTest extends \Tests\DrdPlus\FrontendSkeleton\AnchorsTest
         $rulesLinks = $title->getElementsByTagName('a');
         self::assertNotEmpty($rulesLinks, 'Missing a link to rules in \'rules-authors\'');
         self::assertCount(1, $rulesLinks);
-        /** @var Element $link */
-        $link = $rulesLinks[0];
-        self::assertSame(
-            $eshopUrl,
-            $link->getAttribute('href'),
-            'Link to rules in eshop in \'rules-authors\' differs from that in ' . \basename($this->getEshopFileName())
-        );
+
+        return $rulesLinks[0];
     }
 
     /**

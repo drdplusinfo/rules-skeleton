@@ -1,8 +1,10 @@
 <?php
-namespace Tests\DrdPlus\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton;
 
-class GraphicsTest extends \Tests\DrdPlus\FrontendSkeleton\GraphicsTest
+class GraphicsTest extends \DrdPlus\Tests\FrontendSkeleton\GraphicsTest
 {
+    use AbstractContentTestTrait;
+
     /**
      * @test
      */

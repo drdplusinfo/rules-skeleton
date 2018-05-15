@@ -1,10 +1,10 @@
 <?php
-namespace Tests\DrdPlus\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\Tests\FrontendSkeleton\AbstractContentTest;
+use DrdPlus\Tests\FrontendSkeleton\RequestTest;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
-use Tests\DrdPlus\FrontendSkeleton\AbstractContentTest;
-use Tests\DrdPlus\FrontendSkeleton\RequestTest;
 
 class LicenceConfirmationTest extends AbstractContentTest
 {

@@ -1,7 +1,7 @@
 <?php
-namespace Tests\DrdPlus\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton;
 
-use Tests\DrdPlus\FrontendSkeleton\AbstractContentTest;
+use DrdPlus\Tests\FrontendSkeleton\AbstractContentTest;
 
 class SourceCodeLinksTest extends AbstractContentTest
 {
