@@ -11,8 +11,9 @@ do {
         if ($folder === 'vendor') {
             $autoloadFile = $dirToScanForAutoloader . '/vendor/autoload.php';
             if (file_exists($autoloadFile)) {
+                /** @noinspection PhpIncludeInspection */
                 require_once $autoloadFile;
-                break 2;
+                break 2; // break whole do-while
             }
             unset($autoloadFile);
         }
@@ -51,7 +52,7 @@ $scanForCss = null;
 if (isset($options['c']) || isset($options['css'])) {
     $scanForCss = true;
 }
-$assetsVersion = new \DrdPlus\RulesSkeleton\AssetsVersion($scanForCss, $scanForHtml);
+$assetsVersion = new \DrdPlus\FrontendSkeleton\AssetsVersion($scanForCss, $scanForHtml);
 $assetsRootDir = $options['root-dir'] ?? $options['r'] ?? null;
 if ((string)$assetsRootDir === '') {
     $assetsRootDir = getcwd();
