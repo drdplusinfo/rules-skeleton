@@ -37,7 +37,6 @@
       "cp -r ./vendor/drd-plus/frontend-skeleton/images/generic ./images",
       "cp -r ./vendor/drd-plus/frontend-skeleton/css/generic ./css",
       "cp -r ./vendor/drd-plus/frontend-skeleton/js/generic ./js",
-      "cp -r ./vendor/drd-plus/frontend-skeleton/bin/assets ./bin/assets",
       "find ./cache -mindepth 2 -type f -exec rm {} +"
     ]
   }
