@@ -1,11 +1,11 @@
 body {
-    background: url(/images/rules-skeleton/background.png?version=40fd24846865c459e4f38300e2ae9377) repeat-y #FFEDD5 left fixed;
+    background: url(/images/generic/frontend-skeleton/background.png?version=40fd24846865c459e4f38300e2ae9377) repeat-y #FFEDD5 left fixed;
     background-size: 100%;
     color: #011126;
 }
 
 .background-image {
-    background: url(/images/rules-monochromatic.png?version=5c955ad6290eaa184f6ba756de169796) no-repeat center;
+    background: url(/images/main-background.png?version=5c955ad6290eaa184f6ba756de169796) no-repeat center;
     background-size: cover;
     position: fixed;
     top: 0;
