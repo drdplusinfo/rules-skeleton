@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6cff26d49abdc4f5939c6f49856daaf9",
+    "hash": "8a1965667fbb03b25a06d6fc3a7ad689",
     "content-hash": "0e61008656a37b624631f963f973fef4",
     "packages": [
         {
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "760f8b663e6ea9c3d0e1bd87ddf7d04d3a503e3f"
+                "reference": "96c22f28074dbfb2d98bd1e77208c649450575b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/760f8b663e6ea9c3d0e1bd87ddf7d04d3a503e3f",
-                "reference": "760f8b663e6ea9c3d0e1bd87ddf7d04d3a503e3f",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/96c22f28074dbfb2d98bd1e77208c649450575b1",
+                "reference": "96c22f28074dbfb2d98bd1e77208c649450575b1",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-05-15 13:57:24"
+            "time": "2018-05-17 05:24:46"
         },
         {
             "name": "granam/exceptions-hierarchy",

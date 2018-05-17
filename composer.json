@@ -34,9 +34,12 @@
   "prefer-stable": true,
   "scripts": {
     "pre-autoload-dump": [
-      "cp -r ./vendor/drd-plus/frontend-skeleton/images/generic ./images",
-      "cp -r ./vendor/drd-plus/frontend-skeleton/css/generic ./css",
-      "cp -r ./vendor/drd-plus/frontend-skeleton/js/generic ./js",
+      "rm -f ./images/generic",
+      "rm -f ./css/generic",
+      "rm -f ./js/generic",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/images/frontend-skeleton ./images",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/css/frontend-skeleton ./css",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/js/frontend-skeleton ./js",
       "find ./cache -mindepth 2 -type f -exec rm {} +"
     ]
   }
