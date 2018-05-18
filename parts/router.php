@@ -26,8 +26,8 @@ if (empty($visitorCanAccessContent)) { // can be defined externally by including
             if (!$visitorCanAccessContent) {
                 if (\file_exists($partsRoot . '/pass.php')) {
                     echo require $partsRoot . '/pass.php';
-                } elseif (\file_exists($documentRoot . '/parts/pass.php')) {
-                    echo require $documentRoot . '/parts/pass.php';
+                } elseif (\file_exists($vendorRoot . '/drd-plus/rules-skeleton/parts/pass.php')) {
+                    echo require $documentRoot . '/drd-plus/rules-skeleton/parts/pass.php';
                 } else {
                     echo require __DIR__ . '/pass.php';
                 }
@@ -47,8 +47,8 @@ if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !\file_exists($documentRoo
 ) {
     if (\file_exists($partsRoot . '/get_pdf.php')) {
         echo include $partsRoot . '/get_pdf.php';
-    } else if (\file_exists($documentRoot . '/parts/get_pdf.php')) {
-        echo include $documentRoot . '/parts/get_pdf.php';
+    } else if (\file_exists($vendorRoot . '/drd-plus/rules-skeleton/parts/get_pdf.php')) {
+        echo include $vendorRoot . '/drd-plus/rules-skeleton/parts/get_pdf.php';
     } else {
         /** @see vendor/drd-plus/rules-html-skeleton/get_pdf.php */
         echo include __DIR__ . '/get_pdf.php';
