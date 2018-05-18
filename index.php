@@ -6,6 +6,7 @@ $currentDir = \str_replace('\\', '/', __DIR__);
 if (\strpos($currentDir, '/vendor/') !== false) {
     $dirToScanForFrontendSkeleton = \substr($currentDir, 0, \strpos($currentDir, '/vendor/'));
 }
+$partsRoot = __DIR__ . '/parts';
 do {
     foreach (\scandir($dirToScanForFrontendSkeleton, SCANDIR_SORT_NONE) as $folder) {
         if ($folder === 'vendor') {
