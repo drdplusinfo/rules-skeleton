@@ -11,8 +11,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "DrdPlus\\": "DrdPlus/",
-      "Tests\\": "Tests/"
+      "DrdPlus\\": "DrdPlus/"
     }
   },
   "require": {
@@ -34,9 +33,9 @@
   "prefer-stable": true,
   "scripts": {
     "pre-autoload-dump": [
-      "cp -r ./vendor/drd-plus/frontend-skeleton/images/generic/ ./images/generic/",
-      "cp -r ./vendor/drd-plus/frontend-skeleton/css/generic/ ./css/generic/",
-      "cp -r ./vendor/drd-plus/frontend-skeleton/js/generic/ ./js/generic/",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/images/generic ./images/",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/css/generic ./css/",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/js/generic ./js/",
       "find ./cache -mindepth 2 -type f -exec rm {} +"
     ]
   }
