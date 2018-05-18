@@ -13,14 +13,14 @@ $visitorCanAccessContent = true; // just a little hack
 if (\file_exists($partsRoot . '/content.php')) {
     $rawContent = require $partsRoot . '/content.php';
 } else {
-    $rawContent = require __DIR__ . '/content.php';
+    $rawContent = require $vendorDir . '/drd-plus/rules-skeleton/content.php';
 }
 \ob_start();
 ?>
   <!DOCTYPE html>
   <html lang="cs">
     <head>
-      <title>Tabulky pro Drd+ <?= basename($documentRoot) ?></title>
+      <title>Tabulky pro Drd+ <?= \basename($documentRoot) ?></title>
       <link rel="shortcut icon" href="../favicon.ico">
       <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
@@ -48,7 +48,7 @@ if (\file_exists($partsRoot . '/content.php')) {
         \ob_clean();
         $wantedTableIds = \array_map(
             function (string $id) {
-                return trim($id);
+                return \trim($id);
             },
             \explode(',', $_GET['tables'] ?? $_GET['tabulky'] ?? '')
         );

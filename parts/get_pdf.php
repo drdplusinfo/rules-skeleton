@@ -11,6 +11,6 @@ if (\count($pdfFiles) === 0) {
 }
 $pdfFile = $pdfFiles[0];
 $pdfFileBasename = \basename($pdfFile);
-\header('Content-type:application/pdf');
+\header('Content-type: application/pdf');
 \header('Content-Length: ' . \filesize($pdfFile));
 \readfile($pdfFile);

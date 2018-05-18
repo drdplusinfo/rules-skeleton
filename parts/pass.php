@@ -27,10 +27,8 @@
                   // $contactsBottom = true; // (default is top)
                   if (\file_exists($partsRoot . '/menu.php')) {
                       include $partsRoot . '/menu.php';
-                  } elseif (\file_exists($vendorRoot . '/drd-plus/rules-skeleton/parts/menu.php')) {
-                      include $vendorRoot . '/drd-plus/rules-skeleton/parts/menu.php';
                   } else {
-                      include __DIR__ . '/../vendor/drd-plus/frontend-skeleton/parts/menu.php';
+                      include $vendorRoot . '/drd-plus/frontend-skeleton/parts/menu.php';
                   }
                   unset($contactsFixed);
                   if ($usagePolicy->trialJustExpired()) { ?>
