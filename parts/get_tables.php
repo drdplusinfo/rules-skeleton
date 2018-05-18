@@ -10,8 +10,8 @@ if ($tablesCache->isCacheValid()) {
 }
 
 $visitorCanAccessContent = true; // just a little hack
-if (\file_exists($documentRoot . '/parts/content.php')) {
-    $rawContent = require $documentRoot . '/parts/content.php';
+if (\file_exists($partsRoot . '/content.php')) {
+    $rawContent = require $partsRoot . '/content.php';
 } else {
     $rawContent = require __DIR__ . '/content.php';
 }

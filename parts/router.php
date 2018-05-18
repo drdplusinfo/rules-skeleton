@@ -24,7 +24,9 @@ if (empty($visitorCanAccessContent)) { // can be defined externally by including
                 $visitorCanAccessContent = $usagePolicy->activateTrial(new \DateTime('+4 minutes'));
             }
             if (!$visitorCanAccessContent) {
-                if (\file_exists($documentRoot . '/parts/pass.php')) {
+                if (\file_exists($partsRoot . '/pass.php')) {
+                    echo require $partsRoot . '/pass.php';
+                } elseif (\file_exists($documentRoot . '/parts/pass.php')) {
                     echo require $documentRoot . '/parts/pass.php';
                 } else {
                     echo require __DIR__ . '/pass.php';
@@ -43,7 +45,9 @@ if (!$visitorCanAccessContent) {
 if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !\file_exists($documentRoot . '/web'))
     && \file_exists($documentRoot . '/pdf') && \glob($documentRoot . '/pdf/*.pdf')
 ) {
-    if (\file_exists($documentRoot . '/parts/get_pdf.php')) {
+    if (\file_exists($partsRoot . '/get_pdf.php')) {
+        echo include $partsRoot . '/get_pdf.php';
+    } else if (\file_exists($documentRoot . '/parts/get_pdf.php')) {
         echo include $documentRoot . '/parts/get_pdf.php';
     } else {
         /** @see vendor/drd-plus/rules-html-skeleton/get_pdf.php */

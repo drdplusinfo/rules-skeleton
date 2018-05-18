@@ -1,6 +1,6 @@
 <?php
-if (\file_exists($documentRoot . '/parts/router.php')) {
-    if (require $documentRoot . '/parts/router.php') {
+if (\file_exists($partsRoot . '/router.php')) {
+    if (require $partsRoot . '/router.php') {
         return ''; // routing solved
     }
 } elseif (require __DIR__ . '/router.php') {

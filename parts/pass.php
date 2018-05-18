@@ -25,7 +25,13 @@
                   <?php
                   $contactsFixed = true; // (default is on top or bottom of the content)
                   // $contactsBottom = true; // (default is top)
-                  include __DIR__ . '/../vendor/drd-plus/frontend-skeleton/parts/menu.php';
+                  if (\file_exists($partsRoot . '/menu.php')) {
+                      include $partsRoot . '/menu.php';
+                  } elseif (\file_exists($documentRoot . '/parts/menu.php')) {
+                      include $documentRoot . '/parts/menu.php';
+                  } else {
+                      include __DIR__ . '/../vendor/drd-plus/frontend-skeleton/parts/menu.php';
+                  }
                   unset($contactsFixed);
                   if ($usagePolicy->trialJustExpired()) { ?>
                     <div class="message warning">⌛ Čas tvého testování se naplnil ⌛</div><?php
