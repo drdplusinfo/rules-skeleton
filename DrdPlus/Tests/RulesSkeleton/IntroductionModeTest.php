@@ -102,7 +102,7 @@ class IntroductionModeTest extends AbstractContentTest
         foreach ($child->children as $grandChild) {
             self::assertFalse(
                 $grandChild->classList->contains('introduction'),
-                'A grand-child should NOT have "introduction" class: ' . $grandChild->innerHTML
+                'A grand-child should NOT have "introduction" class: ' . $grandChild->outerHTML
             );
             $this->guardNoChildIntroduction($grandChild);
         }
