@@ -3,7 +3,7 @@ if (\array_key_exists('tables', $_GET) || \array_key_exists('tabulky', $_GET)) {
     if (\file_exists($partsRoot)) {
         echo include $partsRoot . '/get_tables.php';
     } else {
-        echo include __DIR__ . '/get_tables.php';
+        echo include $vendorRoot . '/drd-plus/rules-skeleton/parts/get_tables.php';
     }
 
     return true; // routing solved

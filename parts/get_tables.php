@@ -3,6 +3,8 @@ if (!\headers_sent()) {
     // anyone can show content of this page
     \header('Access-Control-Allow-Origin: *', true);
 }
+$vendorRoot = $vendorRoot ?? __DIR__ . '/..';
+require_once $vendorRoot . '/autoload.php';
 
 $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache($documentRoot, $webVersions, $htmlHelper->isInProduction());
 if ($tablesCache->isCacheValid()) {
@@ -10,11 +12,8 @@ if ($tablesCache->isCacheValid()) {
 }
 
 $visitorCanAccessContent = true; // just a little hack
-if (\file_exists($partsRoot . '/content.php')) {
-    $rawContent = require $partsRoot . '/content.php';
-} else {
-    $rawContent = require $vendorDir . '/drd-plus/rules-skeleton/content.php';
-}
+// must NOT include current content.php as it uses router and that requires this script so endless recursion happens
+$rawContent = require $vendorRoot . '/drd-plus/frontend-skeleton/parts/content.php';
 \ob_start();
 ?>
   <!DOCTYPE html>
