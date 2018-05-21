@@ -49,7 +49,7 @@
                   <form class="manifest trial" action="" method="post">
                     <p>
                       <label>
-                        <input type="submit" name="trial" value="Mrknu na <?= $name ?>">
+                        <input type="submit" name="trial" value="Juknu na <?= $name ?>">
                         Chci se na <?= $name ?> jen na chvíli podívat, ať vím, o co jde
                       </label>
                     </p>
