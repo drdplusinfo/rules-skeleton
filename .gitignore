@@ -1,7 +1,6 @@
 /.idea/
 /vendor/
 /phpunit_log/
-/cache/*
 /composer_install_result.txt
 /parts/images
 /web/images

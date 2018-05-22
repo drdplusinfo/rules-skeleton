@@ -10,10 +10,16 @@ $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache($documentRoot, $webVersion
 if ($tablesCache->isCacheValid()) {
     return $tablesCache->getCachedContent();
 }
-
 $visitorCanAccessContent = true; // just a little hack
 // must NOT include current content.php as it uses router and that requires this script so endless recursion happens
 $rawContent = require $vendorRoot . '/drd-plus/frontend-skeleton/parts/content.php';
+$rawContentDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($rawContent);
+$tables = $htmlHelper->findTablesWithIds($rawContentDocument, (new \DrdPlus\RulesSkeleton\Request())->getWantedTablesIds());
+$tablesContent = '';
+foreach ($tables as $table) {
+    $tablesContent .= $table->outerHTML . "\n";
+}
+unset($rawContent, $rawContentDocument);
 \ob_start();
 ?>
   <!DOCTYPE html>
@@ -28,8 +34,7 @@ $rawContent = require $vendorRoot . '/drd-plus/frontend-skeleton/parts/content.p
         $cssRoot = $documentRoot . '/css';
         $cssFiles = new \DrdPlus\FrontendSkeleton\CssFiles($cssRoot);
         foreach ($cssFiles as $cssFile) { ?>
-          <link rel="stylesheet" type="text/css"
-                href="css/<?= $cssFile ?>">
+          <link rel="stylesheet" type="text/css" href="css/<?= $cssFile ?>">
         <?php } ?>
       <style>
         table {
@@ -45,22 +50,7 @@ $rawContent = require $vendorRoot . '/drd-plus/frontend-skeleton/parts/content.p
         <?php
         $content = \ob_get_contents();
         \ob_clean();
-        $wantedTableIds = \array_map(
-            function (string $id) {
-                return \trim($id);
-            },
-            \explode(',', $_GET['tables'] ?? $_GET['tabulky'] ?? '')
-        );
-        $wantedTableIds = \array_filter(
-            $wantedTableIds,
-            function (string $id) {
-                return $id !== '';
-            }
-        );
-        $tables = $htmlHelper->findTablesWithIds(new \DrdPlus\FrontendSkeleton\HtmlDocument($rawContent), $wantedTableIds);
-        foreach ($tables as $table) {
-            $content .= $table->outerHTML . "\n";
-        }
+        $content .= $tablesContent;
         ?>
     </body>
   </html>
