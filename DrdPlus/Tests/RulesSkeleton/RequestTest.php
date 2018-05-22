@@ -10,6 +10,7 @@ class RequestTest extends \DrdPlus\Tests\FrontendSkeleton\RequestTest
 {
     /**
      * @test
+     * @backupGlobals
      * @dataProvider provideTablesIdsParameterName
      * @param string $parameterName
      */
