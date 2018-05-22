@@ -6,9 +6,4 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 class HtmlHelperTest extends \DrdPlus\Tests\FrontendSkeleton\HtmlHelperTest
 {
-    protected function getSomeExpectedTableIds(): array
-    {
-        return ['IAmSoAlone', 'JustSomeTable'];
-    }
-
 }

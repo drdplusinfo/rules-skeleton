@@ -5,3 +5,4 @@
 // const NOT_FOR_PLAYERS = true;
 // SINGLE_VERSION_ONLY = true;
 // WITHOUT_SPECIFIC_JOURNAL = true;
+const SOME_EXPECTED_TABLE_IDS = ['IAmSoAlone', 'JustSomeTable'];
