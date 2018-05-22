@@ -1,10 +1,6 @@
 <?php
-$documentRoot = $documentRoot ?? __DIR__;
-
+$documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER['SCRIPT_FILENAME']), '\/') : \getcwd());
 $vendorRoot = $vendorRoot ?? $documentRoot . '/vendor';
-$partsRoot = __DIR__ . '/parts';
-if (\file_exists($vendorRoot . '/drd-plus/frontend-skeleton/index.php')) {
-    require $vendorRoot . '/drd-plus/frontend-skeleton/index.php';
-} else {
-    require __DIR__ . '/vendor/drd-plus/frontend-skeleton/index.php';
-}
+$partsRoot = $documentRoot . '/parts';
+
+require $vendorRoot . '/drd-plus/frontend-skeleton/index.php';
