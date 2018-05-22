@@ -23,6 +23,7 @@ class RequestTest extends \DrdPlus\Tests\FrontendSkeleton\RequestTest
         self::assertSame(['foo'], (new Request())->getWantedTablesIds());
         $_GET[$parameterName] .= ',bar,baz';
         self::assertSame(['foo', 'bar', 'baz'], (new Request())->getWantedTablesIds());
+        unset($_GET[$parameterName]); // to avoid using this in next iteration as @backupGlobals does not work
     }
 
     public function provideTablesIdsParameterName(): array
