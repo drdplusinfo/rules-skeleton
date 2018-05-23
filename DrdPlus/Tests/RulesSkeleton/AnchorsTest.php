@@ -4,6 +4,9 @@ namespace DrdPlus\Tests\RulesSkeleton;
 use Granam\String\StringTools;
 use Gt\Dom\Element;
 
+/**
+ * @method TestsConfiguration getTestsConfiguration
+ */
 class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 {
 
@@ -19,7 +22,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
         self::assertCount(
             0,
             $invalidAnchors,
-            'Some anchors from ownership confirmation points to invalid links ' . implode(',', $invalidAnchors)
+            'Some anchors from ownership confirmation points to invalid links ' . \implode(',', $invalidAnchors)
         );
     }
 
@@ -28,7 +31,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
      */
     public function I_can_go_directly_to_eshop_item_page(): void
     {
-        if (\defined('FREE_ACCESS') && FREE_ACCESS) {
+        if (!$this->getTestsConfiguration()->canBeBoughtOnEshop()) {
             self::assertFileNotExists(
                 $this->getEshopFileName(),
                 'Text-only and free content is accessible for anyone and can not be bought'
@@ -105,12 +108,8 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
                 $linksToCharacterSheet[] = $link;
             }
         }
-        if (((\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING)
-                || (\defined('NOT_FOR_PLAYERS') && NOT_FOR_PLAYERS)
-            )
-            && \count($linksToCharacterSheet) === 0
-        ) {
-            self::assertFalse(false, 'No links to PDF character sheet have been found');
+        if (!$this->getTestsConfiguration()->hasCharacterSheet()) {
+            self::assertCount(0, $linksToCharacterSheet, 'No links to PDF character sheet expected');
 
             return;
         }
@@ -139,17 +138,13 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
                 $linksToJournal[] = $link;
             }
         }
-        if (((\defined('JUST_TEXT_TESTING') && JUST_TEXT_TESTING)
-                || (\defined('NOT_FOR_PLAYERS') && NOT_FOR_PLAYERS)
-            )
-            || \count($linksToJournal) === 0
-        ) {
-            self::assertFalse(false, 'No links to PDF journal have been found');
+        if (!$this->getTestsConfiguration()->hasLinksToJournals() && !$this->getTestsConfiguration()->hasLinkToSingleJournal()) {
+            self::assertCount(0, $linksToJournal, 'No links to PDF journal expected');
 
             return;
         }
         self::assertGreaterThan(0, \count($linksToJournal), 'PDF journals are missing');
-        if (\defined('WITHOUT_SPECIFIC_JOURNAL') && WITHOUT_SPECIFIC_JOURNAL) {
+        if (!$this->getTestsConfiguration()->hasLinkToSingleJournal()) {
             foreach ($linksToJournal as $linkToJournal) {
                 self::assertRegExp(
                     '~^http://www.drdplus[.]loc/pdf/deniky/denik_\w+[.]pdf$~',
@@ -160,6 +155,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 
             return;
         }
+        self::assertTrue($this->getTestsConfiguration()->hasLinksToJournals());
         $expectedOriginalLink = $this->getExpectedLinkToJournal();
         $expectedLink = $this->turnToLocalLink($expectedOriginalLink);
         foreach ($linksToJournal as $linkToJournal) {
@@ -173,7 +169,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 
     private function getExpectedLinkToJournal(): string
     {
-        return 'https://www.drdplus.info/pdf/deniky/denik_' . StringTools::toConstant($this->getProfessionName()) . '.pdf';
+        return 'https://www.drdplus.info/pdf/deniky/denik_' . StringTools::toConstantLikeValue($this->getProfessionName()) . '.pdf';
     }
 
     private function getProfessionName(): string

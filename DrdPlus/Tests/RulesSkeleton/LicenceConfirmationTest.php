@@ -6,6 +6,9 @@ use DrdPlus\Tests\FrontendSkeleton\RequestTest;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 
+/**
+ * @method TestsConfiguration getTestsConfiguration
+ */
 class LicenceConfirmationTest extends AbstractContentTest
 {
 
@@ -16,7 +19,7 @@ class LicenceConfirmationTest extends AbstractContentTest
      */
     public function I_have_to_confirm_owning_of_a_licence_first(): void
     {
-        if (\defined('FREE_ACCESS') && FREE_ACCESS) {
+        if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
             self::assertFalse(
                 false,
                 'Text-only and free content is accessible for anyone and licence need not to be confirmed'
