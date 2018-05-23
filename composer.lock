@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "c2d7f6e416c7a8a585f1d5a33e3fa7aaac8dd500"
+                "reference": "77fe3179c91b14c873191f9ac05956c560fd9a6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/c2d7f6e416c7a8a585f1d5a33e3fa7aaac8dd500",
-                "reference": "c2d7f6e416c7a8a585f1d5a33e3fa7aaac8dd500",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/77fe3179c91b14c873191f9ac05956c560fd9a6d",
+                "reference": "77fe3179c91b14c873191f9ac05956c560fd9a6d",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-05-22 14:56:16"
+            "time": "2018-05-23 08:24:31"
         },
         {
             "name": "granam/exceptions-hierarchy",
@@ -204,12 +204,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/granam-string.git",
-                "reference": "1c92da651de89cdc17ec15d0c7cdc1728f236553"
+                "reference": "af7af196745569b3e503bac29359eefc7a9cc53c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/1c92da651de89cdc17ec15d0c7cdc1728f236553",
-                "reference": "1c92da651de89cdc17ec15d0c7cdc1728f236553",
+                "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/af7af196745569b3e503bac29359eefc7a9cc53c",
+                "reference": "af7af196745569b3e503bac29359eefc7a9cc53c",
                 "shasum": ""
             },
             "require": {
@@ -250,7 +250,7 @@
                 "php",
                 "string"
             ],
-            "time": "2018-04-21 14:40:21"
+            "time": "2018-05-23 07:40:42"
         },
         {
             "name": "granam/tools",
