@@ -24,6 +24,8 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
     private $hasLinksToJournals = true;
     /** @var bool */
     private $hasLinkToSingleJournal = true;
+    /** @var bool */
+    private $hasDebugContacts = true;
 
     /**
      * @return bool
@@ -120,4 +122,22 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function hasDebugContacts(): bool
+    {
+        return $this->hasDebugContacts;
+    }
+
+    /**
+     * @param bool $hasDebugContacts
+     * @return TestsConfiguration
+     */
+    public function setHasDebugContacts(bool $hasDebugContacts): TestsConfiguration
+    {
+        $this->hasDebugContacts = $hasDebugContacts;
+
+        return $this;
+    }
 }

@@ -7,6 +7,9 @@ namespace DrdPlus\Tests\RulesSkeleton;
 use DrdPlus\Tests\FrontendSkeleton\AbstractContentTest;
 use Gt\Dom\Element;
 
+/**
+ * @method TestsConfiguration getTestsConfiguration
+ */
 class ContactsTest extends AbstractContentTest
 {
     use AbstractContentTestTrait;
@@ -56,6 +59,12 @@ class ContactsTest extends AbstractContentTest
     public function I_can_use_link_to_drdplus_info_email(): void
     {
         $debugContacts = $this->getDebugContactsElement();
+        if (!$this->getTestsConfiguration()->hasDebugContacts()) {
+            self::assertNull($debugContacts, 'Debug contacts have not been expected');
+
+            return;
+        }
+        $this->guardDebugContactsAreNotEmpty($debugContacts);
         $anchors = $debugContacts->getElementsByTagName('a');
         self::assertNotEmpty($anchors, 'No anchors found in debug contacts');
         $mailTo = null;
@@ -70,14 +79,15 @@ class ContactsTest extends AbstractContentTest
         self::assertSame('mailto:info@drdplus.info', $mailTo);
     }
 
-    private function getDebugContactsElement(): Element
+    private function getDebugContactsElement(): ?Element
     {
-        $htmlDocument = $this->getHtmlDocument();
-        /** @var Element $debugContacts */
-        $debugContacts = $htmlDocument->getElementById('debug_contacts');
+        return $this->getHtmlDocument()->getElementById('debug_contacts');
+    }
+
+    private function guardDebugContactsAreNotEmpty(Element $debugContacts): void
+    {
         self::assertNotEmpty($debugContacts, 'Debug contacts has not been found by ID debug_contacts (debugContacts)');
         self::assertNotEmpty($debugContacts->textContent, 'Debug contacts are empty');
-
-        return $debugContacts;
     }
+
 }
