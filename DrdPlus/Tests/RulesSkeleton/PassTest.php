@@ -9,7 +9,7 @@ use Gt\Dom\HTMLDocument;
 /**
  * @method TestsConfiguration getTestsConfiguration
  */
-class LicenceConfirmationTest extends AbstractContentTest
+class PassTest extends AbstractContentTest
 {
 
     use AbstractContentTestTrait;
@@ -95,5 +95,39 @@ class LicenceConfirmationTest extends AbstractContentTest
                 'Expected rules content for a crawler, skipping ownership confirmation page'
             );
         }
+    }
+
+    /**
+     * @test
+     */
+    public function Pass_page_uses_style_with_background_image(): void
+    {
+        $html = new HTMLDocument($this->getOwnershipConfirmationContent());
+        $links = $html->head->getElementsByTagName('link');
+        self::assertNotEmpty($links, 'No links found in pass head');
+        $stylesLinks = [];
+        foreach ($links as $link) {
+            if ($link->getAttribute('rel') !== 'stylesheet') {
+                continue;
+            }
+            $stylesLinks[] = $link;
+        }
+        self::assertNotEmpty($stylesLinks, 'No links to styles found in pass head');
+        $stylesHrefs = [];
+        /** @var Element $stylesLink */
+        foreach ($stylesLinks as $stylesLink) {
+            $stylesHrefs[] = $stylesLink->getAttribute('href');
+        }
+        foreach ($stylesHrefs as $stylesHref) {
+            if (\strpos(\ltrim($stylesHref, '/'), 'css/generic/frontend-skeleton/graphics.css') === 0) {
+                self::assertTrue(true, 'Frontend skeleton graphics is not used');
+
+                return;
+            }
+        }
+        self::fail(
+            'Missing /css/generic/frontend-skeleton/graphics.css style sheet in head, there are only '
+            . "\n" . \implode("\n", $stylesHrefs)
+        );
     }
 }

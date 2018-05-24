@@ -10,9 +10,10 @@
       <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
       <link rel="stylesheet" href="/css/generic/frontend-skeleton/vendor/bootstrap/bootstrap.min.css">
-      <link rel="stylesheet" href="/css/generic/rules-html-skeleton/graphics.css">
       <link rel="stylesheet" href="/css/generic/frontend-skeleton/flash_messages.css">
       <link rel="stylesheet" href="/css/generic/frontend-skeleton/contacts.css">
+      <link rel="stylesheet" href="/css/generic/frontend-skeleton/graphics.css">
+      <link rel="stylesheet" href="/css/generic/rules-html-skeleton/graphics.css">
       <link rel="stylesheet" href="/css/generic/rules-html-skeleton/ignore/licence.css">
     </head>
     <body>
