@@ -84,7 +84,7 @@ class ContactsTest extends AbstractContentTest
         return $this->getHtmlDocument()->getElementById('debug_contacts');
     }
 
-    private function guardDebugContactsAreNotEmpty(Element $debugContacts): void
+    private function guardDebugContactsAreNotEmpty(?Element $debugContacts): void
     {
         self::assertNotEmpty($debugContacts, 'Debug contacts has not been found by ID debug_contacts (debugContacts)');
         self::assertNotEmpty($debugContacts->textContent, 'Debug contacts are empty');
