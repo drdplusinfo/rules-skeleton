@@ -3,6 +3,6 @@ $documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER[
 $vendorRoot = $vendorRoot ?? $documentRoot . '/vendor';
 $partsRoot = \file_exists($documentRoot . '/parts')
     ? ($documentRoot . '/parts')
-    : ($vendorRoot . '/drd-plus/rules-skeleton/parts');
+    : ($vendorRoot . '/drd-plus/rules-html-skeleton/parts');
 
 require $vendorRoot . '/drd-plus/frontend-skeleton/index.php';

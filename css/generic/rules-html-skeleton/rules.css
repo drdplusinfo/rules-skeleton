@@ -12,7 +12,7 @@ h1#obsah {
 
 .example {
     margin: 0.5em 0 0.3em;
-    background: url('/images/generic/rules-skeleton/example-left-upper-corner.png?version=46f9b5a2f9748b74d77e235abd70269a') left top no-repeat, url('/images/generic/rules-skeleton/example-right-bottom-corner.png?version=cb51f4af301e14ee81477ce675fbde3f') right bottom no-repeat;
+    background: url('/images/generic/rules-html-skeleton/example-left-upper-corner.png?version=46f9b5a2f9748b74d77e235abd70269a') left top no-repeat, url('/images/generic/rules-html-skeleton/example-right-bottom-corner.png?version=cb51f4af301e14ee81477ce675fbde3f') right bottom no-repeat;
     background-size: 6em 3em;
     padding: 0.8em 1.3em;
     font-family: sans-serif;
@@ -21,7 +21,7 @@ h1#obsah {
 
 div.item-combination {
     margin-top: 6px;
-    background: url('/images/generic/rules-skeleton/items-combination.png?version=b86bb5ffdbb33e25dfd21f1dc13d44a4') no-repeat;
+    background: url('/images/generic/rules-html-skeleton/items-combination.png?version=b86bb5ffdbb33e25dfd21f1dc13d44a4') no-repeat;
     background-size: 100%;
     width: 192px;
     height: 124px;
