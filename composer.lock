@@ -204,12 +204,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/granam-string.git",
-                "reference": "af7af196745569b3e503bac29359eefc7a9cc53c"
+                "reference": "663e994e68fef4980a0ff7c6f3ef9bc8e9844b4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/af7af196745569b3e503bac29359eefc7a9cc53c",
-                "reference": "af7af196745569b3e503bac29359eefc7a9cc53c",
+                "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/663e994e68fef4980a0ff7c6f3ef9bc8e9844b4f",
+                "reference": "663e994e68fef4980a0ff7c6f3ef9bc8e9844b4f",
                 "shasum": ""
             },
             "require": {
@@ -250,7 +250,7 @@
                 "php",
                 "string"
             ],
-            "time": "2018-05-23 07:40:42"
+            "time": "2018-05-24 05:52:48"
         },
         {
             "name": "granam/tools",
