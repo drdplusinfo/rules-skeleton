@@ -26,6 +26,21 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
     private $hasLinkToSingleJournal = true;
     /** @var bool */
     private $hasDebugContacts = true;
+    /** @var array|string[] */
+    private $blockNamesToExpectedContent = ['just-some-block' => <<<HTML
+<div class="block-just-some-block">
+    First part of some block
+</div>
+
+<div class="block-just-some-block">
+    Second part of some block
+</div>
+
+<div class="block-just-some-block">
+    Last part of some block
+</div>
+HTML
+    ];
 
     /**
      * @return bool
@@ -137,6 +152,25 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
     public function setHasDebugContacts(bool $hasDebugContacts): TestsConfiguration
     {
         $this->hasDebugContacts = $hasDebugContacts;
+
+        return $this;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getBlockNamesToExpectedContent(): array
+    {
+        return $this->blockNamesToExpectedContent;
+    }
+
+    /**
+     * @param array $blockNamesToExpectedContent
+     * @return TestsConfiguration
+     */
+    public function setBlockNamesToExpectedContent(array $blockNamesToExpectedContent): TestsConfiguration
+    {
+        $this->blockNamesToExpectedContent = $blockNamesToExpectedContent;
 
         return $this;
     }

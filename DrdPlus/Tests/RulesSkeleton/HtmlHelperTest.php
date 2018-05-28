@@ -15,22 +15,15 @@ class HtmlHelperTest extends \DrdPlus\Tests\FrontendSkeleton\HtmlHelperTest
      */
     public function I_can_get_html_document_with_block(): void
     {
+        $blockNamesToExpectedContent = $this->getTestsConfiguration()->getBlockNamesToExpectedContent();
+        if (!$blockNamesToExpectedContent) {
+            self::assertEmpty($blockNamesToExpectedContent, 'No blocks to test');
+        }
         $document = $this->getHtmlDocument();
         $htmlHelper = HtmlHelper::createFromGlobals($this->getDocumentRoot());
-        $documentWithBlock = $htmlHelper->getDocumentWithBlock('just-some-block', $document);
-        self::assertSame(<<<HTML
-<div class="block-just-some-block">
-    First part of some block
-</div>
-
-<div class="block-just-some-block">
-    Second part of some block
-</div>
-
-<div class="block-just-some-block">
-    Last part of some block
-</div>
-HTML
-            , $documentWithBlock->body->innerHTML);
+        foreach ($blockNamesToExpectedContent as $blockName => $expectedContent) {
+            $documentWithBlock = $htmlHelper->getDocumentWithBlock($blockName, $document);
+            self::assertSame($expectedContent, $documentWithBlock->body->innerHTML);
+        }
     }
 }

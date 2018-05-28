@@ -6,6 +6,7 @@ use Gt\Dom\HTMLDocument;
 
 /**
  * @method string getDocumentRoot
+ * @method TestsConfiguration getTestsConfiguration
  * @method static assertNotSame($expected, $actual)
  * @method static fail($message)
  */
