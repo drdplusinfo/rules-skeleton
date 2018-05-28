@@ -33,4 +33,15 @@ class RequestTest extends \DrdPlus\Tests\FrontendSkeleton\RequestTest
             ['tabulky'],
         ];
     }
+
+    /**
+     * @test
+     * @backupGlobals
+     */
+    public function I_can_get_current_request_path()
+    {
+        self::assertSame('', (new Request())->getPath());
+        $_SERVER['PATH_INFO'] = '/foo/bar/baz-qux';
+        self::assertSame('/foo/bar/baz-qux', (new Request())->getPath());
+    }
 }

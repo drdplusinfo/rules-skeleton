@@ -25,4 +25,9 @@ class Request extends \DrdPlus\FrontendSkeleton\Request
             }
         );
     }
+
+    public function getPath(): string
+    {
+        return $_SERVER['PATH_INFO'] ?? '';
+    }
 }
