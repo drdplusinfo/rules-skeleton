@@ -6,7 +6,7 @@ if (!\headers_sent()) {
 $vendorRoot = $vendorRoot ?? __DIR__ . '/..';
 require_once $vendorRoot . '/autoload.php';
 
-$tablesCache = new \DrdPlus\RulesSkeleton\TablesCache($documentRoot, $webVersions, $htmlHelper->isInProduction());
+$tablesCache = new \DrdPlus\RulesSkeleton\TablesCache($cacheRoot, $webVersions, $htmlHelper->isInProduction());
 if ($tablesCache->isCacheValid()) {
     return $tablesCache->getCachedContent();
 }

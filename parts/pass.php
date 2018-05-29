@@ -102,7 +102,7 @@
   </html>
 <?php $passContent = \ob_get_clean();
 unset($name);
-$passCache = new \DrdPlus\RulesSkeleton\PassCache($documentRoot, $webVersions, $htmlHelper->isInProduction());
+$passCache = new \DrdPlus\RulesSkeleton\PassCache($cacheRoot, $webVersions, $htmlHelper->isInProduction());
 $passCache->saveContentForDebug($passContent); // for debugging purpose
 $passHtmlDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($passContent);
 $htmlHelper = new \DrdPlus\FrontendSkeleton\HtmlHelper($documentRoot, false, false, false);
