@@ -11,6 +11,7 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
     public const HAS_CHARACTER_SHEET = 'has_character_sheet';
     public const HAS_LINKS_TO_JOURNALS = 'has_links_to_journals';
     public const HAS_LINK_TO_SINGLE_JOURNAL = 'has_link_to_single_journal';
+    public const HAS_AUTHORS = 'has_authors';
 
     // every setting SHOULD be strict (expecting instead of ignoring)
 
@@ -28,6 +29,8 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
     private $hasDebugContacts = true;
     /** @var bool */
     private $hasIntroduction = true;
+    /** @var bool */
+    private $hasAuthors = true;
     /** @var array|string[] */
     private $blockNamesToExpectedContent = ['just-some-block' => <<<HTML
 <div class="block-just-some-block">
@@ -173,6 +176,25 @@ HTML
     public function setHasIntroduction(bool $hasIntroduction): TestsConfiguration
     {
         $this->hasIntroduction = $hasIntroduction;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAuthors(): bool
+    {
+        return $this->hasAuthors;
+    }
+
+    /**
+     * @param bool $hasAuthors
+     * @return TestsConfiguration
+     */
+    public function setHasAuthors(bool $hasAuthors): TestsConfiguration
+    {
+        $this->hasAuthors = $hasAuthors;
 
         return $this;
     }
