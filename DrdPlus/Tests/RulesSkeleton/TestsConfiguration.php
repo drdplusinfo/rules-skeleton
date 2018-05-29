@@ -26,6 +26,8 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
     private $hasLinkToSingleJournal = true;
     /** @var bool */
     private $hasDebugContacts = true;
+    /** @var bool */
+    private $hasIntroduction = true;
     /** @var array|string[] */
     private $blockNamesToExpectedContent = ['just-some-block' => <<<HTML
 <div class="block-just-some-block">
@@ -152,6 +154,25 @@ HTML
     public function setHasDebugContacts(bool $hasDebugContacts): TestsConfiguration
     {
         $this->hasDebugContacts = $hasDebugContacts;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasIntroduction(): bool
+    {
+        return $this->hasIntroduction;
+    }
+
+    /**
+     * @param bool $hasIntroduction
+     * @return TestsConfiguration
+     */
+    public function setHasIntroduction(bool $hasIntroduction): TestsConfiguration
+    {
+        $this->hasIntroduction = $hasIntroduction;
 
         return $this;
     }

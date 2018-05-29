@@ -23,35 +23,41 @@ class IntroductionModeTest extends AbstractContentTest
          */
         foreach ($documents as $mode => $document) {
             self::assertGreaterThan(0, $document->children->count());
-            $bodies = $document->getElementsByTagName('body');
-            self::assertGreaterThan(0, $bodies->length);
-            /** @var Element $body */
-            foreach ($bodies as $body) {
-                self::assertGreaterThan(0, $body->children->length, 'No introduction found');
-                foreach ($body->children as $child) {
-                    self::assertTrue(
-                        $child->classList->contains('introduction')
-                        || $child->classList->contains('background-image')
-                        || $child->classList->contains('quote')
-                        || $child->classList->contains('hidden')
-                        || $child->nodeName === 'img',
-                        "Only an element with classes 'introduction', 'background-image' and 'quote' or the <img> element is expected in {$mode} mode, got : " . $child->outerHTML
-                    );
+            $body = $document->body;
+            $bodyChildren = [];
+            foreach ($body->children as $bodyChild) {
+                if (\trim($bodyChild->innerHTML) !== '') {
+                    $bodyChildren[] = $bodyChild;
                 }
             }
-            self::assertSame(
+            if (!$this->getTestsConfiguration()->hasIntroduction()) {
+                self::assertEmpty($bodyChildren, 'No introduction expected according to tests config');
+                continue;
+            }
+            self::assertNotEmpty($bodyChildren, 'No introduction found');
+            foreach ($bodyChildren as $bodyChild) {
+                self::assertTrue(
+                    $bodyChild->classList->contains('introduction')
+                    || $bodyChild->classList->contains('background-image')
+                    || $bodyChild->classList->contains('quote')
+                    || $bodyChild->classList->contains('hidden')
+                    || $bodyChild->nodeName === 'img',
+                    "Only an element with classes 'introduction', 'background-image' and 'quote' or the <img> element is expected in {$mode} mode, got : " . $bodyChild->outerHTML
+                );
+            }
+            self::assertCount(
                 0,
-                $document->body->getElementsByClassName('generic')->count(),
+                $body->getElementsByClassName('generic'),
                 "Class 'generic' would be already hidden id mode='$mode' and show='introduction'."
             );
             if ($mode === 'standard') {
                 self::assertGreaterThan(
                     0,
-                    $document->body->getElementsByTagName('img')->count(),
+                    $body->getElementsByTagName('img')->count(),
                     "Expected some image in mode='$mode' and show='introduction'"
                 );
             } else {
-                $imagesList = $document->body->getElementsByTagName('img');
+                $imagesList = $body->getElementsByTagName('img');
                 $images = [];
                 foreach ($imagesList as $image) {
                     $images[] = $image;
@@ -73,7 +79,7 @@ class IntroductionModeTest extends AbstractContentTest
             }
             self::assertGreaterThan(
                 0,
-                $document->getElementsByClassName('background-image')->count(),
+                $body->getElementsByClassName('background-image')->count(),
                 "Background image should not be removed in mode='$mode' and show='introduction'"
             );
         }
@@ -86,14 +92,10 @@ class IntroductionModeTest extends AbstractContentTest
     {
         $html = $this->getHtmlDocument('introduction');
         self::assertGreaterThan(0, $html->children->count());
-        $bodies = $html->getElementsByTagName('body');
-        self::assertGreaterThan(0, $bodies->length);
-        /** @var Element $body */
-        foreach ($bodies as $body) {
-            self::assertGreaterThan(0, $body->children->length, 'No introduction found');
-            foreach ($body->children as $child) {
-                $this->guardNoChildIntroduction($child);
-            }
+        $body = $html->body;
+        self::assertGreaterThan(0, $body->children->length, 'No introduction found');
+        foreach ($body->children as $child) {
+            $this->guardNoChildIntroduction($child);
         }
     }
 
