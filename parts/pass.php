@@ -105,7 +105,7 @@ unset($name);
 $passCache = new \DrdPlus\RulesSkeleton\PassCache($cacheRoot, $webVersions, $htmlHelper->isInProduction());
 $passCache->saveContentForDebug($passContent); // for debugging purpose
 $passHtmlDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($passContent);
-$htmlHelper = new \DrdPlus\FrontendSkeleton\HtmlHelper($documentRoot, false, false, false);
+$htmlHelper = new \DrdPlus\FrontendSkeleton\HtmlHelper($documentRoot, false, false, false, false);
 $htmlHelper->addVersionHashToAssets($passHtmlDocument);
 if (PHP_SAPI === 'cli' || ($_SERVER['REMOTE_ADDR'] ?? null) === '127.0.0.1') {
     $htmlHelper->makeExternalLinksLocal($passHtmlDocument);

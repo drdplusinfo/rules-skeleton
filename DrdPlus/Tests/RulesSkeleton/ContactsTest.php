@@ -19,12 +19,21 @@ class ContactsTest extends AbstractContentTest
      */
     public function Proper_email_is_used_in_debug_contacts(): void
     {
-        $debugContacts = include __DIR__ . '/../../../parts/debug_contacts.php';
         self::assertRegExp(
             '~[^[:alnum:]]info@drdplus[.]info[^[:alnum:]]~',
-            $debugContacts,
+            $this->getDebugContactsContent(),
             'Email to info@drdplus.info has not been found in debug contacts template'
         );
+    }
+
+    private function getDebugContactsContent(): string
+    {
+        static $debugContactsContent;
+        if ($debugContactsContent === null) {
+            $debugContactsContent = \file_get_contents(__DIR__ . '/../../../parts/debug_contacts.html');
+        }
+
+        return $debugContactsContent;
     }
 
     /**
@@ -32,10 +41,9 @@ class ContactsTest extends AbstractContentTest
      */
     public function Proper_facebook_link_is_used_in_debug_contacts(): void
     {
-        $debugContacts = include __DIR__ . '/../../../parts/debug_contacts.php';
         self::assertRegExp(
             '~[^[:alnum:]]https://www[.]facebook[.]com/drdplus[.]info[^[:alnum:]]~',
-            $debugContacts,
+            $this->getDebugContactsContent(),
             'Link to facebook.com/drdplus.info has not been found in debug contacts template'
         );
     }
@@ -45,10 +53,9 @@ class ContactsTest extends AbstractContentTest
      */
     public function Proper_rpg_forum_link_is_used_in_debug_contacts(): void
     {
-        $debugContacts = include __DIR__ . '/../../../parts/debug_contacts.php';
         self::assertRegExp(
             '~[^[:alnum:]]https://rpgforum[.]cz/forum/viewtopic[.]php[?]f=238&t=14870[^[:alnum:]]~',
-            $debugContacts,
+            $this->getDebugContactsContent(),
             'Link to RPG forum has not been found in debug contacts template'
         );
     }
@@ -58,14 +65,14 @@ class ContactsTest extends AbstractContentTest
      */
     public function I_can_use_link_to_drdplus_info_email(): void
     {
-        $debugContacts = $this->getDebugContactsElement();
+        $debugContactsElement = $this->getDebugContactsElement();
         if (!$this->getTestsConfiguration()->hasDebugContacts()) {
-            self::assertNull($debugContacts, 'Debug contacts have not been expected');
+            self::assertNull($debugContactsElement, 'Debug contacts have not been expected');
 
             return;
         }
-        $this->guardDebugContactsAreNotEmpty($debugContacts);
-        $anchors = $debugContacts->getElementsByTagName('a');
+        $this->guardDebugContactsAreNotEmpty($debugContactsElement);
+        $anchors = $debugContactsElement->getElementsByTagName('a');
         self::assertNotEmpty($anchors, 'No anchors found in debug contacts');
         $mailTo = null;
         foreach ($anchors as $anchor) {
@@ -75,7 +82,7 @@ class ContactsTest extends AbstractContentTest
             }
             $mailTo = $href;
         }
-        self::assertNotEmpty($mailTo, 'Missing mailto: in debug contacts ' . $debugContacts->innerHTML);
+        self::assertNotEmpty($mailTo, 'Missing mailto: in debug contacts ' . $debugContactsElement->innerHTML);
         self::assertSame('mailto:info@drdplus.info', $mailTo);
     }
 
@@ -84,10 +91,10 @@ class ContactsTest extends AbstractContentTest
         return $this->getHtmlDocument()->getElementById('debug_contacts');
     }
 
-    private function guardDebugContactsAreNotEmpty(?Element $debugContacts): void
+    private function guardDebugContactsAreNotEmpty(?Element $debugContactsElement): void
     {
-        self::assertNotEmpty($debugContacts, 'Debug contacts has not been found by ID debug_contacts (debugContacts)');
-        self::assertNotEmpty($debugContacts->textContent, 'Debug contacts are empty');
+        self::assertNotEmpty($debugContactsElement, 'Debug contacts has not been found by ID debug_contacts (debugContacts)');
+        self::assertNotEmpty($debugContactsElement->textContent, 'Debug contacts are empty');
     }
 
 }

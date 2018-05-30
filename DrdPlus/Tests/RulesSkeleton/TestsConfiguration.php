@@ -56,12 +56,11 @@ HTML
     }
 
     /**
-     * @param bool $hasProtectedAccess
      * @return TestsConfiguration
      */
-    public function setHasProtectedAccess(bool $hasProtectedAccess): TestsConfiguration
+    public function disableHasProtectedAccess(): TestsConfiguration
     {
-        $this->hasProtectedAccess = $hasProtectedAccess;
+        $this->hasProtectedAccess = false;
 
         return $this;
     }
@@ -75,12 +74,11 @@ HTML
     }
 
     /**
-     * @param bool $canBeBoughtOnEshop
      * @return TestsConfiguration
      */
-    public function setCanBeBoughtOnEshop(bool $canBeBoughtOnEshop): TestsConfiguration
+    public function disableCanBeBoughtOnEshop(): TestsConfiguration
     {
-        $this->canBeBoughtOnEshop = $canBeBoughtOnEshop;
+        $this->canBeBoughtOnEshop = false;
 
         return $this;
     }
@@ -94,12 +92,11 @@ HTML
     }
 
     /**
-     * @param bool $hasCharacterSheet
      * @return TestsConfiguration
      */
-    public function setHasCharacterSheet(bool $hasCharacterSheet): TestsConfiguration
+    public function disableHasCharacterSheet(): TestsConfiguration
     {
-        $this->hasCharacterSheet = $hasCharacterSheet;
+        $this->hasCharacterSheet = false;
 
         return $this;
     }
@@ -113,12 +110,11 @@ HTML
     }
 
     /**
-     * @param bool $hasLinksToJournals
      * @return TestsConfiguration
      */
-    public function setHasLinksToJournals(bool $hasLinksToJournals): TestsConfiguration
+    public function disableHasLinksToJournals(): TestsConfiguration
     {
-        $this->hasLinksToJournals = $hasLinksToJournals;
+        $this->hasLinksToJournals = false;
 
         return $this;
     }
@@ -132,12 +128,11 @@ HTML
     }
 
     /**
-     * @param bool $hasLinkToSingleJournal
      * @return TestsConfiguration
      */
-    public function setHasLinkToSingleJournal(bool $hasLinkToSingleJournal): TestsConfiguration
+    public function disableHasLinkToSingleJournal(): TestsConfiguration
     {
-        $this->hasLinkToSingleJournal = $hasLinkToSingleJournal;
+        $this->hasLinkToSingleJournal = false;
 
         return $this;
     }
@@ -151,12 +146,11 @@ HTML
     }
 
     /**
-     * @param bool $hasDebugContacts
      * @return TestsConfiguration
      */
-    public function setHasDebugContacts(bool $hasDebugContacts): TestsConfiguration
+    public function disableHasDebugContacts(): TestsConfiguration
     {
-        $this->hasDebugContacts = $hasDebugContacts;
+        $this->hasDebugContacts = false;
 
         return $this;
     }
@@ -170,12 +164,11 @@ HTML
     }
 
     /**
-     * @param bool $hasIntroduction
      * @return TestsConfiguration
      */
-    public function setHasIntroduction(bool $hasIntroduction): TestsConfiguration
+    public function disableHasIntroduction(): TestsConfiguration
     {
-        $this->hasIntroduction = $hasIntroduction;
+        $this->hasIntroduction = false;
 
         return $this;
     }
@@ -189,12 +182,11 @@ HTML
     }
 
     /**
-     * @param bool $hasAuthors
      * @return TestsConfiguration
      */
-    public function setHasAuthors(bool $hasAuthors): TestsConfiguration
+    public function disableHasAuthors(): TestsConfiguration
     {
-        $this->hasAuthors = $hasAuthors;
+        $this->hasAuthors = false;
 
         return $this;
     }
