@@ -3,7 +3,8 @@ if (!\headers_sent()) {
     // anyone can show content of this page
     \header('Access-Control-Allow-Origin: *', true);
 }
-$vendorRoot = $vendorRoot ?? __DIR__ . '/..';
+$vendorRoot = $vendorRoot ?? __DIR__ . '/rules-html-skeleton';
+/** @noinspection PhpIncludeInspection */
 require_once $vendorRoot . '/autoload.php';
 
 $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache($cacheRoot, $webVersions, $htmlHelper->isInProduction());
@@ -12,7 +13,8 @@ if ($tablesCache->isCacheValid()) {
 }
 $visitorCanAccessContent = true; // just a little hack
 // must NOT include current content.php as it uses router and that requires this script so endless recursion happens
-$rawContent = require $vendorRoot . '/drd-plus/frontend-skeleton/parts/content.php';
+/** @noinspection PhpIncludeInspection */
+$rawContent = require $vendorRoot . '/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';
 $rawContentDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($rawContent);
 $tables = $htmlHelper->findTablesWithIds($rawContentDocument, (new \DrdPlus\RulesSkeleton\Request())->getWantedTablesIds());
 $tablesContent = '';
@@ -26,7 +28,7 @@ unset($rawContent, $rawContentDocument);
   <html lang="cs">
     <head>
       <title>Tabulky pro Drd+ <?= \basename($documentRoot) ?></title>
-      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="shortcut icon" href="../../favicon.ico">
       <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         <?php

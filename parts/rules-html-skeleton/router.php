@@ -1,10 +1,6 @@
 <?php
 if (\array_key_exists('tables', $_GET) || \array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
-    if (\file_exists($partsRoot)) {
-        echo include $partsRoot . '/get_tables.php';
-    } else {
-        echo include $vendorRoot . '/drd-plus/rules-html-skeleton/parts/get_tables.php';
-    }
+    echo include $genericPartsRoot . '/get_tables.php';
 
     return true; // routing solved
 }
@@ -26,11 +22,7 @@ if (empty($visitorCanAccessContent)) { // can be defined externally by including
                 $visitorCanAccessContent = $usagePolicy->activateTrial(new \DateTime('+4 minutes'));
             }
             if (!$visitorCanAccessContent) {
-                if (\file_exists($partsRoot . '/pass.php')) {
-                    echo require $partsRoot . '/pass.php';
-                } else {
-                    echo require $documentRoot . '/drd-plus/rules-html-skeleton/parts/pass.php';
-                }
+                echo require $genericPartsRoot . '/pass.php';
             }
         }
     }
@@ -43,11 +35,7 @@ if (!$visitorCanAccessContent) {
 if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !\file_exists($documentRoot . '/web'))
     && \file_exists($documentRoot . '/pdf') && \glob($documentRoot . '/pdf/*.pdf')
 ) {
-    if (\file_exists($partsRoot . '/get_pdf.php')) {
-        echo include $partsRoot . '/get_pdf.php';
-    } else {
-        echo include $vendorRoot . '/drd-plus/rules-html-skeleton/parts/get_pdf.php';
-    }
+    echo include $genericPartsRoot . '/get_pdf.php';
 
     return true; // routing solved
 }

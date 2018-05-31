@@ -26,11 +26,8 @@
                   <?php
                   $contactsFixed = true; // (default is on top or bottom of the content)
                   // $contactsBottom = true; // (default is top)
-                  if (\file_exists($partsRoot . '/menu.php')) {
-                      include $partsRoot . '/menu.php';
-                  } else {
-                      include $vendorRoot . '/drd-plus/frontend-skeleton/parts/menu.php';
-                  }
+                  /** @noinspection PhpIncludeInspection */
+                  include $genericPartsRoot . '/menu.php';
                   unset($contactsFixed);
                   if ($usagePolicy->trialJustExpired()) { ?>
                     <div class="message warning">⌛ Čas tvého testování se naplnil ⌛</div><?php

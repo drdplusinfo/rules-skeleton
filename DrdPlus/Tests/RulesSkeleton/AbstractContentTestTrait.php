@@ -163,4 +163,9 @@ trait AbstractContentTestTrait
     {
         return $this->getDocumentRoot() . '/eshop_url.txt';
     }
+
+    protected function getGenericPartsRoot(): string
+    {
+        return $this->getDocumentRoot() . '/parts/rules-html-skeleton';
+    }
 }

@@ -30,7 +30,7 @@ class ContactsTest extends AbstractContentTest
     {
         static $debugContactsContent;
         if ($debugContactsContent === null) {
-            $debugContactsContent = \file_get_contents(__DIR__ . '/../../../parts/debug_contacts.html');
+            $debugContactsContent = \file_get_contents($this->getGenericPartsRoot() . '/debug_contacts.html');
         }
 
         return $debugContactsContent;
