@@ -27,7 +27,7 @@ class PassTest extends AbstractContentTest
 
             return;
         }
-        $html = new HTMLDocument($this->getOwnershipConfirmationContent());
+        $html = new HTMLDocument($this->getPassContent());
         $forms = $html->getElementsByTagName('form');
         self::assertCount(3, $forms);
         foreach ($forms as $index => $form) {
@@ -90,7 +90,7 @@ class PassTest extends AbstractContentTest
         foreach (RequestTest::getCrawlerUserAgents() as $crawlerUserAgent) {
             $_SERVER['HTTP_USER_AGENT'] = $crawlerUserAgent;
             self::assertSame(
-                $this->getOwnershipConfirmationContent(true /* not cached */),
+                $this->getPassContent(true /* not cached */),
                 $this->getContent(),
                 'Expected rules content for a crawler, skipping ownership confirmation page'
             );
@@ -102,7 +102,7 @@ class PassTest extends AbstractContentTest
      */
     public function Pass_page_uses_style_with_background_image(): void
     {
-        $html = new HTMLDocument($this->getOwnershipConfirmationContent());
+        $html = new HTMLDocument($this->getPassContent());
         $links = $html->head->getElementsByTagName('link');
         self::assertNotEmpty($links, 'No links found in pass head');
         $stylesLinks = [];

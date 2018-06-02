@@ -35,22 +35,38 @@ trait AbstractContentTestTrait
         return true;
     }
 
+    protected function getPassDocument(bool $notCached = false): \DrdPlus\FrontendSkeleton\HtmlDocument
+    {
+        if ($notCached) {
+            return new \DrdPlus\FrontendSkeleton\HtmlDocument($this->getPassContent($notCached));
+        }
+        static $passDocument;
+        if ($passDocument === null) {
+            $this->removeOwnerShipConfirmation();
+            $passDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($this->fetchRulesContent());
+        }
+
+        return $passDocument;
+    }
+
     /**
      * @param bool $notCached
      * @return string
      */
-    protected function getOwnershipConfirmationContent(bool $notCached = false): string
+    protected function getPassContent(bool $notCached = false): string
     {
         if ($notCached) {
+            $this->removeOwnerShipConfirmation();
+
             return $this->fetchRulesContent();
         }
-        static $ownershipConfirmationContent;
-        if ($ownershipConfirmationContent === null) {
+        static $passContent;
+        if ($passContent === null) {
             $this->removeOwnerShipConfirmation();
-            $ownershipConfirmationContent = $this->fetchRulesContent();
+            $passContent = $this->fetchRulesContent();
         }
 
-        return $ownershipConfirmationContent;
+        return $passContent;
     }
 
     private function fetchRulesContent(): string
@@ -135,8 +151,7 @@ trait AbstractContentTestTrait
             include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
             self::$rulesContentForDev[$show][$hide] = \ob_get_clean();
             unset($_GET['mode'], $_GET['show'], $_GET['hide']);
-            $this->removeOwnerShipConfirmation();
-            self::assertNotSame($this->getOwnershipConfirmationContent(), self::$rulesContentForDev[$show]);
+            self::assertNotSame($this->getPassContent(), self::$rulesContentForDev[$show]);
         }
 
         return self::$rulesContentForDev[$show][$hide];

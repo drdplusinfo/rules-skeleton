@@ -18,7 +18,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
     public function All_anchors_point_to_syntactically_valid_links(): void
     {
         parent::All_anchors_point_to_syntactically_valid_links();
-        $invalidAnchors = $this->parseInvalidAnchors($this->getOwnershipConfirmationContent());
+        $invalidAnchors = $this->parseInvalidAnchors($this->getPassContent());
         self::assertCount(
             0,
             $invalidAnchors,

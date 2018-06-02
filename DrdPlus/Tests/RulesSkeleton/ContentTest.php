@@ -26,4 +26,18 @@ class ContentTest extends \DrdPlus\Tests\FrontendSkeleton\ContentTest
             'Authors heading should be h3, but is ' . $authorsHeading->nodeName
         );
     }
+
+    /**
+     * @test
+     */
+    public function Page_has_title(): void
+    {
+        parent::Page_has_title();
+        $rulesTitle = $this->getCurrentPageTitle($this->getHtmlDocument());
+        $passTitle = $this->getCurrentPageTitle($this->getPassDocument());
+        self::assertNotEmpty($rulesTitle, 'Rules title is missing');
+        self::assertNotEmpty($passTitle, 'Pass title is missing');
+        self::assertSame($rulesTitle, $passTitle, 'Rules and pass titles should be the same');
+    }
+
 }
