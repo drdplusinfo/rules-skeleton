@@ -174,11 +174,11 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 
     private function getProfessionName(): string
     {
-        $pageTitle = $this->getPageTitle();
+        $currentPageTitle = $this->getCurrentPageTitle();
         self::assertSame(
             1,
-            \preg_match('~\s(?<lastWord>\w+)$~u', $pageTitle, $matches),
-            "No last word found in '$pageTitle'"
+            \preg_match('~\s(?<lastWord>\w+)$~u', $currentPageTitle, $matches),
+            "No last word found in '$currentPageTitle'"
         );
         $lastWord = $matches['lastWord'];
 
