@@ -1,20 +1,20 @@
 <?php
-/** @var \DrdPlus\FrontendSkeleton\UsagePolicy $usagePolicy */
+/** @var \DrdPlus\RulesSkeleton\Controller $controller */
 \ob_start();
 ?>
   <!DOCTYPE html>
   <html lang="cs">
     <head>
-      <title><?= $htmlHelper->getPageTitle() ?></title>
+      <title><?= $controller->getPageTitle() ?></title>
       <link rel="shortcut icon" href="/favicon.ico">
       <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
-      <link rel="stylesheet" href="/css/generic/frontend-skeleton/vendor/bootstrap.v4.0.0-alpha.6/bootstrap.min.css">
-      <link rel="stylesheet" href="/css/generic/frontend-skeleton/flash-messages.css">
-      <link rel="stylesheet" href="/css/generic/frontend-skeleton/contacts.css">
-      <link rel="stylesheet" href="/css/generic/frontend-skeleton/graphics.css">
-      <link rel="stylesheet" href="/css/generic/rules-html-skeleton/graphics.css">
-      <link rel="stylesheet" href="/css/generic/rules-html-skeleton/ignore/licence.css">
+      <link rel="stylesheet" href="/css/generic/skeleton/vendor/bootstrap.v4.0.0-alpha.6/bootstrap.min.css">
+      <link rel="stylesheet" href="/css/generic/skeleton/flash-messages.css">
+      <link rel="stylesheet" href="/css/generic/skeleton/contacts.css">
+      <link rel="stylesheet" href="/css/generic/skeleton/graphics.css">
+      <link rel="stylesheet" href="/css/generic/skeleton/rules-html-skeleton-graphics.css">
+      <link rel="stylesheet" href="/css/generic/skeleton/ignore/licence.css">
     </head>
     <body>
       <div class="vertical-centered-wrapper">
@@ -29,7 +29,7 @@
                   /** @noinspection PhpIncludeInspection */
                   include $genericPartsRoot . '/menu.php';
                   unset($contactsFixed);
-                  if ($usagePolicy->trialJustExpired()) { ?>
+                  if ($controller->getUsagePolicy()->trialJustExpired()) { ?>
                     <div class="message warning">⌛ Čas tvého testování se naplnil ⌛</div><?php
                   } ?>
                 <div>
@@ -39,10 +39,7 @@
                     } else {
                         $name = \basename($documentRoot);
                     }
-                    $eShop = 'https://obchod.altar.cz';
-                    if (\file_exists($documentRoot . '/eshop_url.txt')) {
-                        $eShop = \trim(\file_get_contents($documentRoot . '/eshop_url.txt')) ?: $eShop;
-                    }
+                    $eShop = \trim(\file_get_contents($documentRoot . '/eshop_url.txt'));
                     ?>
                   <form class="manifest trial" action="" method="post">
                     <p>

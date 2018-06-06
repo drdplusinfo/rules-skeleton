@@ -3,10 +3,13 @@ if (!\headers_sent()) {
     // anyone can show content of this page
     \header('Access-Control-Allow-Origin: *', true);
 }
-$vendorRoot = $vendorRoot ?? __DIR__ . '/rules-html-skeleton';
+$documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER['SCRIPT_FILENAME']), '\/') : \getcwd());
+$vendorRoot = $vendorRoot ?? $documentRoot . '/vendor';
+
 /** @noinspection PhpIncludeInspection */
 require_once $vendorRoot . '/autoload.php';
 
+$controller = $controller ?? new \DrdPlus\RulesSkeleton\Controller($documentRoot);
 $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache($cacheRoot, $webVersions, $htmlHelper->isInProduction());
 if ($tablesCache->isCacheValid()) {
     return $tablesCache->getCachedContent();
@@ -16,7 +19,7 @@ $visitorCanAccessContent = true; // just a little hack
 /** @noinspection PhpIncludeInspection */
 $rawContent = require $vendorRoot . '/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';
 $rawContentDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($rawContent);
-$tables = $htmlHelper->findTablesWithIds($rawContentDocument, (new \DrdPlus\RulesSkeleton\Request())->getWantedTablesIds());
+$tables = $htmlHelper->findTablesWithIds($rawContentDocument, $controller->getRequest()->getWantedTablesIds());
 $tablesContent = '';
 foreach ($tables as $table) {
     $tablesContent .= $table->outerHTML . "\n";

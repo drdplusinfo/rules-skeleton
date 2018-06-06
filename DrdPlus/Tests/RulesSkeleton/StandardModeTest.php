@@ -6,5 +6,5 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 class StandardModeTest extends \DrdPlus\Tests\FrontendSkeleton\StandardModeTest
 {
-
+    use AbstractContentTestTrait;
 }

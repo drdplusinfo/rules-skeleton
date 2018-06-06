@@ -286,7 +286,7 @@ table.borderless thead th {
 }
 
 table.battle-stats {
-    background: url('/images/generic/rules-html-skeleton/battle-stats.png?version=3d5edfd845e1bcbb997fb497074ef19b') no-repeat;
+    background: url('/images/generic/skeleton/battle-stats.png?version=3d5edfd845e1bcbb997fb497074ef19b') no-repeat;
     background-size: 100%;
     display: table;
 }
@@ -312,7 +312,7 @@ table.battle-stats tbody:last-child td:last-child {
 }
 
 table.item-combination {
-    background: url('/images/generic/rules-html-skeleton/items-combination.png?version=b86bb5ffdbb33e25dfd21f1dc13d44a4') no-repeat;
+    background: url('/images/generic/skeleton/items-combination.png?version=b86bb5ffdbb33e25dfd21f1dc13d44a4') no-repeat;
     background-size: 100%;
     width: 12em;
     height: 8em;

@@ -27,7 +27,7 @@
     "drd-plus/frontend-skeleton": "dev-master"
   },
   "require-dev": {
-    "phpunit/phpunit": "~6.0",
+    "phpunit/phpunit": "~7.0",
     "mockery/mockery": "~1.0"
   },
   "minimum-stability": "dev",

@@ -1,7 +1,9 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\FrontendSkeleton\UsagePolicy;
+use DeviceDetector\Parser\Bot;
+use DrdPlus\RulesSkeleton\Request;
+use DrdPlus\RulesSkeleton\UsagePolicy;
 use Gt\Dom\HTMLDocument;
 
 /**
@@ -25,7 +27,7 @@ trait AbstractContentTestTrait
     {
         $_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
         $realDocumentRoot = \realpath($this->getDocumentRoot());
-        $usagePolicy = new UsagePolicy(\basename($realDocumentRoot));
+        $usagePolicy = new UsagePolicy(\basename($realDocumentRoot), new Request(new Bot()));
         self::assertTrue(
             $usagePolicy->hasVisitorConfirmedOwnership(),
             "Ownership has not been confirmed by cookie '{$this->getCookieNameForLocalOwnershipConfirmation()}'"
@@ -92,7 +94,7 @@ trait AbstractContentTestTrait
 
     protected function getCookieNameForOwnershipConfirmation(string $rulesDirBasename): string
     {
-        $usagePolicy = new UsagePolicy($rulesDirBasename);
+        $usagePolicy = new UsagePolicy($rulesDirBasename, new Request(new Bot()));
         try {
             $reflectionClass = new \ReflectionClass(UsagePolicy::class);
         } catch (\ReflectionException $reflectionException) {

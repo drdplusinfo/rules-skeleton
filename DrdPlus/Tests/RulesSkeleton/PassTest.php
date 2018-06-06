@@ -119,14 +119,14 @@ class PassTest extends AbstractContentTest
             $stylesHrefs[] = $stylesLink->getAttribute('href');
         }
         foreach ($stylesHrefs as $stylesHref) {
-            if (\strpos(\ltrim($stylesHref, '/'), 'css/generic/frontend-skeleton/graphics.css') === 0) {
+            if (\strpos(\ltrim($stylesHref, '/'), 'css/generic/skeleton/graphics.css') === 0) {
                 self::assertTrue(true, 'Frontend skeleton graphics is not used');
 
                 return;
             }
         }
         self::fail(
-            'Missing /css/generic/frontend-skeleton/graphics.css style sheet in head, there are only '
+            'Missing /css/generic/skeleton/graphics.css style sheet in head, there are only '
             . "\n" . \implode("\n", $stylesHrefs)
         );
     }

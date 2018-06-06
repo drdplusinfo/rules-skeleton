@@ -1,4 +1,5 @@
 <?php
+/** @var \DrdPlus\RulesSkeleton\Controller $controller */
 if (\array_key_exists('tables', $_GET) || \array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     echo include $genericPartsRoot . '/get_tables.php';
 
@@ -7,19 +8,18 @@ if (\array_key_exists('tables', $_GET) || \array_key_exists('tabulky', $_GET)) {
 
 if (empty($visitorCanAccessContent)) { // can be defined externally by including script
     $visitorIsUsingTrial = false;
-    $visitorCanAccessContent = $request->isVisitorBot();
+    $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorBot();
     if (!$visitorCanAccessContent) {
-        $usagePolicy = new \DrdPlus\FrontendSkeleton\UsagePolicy(basename($documentRoot));
-        $visitorCanAccessContent = $usagePolicy->hasVisitorConfirmedOwnership();
+        $visitorCanAccessContent = $controller->getUsagePolicy()->hasVisitorConfirmedOwnership();
         if (!$visitorCanAccessContent) {
-            $visitorCanAccessContent = $usagePolicy->isVisitorUsingTrial();
+            $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorUsingTrial();
         }
         if (!$visitorCanAccessContent) {
             if (!empty($_POST['confirm'])) {
-                $visitorCanAccessContent = $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
+                $visitorCanAccessContent = $controller->getUsagePolicy()->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
             }
             if (!$visitorCanAccessContent && !empty($_POST['trial'])) {
-                $visitorCanAccessContent = $usagePolicy->activateTrial(new \DateTime('+4 minutes'));
+                $visitorCanAccessContent = $controller->getUsagePolicy()->activateTrial(new \DateTime('+4 minutes'));
             }
             if (!$visitorCanAccessContent) {
                 echo require $genericPartsRoot . '/pass.php';
