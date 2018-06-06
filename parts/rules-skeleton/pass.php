@@ -13,7 +13,7 @@
       <link rel="stylesheet" href="/css/generic/skeleton/flash-messages.css">
       <link rel="stylesheet" href="/css/generic/skeleton/contacts.css">
       <link rel="stylesheet" href="/css/generic/skeleton/graphics.css">
-      <link rel="stylesheet" href="/css/generic/skeleton/rules-html-skeleton-graphics.css">
+      <link rel="stylesheet" href="/css/generic/skeleton/rules-skeleton-graphics.css">
       <link rel="stylesheet" href="/css/generic/skeleton/ignore/licence.css">
     </head>
     <body>

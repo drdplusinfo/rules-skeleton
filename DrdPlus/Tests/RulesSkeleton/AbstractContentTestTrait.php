@@ -183,9 +183,9 @@ trait AbstractContentTestTrait
 
     protected function getGenericPartsRoot(): string
     {
-        return \file_exists($this->getDocumentRoot() . '/parts/rules-html-skeleton')
-            ? $this->getDocumentRoot() . '/parts/rules-html-skeleton'
-            : $this->getVendorRoot() . '/drd-plus/rules-html-skeleton/parts/rules-html-skeleton';
+        return \file_exists($this->getDocumentRoot() . '/parts/rules-skeleton')
+            ? $this->getDocumentRoot() . '/parts/rules-skeleton'
+            : $this->getVendorRoot() . '/drd-plus/rules-skeleton/parts/rules-skeleton';
     }
 
     protected function getVendorRoot(): string

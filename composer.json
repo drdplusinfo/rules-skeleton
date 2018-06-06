@@ -1,5 +1,5 @@
 {
-  "name": "drd-plus/rules-html-skeleton",
+  "name": "drd-plus/rules-skeleton",
   "license": "MIT",
   "type": "library",
   "description": "Skeleton for DrD+ rules as HTML",
