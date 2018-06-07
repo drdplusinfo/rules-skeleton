@@ -10,6 +10,8 @@ class Controller extends \DrdPlus\FrontendSkeleton\Controller
     private $usagePolicy;
     /** @var Request */
     private $rulesSkeletonRequest;
+    /** @var string */
+    private $eshopUrl;
 
     public function getUsagePolicy(): UsagePolicy
     {
@@ -30,5 +32,21 @@ class Controller extends \DrdPlus\FrontendSkeleton\Controller
         }
 
         return $this->rulesSkeletonRequest;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEshopUrl(): string
+    {
+        if ($this->eshopUrl === null) {
+            $eshopUrl = \trim(\file_get_contents($this->getDocumentRoot() . '/eshop_url.txt'));
+            if (!\filter_var($eshopUrl, FILTER_VALIDATE_URL)) {
+                throw new Exceptions\InvalidEshopUrl("Given e-shop URL from 'eshop_url.txt' is not valid: '$eshopUrl'");
+            }
+            $this->eshopUrl = $eshopUrl;
+        }
+
+        return $this->eshopUrl;
     }
 }

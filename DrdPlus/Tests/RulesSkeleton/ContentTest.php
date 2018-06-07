@@ -34,8 +34,8 @@ class ContentTest extends \DrdPlus\Tests\FrontendSkeleton\ContentTest
     {
         parent::Page_has_title();
         $rulesTitle = $this->getCurrentPageTitle($this->getHtmlDocument());
-        $passTitle = $this->getCurrentPageTitle($this->getPassDocument());
         self::assertNotEmpty($rulesTitle, 'Rules title is missing');
+        $passTitle = $this->getCurrentPageTitle($this->getPassDocument());
         self::assertNotEmpty($passTitle, 'Pass title is missing');
         self::assertSame($rulesTitle, $passTitle, 'Rules and pass titles should be the same');
     }

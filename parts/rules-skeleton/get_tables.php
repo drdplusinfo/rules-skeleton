@@ -10,7 +10,12 @@ $vendorRoot = $vendorRoot ?? $documentRoot . '/vendor';
 require_once $vendorRoot . '/autoload.php';
 
 $controller = $controller ?? new \DrdPlus\RulesSkeleton\Controller($documentRoot);
-$tablesCache = new \DrdPlus\RulesSkeleton\TablesCache($cacheRoot, $webVersions, $htmlHelper->isInProduction());
+$tablesCache = new \DrdPlus\RulesSkeleton\TablesCache(
+    $cacheRoot,
+    $webVersions,
+    $htmlHelper->isInProduction(),
+    $controller->getWebRoot()
+);
 if ($tablesCache->isCacheValid()) {
     return $tablesCache->getCachedContent();
 }
