@@ -47,10 +47,15 @@ body.pass {
     font-size: 15px;
 }
 
-.pass input[type=submit], label {
+.pass button[type=submit], label {
     cursor: pointer;
     text-wrap: normal;
     display: inline;
+}
+
+.pass label {
+    display: block; /* to get everything click-able including space between words and rows */
+    margin: 0;
 }
 
 .pass label:hover {
