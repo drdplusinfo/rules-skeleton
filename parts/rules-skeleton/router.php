@@ -32,7 +32,7 @@ if (empty($visitorCanAccessContent)) { // can be defined externally by including
             if (!$visitorCanAccessContent) {
                 $controller->setWebRoot(\file_exists($controller->getDocumentRoot() . '/web/pass')
                     ? $controller->getDocumentRoot() . '/web/pass'
-                    : $controller->getVendorRoot() . '/rules-skeleton/web/pass'
+                    : $controller->getVendorRoot() . '/drd-plus/rules-skeleton/web/pass'
                 );
                 $controller->addBodyClass('pass');
             }
