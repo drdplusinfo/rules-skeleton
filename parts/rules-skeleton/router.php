@@ -30,7 +30,10 @@ if (empty($visitorCanAccessContent)) { // can be defined externally by including
                 $visitorCanAccessContent = $controller->getUsagePolicy()->activateTrial(new \DateTime('+4 minutes'));
             }
             if (!$visitorCanAccessContent) {
-                $controller->setWebRoot($controller->getDocumentRoot() . '/web/pass');
+                $controller->setWebRoot(\file_exists($controller->getDocumentRoot() . '/web/pass')
+                    ? $controller->getDocumentRoot() . '/web/pass'
+                    : $controller->getVendorRoot() . '/rules-skeleton/web/pass'
+                );
                 $controller->addBodyClass('pass');
             }
         }
