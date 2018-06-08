@@ -53,21 +53,21 @@ class PassTest extends AbstractContentTest
             'Missing direct link to current article in e-shop, (put it into eshop_url.txt file)'
         );
         self::assertContains((string)$buyForm->getAttribute('method'), ['' /* get as default */, 'get']);
-        self::assertSame('buy', $buyForm->getElementsByTagName('input')->current()->getAttribute('name'));
+        self::assertSame('buy', $buyForm->getElementsByTagName('button')->current()->getAttribute('name'));
         self::assertEmpty($buyForm->getAttribute('onsubmit'), 'No confirmation should be required to access e-shop');
     }
 
     private function I_can_continue_after_confirmation_of_owning(Element $confirmForm): void
     {
         self::assertSame('post', $confirmForm->getAttribute('method'));
-        self::assertSame('confirm', $confirmForm->getElementsByTagName('input')->current()->getAttribute('name'));
+        self::assertSame('confirm', $confirmForm->getElementsByTagName('button')->current()->getAttribute('name'));
         self::assertStringStartsWith('return window.confirm', $confirmForm->getAttribute('onsubmit'));
     }
 
     private function I_can_continue_with_trial(Element $trialForm): void
     {
         self::assertSame('post', $trialForm->getAttribute('method'));
-        self::assertSame('trial', $trialForm->getElementsByTagName('input')->current()->getAttribute('name'));
+        self::assertSame('trial', $trialForm->getElementsByTagName('button')->current()->getAttribute('name'));
         self::assertEmpty($trialForm->getAttribute('onsubmit'), 'No confirmation should be required for trial access');
     }
 
