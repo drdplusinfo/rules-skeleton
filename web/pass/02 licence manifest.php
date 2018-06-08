@@ -11,18 +11,17 @@ $eShopUrl = $controller->getEshopUrl();
     <p>
       <label>
         <input type="submit" name="trial" value="Juknu na <?= $webName ?>">
-        Chci se na <strong><?= $webName ?></strong> jen na chvíli podívat, ať vím, o co jde
+        <span class="col-6">Chci se na <strong><?= $webName ?></strong> jen na chvíli podívat, ať vím, o co jde</span>
       </label>
     </p>
   </form>
 </div>
 <div class="row">
-  <form class="manifest" action="<?= $eShopUrl ?>">
+  <form class="manifest buy" action="<?= $eShopUrl ?>">
     <p>
       <label>
-        <input type="submit" name="buy" value="Koupím <?= $webName ?>">
-        Zatím nemám <strong><?= $webName ?></strong>, tak si je od Altaru
-        <a href="<?= $eShopUrl ?>">koupím (doporučujeme PDF verzi)</a>
+        <input class="col" type="submit" name="buy" value="Koupím <?= $webName ?>">
+        <span class="col">Zatím nemám <strong><?= $webName ?></strong>, tak si je od Altaru koupím <span class="note">(doporučujeme PDF verzi)</span></span>
       </label>
     </p>
   </form>
@@ -32,8 +31,8 @@ $eShopUrl = $controller->getEshopUrl();
         onsubmit="return window.confirm('A klidně to potvrdím dvakrát')">
     <p>
       <label>
-        <input type="submit" name="confirm" value="Vlastním <?= $webName ?>">
-        Prohlašuji na svou čest, že vlastním legální kopii <strong><?= $webName ?></strong>
+        <input class="col" type="submit" name="confirm" value="Vlastním <?= $webName ?>">
+        <span class="col">Prohlašuji na svou čest, že vlastním legální kopii <strong><?= $webName ?></strong></span>
       </label>
     </p>
   </form>
