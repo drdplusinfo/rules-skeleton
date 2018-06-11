@@ -16,10 +16,10 @@ $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache(
     $htmlHelper->isInProduction(),
     $controller->getWebRoot()
 );
+$controller->setFreeAccess();
 if ($tablesCache->isCacheValid()) {
     return $tablesCache->getCachedContent();
 }
-$visitorCanAccessContent = true; // just a little hack
 // must NOT include current content.php as it uses router and that requires this script so endless recursion happens
 /** @noinspection PhpIncludeInspection */
 $rawContent = require $vendorRoot . '/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';

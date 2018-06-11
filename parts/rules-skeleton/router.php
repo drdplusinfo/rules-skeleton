@@ -14,7 +14,7 @@ if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !\file_exists($controller-
     return true; // routing solved
 }
 
-if (empty($visitorCanAccessContent)) { // can be defined externally by including script
+if (empty($visitorCanAccessContent) && !$controller->isFreeAccess()) { // can be defined externally by including script
     $visitorIsUsingTrial = false;
     $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorBot();
     if (!$visitorCanAccessContent) {

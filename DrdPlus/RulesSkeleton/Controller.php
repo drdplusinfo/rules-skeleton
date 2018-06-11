@@ -12,6 +12,23 @@ class Controller extends \DrdPlus\FrontendSkeleton\Controller
     private $rulesSkeletonRequest;
     /** @var string */
     private $eshopUrl;
+    /** @var bool */
+    private $freeAccess = false;
+
+    public function setFreeAccess(): Controller
+    {
+        $this->freeAccess = true;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFreeAccess(): bool
+    {
+        return $this->freeAccess;
+    }
 
     public function getUsagePolicy(): UsagePolicy
     {
