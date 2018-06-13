@@ -45,18 +45,21 @@ class UsagePolicy extends StrictObject
      */
     private function setCookie(string $cookieName, string $value, ?\DateTime $expiresAt): bool
     {
-        $cookieSet = \setcookie(
-            $cookieName,
-            $value,
-            $expiresAt ? $expiresAt->getTimestamp() : 0 /* ends with browser session */,
-            '/', // path
-            $_SERVER['SERVER_NAME'] ?? '', // domain
-            !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', // secure if possible
-            false /* not HTTP only to allow JS to read it */
-        );
-        if (!$cookieSet) {
-            throw new Exceptions\CookieCanNotBeSet('Could not set cookie ' . $cookieName);
+        if (PHP_SAPI !== 'cli') {
+            $cookieSet = \setcookie(
+                $cookieName,
+                $value,
+                $expiresAt ? $expiresAt->getTimestamp() : 0 /* ends with browser session */,
+                '/', // path
+                $_SERVER['SERVER_NAME'] ?? '', // domain
+                !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', // secure if possible
+                false /* not HTTP only to allow JS to read it */
+            );
+            if (!$cookieSet) {
+                throw new Exceptions\CookieCanNotBeSet('Could not set cookie ' . $cookieName);
+            }
         }
+
         $_COOKIE[$cookieName] = $value;
 
         return true;

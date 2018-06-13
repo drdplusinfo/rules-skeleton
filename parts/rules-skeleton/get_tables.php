@@ -1,6 +1,6 @@
 <?php
-if (!\headers_sent()) {
-    // anyone can show content of this page
+if (PHP_SAPI !== 'cli') {
+// anyone can show content of this page
     \header('Access-Control-Allow-Origin: *', true);
 }
 $documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER['SCRIPT_FILENAME']), '\/') : \getcwd());
