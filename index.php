@@ -4,7 +4,7 @@ $vendorRoot = $vendorRoot ?? $documentRoot . '/vendor';
 
 require_once $vendorRoot . '/autoload.php';
 
-$controller = $controller ?? new \DrdPlus\RulesSkeleton\Controller(
+$controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController(
         $documentRoot,
         $webRoot ?? $documentRoot . '/web/passed', // pass.php will change it to /web/pass if access is not allowed yet
         $vendorRoot ?? null,

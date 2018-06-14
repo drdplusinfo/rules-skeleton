@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
+use DrdPlus\FrontendSkeleton\Cookie;
 use Granam\Strict\Object\StrictObject;
 
 class UsagePolicy extends StrictObject
@@ -21,7 +22,7 @@ class UsagePolicy extends StrictObject
      * @param string $articleName
      * @param \DrdPlus\FrontendSkeleton\Request $request
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CookieCanNotBeSet
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CookieCanNotBeSet
      */
     public function __construct(string $articleName, \DrdPlus\FrontendSkeleton\Request $request)
     {
@@ -41,28 +42,11 @@ class UsagePolicy extends StrictObject
      * @param string $value
      * @param \DateTime|null $expiresAt
      * @return bool
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CookieCanNotBeSet
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CookieCanNotBeSet
      */
     private function setCookie(string $cookieName, string $value, ?\DateTime $expiresAt): bool
     {
-        if (PHP_SAPI !== 'cli') {
-            $cookieSet = \setcookie(
-                $cookieName,
-                $value,
-                $expiresAt ? $expiresAt->getTimestamp() : 0 /* ends with browser session */,
-                '/', // path
-                $_SERVER['SERVER_NAME'] ?? '', // domain
-                !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', // secure if possible
-                false /* not HTTP only to allow JS to read it */
-            );
-            if (!$cookieSet) {
-                throw new Exceptions\CookieCanNotBeSet('Could not set cookie ' . $cookieName);
-            }
-        }
-
-        $_COOKIE[$cookieName] = $value;
-
-        return true;
+        return Cookie::setCookie($cookieName, $value, true /* only HTTP, not accessible via JS */, $expiresAt);
     }
 
     /**

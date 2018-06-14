@@ -3,7 +3,7 @@ namespace DrdPlus\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
 
-class Controller extends \DrdPlus\FrontendSkeleton\Controller
+class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
 {
 
     /** @var UsagePolicy */
@@ -15,7 +15,7 @@ class Controller extends \DrdPlus\FrontendSkeleton\Controller
     /** @var bool */
     private $freeAccess = false;
 
-    public function setFreeAccess(): Controller
+    public function setFreeAccess(): RulesController
     {
         $this->freeAccess = true;
 

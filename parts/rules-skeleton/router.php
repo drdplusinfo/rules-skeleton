@@ -1,5 +1,5 @@
 <?php
-/** @var \DrdPlus\RulesSkeleton\Controller $controller */
+/** @var \DrdPlus\RulesSkeleton\RulesController $controller */
 if (\array_key_exists('tables', $_GET) || \array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     echo include $controller->getGenericPartsRoot() . '/get_tables.php';
 

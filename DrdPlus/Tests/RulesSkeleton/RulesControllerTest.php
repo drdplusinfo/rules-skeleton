@@ -2,11 +2,11 @@
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
-use DrdPlus\RulesSkeleton\Controller;
+use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 
-class ControllerTest extends \DrdPlus\Tests\FrontendSkeleton\ControllerTest
+class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendControllerTest
 {
 
     /**
@@ -14,7 +14,7 @@ class ControllerTest extends \DrdPlus\Tests\FrontendSkeleton\ControllerTest
      */
     public function I_can_set_access_as_free_for_everyone(): void
     {
-        $controller = new Controller($this->getDocumentRoot());
+        $controller = new RulesController($this->getDocumentRoot());
         self::assertFalse($controller->isFreeAccess(), 'Access should be protected by default');
         self::assertSame($controller, $controller->setFreeAccess());
         self::assertTrue($controller->isFreeAccess(), 'Access should be switched to free');
@@ -25,7 +25,7 @@ class ControllerTest extends \DrdPlus\Tests\FrontendSkeleton\ControllerTest
      */
     public function I_can_get_request(): void
     {
-        $controller = new Controller($this->getDocumentRoot());
+        $controller = new RulesController($this->getDocumentRoot());
         self::assertEquals(new Request(new Bot()), $controller->getRequest());
     }
 
@@ -34,7 +34,7 @@ class ControllerTest extends \DrdPlus\Tests\FrontendSkeleton\ControllerTest
      */
     public function I_can_get_usage_policy(): void
     {
-        $controller = new Controller($this->getDocumentRoot());
+        $controller = new RulesController($this->getDocumentRoot());
         self::assertEquals(new UsagePolicy(\basename($this->getDocumentRoot()), new Request(new Bot())), $controller->getUsagePolicy());
     }
 }

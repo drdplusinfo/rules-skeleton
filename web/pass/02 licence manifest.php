@@ -1,5 +1,5 @@
 <?php
-/** @var \DrdPlus\RulesSkeleton\Controller $controller */
+/** @var \DrdPlus\RulesSkeleton\RulesController $controller */
 ?>
 <h1>Prohlášení</h1>
 <?php
