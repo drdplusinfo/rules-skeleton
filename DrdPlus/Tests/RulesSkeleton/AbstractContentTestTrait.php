@@ -17,7 +17,7 @@ trait AbstractContentTestTrait
     private static $rulesContentForDev = [];
     private static $rulesForDevHtmlDocument = [];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->passIn();

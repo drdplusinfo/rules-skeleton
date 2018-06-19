@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "dbabca053e1a7f63733d83fa4e4c6121f6be3d36"
+                "reference": "346fcfd62bbbabbb15a534a5ac22a19eb43740d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/dbabca053e1a7f63733d83fa4e4c6121f6be3d36",
-                "reference": "dbabca053e1a7f63733d83fa4e4c6121f6be3d36",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/346fcfd62bbbabbb15a534a5ac22a19eb43740d5",
+                "reference": "346fcfd62bbbabbb15a534a5ac22a19eb43740d5",
                 "shasum": ""
             },
             "require": {
@@ -59,7 +59,7 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-06-14 05:15:13"
+            "time": "2018-06-19 11:16:03"
         },
         {
             "name": "granam/exceptions-hierarchy",
@@ -1754,16 +1754,16 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "ed5fd2281113729f1ebcc64d101ad66028aeb3d5"
+                "reference": "591a30922f54656695e59b1f39501aec513403da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/ed5fd2281113729f1ebcc64d101ad66028aeb3d5",
-                "reference": "ed5fd2281113729f1ebcc64d101ad66028aeb3d5",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/591a30922f54656695e59b1f39501aec513403da",
+                "reference": "591a30922f54656695e59b1f39501aec513403da",
                 "shasum": ""
             },
             "require": {
@@ -1814,7 +1814,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2018-04-18 13:33:00"
+            "time": "2018-06-14 15:05:28"
         },
         {
             "name": "sebastian/diff",

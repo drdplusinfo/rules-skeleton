@@ -54,7 +54,7 @@ class UsagePolicy extends StrictObject
      */
     public function hasVisitorConfirmedOwnership(): bool
     {
-        return !empty($_COOKIE[$this->getOwnershipCookieName()]);
+        return Cookie::getCookie($this->getOwnershipCookieName()) !== null;
     }
 
     /**
@@ -85,7 +85,7 @@ class UsagePolicy extends StrictObject
      */
     public function isVisitorUsingTrial(): bool
     {
-        return !empty($_COOKIE[$this->getTrialCookieName()]);
+        return Cookie::getCookie($this->getTrialCookieName()) !== null;
     }
 
     /**

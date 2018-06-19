@@ -9,10 +9,14 @@ $vendorRoot = $vendorRoot ?? $documentRoot . '/vendor';
 /** @noinspection PhpIncludeInspection */
 require_once $vendorRoot . '/autoload.php';
 
-$controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController($documentRoot);
+$controller = $controller
+    ?? new \DrdPlus\RulesSkeleton\RulesController(
+        \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($documentRoot),
+        $documentRoot
+    );
 $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache(
-    $cacheRoot,
-    $webVersions,
+    $controller->getCacheRoot(),
+    $controller->getWebVersions(),
     $htmlHelper->isInProduction(),
     $controller->getWebRoot()
 );
