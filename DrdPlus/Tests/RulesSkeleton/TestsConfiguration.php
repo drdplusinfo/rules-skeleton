@@ -15,6 +15,8 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
 
     // every setting SHOULD be strict (expecting instead of ignoring)
 
+    /** @var string */
+    private $publicUrl;
     /** @var bool */
     private $hasProtectedAccess = true;
     /** @var bool */
@@ -46,6 +48,30 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
 </div>
 HTML
     ];
+
+    /**
+     * @param string $publicUrl
+     * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidPublicUrl
+     * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\PublicUrlShouldUseHttps
+     */
+    public function __construct(string $publicUrl)
+    {
+        if (!\filter_var($publicUrl, FILTER_VALIDATE_URL)) {
+            throw new Exceptions\InvalidPublicUrl("Given public URL is not valid: '$publicUrl'");
+        }
+        if (\strpos($publicUrl, 'https://') !== 0) {
+            throw new Exceptions\PublicUrlShouldUseHttps("Given public URL should use HTTPS: '$publicUrl'");
+        }
+        $this->publicUrl = $publicUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublicUrl(): string
+    {
+        return $this->publicUrl;
+    }
 
     /**
      * @return bool

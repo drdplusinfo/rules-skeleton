@@ -12,6 +12,14 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 
     use AbstractContentTestTrait;
 
+    protected function getExternalAnchors(): array
+    {
+        $externalAnchors = parent::getExternalAnchors();
+        $externalAnchors[] = $this->getTestsConfiguration()->getPublicUrl();
+
+        return $externalAnchors;
+    }
+
     /**
      * @test
      */
@@ -80,8 +88,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
     public function Links_to_vukogvazd_uses_https(): void
     {
         $linksToVukogvazd = [];
-        foreach ($this->getExternalAnchors() as $anchor) {
-            $link = $anchor->getAttribute('href');
+        foreach ($this->getExternalAnchors() as $link) {
             if (\strpos($link, 'vukogvazd.cz')) {
                 $linksToVukogvazd[] = $link;
             }
@@ -101,8 +108,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
     public function Character_sheet_comes_from_drdplus_info(): void
     {
         $linksToCharacterSheet = [];
-        foreach ($this->getExternalAnchors() as $anchor) {
-            $link = $anchor->getAttribute('href');
+        foreach ($this->getExternalAnchors() as $link) {
             $link = $this->turnToLocalLink($link);
             if (\strpos($link, 'charakternik.pdf')) {
                 $linksToCharacterSheet[] = $link;
@@ -131,8 +137,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
     public function Journal_comes_from_drdplus_info(): void
     {
         $linksToJournal = [];
-        foreach ($this->getExternalAnchors() as $anchor) {
-            $link = $anchor->getAttribute('href');
+        foreach ($this->getExternalAnchors() as $link) {
             $link = $this->turnToLocalLink($link);
             if (\preg_match('~/denik_\w+\.pdf$~', $link)) {
                 $linksToJournal[] = $link;

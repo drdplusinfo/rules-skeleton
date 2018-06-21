@@ -41,6 +41,13 @@
       "rm ./js/generic/skeleton/frontend*",
       "cp -r ./vendor/drd-plus/frontend-skeleton/js/generic ./js/",
       "find ./cache -mindepth 2 -type f -exec rm {} +"
+    ],
+    "post-update-cmd": [
+      "php ./vendor/bin/assets --css --dir=css"
+    ],
+    "post-install-cmd": [
+      "php ./vendor/bin/assets --css --dir=css",
+      "wget https://rules.drdplus.info --post-data=\"trial=1\" --background --output-document=- --output-file=/dev/null >> /dev/null"
     ]
   }
 }

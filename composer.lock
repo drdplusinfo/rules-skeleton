@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5c99ee71b0e121552af232ab9f84dbe9",
+    "hash": "1ba13575f30756aafe757553232cff6f",
     "content-hash": "5e1e1f451eb4bf1456eeb658c389fbd3",
     "packages": [
         {
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "1f62a40bbb8cab68f1e5dc8f73067a39d87d361a"
+                "reference": "3b3e3a29435e7dc5f2f9622c4eecd77e0279c142"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/1f62a40bbb8cab68f1e5dc8f73067a39d87d361a",
-                "reference": "1f62a40bbb8cab68f1e5dc8f73067a39d87d361a",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/3b3e3a29435e7dc5f2f9622c4eecd77e0279c142",
+                "reference": "3b3e3a29435e7dc5f2f9622c4eecd77e0279c142",
                 "shasum": ""
             },
             "require": {
@@ -59,7 +59,7 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-06-20 05:16:35"
+            "time": "2018-06-21 09:21:03"
         },
         {
             "name": "granam/exceptions-hierarchy",
@@ -1625,16 +1625,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.2.4",
+            "version": "7.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "00bc0b93f0ff4f557e9ea766557fde96da9a03dd"
+                "reference": "1dbfbe286dbbc194bb81b4a120415ebdf7db42c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/00bc0b93f0ff4f557e9ea766557fde96da9a03dd",
-                "reference": "00bc0b93f0ff4f557e9ea766557fde96da9a03dd",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1dbfbe286dbbc194bb81b4a120415ebdf7db42c3",
+                "reference": "1dbfbe286dbbc194bb81b4a120415ebdf7db42c3",
                 "shasum": ""
             },
             "require": {
@@ -1650,7 +1650,7 @@
                 "php": "^7.1",
                 "phpspec/prophecy": "^1.7",
                 "phpunit/php-code-coverage": "^6.0.7",
-                "phpunit/php-file-iterator": "^2.0",
+                "phpunit/php-file-iterator": "^2.0.1",
                 "phpunit/php-text-template": "^1.2.1",
                 "phpunit/php-timer": "^2.0",
                 "sebastian/comparator": "^3.0",
@@ -1705,7 +1705,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-06-05 03:40:05"
+            "time": "2018-06-21 04:05:21"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
