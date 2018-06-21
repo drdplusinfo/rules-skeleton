@@ -61,8 +61,13 @@ class ComposerConfigTest extends AbstractContentTest
         self::assertNotEmpty($postInstallScripts, 'Missing post-install-cmd scripts');
         $postUpdateScripts = static::$composerConfig['scripts']['post-update-cmd'] ?? [];
         self::assertNotEmpty($postUpdateScripts, 'Missing post-update-cmd scripts');
-        foreach ([$postInstallScripts, $postUpdateScripts] as $scripts) {
-            self::assertContains('php ./vendor/bin/assets --css --dir=css', $scripts);
+        foreach ([$postInstallScripts, $postUpdateScripts] as $postChangeScripts) {
+            self::assertContains(
+                'php ./vendor/bin/assets --css --dir=css',
+                $postChangeScripts,
+                'Missing script to compile assets, there are configs '
+                . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($postChangeScripts, true))
+            );
         }
     }
 
@@ -79,7 +84,9 @@ class ComposerConfigTest extends AbstractContentTest
         self::assertContains(
             $cacheWarmUpScript,
             $postInstallScripts,
-            "Missing script to warm up frontend cache, there are configs \n" . \implode("\n", $postInstallScripts)
+            'Missing script to warm up frontend cache, there are configs '
+            . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($postInstallScripts, true))
+
         );
     }
 }
