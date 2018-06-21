@@ -37,6 +37,14 @@ trait AbstractContentTestTrait
         return true;
     }
 
+    protected function isSkeletonChecked(): bool
+    {
+        $documentRootRealPath = \realpath($this->getDocumentRoot());
+        $frontendSkeletonRealPath = \realpath(__DIR__ . '/../../..');
+
+        return $documentRootRealPath === $frontendSkeletonRealPath;
+    }
+
     protected function getPassDocument(bool $notCached = false): \DrdPlus\FrontendSkeleton\HtmlDocument
     {
         if ($notCached) {

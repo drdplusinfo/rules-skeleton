@@ -8,6 +8,8 @@ use DrdPlus\Tests\FrontendSkeleton\AbstractContentTest;
  */
 class ComposerConfigTest extends AbstractContentTest
 {
+    use AbstractContentTestTrait;
+
     protected static $composerConfig;
 
     protected function setUp(): void
