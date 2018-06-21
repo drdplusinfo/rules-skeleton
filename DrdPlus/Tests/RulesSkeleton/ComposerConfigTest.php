@@ -40,9 +40,14 @@ class ComposerConfigTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Licence_is_MIT(): void
+    public function Has_licence_matching_to_access(): void
     {
-        self::assertSame('MIT', static::$composerConfig['license']);
+        $expectedLicence = $this->isSkeletonChecked() || !$this->getTestsConfiguration()->hasProtectedAccess() ? 'MIT' : 'proprietary';
+        self::assertSame(
+            $expectedLicence,
+            static::$composerConfig['license'],
+            "Expected licence '$expectedLicence' as content is " . ($this->getTestsConfiguration()->hasProtectedAccess() ? 'not public' : 'public')
+        );
     }
 
     /**
@@ -66,7 +71,9 @@ class ComposerConfigTest extends AbstractContentTest
     {
         $postInstallScripts = static::$composerConfig['scripts']['post-install-cmd'] ?? [];
         self::assertNotEmpty($postInstallScripts, 'Missing post-install-cmd scripts');
-        $cacheWarmUpScript = 'wget ' . $this->getTestsConfiguration()->getPublicUrl() . ' --post-data="trial=1" --background --output-document=- --output-file=/dev/null >> /dev/null';
-        self::assertContains($cacheWarmUpScript, $postInstallScripts, 'Missing script to warmp up frontend cache');
+        $cacheWarmUpScript = 'wget ' . $this->getTestsConfiguration()->getPublicUrl()
+            . ($this->getTestsConfiguration()->hasProtectedAccess() ? ' --post-data="trial=1"' : '')
+            . ' --background --output-document=- --output-file=/dev/null >> /dev/null';
+        self::assertContains($cacheWarmUpScript, $postInstallScripts, 'Missing script to warm up frontend cache');
     }
 }
