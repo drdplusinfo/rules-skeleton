@@ -74,6 +74,10 @@ class ComposerConfigTest extends AbstractContentTest
         $cacheWarmUpScript = 'wget ' . $this->getTestsConfiguration()->getPublicUrl()
             . ($this->getTestsConfiguration()->hasProtectedAccess() ? ' --post-data="trial=1"' : '')
             . ' --background --output-document=- --output-file=/dev/null >> /dev/null';
-        self::assertContains($cacheWarmUpScript, $postInstallScripts, 'Missing script to warm up frontend cache');
+        self::assertContains(
+            $cacheWarmUpScript,
+            $postInstallScripts,
+            "Missing script to warm up frontend cache, there are configs \n" . \implode("\n", $postInstallScripts)
+        );
     }
 }
