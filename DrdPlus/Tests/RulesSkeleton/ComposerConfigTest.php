@@ -36,7 +36,23 @@ class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigT
             $postInstallScripts,
             'Missing script to warm up frontend cache, there are configs '
             . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($postInstallScripts, true))
+        );
+    }
 
+    /**
+     * @test
+     */
+    public function File_for_for_google_search_console_verification_is_copied_from_skeleton(): void
+    {
+        $preAutoloadDumpScripts = static::$composerConfig['scripts']['pre-autoload-dump'] ?? [];
+        self::assertNotEmpty($preAutoloadDumpScripts, 'Missing pre-autoload-dump scripts');
+        $sourceSkeleton = $this->isSkeletonChecked(__DIR__ . '/../../..') ? 'frontend-skeleton' : 'rules-skeleton';
+        $fileCopyScript = "cp ./vendor/drd-plus/$sourceSkeleton/google8d8724e0c2818dfc.html .";
+        self::assertContains(
+            $fileCopyScript,
+            $preAutoloadDumpScripts,
+            'Missing script to copy file for Google search console verification, there are configs '
+            . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($preAutoloadDumpScripts, true))
         );
     }
 }

@@ -37,10 +37,10 @@ trait AbstractContentTestTrait
         return true;
     }
 
-    protected function isSkeletonChecked(): bool
+    protected function isSkeletonChecked(string $skeletonDocumentRoot = null): bool
     {
         $documentRootRealPath = \realpath($this->getDocumentRoot());
-        $frontendSkeletonRealPath = \realpath(__DIR__ . '/../../..');
+        $frontendSkeletonRealPath = \realpath($skeletonDocumentRoot ?? __DIR__ . '/../../..');
 
         return $documentRootRealPath === $frontendSkeletonRealPath;
     }
