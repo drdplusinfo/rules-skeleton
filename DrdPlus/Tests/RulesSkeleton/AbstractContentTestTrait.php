@@ -37,6 +37,28 @@ trait AbstractContentTestTrait
         return true;
     }
 
+    protected function logOut(): bool
+    {
+        unset($_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()]);
+        $realDocumentRoot = \realpath($this->getDocumentRoot());
+        $usagePolicy = new UsagePolicy(\basename($realDocumentRoot), new Request(new Bot()));
+        self::assertFalse(
+            $usagePolicy->hasVisitorConfirmedOwnership(),
+            "Ownership is still confirmed by cookie '{$this->getCookieNameForLocalOwnershipConfirmation()}'"
+            . " (with document root {$realDocumentRoot})"
+        );
+
+        return true;
+    }
+
+    /**
+     * @return array|\Closure[]
+     */
+    protected function getLicenceSwitchers(): array
+    {
+        return [[$this, 'passIn'], [$this, 'logOut']];
+    }
+
     protected function isSkeletonChecked(string $skeletonDocumentRoot = null): bool
     {
         $documentRootRealPath = \realpath($this->getDocumentRoot());

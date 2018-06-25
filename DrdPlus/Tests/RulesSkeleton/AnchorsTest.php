@@ -25,13 +25,16 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
      */
     public function All_anchors_point_to_syntactically_valid_links(): void
     {
-        parent::All_anchors_point_to_syntactically_valid_links();
-        $invalidAnchors = $this->parseInvalidAnchors($this->getPassContent());
-        self::assertCount(
-            0,
-            $invalidAnchors,
-            'Some anchors from ownership confirmation points to invalid links ' . \implode(',', $invalidAnchors)
-        );
+        foreach ($this->getLicenceSwitchers() as $licenceSwitcher) {
+            $licenceSwitcher();
+            parent::All_anchors_point_to_syntactically_valid_links();
+            $invalidAnchors = $this->parseInvalidAnchors($this->getPassContent());
+            self::assertCount(
+                0,
+                $invalidAnchors,
+                'Some anchors from ownership confirmation points to invalid links ' . \implode(',', $invalidAnchors)
+            );
+        }
     }
 
     /**
@@ -189,4 +192,16 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 
         return \rtrim($lastWord, 'aeiouy');
     }
+
+    /**
+     * @test
+     */
+    public function Buttons_should_not_have_links_inside(): void
+    {
+        foreach ($this->getLicenceSwitchers() as $licenceSwitcher) {
+            $licenceSwitcher();
+            parent::Buttons_should_not_have_links_inside();
+        }
+    }
+
 }
