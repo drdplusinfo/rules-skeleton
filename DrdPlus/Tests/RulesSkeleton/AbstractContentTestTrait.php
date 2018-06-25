@@ -2,9 +2,11 @@
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use Gt\Dom\HTMLDocument;
+use Mockery\MockInterface;
 
 /**
  * @method string getDocumentRoot
@@ -25,28 +27,32 @@ trait AbstractContentTestTrait
 
     protected function passIn(): bool
     {
-        $_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
+        $_COOKIE[$this->getNameForLocalOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
         $realDocumentRoot = \realpath($this->getDocumentRoot());
         $usagePolicy = new UsagePolicy(\basename($realDocumentRoot), new Request(new Bot()));
         self::assertTrue(
             $usagePolicy->hasVisitorConfirmedOwnership(),
-            "Ownership has not been confirmed by cookie '{$this->getCookieNameForLocalOwnershipConfirmation()}'"
+            "Ownership has not been confirmed by cookie '{$this->getNameForLocalOwnershipConfirmation()}'"
             . " (with document root {$realDocumentRoot})"
         );
+        $this->needPassOut = false;
+        $this->needPassIn = true;
 
         return true;
     }
 
-    protected function logOut(): bool
+    protected function passOut(): bool
     {
-        unset($_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()]);
+        unset($_COOKIE[$this->getNameForLocalOwnershipConfirmation()]);
         $realDocumentRoot = \realpath($this->getDocumentRoot());
         $usagePolicy = new UsagePolicy(\basename($realDocumentRoot), new Request(new Bot()));
         self::assertFalse(
             $usagePolicy->hasVisitorConfirmedOwnership(),
-            "Ownership is still confirmed by cookie '{$this->getCookieNameForLocalOwnershipConfirmation()}'"
+            "Ownership is still confirmed by cookie '{$this->getNameForLocalOwnershipConfirmation()}'"
             . " (with document root {$realDocumentRoot})"
         );
+        $this->needPassOut = true;
+        $this->needPassIn = false;
 
         return true;
     }
@@ -56,7 +62,7 @@ trait AbstractContentTestTrait
      */
     protected function getLicenceSwitchers(): array
     {
-        return [[$this, 'passIn'], [$this, 'logOut']];
+        return [[$this, 'passIn'], [$this, 'passOut']];
     }
 
     protected function isSkeletonChecked(string $skeletonDocumentRoot = null): bool
@@ -110,11 +116,11 @@ trait AbstractContentTestTrait
         return \ob_get_clean();
     }
 
-    private function getCookieNameForLocalOwnershipConfirmation(): string
+    private function getNameForLocalOwnershipConfirmation(): string
     {
         static $cookieName;
         if ($cookieName === null) {
-            $cookieName = $this->getCookieNameForOwnershipConfirmation(
+            $cookieName = $this->getNameForOwnershipConfirmation(
                 \basename($this->getDirName(DRD_PLUS_INDEX_FILE_NAME_TO_TEST))
             );
         }
@@ -122,7 +128,7 @@ trait AbstractContentTestTrait
         return $cookieName;
     }
 
-    protected function getCookieNameForOwnershipConfirmation(string $rulesDirBasename): string
+    protected function getNameForOwnershipConfirmation(string $rulesDirBasename): string
     {
         $usagePolicy = new UsagePolicy($rulesDirBasename, new Request(new Bot()));
         try {
@@ -131,10 +137,10 @@ trait AbstractContentTestTrait
             self::fail($reflectionException->getMessage());
             exit;
         }
-        $getCookieName = $reflectionClass->getMethod('getOwnershipCookieName');
-        $getCookieName->setAccessible(true);
+        $getName = $reflectionClass->getMethod('getOwnershipName');
+        $getName->setAccessible(true);
 
-        return $getCookieName->invoke($usagePolicy);
+        return $getName->invoke($usagePolicy);
     }
 
     private function getDirName(string $fileName): string
@@ -159,7 +165,7 @@ trait AbstractContentTestTrait
 
     private function removeOwnerShipConfirmation(): void
     {
-        unset($_COOKIE[$this->getCookieNameForLocalOwnershipConfirmation()]);
+        unset($_COOKIE[$this->getNameForLocalOwnershipConfirmation()]);
     }
 
     /**
@@ -221,5 +227,21 @@ trait AbstractContentTestTrait
     protected function getVendorRoot(): string
     {
         return $this->getDocumentRoot() . '/vendor';
+    }
+
+    /**
+     * @param bool|null $inProductionMode
+     * @return HtmlHelper|\Mockery\MockInterface
+     */
+    protected function createHtmlHelper(bool $inProductionMode = null): \DrdPlus\FrontendSkeleton\HtmlHelper
+    {
+        /** @var MockInterface $htmlHelper */
+        $htmlHelper = $this->mockery(HtmlHelper::class);
+        if ($inProductionMode !== null) {
+            $htmlHelper->shouldReceive('isInProduction')
+                ->andReturn($inProductionMode);
+        }
+
+        return $htmlHelper;
     }
 }

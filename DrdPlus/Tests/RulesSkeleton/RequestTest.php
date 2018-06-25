@@ -11,7 +11,7 @@ class RequestTest extends \DrdPlus\Tests\FrontendSkeleton\RequestTest
 {
     /**
      * @test
-     * @backupGlobals
+     * @backupGlobals enabled
      * @dataProvider provideTablesIdsParameterName
      * @param string $parameterName
      */
@@ -37,7 +37,7 @@ class RequestTest extends \DrdPlus\Tests\FrontendSkeleton\RequestTest
 
     /**
      * @test
-     * @backupGlobals
+     * @backupGlobals enabled
      */
     public function I_can_get_current_request_path(): void
     {

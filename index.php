@@ -8,10 +8,7 @@ $controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController(
         $googleAnalyticsId ?? 'UA-121206931-1',
         \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($documentRoot),
         $documentRoot,
-        $webRoot ?? $documentRoot . '/web/passed', // pass.php will change it to /web/pass if access is not allowed yet
-        $vendorRoot ?? null,
-        $partsRoot ?? null,
-        $genericPartsRoot ?? __DIR__ . '/parts/rules-skeleton'
+        $webRoot ?? $documentRoot . '/web/passed' // pass.php will change it to /web/pass if access is not allowed yet
     );
 
 $vendorRoot = $controller->getVendorRoot();

@@ -26,7 +26,8 @@ if (empty($visitorCanAccessContent) && !$controller->isFreeAccess()) { // can be
                 $visitorCanAccessContent = $controller->getUsagePolicy()->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
             }
             if (!$visitorCanAccessContent && !empty($_POST['trial'])) {
-                $visitorCanAccessContent = $controller->getUsagePolicy()->activateTrial(new \DateTime('+4 minutes'));
+                $now = $now ?? new \DateTime();
+                $visitorCanAccessContent = $controller->activateTrial((clone $now)->modify('+4 minutes'));
             }
             if (!$visitorCanAccessContent) {
                 $controller->setWebRoot(\file_exists($controller->getDocumentRoot() . '/web/pass')

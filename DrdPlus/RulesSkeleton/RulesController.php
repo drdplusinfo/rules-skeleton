@@ -15,6 +15,29 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
     /** @var bool */
     private $freeAccess = false;
 
+    public function __construct(
+        string $googleAnalyticsId,
+        HtmlHelper $htmlHelper,
+        string $documentRoot = null,
+        string $webRoot = null,
+        string $vendorRoot = null,
+        string $partsRoot = null,
+        string $genericPartsRoot = null,
+        array $bodyClasses = []
+    )
+    {
+        $documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER['SCRIPT_FILENAME']), '\/') : \getcwd());
+        parent::__construct(
+            $googleAnalyticsId,
+            $htmlHelper,
+            $documentRoot,
+            $webRoot ?? $documentRoot . '/web/passed', // pass.php will change it to /web/pass if access is not allowed yet
+            $vendorRoot,
+            $partsRoot,
+            $genericPartsRoot ?? __DIR__ . '/../../parts/rules-skeleton'
+        );
+    }
+
     public function setFreeAccess(): RulesController
     {
         $this->freeAccess = true;
@@ -65,5 +88,20 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
         }
 
         return $this->eshopUrl;
+    }
+
+    public function activateTrial(\DateTime $trialExpiration): bool
+    {
+        $visitorCanAccessContent = $this->getUsagePolicy()->activateTrial($trialExpiration);
+        if ($visitorCanAccessContent) {
+            $this->setRedirect(
+                new \DrdPlus\FrontendSkeleton\Redirect(
+                    "/?{$this->getUsagePolicy()->getTrialExpiredAtName()}={$trialExpiration->getTimestamp()}",
+                    $trialExpiration->getTimestamp() - \time()
+                )
+            );
+        }
+
+        return $visitorCanAccessContent;
     }
 }

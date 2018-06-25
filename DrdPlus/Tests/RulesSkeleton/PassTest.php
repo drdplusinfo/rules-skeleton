@@ -83,7 +83,7 @@ class PassTest extends AbstractContentTest
 
     /**
      * @test
-     * @backupGlobals
+     * @backupGlobals enabled
      */
     public function Crawlers_can_pass_without_licence_owning_confirmation(): void
     {

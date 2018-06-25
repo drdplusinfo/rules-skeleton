@@ -22,19 +22,25 @@ class UsagePolicy extends StrictObject
      * @param string $articleName
      * @param \DrdPlus\FrontendSkeleton\Request $request
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameShouldBeValidName
      * @throws \DrdPlus\FrontendSkeleton\Exceptions\CookieCanNotBeSet
      */
     public function __construct(string $articleName, \DrdPlus\FrontendSkeleton\Request $request)
     {
-        $articleName = trim($articleName);
+        $articleName = \trim($articleName);
         if ($articleName === '') {
             throw new Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy('Name of the article to confirm ownership can not be empty');
         }
+        if (!\preg_match('~\w~', $articleName)) {
+            throw new Exceptions\ArticleNameShouldBeValidName(
+                "Name of the article to confirm ownership should contain some meaningful name, got '$articleName'"
+            );
+        }
         $this->articleName = $articleName;
         $this->request = $request;
-        $this->setCookie('ownershipCookieName', $this->getOwnershipCookieName(), null /* expire on session end*/);
-        $this->setCookie('trialCookieName', $this->getTrialCookieName(), null /* expire on session end*/);
-        $this->setCookie('trialExpiredAtName', 'trialExpiredAt', null /* expire on session end*/);
+        $this->setCookie('ownershipCookieName', $this->getOwnershipName(), null /* expire on session end*/);
+        $this->setCookie('trialCookieName', $this->getTrialName(), null /* expire on session end*/);
+        $this->setCookie('trialExpiredAtName', $this->getTrialExpiredAtName(), null /* expire on session end*/);
     }
 
     /**
@@ -54,13 +60,13 @@ class UsagePolicy extends StrictObject
      */
     public function hasVisitorConfirmedOwnership(): bool
     {
-        return Cookie::getCookie($this->getOwnershipCookieName()) !== null;
+        return Cookie::getCookie($this->getOwnershipName()) !== null;
     }
 
     /**
      * @return string
      */
-    private function getOwnershipCookieName(): string
+    private function getOwnershipName(): string
     {
         return \str_replace('.', '_', 'confirmedOwnershipOf' . \ucfirst($this->articleName));
     }
@@ -72,7 +78,7 @@ class UsagePolicy extends StrictObject
      */
     public function confirmOwnershipOfVisitor(\DateTime $expiresAt): bool
     {
-        return $this->setCookie($this->getOwnershipCookieName(), (string)$expiresAt->getTimestamp(), $expiresAt);
+        return $this->setCookie($this->getOwnershipName(), (string)$expiresAt->getTimestamp(), $expiresAt);
     }
 
     public function isVisitorBot(): bool
@@ -85,15 +91,20 @@ class UsagePolicy extends StrictObject
      */
     public function isVisitorUsingTrial(): bool
     {
-        return Cookie::getCookie($this->getTrialCookieName()) !== null;
+        return Cookie::getCookie($this->getTrialName()) !== null;
     }
 
     /**
      * @return string
      */
-    public function getTrialCookieName(): string
+    public function getTrialName(): string
     {
-        return \str_replace('.', '_', 'trialOf' . ucfirst($this->articleName));
+        return \str_replace('.', '_', 'trialOf' . \ucfirst($this->articleName));
+    }
+
+    public function getTrialExpiredAtName(): string
+    {
+        return 'trialExpiredAt';
     }
 
     /**
@@ -103,7 +114,7 @@ class UsagePolicy extends StrictObject
      */
     public function activateTrial(\DateTime $expiresAt): bool
     {
-        return $this->setCookie($this->getTrialCookieName(), (string)$expiresAt->getTimestamp(), $expiresAt);
+        return $this->setCookie($this->getTrialName(), (string)$expiresAt->getTimestamp(), $expiresAt);
     }
 
     public function trialJustExpired(): bool
