@@ -12,6 +12,11 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 
     use AbstractContentTestTrait;
 
+    protected function getPostDataToFetchContent(bool $isDrdPlus): array
+    {
+        return $isDrdPlus ? ['trial' => 1] : [];
+    }
+
     protected function getExternalAnchors(): array
     {
         $externalAnchors = parent::getExternalAnchors();

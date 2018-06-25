@@ -1,13 +1,4 @@
-function showSandGlass() {
-    document.addEventListener('DOMContentLoaded', function () {
-        var sandGlass = document.createElement('span');
-        sandGlass.classList.add('sand-glass');
-        sandGlass.innerHTML = '⏳';
-        sandGlass.title = 'Jen jukáš';
-        var body = document.getElementsByTagName('body')[0];
-        body.appendChild(sandGlass);
-    });
-}
+cutBrowsingOnTrialExpiration();
 
 function cutBrowsingOnTrialExpiration() {
     var ownershipCookieName = Cookies.get('ownershipCookieName');
@@ -37,4 +28,13 @@ function cutBrowsingOnTrialExpiration() {
     showSandGlass();
 }
 
-cutBrowsingOnTrialExpiration();
+function showSandGlass() {
+    document.addEventListener('DOMContentLoaded', function () {
+        var sandGlass = document.createElement('span');
+        sandGlass.classList.add('sand-glass');
+        sandGlass.innerHTML = '⏳';
+        sandGlass.title = 'Jen jukáš';
+        var body = document.getElementsByTagName('body')[0];
+        body.appendChild(sandGlass);
+    });
+}

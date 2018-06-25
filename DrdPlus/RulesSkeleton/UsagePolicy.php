@@ -46,7 +46,7 @@ class UsagePolicy extends StrictObject
      */
     private function setCookie(string $cookieName, string $value, ?\DateTime $expiresAt): bool
     {
-        return Cookie::setCookie($cookieName, $value, true /* only HTTP, not accessible via JS */, $expiresAt);
+        return Cookie::setCookie($cookieName, $value, false /* accessible also via JS */, $expiresAt);
     }
 
     /**
@@ -62,7 +62,7 @@ class UsagePolicy extends StrictObject
      */
     private function getOwnershipCookieName(): string
     {
-        return \str_replace('.', '_', 'confirmedOwnershipOf' . ucfirst($this->articleName));
+        return \str_replace('.', '_', 'confirmedOwnershipOf' . \ucfirst($this->articleName));
     }
 
     /**

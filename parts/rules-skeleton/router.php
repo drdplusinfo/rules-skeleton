@@ -15,7 +15,6 @@ if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !\file_exists($controller-
 }
 
 if (empty($visitorCanAccessContent) && !$controller->isFreeAccess()) { // can be defined externally by including script
-    $visitorIsUsingTrial = false;
     $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorBot();
     if (!$visitorCanAccessContent) {
         $visitorCanAccessContent = $controller->getUsagePolicy()->hasVisitorConfirmedOwnership();
