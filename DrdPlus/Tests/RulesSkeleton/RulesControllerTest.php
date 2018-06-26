@@ -3,6 +3,7 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
 use DrdPlus\FrontendSkeleton\HtmlDocument;
+use DrdPlus\FrontendSkeleton\Redirect;
 use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
@@ -105,13 +106,21 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     {
         self::assertCount(0, $this->getMetaRefreshes($this->getHtmlDocument()), 'No meta tag with refresh meaning expected so far');
         $this->passOut();
-        $_POST['trial'] = 1;
+        $controller = null;
         $now = \time();
-        $trialContent = $this->fetchNonCachedContent();
+        $trialExpiredAt = $now + 240;
+        $trialExpiredAtSecondAfter = $trialExpiredAt++;
+        if ($this->getTestsConfiguration()->hasProtectedAccess()) { // can be solved by POST
+            $_POST['trial'] = 1;
+        } else {
+            $controller = $this->createController();
+            $controller->setRedirect(new Redirect('/?trialExpiredAt=' . $trialExpiredAt, 240));
+        }
+        $trialContent = $this->fetchNonCachedContent($controller);
         $document = new HtmlDocument($trialContent);
         $metaRefreshes = $this->getMetaRefreshes($document);
         self::assertCount(1, $metaRefreshes, 'One meta tag with refresh meaning expected');
         $metaRefresh = \current($metaRefreshes);
-        self::assertSame('240; url=/?trialExpiredAt=' . ($now + 240), $metaRefresh->getAttribute('content'));
+        self::assertRegExp("~240; url=/[?]trialExpiredAt=($trialExpiredAt|$trialExpiredAtSecondAfter)~", $metaRefresh->getAttribute('content'));
     }
 }
