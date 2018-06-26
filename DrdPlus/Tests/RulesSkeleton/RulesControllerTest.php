@@ -39,9 +39,10 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     public function I_will_get_current_skeleton_generic_parts_root_as_default(): void
     {
         $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
-        $expectedGenericPartsRoot = \realpath($this->getDocumentRoot() . '/parts/rules-skeleton');
-        self::assertFileExists($expectedGenericPartsRoot, 'No real path found from rules skeleton parts dir ' . $this->getDocumentRoot());
-        self::assertSame($expectedGenericPartsRoot, \realpath($controller->getGenericPartsRoot()));
+        $expectedGenericPartsRoot = __DIR__ . '/../../../parts/rules-skeleton';
+        $expectedGenericPartsRootRealPath = \realpath(__DIR__ . '/../../../parts/rules-skeleton');
+        self::assertFileExists($expectedGenericPartsRootRealPath, 'No real path found from rules skeleton parts dir ' . $expectedGenericPartsRoot);
+        self::assertSame($expectedGenericPartsRootRealPath, \realpath($controller->getGenericPartsRoot()));
     }
 
     /**
