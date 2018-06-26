@@ -18,7 +18,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     {
         $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
         $expectedDocumentRoot = \realpath($this->getDocumentRoot());
-        self::assertFileExists($expectedDocumentRoot);
+        self::assertFileExists($expectedDocumentRoot, 'No real path found from document root ' . $this->getDocumentRoot());
         self::assertSame($expectedDocumentRoot, \realpath($controller->getDocumentRoot()));
     }
 
@@ -29,7 +29,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     {
         $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
         $expectedPassedWebRoot = \realpath($this->getDocumentRoot() . '/web/passed');
-        self::assertFileExists($expectedPassedWebRoot);
+        self::assertFileExists($expectedPassedWebRoot, 'No real path found from passed web root ' . $this->getDocumentRoot());
         self::assertSame($expectedPassedWebRoot, \realpath($controller->getWebRoot()), "Unexpected {$controller->getWebRoot()}");
     }
 
@@ -40,7 +40,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     {
         $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
         $expectedGenericPartsRoot = \realpath($this->getDocumentRoot() . '/parts/rules-skeleton');
-        self::assertFileExists($expectedGenericPartsRoot);
+        self::assertFileExists($expectedGenericPartsRoot, 'No real path found from rules skeleton ' . $this->getDocumentRoot());
         self::assertSame($expectedGenericPartsRoot, \realpath($controller->getGenericPartsRoot()));
     }
 
