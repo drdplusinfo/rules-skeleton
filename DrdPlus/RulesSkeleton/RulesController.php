@@ -56,7 +56,7 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
     public function getUsagePolicy(): UsagePolicy
     {
         if ($this->usagePolicy === null) {
-            $this->usagePolicy = new UsagePolicy(\basename($this->getDocumentRoot()), $this->getRequest());
+            $this->usagePolicy = new UsagePolicy(\basename(\realpath($this->getDocumentRoot())), $this->getRequest());
         }
 
         return $this->usagePolicy;

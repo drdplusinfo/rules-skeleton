@@ -10,6 +10,11 @@ $controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController(
         $documentRoot,
         $webRoot ?? $documentRoot . '/web/passed' // pass.php will change it to /web/pass if access is not allowed yet
     );
+if (!\is_a($controller, \DrdPlus\RulesSkeleton\RulesController::class)) {
+    throw new \LogicException('Invalid controller class, expected ' . \DrdPlus\RulesSkeleton\RulesController::class
+        . ' or descendant, got ' . \get_class($controller)
+    );
+}
 
 $vendorRoot = $controller->getVendorRoot();
 $webRoot = $controller->getWebRoot();
