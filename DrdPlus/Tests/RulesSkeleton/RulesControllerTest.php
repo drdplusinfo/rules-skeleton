@@ -40,7 +40,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     {
         $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
         $expectedGenericPartsRoot = \realpath($this->getDocumentRoot() . '/parts/rules-skeleton');
-        self::assertFileExists($expectedGenericPartsRoot, 'No real path found from rules skeleton ' . $this->getDocumentRoot());
+        self::assertFileExists($expectedGenericPartsRoot, 'No real path found from rules skeleton parts dir ' . $this->getDocumentRoot());
         self::assertSame($expectedGenericPartsRoot, \realpath($controller->getGenericPartsRoot()));
     }
 
