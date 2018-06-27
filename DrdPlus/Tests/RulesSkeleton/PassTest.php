@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\Tests\FrontendSkeleton\AbstractContentTest;
+use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
 use DrdPlus\Tests\FrontendSkeleton\RequestTest;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
@@ -12,7 +12,7 @@ use Gt\Dom\HTMLDocument;
 class PassTest extends AbstractContentTest
 {
 
-    use AbstractContentTestTrait;
+    use Partials\AbstractContentTestTrait;
 
     /**
      * @test

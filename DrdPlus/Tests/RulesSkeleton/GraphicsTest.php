@@ -6,7 +6,7 @@ namespace DrdPlus\Tests\RulesSkeleton;
  */
 class GraphicsTest extends \DrdPlus\Tests\FrontendSkeleton\GraphicsTest
 {
-    use AbstractContentTestTrait;
+    use Partials\AbstractContentTestTrait;
 
     /**
      * @test

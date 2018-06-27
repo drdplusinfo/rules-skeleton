@@ -1,16 +1,19 @@
 <?php
-namespace DrdPlus\Tests\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
 use DeviceDetector\Parser\Bot;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
+use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
 use Gt\Dom\HTMLDocument;
 use Mockery\MockInterface;
 
 /**
  * @method string getDocumentRoot
  * @method TestsConfiguration getTestsConfiguration
+ * @method static assertTrue($value, $message = '')
+ * @method static assertFalse($value, $message = '')
  * @method static assertNotSame($expected, $actual)
  * @method static fail($message)
  */

@@ -1,13 +1,13 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\Tests\FrontendSkeleton\AbstractContentTest;
+use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 
 class CoveredPartsCanBeHiddenTest extends AbstractContentTest
 {
-    use AbstractContentTestTrait;
+    use Partials\AbstractContentTestTrait;
 
     /**
      * @test

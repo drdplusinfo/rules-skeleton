@@ -8,7 +8,7 @@ use DrdPlus\RulesSkeleton\HtmlHelper;
 
 class HtmlHelperTest extends \DrdPlus\Tests\FrontendSkeleton\HtmlHelperTest
 {
-    use AbstractContentTestTrait;
+    use Partials\AbstractContentTestTrait;
 
     /**
      * @test

@@ -10,7 +10,7 @@ use DrdPlus\RulesSkeleton\UsagePolicy;
 
 class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendControllerTest
 {
-    use AbstractContentTestTrait;
+    use Partials\AbstractContentTestTrait;
 
     /**
      * @test

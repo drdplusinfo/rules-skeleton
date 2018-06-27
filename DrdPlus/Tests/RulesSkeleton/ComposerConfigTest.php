@@ -6,7 +6,7 @@ namespace DrdPlus\Tests\RulesSkeleton;
  */
 class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigTest
 {
-    use AbstractContentTestTrait;
+    use Partials\AbstractContentTestTrait;
 
     /**
      * @test

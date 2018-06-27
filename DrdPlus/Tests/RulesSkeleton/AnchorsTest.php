@@ -10,7 +10,7 @@ use Gt\Dom\Element;
 class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 {
 
-    use AbstractContentTestTrait;
+    use Partials\AbstractContentTestTrait;
 
     protected function getPostDataToFetchContent(bool $isDrdPlus): array
     {

@@ -6,7 +6,7 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 class ContentTest extends \DrdPlus\Tests\FrontendSkeleton\ContentTest
 {
-    use AbstractContentTestTrait;
+    use Partials\AbstractContentTestTrait;
 
     /**
      * @test
