@@ -9,13 +9,11 @@ use Granam\Strict\Object\StrictObject;
 
 class UsagePolicy extends StrictObject
 {
-    /**
-     * @var string
-     */
+    public const TRIAL_EXPIRED_AT = 'trialExpiredAt';
+
+    /** @var string */
     private $articleName;
-    /**
-     * @var Request
-     */
+    /** @var Request */
     private $request;
 
     /**
@@ -104,7 +102,7 @@ class UsagePolicy extends StrictObject
 
     public function getTrialExpiredAtName(): string
     {
-        return 'trialExpiredAt';
+        return static::TRIAL_EXPIRED_AT;
     }
 
     /**
@@ -120,6 +118,6 @@ class UsagePolicy extends StrictObject
     public function trialJustExpired(): bool
     {
         // expired before 5 seconds or less
-        return !empty($_GET['trialExpiredAt']) && ((int)$_GET['trialExpiredAt'] + 5) >= \time();
+        return !empty($_GET[static::TRIAL_EXPIRED_AT]) && ((int)$_GET[static::TRIAL_EXPIRED_AT] + 5) >= \time();
     }
 }

@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfiguration
+use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
+
+class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfiguration implements TestsConfigurationReader
 {
-    public const HAS_PROTECTED_ACCESS = 'has_protected_access';
-    public const CAN_BE_BOUGHT_ON_ESHOP = 'can_be_bought_on_eshop';
-    public const HAS_CHARACTER_SHEET = 'has_character_sheet';
-    public const HAS_LINKS_TO_JOURNALS = 'has_links_to_journals';
-    public const HAS_LINK_TO_SINGLE_JOURNAL = 'has_link_to_single_journal';
-    public const HAS_AUTHORS = 'has_authors';
+    protected const LICENCE_BY_ACCESS = '*by access*';
+    protected const LICENCE_MIT = 'MIT';
+    protected const LICENCE_PROPRIETARY = 'proprietary';
 
     // every setting SHOULD be strict (expecting instead of ignoring)
 
@@ -48,6 +47,8 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
 </div>
 HTML
     ];
+    /** @var string */
+    private $expectedLicence = '*by access*';
 
     /**
      * @param string $publicUrl
@@ -232,6 +233,31 @@ HTML
     public function setBlockNamesToExpectedContent(array $blockNamesToExpectedContent): TestsConfiguration
     {
         $this->blockNamesToExpectedContent = $blockNamesToExpectedContent;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpectedLicence(): string
+    {
+        if ($this->expectedLicence !== self::LICENCE_BY_ACCESS) {
+            return $this->expectedLicence;
+        }
+
+        return $this->hasProtectedAccess()
+            ? self::LICENCE_PROPRIETARY
+            : self::LICENCE_MIT;
+    }
+
+    /**
+     * @param string $expectedLicence
+     * @return TestsConfiguration
+     */
+    public function setExpectedLicence(string $expectedLicence): TestsConfiguration
+    {
+        $this->expectedLicence = $expectedLicence;
 
         return $this;
     }

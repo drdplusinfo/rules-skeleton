@@ -53,4 +53,19 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
     {
         $this->createSut('http://example.com');
     }
+
+    /**
+     * @test
+     */
+    public function I_will_get_expected_licence_by_access_by_default(): void
+    {
+        $testsConfiguration = $this->createSut();
+        self::assertTrue($testsConfiguration->hasProtectedAccess());
+        self::assertSame('proprietary', $testsConfiguration->getExpectedLicence(), 'Expected proprietary licence for protected access');
+        $testsConfiguration->disableHasProtectedAccess();
+        self::assertFalse($testsConfiguration->hasProtectedAccess());
+        self::assertSame('MIT', $testsConfiguration->getExpectedLicence(), 'Expected MIT licence for free access');
+        $testsConfiguration->setExpectedLicence('foo');
+        self::assertSame('foo', $testsConfiguration->getExpectedLicence());
+    }
 }
