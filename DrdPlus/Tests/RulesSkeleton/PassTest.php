@@ -1,6 +1,7 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
 use DrdPlus\Tests\FrontendSkeleton\RequestTest;
 use Gt\Dom\Element;
@@ -95,5 +96,20 @@ class PassTest extends AbstractContentTest
                 'Expected rules content for a crawler, skipping ownership confirmation page'
             );
         }
+    }
+
+    /**
+     * @test
+     */
+    public function I_see_message_about_trial_expiration_if_happens(): void
+    {
+        $this->passOut();
+        $warningsOnFirstVisit = $this->getHtmlDocument()->getElementsByClassName('warning');
+        self::assertCount(0, $warningsOnFirstVisit, 'No warnings expected so far');
+        $warningsOnTrialExpiration = $this->getHtmlDocument('', [UsagePolicy::TRIAL_EXPIRED_AT => time() - 1])->getElementsByClassName('warning');
+        self::assertCount(1, $warningsOnTrialExpiration, 'Expected single warning about trial expiration');
+        /** @var Element $warningAboutTrialExpiration */
+        $warningAboutTrialExpiration = $warningsOnTrialExpiration->current();
+        self::assertSame('⌛ Čas tvého testování se naplnil ⌛', $warningAboutTrialExpiration->textContent);
     }
 }
