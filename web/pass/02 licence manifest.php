@@ -7,15 +7,16 @@ $webName = $controller->getWebName();
 $eShopUrl = $controller->getEshopUrl();
 ?>
 <div class="row">
-  <form class="manifest trial" action="" method="post">
+  <form class="manifest trial" action="/" method="post">
     <div class="col">
       <button type="submit" id="trial" name="trial" value="trial">Juknu na <?= $webName ?></button>
     </div>
     <div class="col">
       <ul>
         <li>
-          <label for="trial">chci se na <strong><?= $webName ?></strong> jen na chvíli podívat, ať vím, o co
-            jde</label>
+          <label for="trial">
+            chci se na <strong><?= $webName ?></strong> jen na chvíli podívat, ať vím, o co jde
+          </label>
         </li>
       </ul>
     </div>
@@ -38,7 +39,7 @@ $eShopUrl = $controller->getEshopUrl();
   </form>
 </div>
 <div class="row">
-  <form class="manifest owning" action="" method="post"
+  <form class="manifest owning" action="/" method="post"
         onsubmit="return window.confirm('A klidně to potvrdím dvakrát')">
     <div class="col">
       <button type="submit" id="confirm" name="confirm" value="submit">Vlastním <?= $webName ?></button>
