@@ -36,4 +36,20 @@ class UsagePolicyTest extends TestCase
         $usagePolicy->confirmOwnershipOfVisitor($expiresAt = new \DateTime());
         self::assertSame((string)$expiresAt->getTimestamp(), $_COOKIE['confirmedOwnershipOfFoo']);
     }
+
+    /**
+     * @test
+     * @backupGlobals enabled
+     */
+    public function I_can_find_out_if_trial_expired(): void
+    {
+        $usagePolicy = new UsagePolicy('foo', new Request(new Bot()));
+        self::assertFalse($usagePolicy->trialJustExpired(), 'Did not expects trial expiration yet');
+        $_GET[UsagePolicy::TRIAL_EXPIRED_AT] = \time();
+        self::assertTrue($usagePolicy->trialJustExpired(), 'Expected trial expiration');
+        $_GET[UsagePolicy::TRIAL_EXPIRED_AT] = \time() + 2;
+        self::assertFalse($usagePolicy->trialJustExpired(), 'Did not expects trial expiration as its time is in future');
+        $_GET[UsagePolicy::TRIAL_EXPIRED_AT] = 0;
+        self::assertFalse($usagePolicy->trialJustExpired(), 'Did not expects trial expiration now');
+    }
 }

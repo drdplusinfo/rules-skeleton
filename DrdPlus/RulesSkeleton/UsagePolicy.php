@@ -117,7 +117,6 @@ class UsagePolicy extends StrictObject
 
     public function trialJustExpired(): bool
     {
-        // expired before 5 seconds or less
-        return !empty($_GET[static::TRIAL_EXPIRED_AT]) && ((int)$_GET[static::TRIAL_EXPIRED_AT] + 5) >= \time();
+        return !empty($_GET[static::TRIAL_EXPIRED_AT]) && ((int)$_GET[static::TRIAL_EXPIRED_AT]) <= \time();
     }
 }
