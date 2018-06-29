@@ -71,9 +71,12 @@ trait AbstractContentTestTrait
     protected function isSkeletonChecked(string $skeletonDocumentRoot = null): bool
     {
         $documentRootRealPath = \realpath($this->getDocumentRoot());
-        $frontendSkeletonRealPath = \realpath($skeletonDocumentRoot ?? __DIR__ . '/../../..');
+        self::assertNotEmpty($documentRootRealPath, 'Can not find out real path of document root ' . \var_export($this->getDocumentRoot(), true));
+        $skeletonRootRealPath = \realpath($skeletonDocumentRoot ?? __DIR__ . '/../../../..');
+        self::assertNotEmpty($skeletonRootRealPath, 'Can not find out real path of skeleton root ' . \var_export($skeletonRootRealPath, true));
+        self::assertSame('rules-skeleton', \basename($skeletonRootRealPath), 'Expected different trailing dir of skeleton document root');
 
-        return $documentRootRealPath === $frontendSkeletonRealPath;
+        return $documentRootRealPath === $skeletonRootRealPath;
     }
 
     protected function getPassDocument(bool $notCached = false): \DrdPlus\FrontendSkeleton\HtmlDocument

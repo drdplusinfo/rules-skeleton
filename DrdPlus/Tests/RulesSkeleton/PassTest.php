@@ -106,7 +106,8 @@ class PassTest extends AbstractContentTest
         $this->passOut();
         $warningsOnFirstVisit = $this->getHtmlDocument()->getElementsByClassName('warning');
         self::assertCount(0, $warningsOnFirstVisit, 'No warnings expected so far');
-        $warningsOnTrialExpiration = $this->getHtmlDocument('', [UsagePolicy::TRIAL_EXPIRED_AT => time() - 1])->getElementsByClassName('warning');
+        $warningsOnTrialExpiration = $this->getHtmlDocument('', [UsagePolicy::TRIAL_EXPIRED_AT => time() - 1])
+            ->getElementsByClassName('warning');
         self::assertCount(1, $warningsOnTrialExpiration, 'Expected single warning about trial expiration');
         /** @var Element $warningAboutTrialExpiration */
         $warningAboutTrialExpiration = $warningsOnTrialExpiration->current();

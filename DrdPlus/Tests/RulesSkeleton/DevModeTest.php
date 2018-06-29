@@ -13,12 +13,12 @@ class DevModeTest extends AbstractContentTest
      */
     public function I_see_content_marked_by_development_classes(): void
     {
-        $html = $this->getRulesForDevHtmlDocument();
-        if (!$this->isSkeletonChecked($html)) {
+        if (!$this->isSkeletonChecked()) {
             self::assertFalse(false, 'Intended for skeleton only');
 
             return;
         }
+        $html = $this->getRulesForDevHtmlDocument();
         self::assertGreaterThan(
             0,
             $html->getElementsByClassName('covered-by-code')->count(),

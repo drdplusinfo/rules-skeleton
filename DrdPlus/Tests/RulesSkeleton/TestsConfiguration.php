@@ -8,9 +8,9 @@ use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
 
 class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfiguration implements TestsConfigurationReader
 {
-    protected const LICENCE_BY_ACCESS = '*by access*';
-    protected const LICENCE_MIT = 'MIT';
-    protected const LICENCE_PROPRIETARY = 'proprietary';
+    public const LICENCE_BY_ACCESS = '*by access*';
+    public const LICENCE_MIT = 'MIT';
+    public const LICENCE_PROPRIETARY = 'proprietary';
 
     // every setting SHOULD be strict (expecting instead of ignoring)
 

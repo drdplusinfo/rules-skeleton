@@ -4,3 +4,4 @@ $testsConfiguration = new \DrdPlus\Tests\RulesSkeleton\TestsConfiguration('https
 $testsConfiguration->setSomeExpectedTableIds(['IAmSoAlone', 'JustSomeTable']);
 $testsConfiguration->setExpectedWebName('HTML kostra pro DrDPlus, jakoby pravidla čaroděje');
 $testsConfiguration->setExpectedPageTitle('☠️ HTML kostra pro DrDPlus, jakoby pravidla čaroděje');
+$testsConfiguration->setExpectedLicence(\DrdPlus\Tests\RulesSkeleton\TestsConfiguration::LICENCE_MIT);

@@ -1,8 +1,10 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
+
 /**
- * @method TestsConfiguration getTestsConfiguration
+ * @method TestsConfigurationReader getTestsConfiguration
  */
 class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigTest
 {
@@ -13,12 +15,8 @@ class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigT
      */
     public function Has_licence_matching_to_access(): void
     {
-        $expectedLicence = $this->isSkeletonChecked() || !$this->getTestsConfiguration()->hasProtectedAccess() ? 'MIT' : 'proprietary';
-        self::assertSame(
-            $expectedLicence,
-            static::$composerConfig['license'],
-            "Expected licence '$expectedLicence' as content is " . ($this->getTestsConfiguration()->hasProtectedAccess() ? 'not public' : 'public')
-        );
+        $expectedLicence = $this->getTestsConfiguration()->getExpectedLicence();
+        self::assertSame($expectedLicence, static::$composerConfig['license'], "Expected licence '$expectedLicence'");
     }
 
     /**

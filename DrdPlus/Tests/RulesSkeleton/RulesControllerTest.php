@@ -114,7 +114,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
             $_POST['trial'] = 1;
         } else {
             $controller = $this->createController();
-            $controller->setRedirect(new Redirect('/?trialExpiredAt=' . $trialExpiredAt, 240));
+            $controller->setRedirect(new Redirect('/?' . UsagePolicy::TRIAL_EXPIRED_AT . '=' . $trialExpiredAt, 240));
         }
         $trialContent = $this->fetchNonCachedContent($controller);
         $document = new HtmlDocument($trialContent);
