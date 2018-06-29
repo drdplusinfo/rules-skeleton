@@ -51,15 +51,15 @@ HTML
     private $expectedLicence = '*by access*';
 
     /**
+     * @param string $localUrl
      * @param string $publicUrl
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidPublicUrl
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\PublicUrlShouldUseHttps
      */
-    public function __construct(string $publicUrl)
+    public function __construct(string $localUrl, string $publicUrl)
     {
-        if (!\filter_var($publicUrl, FILTER_VALIDATE_URL)) {
-            throw new Exceptions\InvalidPublicUrl("Given public URL is not valid: '$publicUrl'");
-        }
+        parent::__construct($localUrl);
+        $this->guardValidUrl($publicUrl);
         if (\strpos($publicUrl, 'https://') !== 0) {
             throw new Exceptions\PublicUrlShouldUseHttps("Given public URL should use HTTPS: '$publicUrl'");
         }
