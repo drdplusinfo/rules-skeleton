@@ -182,6 +182,7 @@ trait AbstractContentTestTrait
     protected function getRulesContentForDev(string $show = '', string $hide = ''): string
     {
         if (empty(self::$rulesContentForDev[$show][$hide])) {
+            $originalGet = $_GET;
             $this->passIn();
             $_GET['mode'] = 'dev';
             if ($show !== '') {
@@ -194,7 +195,7 @@ trait AbstractContentTestTrait
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
             self::$rulesContentForDev[$show][$hide] = \ob_get_clean();
-            unset($_GET['mode'], $_GET['show'], $_GET['hide']);
+            $_GET = $originalGet;
             self::assertNotSame($this->getPassContent(), self::$rulesContentForDev[$show]);
         }
 

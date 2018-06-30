@@ -16,7 +16,10 @@ class IntroductionModeTest extends AbstractContentTest
      */
     public function I_can_get_introduction_only(): void
     {
-        $documents = ['standard' => $this->getHtmlDocument('introduction'), 'dev' => $this->getRulesForDevHtmlDocument('introduction')];
+        $documents = [
+            'standard' => $this->getHtmlDocument(['mode' => 'introduction']),
+            'dev' => $this->getRulesForDevHtmlDocument('introduction')
+        ];
         /**
          * @var string $mode
          * @var HTMLDocument $document
@@ -90,7 +93,7 @@ class IntroductionModeTest extends AbstractContentTest
      */
     public function Every_introduction_is_direct_child_of_body(): void
     {
-        $html = $this->getHtmlDocument('introduction');
+        $html = $this->getHtmlDocument(['mode' => 'introduction']);
         self::assertGreaterThan(0, $html->children->count());
         $body = $html->body;
         self::assertGreaterThan(0, $body->children->length, 'No introduction found');
@@ -115,7 +118,7 @@ class IntroductionModeTest extends AbstractContentTest
      */
     public function I_see_only_single_delimiter_of_blocks(): void
     {
-        $content = $this->getContent('introduction');
+        $content = $this->getContent(['mode' => 'introduction']);
         self::assertNotRegExp(
             '~(\s*<img [^>]*class="delimiter"[^>]*>){2,}~',
             $content,

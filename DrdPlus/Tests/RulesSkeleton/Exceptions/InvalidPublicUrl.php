@@ -1,7 +1,9 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton\Exceptions;
 
-class InvalidPublicUrl extends \InvalidArgumentException
+use DrdPlus\Tests\FrontendSkeleton\Exceptions\InvalidUrl;
+
+class InvalidPublicUrl extends InvalidUrl implements Logic
 {
 
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\Tests\FrontendSkeleton\Exceptions\InvalidUrl;
 use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
 
 class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfiguration implements TestsConfigurationReader
@@ -53,13 +54,22 @@ HTML
     /**
      * @param string $localUrl
      * @param string $publicUrl
+     * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidLocalUrl
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidPublicUrl
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\PublicUrlShouldUseHttps
      */
     public function __construct(string $localUrl, string $publicUrl)
     {
-        parent::__construct($localUrl);
-        $this->guardValidUrl($publicUrl);
+        try {
+            parent::__construct($localUrl);
+        } catch (InvalidUrl $invalidUrl) {
+            throw new Exceptions\InvalidLocalUrl("Given local URL is not valid: '$localUrl'");
+        }
+        try {
+            $this->guardValidUrl($publicUrl);
+        } catch (InvalidUrl $invalidUrl) {
+            throw new Exceptions\InvalidPublicUrl("Given public URL is not valid: '$publicUrl'");
+        }
         if (\strpos($publicUrl, 'https://') !== 0) {
             throw new Exceptions\PublicUrlShouldUseHttps("Given public URL should use HTTPS: '$publicUrl'");
         }

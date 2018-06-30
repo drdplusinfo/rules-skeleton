@@ -2,7 +2,7 @@
 $documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER['SCRIPT_FILENAME']), '\/') : \getcwd());
 $vendorRoot = $vendorRoot ?? $documentRoot . '/vendor';
 
-if (!require $vendorRoot . '/drd-plus/frontend-skeleton/parts/frontend-skeleton/solve_version.php') {
+if (!require __DIR__ . '/parts/rules-skeleton/solve_version.php') {
 
     require_once $vendorRoot . '/autoload.php';
 
