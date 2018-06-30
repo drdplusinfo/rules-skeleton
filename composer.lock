@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "728d8795592a6ab683bc953c4db8a701c1ed7391"
+                "reference": "b56139c4e194bea33a8a3c72107ff4cf94c0c983"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/728d8795592a6ab683bc953c4db8a701c1ed7391",
-                "reference": "728d8795592a6ab683bc953c4db8a701c1ed7391",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/b56139c4e194bea33a8a3c72107ff4cf94c0c983",
+                "reference": "b56139c4e194bea33a8a3c72107ff4cf94c0c983",
                 "shasum": ""
             },
             "require": {
@@ -59,7 +59,7 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-06-29 14:57:39"
+            "time": "2018-06-29 15:59:01"
         },
         {
             "name": "granam/exceptions-hierarchy",
