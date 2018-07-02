@@ -12,6 +12,25 @@ class HtmlHelperTest extends \DrdPlus\Tests\FrontendSkeleton\HtmlHelperTest
 
     /**
      * @test
+     * @dataProvider providePublicAndLocalLinks
+     * @param string $publicLink
+     * @param string $expectedLocalLink
+     */
+    public function I_can_turn_public_link_to_local(string $publicLink, string $expectedLocalLink): void
+    {
+        self::assertSame($expectedLocalLink, HtmlHelper::turnToLocalLink($publicLink));
+    }
+
+    public function providePublicAndLocalLinks(): array
+    {
+        return [
+            ['https://www.drdplus.info', 'http://www.drdplus.loc'],
+            ['https://hranicar.drdplus.info', 'http://hranicar.drdplus.loc'],
+        ];
+    }
+
+    /**
+     * @test
      */
     public function I_can_get_html_document_with_block(): void
     {

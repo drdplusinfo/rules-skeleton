@@ -61,10 +61,14 @@ HTML
     public function __construct(string $localUrl, string $publicUrl)
     {
         try {
-            parent::__construct($localUrl);
+            $this->guardValidUrl($localUrl);
         } catch (InvalidUrl $invalidUrl) {
             throw new Exceptions\InvalidLocalUrl("Given local URL is not valid: '$localUrl'");
         }
+        if (!$this->isLocalLinkAccessible($localUrl)) {
+            throw new Exceptions\InvalidLocalUrl("Given local URL can not be reached or is not local: '$localUrl'");
+        }
+        parent::__construct($localUrl);
         try {
             $this->guardValidUrl($publicUrl);
         } catch (InvalidUrl $invalidUrl) {
@@ -74,6 +78,15 @@ HTML
             throw new Exceptions\PublicUrlShouldUseHttps("Given public URL should use HTTPS: '$publicUrl'");
         }
         $this->publicUrl = $publicUrl;
+    }
+
+    protected function isLocalLinkAccessible(string $localUrl): bool
+    {
+        $host = \parse_url($localUrl, \PHP_URL_HOST);
+
+        return $host !== false
+            && !\filter_var($host, \FILTER_VALIDATE_IP)
+            && \gethostbyname($host) === '127.0.0.1';
     }
 
     /**

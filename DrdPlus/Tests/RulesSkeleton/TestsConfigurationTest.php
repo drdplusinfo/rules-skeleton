@@ -14,7 +14,7 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
      * @param string $publicUrl
      * @return \DrdPlus\Tests\FrontendSkeleton\TestsConfiguration|TestsConfiguration
      */
-    protected function createSut(string $localUrl = 'http://local.loc', string $publicUrl = 'https://example.com'): \DrdPlus\Tests\FrontendSkeleton\TestsConfiguration
+    protected function createSut(string $localUrl = 'http://drdplus.loc', string $publicUrl = 'https://example.com'): \DrdPlus\Tests\FrontendSkeleton\TestsConfiguration
     {
         $sutClass = $this->getSutClass();
 
@@ -31,8 +31,8 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
      */
     public function I_can_set_and_get_local_and_public_url(): void
     {
-        $testsConfiguration = $this->createSut('http://local.loc', 'https://public.com');
-        self::assertSame('http://local.loc', $testsConfiguration->getLocalUrl());
+        $testsConfiguration = $this->createSut('http://drdplus.loc', 'https://public.com');
+        self::assertSame('http://drdplus.loc', $testsConfiguration->getLocalUrl());
         self::assertSame('https://public.com', $testsConfiguration->getPublicUrl());
     }
 
@@ -43,7 +43,7 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
      */
     public function I_can_not_create_it_with_invalid_local_url(): void
     {
-        $this->createSut('local.loc'); // missing protocol
+        $this->createSut('drdplus.loc'); // missing protocol
     }
 
     /**
@@ -53,7 +53,7 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
      */
     public function I_can_not_create_it_with_invalid_public_url(): void
     {
-        $this->createSut('http://local.loc', 'example.com'); // missing protocol
+        $this->createSut('http://drdplus.loc', 'example.com'); // missing protocol
     }
 
     /**
@@ -63,7 +63,7 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
      */
     public function I_can_not_create_it_with_public_url_without_https(): void
     {
-        $this->createSut('http://local.loc', 'http://example.com');
+        $this->createSut('http://drdplus.loc', 'http://example.com');
     }
 
     /**

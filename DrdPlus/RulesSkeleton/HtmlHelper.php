@@ -9,6 +9,17 @@ use DrdPlus\FrontendSkeleton\HtmlDocument;
  */
 class HtmlHelper extends \DrdPlus\FrontendSkeleton\HtmlHelper
 {
+
+    /**
+     * Turn link into local version
+     * @param string $link
+     * @return string
+     */
+    public static function turnToLocalLink(string $link): string
+    {
+        return \preg_replace('~https?://((?:[[:alnum:]]+\.)*)drdplus\.info~', 'http://$1drdplus.loc', $link);
+    }
+
     /**
      * @param string $blockName
      * @param HtmlDocument $document
@@ -26,4 +37,5 @@ class HtmlHelper extends \DrdPlus\FrontendSkeleton\HtmlHelper
 
         return $documentWithBlock;
     }
+
 }
