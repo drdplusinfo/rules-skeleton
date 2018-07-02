@@ -4,11 +4,12 @@ namespace DrdPlus\Tests\RulesSkeleton;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
 use DrdPlus\Tests\FrontendSkeleton\RequestTest;
+use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 
 /**
- * @method TestsConfiguration getTestsConfiguration
+ * @method TestsConfigurationReader getTestsConfiguration
  */
 class PassTest extends AbstractContentTest
 {
@@ -103,6 +104,11 @@ class PassTest extends AbstractContentTest
      */
     public function I_see_message_about_trial_expiration_if_happens(): void
     {
+        if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
+            self::assertFalse(false, 'Free content does not have trial');
+
+            return;
+        }
         $this->passOut();
         $warningsOnFirstVisit = $this->getHtmlDocument()->getElementsByClassName('warning');
         self::assertCount(0, $warningsOnFirstVisit, 'No warnings expected so far');
