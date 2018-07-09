@@ -9,6 +9,7 @@ use DrdPlus\FrontendSkeleton\HtmlDocument;
  */
 class HtmlHelper extends \DrdPlus\FrontendSkeleton\HtmlHelper
 {
+    public const CONTENT_CLASS = 'content';
 
     /**
      * Turn link into local version
