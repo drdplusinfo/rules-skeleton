@@ -1,6 +1,7 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\String\StringTools;
 use Gt\Dom\Element;
 
@@ -209,4 +210,24 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
         }
     }
 
+    /**
+     * @test
+     */
+    public function Calculation_has_descriptive_name(): void
+    {
+        $document = $this->getHtmlDocument();
+        $calculations = $document->getElementsByClassName(HtmlHelper::CALCULATION_CLASS);
+        if (\count($calculations) === 0 && !$this->isSkeletonChecked()) {
+            self::assertFalse(false, 'No calculations in current document');
+
+            return;
+        }
+        self::assertNotEmpty($calculations);
+        foreach ($calculations as $calculation) {
+            $parts = \explode('=', $calculation->textContent ?? '');
+            $resultName = \trim($parts[0] ?? '');
+            self::assertNotSame('Bonus', $resultName, "Expected more specific name of bonus for calculation\n$calculation->outerHTML");
+            self::assertNotSame('Postih', $resultName, "Expected more specific name of malus for calculation\n$calculation->outerHTML   ");
+        }
+    }
 }

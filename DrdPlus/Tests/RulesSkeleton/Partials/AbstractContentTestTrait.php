@@ -14,7 +14,7 @@ use Mockery\MockInterface;
  * @method TestsConfiguration getTestsConfiguration
  * @method static assertTrue($value, $message = '')
  * @method static assertFalse($value, $message = '')
- * @method static assertNotSame($expected, $actual)
+ * @method static assertNotSame($expected, $actual, $message = '')
  * @method static fail($message)
  */
 trait AbstractContentTestTrait
