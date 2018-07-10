@@ -51,6 +51,17 @@ class CalculationsTest extends AbstractContentTest
      */
     public function Result_content_trap_has_descriptive_name(): void
     {
+        $tooShortFailureNames = $this->getTestsConfiguration()->getTooShortFailureNames();
+        $tooShortSuccessNames = $this->getTestsConfiguration()->getTooShortSuccessNames();
+        if (!$tooShortFailureNames && !$tooShortSuccessNames && !$this->isSkeletonChecked()) {
+            self::assertFalse(false, 'Nothing to test here');
+
+            return;
+        }
+        self::assertNotEmpty($tooShortFailureNames, 'Expected some too short failure names for skeleton tests');
+        self::assertNotEmpty($tooShortSuccessNames, 'Expected some too short success names for skeleton tests');
+        $tooShortFailureNamesRegexp = $this->implodeForRegexpOr($tooShortFailureNames);
+        $tooShortSuccessNamesRegexp = $this->implodeForRegexpOr($tooShortSuccessNames);
         $contents = [];
         foreach ($this->getCalculations() as $calculation) {
             foreach ($calculation->getElementsByClassName(HtmlHelper::CONTENT_CLASS) as $contentsFromCalculation) {
@@ -74,9 +85,19 @@ class CalculationsTest extends AbstractContentTest
                 }
             }
             $failName = \strtolower(\trim($parts[0] ?? ''));
-            self::assertNotSame('nevšiml si', $failName, "Expected more specific name of failure for content\n$content->outerHTML");
-            $successName = \strtolower(\trim($parts[2] ?? ''));
-            self::assertNotSame('všiml si', $successName, "Expected more specific name of success for content\n$content->outerHTML");
+            self::assertRegExp("~($tooShortFailureNamesRegexp)~", $failName, "Expected more specific name of failure for content\n$content->outerHTML");
+            $tooShortSuccessNames = \strtolower(\trim($parts[2] ?? ''));
+            self::assertRegExp("~($tooShortSuccessNamesRegexp)~", $tooShortSuccessNames, "Expected more specific name of success for content\n$content->outerHTML");
         }
+    }
+
+    private function implodeForRegexpOr(array $values, string $delimiter = '~'): string
+    {
+        $regexpParts = [];
+        foreach ($values as $value) {
+            $regexpParts[] = \preg_quote($value, $delimiter);
+        }
+
+        return \implode('|', $regexpParts);
     }
 }

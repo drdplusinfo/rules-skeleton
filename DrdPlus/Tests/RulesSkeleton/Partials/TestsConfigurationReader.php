@@ -24,4 +24,8 @@ interface TestsConfigurationReader extends \DrdPlus\Tests\FrontendSkeleton\Parti
     public function getBlockNamesToExpectedContent(): array;
 
     public function getExpectedLicence(): string;
+
+    public function getTooShortFailureNames(): array;
+
+    public function getTooShortSuccessNames(): array;
 }

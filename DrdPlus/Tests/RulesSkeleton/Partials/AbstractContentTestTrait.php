@@ -11,7 +11,7 @@ use Mockery\MockInterface;
 
 /**
  * @method string getDocumentRoot
- * @method TestsConfiguration getTestsConfiguration
+ * @method TestsConfigurationReader getTestsConfiguration
  * @method static assertTrue($value, $message = '')
  * @method static assertFalse($value, $message = '')
  * @method static assertNotSame($expected, $actual, $message = '')

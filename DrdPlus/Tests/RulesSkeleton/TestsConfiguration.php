@@ -50,6 +50,10 @@ HTML
     ];
     /** @var string */
     private $expectedLicence = '*by access*';
+    /** @var array|string[] */
+    private $tooShortFailureNames = [];
+    /** @var array|string[] */
+    private $tooShortSuccessNames = [];
 
     /**
      * @param string $localUrl
@@ -281,6 +285,58 @@ HTML
     public function setExpectedLicence(string $expectedLicence): TestsConfiguration
     {
         $this->expectedLicence = $expectedLicence;
+
+        return $this;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getTooShortFailureNames(): array
+    {
+        return $this->tooShortFailureNames;
+    }
+
+    /**
+     * @param array|string[] $tooShortFailureNames
+     * @return TestsConfiguration
+     */
+    public function setTooShortFailureNames(array $tooShortFailureNames): TestsConfiguration
+    {
+        $this->tooShortFailureNames = $tooShortFailureNames;
+
+        return $this;
+    }
+
+    public function addTooShortFailureName(string $tooShortFailureName): TestsConfiguration
+    {
+        $this->tooShortFailureNames[] = $tooShortFailureName;
+
+        return $this;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getTooShortSuccessNames(): array
+    {
+        return $this->tooShortSuccessNames;
+    }
+
+    /**
+     * @param array|string[] $tooShortSuccessNames
+     * @return TestsConfiguration
+     */
+    public function setTooShortSuccessNames(array $tooShortSuccessNames): TestsConfiguration
+    {
+        $this->tooShortSuccessNames = $tooShortSuccessNames;
+
+        return $this;
+    }
+
+    public function addTooShortSuccessName(string $tooShortSuccessName): TestsConfiguration
+    {
+        $this->tooShortSuccessNames[] = $tooShortSuccessName;
 
         return $this;
     }
