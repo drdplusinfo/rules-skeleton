@@ -54,6 +54,8 @@ HTML
     private $tooShortFailureNames = [];
     /** @var array|string[] */
     private $tooShortSuccessNames = [];
+    /** @var array|string[] */
+    private $tooShortResultNames = [];
 
     /**
      * @param string $localUrl
@@ -337,6 +339,32 @@ HTML
     public function addTooShortSuccessName(string $tooShortSuccessName): TestsConfiguration
     {
         $this->tooShortSuccessNames[] = $tooShortSuccessName;
+
+        return $this;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getTooShortResultNames(): array
+    {
+        return $this->tooShortResultNames;
+    }
+
+    /**
+     * @param array|string[] $tooShortResultNames
+     * @return TestsConfiguration
+     */
+    public function setTooShortResultNames(array $tooShortResultNames): TestsConfiguration
+    {
+        $this->tooShortResultNames = $tooShortResultNames;
+
+        return $this;
+    }
+
+    public function addTooShortResultName(string $tooShortResultName): TestsConfiguration
+    {
+        $this->tooShortResultNames[] = $tooShortResultName;
 
         return $this;
     }

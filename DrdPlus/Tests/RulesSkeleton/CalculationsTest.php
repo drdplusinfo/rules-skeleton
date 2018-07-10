@@ -19,12 +19,29 @@ class CalculationsTest extends AbstractContentTest
      */
     public function Calculation_has_descriptive_name(): void
     {
+        $tooShortResultNames = $this->getTestsConfiguration()->getTooShortResultNames();
+        if (!$tooShortResultNames && !$this->isSkeletonChecked()) {
+            self::assertFalse(false, 'Nothing to test here');
+
+            return;
+        }
+        self::assertNotEmpty($tooShortResultNames, 'Expected some too short names of results for skeleton tests');
+        $tooShortResultNamesRegexp = $this->implodeForRegexpOr($tooShortResultNames);
         foreach ($this->getCalculations() as $calculation) {
             $parts = \explode('=', $calculation->textContent ?? '');
             $resultName = \trim($parts[0] ?? '');
-            self::assertNotSame('Bonus', $resultName, "Expected more specific name of bonus for calculation\n$calculation->outerHTML");
-            self::assertNotSame('Postih', $resultName, "Expected more specific name of malus for calculation\n$calculation->outerHTML");
+            self::assertNotRegExp("~^($tooShortResultNamesRegexp)$~i", $resultName, "Expected more specific name of result in calculation\n$calculation->outerHTML");
         }
+    }
+
+    private function implodeForRegexpOr(array $values, string $delimiter = '~'): string
+    {
+        $regexpParts = [];
+        foreach ($values as $value) {
+            $regexpParts[] = \preg_quote($value, $delimiter);
+        }
+
+        return \implode('|', $regexpParts);
     }
 
     /**
@@ -85,19 +102,9 @@ class CalculationsTest extends AbstractContentTest
                 }
             }
             $failName = \strtolower(\trim($parts[0] ?? ''));
-            self::assertRegExp("~($tooShortFailureNamesRegexp)~", $failName, "Expected more specific name of failure for content\n$content->outerHTML");
+            self::assertNotRegExp("~^($tooShortFailureNamesRegexp)$~i", $failName, "Expected more specific name of failure for content\n$content->outerHTML");
             $tooShortSuccessNames = \strtolower(\trim($parts[2] ?? ''));
-            self::assertRegExp("~($tooShortSuccessNamesRegexp)~", $tooShortSuccessNames, "Expected more specific name of success for content\n$content->outerHTML");
+            self::assertNotRegExp("~^($tooShortSuccessNamesRegexp)$~i", $tooShortSuccessNames, "Expected more specific name of success for content\n$content->outerHTML");
         }
-    }
-
-    private function implodeForRegexpOr(array $values, string $delimiter = '~'): string
-    {
-        $regexpParts = [];
-        foreach ($values as $value) {
-            $regexpParts[] = \preg_quote($value, $delimiter);
-        }
-
-        return \implode('|', $regexpParts);
     }
 }
