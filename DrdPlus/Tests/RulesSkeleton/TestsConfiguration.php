@@ -312,7 +312,9 @@ HTML
 
     public function addTooShortFailureName(string $tooShortFailureName): TestsConfiguration
     {
-        $this->tooShortFailureNames[] = $tooShortFailureName;
+        if (!\in_array($tooShortFailureName, $this->tooShortFailureNames, true)) {
+            $this->tooShortFailureNames[] = $tooShortFailureName;
+        }
 
         return $this;
     }
@@ -338,7 +340,9 @@ HTML
 
     public function addTooShortSuccessName(string $tooShortSuccessName): TestsConfiguration
     {
-        $this->tooShortSuccessNames[] = $tooShortSuccessName;
+        if (!\in_array($tooShortSuccessName, $this->tooShortSuccessNames, true)) {
+            $this->tooShortSuccessNames[] = $tooShortSuccessName;
+        }
 
         return $this;
     }
@@ -364,7 +368,9 @@ HTML
 
     public function addTooShortResultName(string $tooShortResultName): TestsConfiguration
     {
-        $this->tooShortResultNames[] = $tooShortResultName;
+        if (!\in_array($tooShortResultName, $this->tooShortResultNames, true)) {
+            $this->tooShortResultNames[] = $tooShortResultName;
+        }
 
         return $this;
     }

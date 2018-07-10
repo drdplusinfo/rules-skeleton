@@ -99,6 +99,19 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
     /**
      * @test
      */
+    public function I_can_add_every_too_short_failure_name_just_once(): void
+    {
+        $testsConfiguration = $this->createSut();
+        $testsConfiguration->setTooShortFailureNames(['foo', 'bar']);
+        self::assertSame(['foo', 'bar'], $testsConfiguration->getTooShortFailureNames());
+        $testsConfiguration->addTooShortFailureName('foo');
+        $testsConfiguration->addTooShortFailureName('bar');
+        self::assertSame(['foo', 'bar'], $testsConfiguration->getTooShortFailureNames());
+    }
+
+    /**
+     * @test
+     */
     public function I_can_add_too_short_success_names(): void
     {
         $testsConfiguration = $this->createSut();
@@ -109,6 +122,19 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
         self::assertSame(['všiml si', 'foo', 'bar'], $testsConfiguration->getTooShortSuccessNames());
         $testsConfiguration->setTooShortSuccessNames(['baz', 'qux']);
         self::assertSame(['baz', 'qux'], $testsConfiguration->getTooShortSuccessNames());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_add_every_too_short_success_name_just_once(): void
+    {
+        $testsConfiguration = $this->createSut();
+        $testsConfiguration->setTooShortSuccessNames(['foo', 'bar']);
+        self::assertSame(['foo', 'bar'], $testsConfiguration->getTooShortSuccessNames());
+        $testsConfiguration->addTooShortSuccessName('foo');
+        $testsConfiguration->addTooShortSuccessName('bar');
+        self::assertSame(['foo', 'bar'], $testsConfiguration->getTooShortSuccessNames());
     }
 
     /**
@@ -125,4 +151,18 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
         $testsConfiguration->setTooShortResultNames(['baz', 'qux']);
         self::assertSame(['baz', 'qux'], $testsConfiguration->getTooShortResultNames());
     }
+
+    /**
+     * @test
+     */
+    public function I_can_add_every_too_short_result_name_just_once(): void
+    {
+        $testsConfiguration = $this->createSut();
+        $testsConfiguration->setTooShortResultNames(['foo', 'bar']);
+        self::assertSame(['foo', 'bar'], $testsConfiguration->getTooShortResultNames());
+        $testsConfiguration->addTooShortResultName('foo');
+        $testsConfiguration->addTooShortResultName('bar');
+        self::assertSame(['foo', 'bar'], $testsConfiguration->getTooShortResultNames());
+    }
+
 }
