@@ -25,7 +25,7 @@ class CalculationsTest extends AbstractContentTest
 
             return;
         }
-        self::assertNotEmpty($tooShortResultNames, 'Expected some too short names of results for skeleton tests');
+        self::assertNotEmpty($tooShortResultNames, 'Expected some too short names of results');
         $tooShortResultNamesRegexp = $this->implodeForRegexpOr($tooShortResultNames);
         foreach ($this->getCalculations() as $calculation) {
             $parts = \explode('=', $calculation->textContent ?? '');
@@ -84,13 +84,13 @@ class CalculationsTest extends AbstractContentTest
             foreach ($calculation->getElementsByClassName(HtmlHelper::CONTENT_CLASS) as $contentsFromCalculation) {
                 $contents[] = $contentsFromCalculation;
             }
-            if (\count($contents) === 0 && !$this->isSkeletonChecked()) {
-                self::assertFalse(false, 'No content classes in current document');
-
-                return;
-            }
         }
-        self::assertNotEmpty($contents, 'Some content class inside calculation class expected for skeleton testing');
+        if (\count($contents) === 0 && !$this->isSkeletonChecked()) {
+            self::assertFalse(false, 'No content classes in current document');
+
+            return;
+        }
+        self::assertNotEmpty($contents, 'Some content class inside calculation class expected');
         foreach ($contents as $content) {
             $parts = \explode('~', $content->textContent ?? '');
             if (\count($parts) < 3) {
