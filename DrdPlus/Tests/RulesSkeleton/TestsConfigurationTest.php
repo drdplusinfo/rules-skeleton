@@ -87,11 +87,11 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
     public function I_can_add_too_short_failure_names(): void
     {
         $testsConfiguration = $this->createSut();
-        self::assertCount(0, $testsConfiguration->getTooShortFailureNames());
+        self::assertCount(1, $testsConfiguration->getTooShortFailureNames());
         $testsConfiguration->addTooShortFailureName('foo');
-        self::assertSame(['foo'], $testsConfiguration->getTooShortFailureNames());
+        self::assertSame(['nevšiml si', 'foo'], $testsConfiguration->getTooShortFailureNames());
         $testsConfiguration->addTooShortFailureName('bar');
-        self::assertSame(['foo', 'bar'], $testsConfiguration->getTooShortFailureNames());
+        self::assertSame(['nevšiml si', 'foo', 'bar'], $testsConfiguration->getTooShortFailureNames());
         $testsConfiguration->setTooShortFailureNames(['baz', 'qux']);
         self::assertSame(['baz', 'qux'], $testsConfiguration->getTooShortFailureNames());
     }
@@ -102,11 +102,11 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
     public function I_can_add_too_short_success_names(): void
     {
         $testsConfiguration = $this->createSut();
-        self::assertCount(0, $testsConfiguration->getTooShortSuccessNames());
+        self::assertCount(1, $testsConfiguration->getTooShortSuccessNames());
         $testsConfiguration->addTooShortSuccessName('foo');
-        self::assertSame(['foo'], $testsConfiguration->getTooShortSuccessNames());
+        self::assertSame(['všiml si', 'foo'], $testsConfiguration->getTooShortSuccessNames());
         $testsConfiguration->addTooShortSuccessName('bar');
-        self::assertSame(['foo', 'bar'], $testsConfiguration->getTooShortSuccessNames());
+        self::assertSame(['všiml si', 'foo', 'bar'], $testsConfiguration->getTooShortSuccessNames());
         $testsConfiguration->setTooShortSuccessNames(['baz', 'qux']);
         self::assertSame(['baz', 'qux'], $testsConfiguration->getTooShortSuccessNames());
     }
@@ -117,11 +117,11 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
     public function I_can_add_too_short_result_names(): void
     {
         $testsConfiguration = $this->createSut();
-        self::assertCount(0, $testsConfiguration->getTooShortResultNames());
+        self::assertCount(2, $testsConfiguration->getTooShortResultNames());
         $testsConfiguration->addTooShortResultName('foo');
-        self::assertSame(['foo'], $testsConfiguration->getTooShortResultNames());
+        self::assertSame(['Bonus', 'Postih', 'foo'], $testsConfiguration->getTooShortResultNames());
         $testsConfiguration->addTooShortResultName('bar');
-        self::assertSame(['foo', 'bar'], $testsConfiguration->getTooShortResultNames());
+        self::assertSame(['Bonus', 'Postih', 'foo', 'bar'], $testsConfiguration->getTooShortResultNames());
         $testsConfiguration->setTooShortResultNames(['baz', 'qux']);
         self::assertSame(['baz', 'qux'], $testsConfiguration->getTooShortResultNames());
     }

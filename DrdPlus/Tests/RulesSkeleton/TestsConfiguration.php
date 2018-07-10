@@ -51,11 +51,11 @@ HTML
     /** @var string */
     private $expectedLicence = '*by access*';
     /** @var array|string[] */
-    private $tooShortFailureNames = [];
+    private $tooShortFailureNames = ['nevšiml si'];
     /** @var array|string[] */
-    private $tooShortSuccessNames = [];
+    private $tooShortSuccessNames = ['všiml si'];
     /** @var array|string[] */
-    private $tooShortResultNames = [];
+    private $tooShortResultNames = ['Bonus', 'Postih'];
 
     /**
      * @param string $localUrl
