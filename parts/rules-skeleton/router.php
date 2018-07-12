@@ -1,6 +1,7 @@
 <?php
 /** @var \DrdPlus\RulesSkeleton\RulesController $controller */
 if (\array_key_exists('tables', $_GET) || \array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
+    /** @noinspection PhpIncludeInspection */
     echo include $controller->getGenericPartsRoot() . '/get_tables.php';
 
     return true; // routing solved
@@ -9,6 +10,7 @@ if (\array_key_exists('tables', $_GET) || \array_key_exists('tabulky', $_GET)) {
 if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !\file_exists($controller->getDocumentRoot() . '/web'))
     && \file_exists($controller->getDocumentRoot() . '/pdf') && \glob($controller->getDocumentRoot() . '/pdf/*.pdf')
 ) {
+    /** @noinspection PhpIncludeInspection */
     echo include $controller->getGenericPartsRoot() . '/get_pdf.php';
 
     return true; // routing solved

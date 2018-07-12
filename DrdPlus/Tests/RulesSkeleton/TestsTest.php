@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
 use PHPUnit\Framework\TestCase;
 
 class TestsTest extends TestCase
@@ -15,11 +14,14 @@ class TestsTest extends TestCase
      */
     public function All_frontend_skeleton_tests_are_used(): void
     {
-        $reflectionClass = new \ReflectionClass(AbstractContentTest::class);
+        $reflectionClass = new \ReflectionClass(\DrdPlus\Tests\FrontendSkeleton\ContentTest::class);
         $frontendSkeletonDir = \dirname($reflectionClass->getFileName());
         foreach ($this->getClassesFromDir($frontendSkeletonDir) as $frontendSkeletonTestClass) {
             $frontendSkeletonTestClassReflection = new \ReflectionClass($frontendSkeletonTestClass);
-            if ($frontendSkeletonTestClassReflection->isAbstract()) {
+            if ($frontendSkeletonTestClassReflection->isAbstract()
+                || $frontendSkeletonTestClassReflection->isInterface()
+                || $frontendSkeletonTestClassReflection->isSubclassOf(\Throwable::class)
+            ) {
                 continue;
             }
             $expectedRulesTestClass = \str_replace('\\FrontendSkeleton', '\\RulesSkeleton', $frontendSkeletonTestClass);
