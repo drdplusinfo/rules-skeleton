@@ -1,5 +1,6 @@
 /.idea/
 /vendor/
+/composer.lock
 /phpunit_log/
 /composer_install_result.txt
 /parts/images
