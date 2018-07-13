@@ -3,6 +3,7 @@ namespace DrdPlus\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
 use DrdPlus\FrontendSkeleton\CookiesService;
+use Granam\String\StringTools;
 
 /**
  * @method Dirs getDirs(): Dirs
@@ -50,7 +51,7 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
     {
         if ($this->usagePolicy === null) {
             $this->usagePolicy = new UsagePolicy(
-                \basename(\realpath($this->getDirs()->getDocumentRoot())),
+                StringTools::toVariableName($this->getWebName()),
                 $this->getRequest(),
                 $this->getCookiesService()
             );

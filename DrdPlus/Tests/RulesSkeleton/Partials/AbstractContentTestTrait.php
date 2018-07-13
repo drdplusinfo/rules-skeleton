@@ -6,6 +6,7 @@ use DrdPlus\FrontendSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
+use Granam\String\StringTools;
 use Gt\Dom\HTMLDocument;
 use Mockery\MockInterface;
 
@@ -127,7 +128,7 @@ trait AbstractContentTestTrait
         static $cookieName;
         if ($cookieName === null) {
             $cookieName = $this->getNameForOwnershipConfirmation(
-                \basename($this->getDirName(DRD_PLUS_INDEX_FILE_NAME_TO_TEST))
+                StringTools::toVariableName(\file_get_contents($this->getDocumentRoot() . '/name.txt'))
             );
         }
 
@@ -138,12 +139,12 @@ trait AbstractContentTestTrait
     {
         $usagePolicy = new UsagePolicy($rulesDirBasename, new Request(new Bot()), new CookiesService());
         try {
-            $reflectionClass = new \ReflectionClass(UsagePolicy::class);
+            $usagePolicyReflection = new \ReflectionClass(UsagePolicy::class);
         } catch (\ReflectionException $reflectionException) {
             self::fail($reflectionException->getMessage());
             exit;
         }
-        $getName = $reflectionClass->getMethod('getOwnershipName');
+        $getName = $usagePolicyReflection->getMethod('getOwnershipName');
         $getName->setAccessible(true);
 
         return $getName->invoke($usagePolicy);
