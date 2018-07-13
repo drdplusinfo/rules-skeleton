@@ -4,6 +4,9 @@ namespace DrdPlus\RulesSkeleton;
 use DeviceDetector\Parser\Bot;
 use DrdPlus\FrontendSkeleton\CookiesService;
 
+/**
+ * @method Dirs getDirs(): Dirs
+ */
 class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
 {
 

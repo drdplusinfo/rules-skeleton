@@ -12,7 +12,9 @@ if (!require __DIR__ . '/parts/rules-skeleton/solve_version.php') {
     /** @noinspection PhpIncludeInspection */
     require_once __DIR__ . '/parts/rules-skeleton/safe_autoload.php';
 
-    $dirs = $dirs ?? new \DrdPlus\RulesSkeleton\Dirs();
+    $dirs = !empty($dirs)
+        ? new \DrdPlus\RulesSkeleton\Dirs($dirs->getDocumentRoot())
+        : new \DrdPlus\RulesSkeleton\Dirs($documentRoot);
     $controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController(
             $googleAnalyticsId ?? 'UA-121206931-1',
             \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($dirs->getDocumentRoot()),
