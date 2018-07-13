@@ -2,10 +2,10 @@
 namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
 use DeviceDetector\Parser\Bot;
+use DrdPlus\FrontendSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
-use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
 use Gt\Dom\HTMLDocument;
 use Mockery\MockInterface;
 
@@ -32,7 +32,7 @@ trait AbstractContentTestTrait
     {
         $_COOKIE[$this->getNameForLocalOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
         $realDocumentRoot = \realpath($this->getDocumentRoot());
-        $usagePolicy = new UsagePolicy(\basename($realDocumentRoot), new Request(new Bot()));
+        $usagePolicy = new UsagePolicy(\basename($realDocumentRoot), new Request(new Bot()), new CookiesService());
         self::assertTrue(
             $usagePolicy->hasVisitorConfirmedOwnership(),
             "Ownership has not been confirmed by cookie '{$this->getNameForLocalOwnershipConfirmation()}'"
@@ -48,7 +48,7 @@ trait AbstractContentTestTrait
     {
         unset($_COOKIE[$this->getNameForLocalOwnershipConfirmation()]);
         $realDocumentRoot = \realpath($this->getDocumentRoot());
-        $usagePolicy = new UsagePolicy(\basename($realDocumentRoot), new Request(new Bot()));
+        $usagePolicy = new UsagePolicy(\basename($realDocumentRoot), new Request(new Bot()), new CookiesService());
         self::assertFalse(
             $usagePolicy->hasVisitorConfirmedOwnership(),
             "Ownership is still confirmed by cookie '{$this->getNameForLocalOwnershipConfirmation()}'"
@@ -136,7 +136,7 @@ trait AbstractContentTestTrait
 
     protected function getNameForOwnershipConfirmation(string $rulesDirBasename): string
     {
-        $usagePolicy = new UsagePolicy($rulesDirBasename, new Request(new Bot()));
+        $usagePolicy = new UsagePolicy($rulesDirBasename, new Request(new Bot()), new CookiesService());
         try {
             $reflectionClass = new \ReflectionClass(UsagePolicy::class);
         } catch (\ReflectionException $reflectionException) {

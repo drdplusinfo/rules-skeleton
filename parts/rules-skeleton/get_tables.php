@@ -9,16 +9,15 @@ $vendorRoot = $vendorRoot ?? $documentRoot . '/vendor';
 /** @noinspection PhpIncludeInspection */
 require_once $vendorRoot . '/autoload.php';
 
-$controller = $controller
-    ?? new \DrdPlus\RulesSkeleton\RulesController(
-        \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($documentRoot),
-        $documentRoot
-    );
+/**
+ * @var \DrdPlus\RulesSkeleton\RulesController $controller
+ * @var \DrdPlus\RulesSkeleton\HtmlHelper $htmlHelper
+ */
 $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache(
     $controller->getCacheRoot(),
     $controller->getWebVersions(),
     $htmlHelper->isInProduction(),
-    $controller->getWebRoot()
+    $controller->getDirs()->getWebRoot()
 );
 $controller->setFreeAccess();
 if ($tablesCache->isCacheValid()) {

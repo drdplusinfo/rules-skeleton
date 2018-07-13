@@ -2,16 +2,16 @@
 /** @var \DrdPlus\RulesSkeleton\RulesController $controller */
 if (\array_key_exists('tables', $_GET) || \array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
     /** @noinspection PhpIncludeInspection */
-    echo include $controller->getGenericPartsRoot() . '/get_tables.php';
+    echo include $controller->getDirs()->getGenericPartsRoot() . '/get_tables.php';
 
     return true; // routing solved
 }
 
-if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !\file_exists($controller->getDocumentRoot() . '/web'))
-    && \file_exists($controller->getDocumentRoot() . '/pdf') && \glob($controller->getDocumentRoot() . '/pdf/*.pdf')
+if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !\file_exists($controller->getDirs()->getDocumentRoot() . '/web'))
+    && \file_exists($controller->getDirs()->getDocumentRoot() . '/pdf') && \glob($controller->getDirs()->getDocumentRoot() . '/pdf/*.pdf')
 ) {
     /** @noinspection PhpIncludeInspection */
-    echo include $controller->getGenericPartsRoot() . '/get_pdf.php';
+    echo include $controller->getDirs()->getGenericPartsRoot() . '/get_pdf.php';
 
     return true; // routing solved
 }
@@ -32,9 +32,9 @@ if (empty($visitorCanAccessContent) && !$controller->isFreeAccess()) { // can be
                 $visitorCanAccessContent = $controller->activateTrial((clone $now)->modify('+4 minutes'));
             }
             if (!$visitorCanAccessContent) {
-                $controller->setWebRoot(\file_exists($controller->getDocumentRoot() . '/web/pass')
-                    ? $controller->getDocumentRoot() . '/web/pass'
-                    : $controller->getVendorRoot() . '/drd-plus/rules-skeleton/web/pass'
+                $controller->getDirs()->setWebRoot(\file_exists($controller->getDirs()->getDocumentRoot() . '/web/pass')
+                    ? $controller->getDirs()->getDocumentRoot() . '/web/pass'
+                    : $controller->getDirs()->getVendorRoot() . '/drd-plus/rules-skeleton/web/pass'
                 );
                 $controller->addBodyClass('pass');
             }

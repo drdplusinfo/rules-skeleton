@@ -2,8 +2,10 @@
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
+use DrdPlus\FrontendSkeleton\CookiesService;
 use DrdPlus\FrontendSkeleton\HtmlDocument;
 use DrdPlus\FrontendSkeleton\Redirect;
+use DrdPlus\RulesSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
@@ -13,37 +15,12 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     use Partials\AbstractContentTestTrait;
 
     /**
-     * @test
+     * @param string|null $documentRoot
+     * @return \DrdPlus\FrontendSkeleton\Dirs|Dirs
      */
-    public function I_will_get_current_skeleton_root_as_default_document_root(): void
+    protected function createDirs(string $documentRoot = null): \DrdPlus\FrontendSkeleton\Dirs
     {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
-        $expectedDocumentRoot = \realpath($this->getDocumentRoot());
-        self::assertFileExists($expectedDocumentRoot, 'No real path found from document root ' . $this->getDocumentRoot());
-        self::assertSame($expectedDocumentRoot, \realpath($controller->getDocumentRoot()));
-    }
-
-    /**
-     * @test
-     */
-    public function I_will_get_current_document_root_related_passed_web_root_as_default(): void
-    {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
-        $expectedPassedWebRoot = \realpath($this->getDocumentRoot() . '/web/passed');
-        self::assertFileExists($expectedPassedWebRoot, 'No real path found from passed web root ' . $this->getDocumentRoot());
-        self::assertSame($expectedPassedWebRoot, \realpath($controller->getWebRoot()), "Unexpected {$controller->getWebRoot()}");
-    }
-
-    /**
-     * @test
-     */
-    public function I_will_get_current_skeleton_generic_parts_root_as_default(): void
-    {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
-        $expectedGenericPartsRoot = __DIR__ . '/../../../parts/rules-skeleton';
-        $expectedGenericPartsRootRealPath = \realpath(__DIR__ . '/../../../parts/rules-skeleton');
-        self::assertFileExists($expectedGenericPartsRootRealPath, 'No real path found from rules skeleton parts dir ' . $expectedGenericPartsRoot);
-        self::assertSame($expectedGenericPartsRootRealPath, \realpath($controller->getGenericPartsRoot()));
+        return new Dirs($documentRoot);
     }
 
     /**
@@ -51,7 +28,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     public function I_can_set_access_as_free_for_everyone(): void
     {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
+        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
         self::assertFalse($controller->isFreeAccess(), 'Access should be protected by default');
         self::assertSame($controller, $controller->setFreeAccess());
         self::assertTrue($controller->isFreeAccess(), 'Access should be switched to free');
@@ -62,7 +39,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     public function I_can_get_request(): void
     {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
+        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
         self::assertEquals(new Request(new Bot()), $controller->getRequest());
     }
 
@@ -71,9 +48,9 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     public function I_can_get_usage_policy(): void
     {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
+        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
         self::assertEquals(
-            new UsagePolicy(\basename(\realpath($this->getDocumentRoot())), new Request(new Bot())),
+            new UsagePolicy(\basename(\realpath($this->getDocumentRoot())), new Request(new Bot()), new CookiesService()),
             $controller->getUsagePolicy()
         );
     }
@@ -84,7 +61,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     public function I_can_activate_trial(): void
     {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper());
+        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
         $trialUntil = new \DateTime();
         $usagePolicy = $this->mockery(UsagePolicy::class);
         $usagePolicy->expects('activateTrial')
@@ -122,5 +99,14 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
         self::assertCount(1, $metaRefreshes, 'One meta tag with refresh meaning expected');
         $metaRefresh = \current($metaRefreshes);
         self::assertRegExp("~240; url=/[?]trialExpiredAt=($trialExpiredAt|$trialExpiredAtSecondAfter)~", $metaRefresh->getAttribute('content'));
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_cookies_service(): void
+    {
+        $controller = new RulesController('Google Anakytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
+        self::assertEquals(new CookiesService(), $controller->getCookiesService());
     }
 }

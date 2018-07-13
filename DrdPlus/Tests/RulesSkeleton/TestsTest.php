@@ -20,6 +20,7 @@ class TestsTest extends TestCase
             $frontendSkeletonTestClassReflection = new \ReflectionClass($frontendSkeletonTestClass);
             if ($frontendSkeletonTestClassReflection->isAbstract()
                 || $frontendSkeletonTestClassReflection->isInterface()
+                || $frontendSkeletonTestClassReflection->isTrait()
                 || $frontendSkeletonTestClassReflection->isSubclassOf(\Throwable::class)
             ) {
                 continue;

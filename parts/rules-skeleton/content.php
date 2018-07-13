@@ -1,5 +1,7 @@
 <?php
-if (require $genericPartsRoot . '/router.php') {
+/** @var \DrdPlus\RulesSkeleton\RulesController $controller */
+/** @noinspection PhpIncludeInspection */
+if (require $controller->getDirs()->getGenericPartsRoot() . '/router.php') {
     return ''; // routing solved
 }
 

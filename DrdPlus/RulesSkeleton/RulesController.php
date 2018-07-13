@@ -2,10 +2,13 @@
 namespace DrdPlus\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
+use DrdPlus\FrontendSkeleton\CookiesService;
 
 class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
 {
 
+    /** @var CookiesService */
+    private $cookiesService;
     /** @var UsagePolicy */
     private $usagePolicy;
     /** @var Request */
@@ -18,24 +21,11 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
     public function __construct(
         string $googleAnalyticsId,
         HtmlHelper $htmlHelper,
-        string $documentRoot = null,
-        string $webRoot = null,
-        string $vendorRoot = null,
-        string $partsRoot = null,
-        string $genericPartsRoot = null,
+        Dirs $dirs,
         array $bodyClasses = []
     )
     {
-        $documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER['SCRIPT_FILENAME']), '\/') : \getcwd());
-        parent::__construct(
-            $googleAnalyticsId,
-            $htmlHelper,
-            $documentRoot,
-            $webRoot ?? $documentRoot . '/web/passed', // pass.php will change it to /web/pass if access is not allowed yet
-            $vendorRoot,
-            $partsRoot,
-            $genericPartsRoot ?? __DIR__ . '/../../parts/rules-skeleton'
-        );
+        parent::__construct($googleAnalyticsId, $htmlHelper, $dirs, $bodyClasses);
     }
 
     public function setFreeAccess(): RulesController
@@ -56,10 +46,23 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
     public function getUsagePolicy(): UsagePolicy
     {
         if ($this->usagePolicy === null) {
-            $this->usagePolicy = new UsagePolicy(\basename(\realpath($this->getDocumentRoot())), $this->getRequest());
+            $this->usagePolicy = new UsagePolicy(
+                \basename(\realpath($this->getDirs()->getDocumentRoot())),
+                $this->getRequest(),
+                $this->getCookiesService()
+            );
         }
 
         return $this->usagePolicy;
+    }
+
+    public function getCookiesService(): CookiesService
+    {
+        if ($this->cookiesService === null) {
+            $this->cookiesService = new CookiesService();
+        }
+
+        return $this->cookiesService;
     }
 
     /**
@@ -80,7 +83,7 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
     public function getEshopUrl(): string
     {
         if ($this->eshopUrl === null) {
-            $eshopUrl = \trim(\file_get_contents($this->getDocumentRoot() . '/eshop_url.txt'));
+            $eshopUrl = \trim(\file_get_contents($this->getDirs()->getDocumentRoot() . '/eshop_url.txt'));
             if (!\filter_var($eshopUrl, FILTER_VALIDATE_URL)) {
                 throw new Exceptions\InvalidEshopUrl("Given e-shop URL from 'eshop_url.txt' is not valid: '$eshopUrl'");
             }

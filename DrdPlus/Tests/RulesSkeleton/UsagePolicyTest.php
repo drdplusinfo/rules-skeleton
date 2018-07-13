@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
+use DrdPlus\FrontendSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use PHPUnit\Framework\TestCase;
@@ -17,7 +18,7 @@ class UsagePolicyTest extends TestCase
      */
     public function I_can_not_create_it_without_article_name(): void
     {
-        new UsagePolicy('', new Request(new Bot()));
+        new UsagePolicy('', new Request(new Bot()), new CookiesService());
     }
 
     /**
@@ -27,7 +28,7 @@ class UsagePolicyTest extends TestCase
     public function I_can_confirm_ownership_of_visitor(): void
     {
         $_COOKIE = [];
-        $usagePolicy = new UsagePolicy('foo', new Request(new Bot()));
+        $usagePolicy = new UsagePolicy('foo', new Request(new Bot()), new CookiesService());
         self::assertNotEmpty($_COOKIE);
         self::assertSame('confirmedOwnershipOfFoo', $_COOKIE['ownershipCookieName']);
         self::assertSame('trialOfFoo', $_COOKIE['trialCookieName']);
@@ -43,7 +44,7 @@ class UsagePolicyTest extends TestCase
      */
     public function I_can_find_out_if_trial_expired(): void
     {
-        $usagePolicy = new UsagePolicy('foo', new Request(new Bot()));
+        $usagePolicy = new UsagePolicy('foo', new Request(new Bot()), new CookiesService());
         self::assertFalse($usagePolicy->trialJustExpired(), 'Did not expects trial expiration yet');
         $_GET[UsagePolicy::TRIAL_EXPIRED_AT] = \time();
         self::assertTrue($usagePolicy->trialJustExpired(), 'Expected trial expiration');

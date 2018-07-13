@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use DrdPlus\FrontendSkeleton\Cookie;
+use DrdPlus\FrontendSkeleton\CookiesService;
 use Granam\Strict\Object\StrictObject;
 
 class UsagePolicy extends StrictObject
@@ -15,15 +15,18 @@ class UsagePolicy extends StrictObject
     private $articleName;
     /** @var Request */
     private $request;
+    /** @var CookiesService */
+    private $cookiesService;
 
     /**
      * @param string $articleName
      * @param \DrdPlus\FrontendSkeleton\Request $request
+     * @param CookiesService $cookiesService
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameShouldBeValidName
      * @throws \DrdPlus\FrontendSkeleton\Exceptions\CookieCanNotBeSet
      */
-    public function __construct(string $articleName, \DrdPlus\FrontendSkeleton\Request $request)
+    public function __construct(string $articleName, \DrdPlus\FrontendSkeleton\Request $request, CookiesService $cookiesService)
     {
         $articleName = \trim($articleName);
         if ($articleName === '') {
@@ -36,6 +39,7 @@ class UsagePolicy extends StrictObject
         }
         $this->articleName = $articleName;
         $this->request = $request;
+        $this->cookiesService = $cookiesService;
         $this->setCookie('ownershipCookieName', $this->getOwnershipName(), null /* expire on session end*/);
         $this->setCookie('trialCookieName', $this->getTrialName(), null /* expire on session end*/);
         $this->setCookie('trialExpiredAtName', $this->getTrialExpiredAtName(), null /* expire on session end*/);
@@ -50,7 +54,7 @@ class UsagePolicy extends StrictObject
      */
     private function setCookie(string $cookieName, string $value, ?\DateTime $expiresAt): bool
     {
-        return Cookie::setCookie($cookieName, $value, false /* accessible also via JS */, $expiresAt);
+        return $this->cookiesService->setCookie($cookieName, $value, false /* accessible also via JS */, $expiresAt);
     }
 
     /**
@@ -58,7 +62,7 @@ class UsagePolicy extends StrictObject
      */
     public function hasVisitorConfirmedOwnership(): bool
     {
-        return Cookie::getCookie($this->getOwnershipName()) !== null;
+        return $this->cookiesService->getCookie($this->getOwnershipName()) !== null;
     }
 
     /**
@@ -89,7 +93,7 @@ class UsagePolicy extends StrictObject
      */
     public function isVisitorUsingTrial(): bool
     {
-        return Cookie::getCookie($this->getTrialName()) !== null;
+        return $this->cookiesService->getCookie($this->getTrialName()) !== null;
     }
 
     /**

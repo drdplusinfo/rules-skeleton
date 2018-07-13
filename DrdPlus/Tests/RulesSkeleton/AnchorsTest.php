@@ -1,7 +1,6 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\String\StringTools;
 use Gt\Dom\Element;
 
