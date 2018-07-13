@@ -12,13 +12,11 @@ if (!require __DIR__ . '/parts/rules-skeleton/solve_version.php') {
     /** @noinspection PhpIncludeInspection */
     require_once __DIR__ . '/parts/rules-skeleton/safe_autoload.php';
 
+    $dirs = $dirs ?? new \DrdPlus\RulesSkeleton\Dirs();
     $controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController(
             $googleAnalyticsId ?? 'UA-121206931-1',
-            \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($documentRoot),
-            new \DrdPlus\RulesSkeleton\Dirs(
-                $documentRoot,
-                $webRoot ?? $documentRoot . '/web/passed' // pass.php will change it to /web/pass if access is not allowed yet
-            )
+            \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($dirs->getDocumentRoot()),
+            $dirs
         );
     if (!\is_a($controller, \DrdPlus\RulesSkeleton\RulesController::class)) {
         throw new \LogicException('Invalid controller class, expected ' . \DrdPlus\RulesSkeleton\RulesController::class
@@ -27,5 +25,5 @@ if (!require __DIR__ . '/parts/rules-skeleton/solve_version.php') {
     }
 
     /** @noinspection PhpIncludeInspection */
-    require $documentRoot . '/vendor/drd-plus/frontend-skeleton/index.php';
+    require $dirs->getVendorRoot() . '/drd-plus/frontend-skeleton/index.php';
 }

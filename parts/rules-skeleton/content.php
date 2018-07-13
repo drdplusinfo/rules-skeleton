@@ -6,4 +6,4 @@ if (require $controller->getDirs()->getGenericPartsRoot() . '/router.php') {
 }
 
 /** @noinspection PhpIncludeInspection */
-return require $vendorRoot . '/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';
+return require $controller->getDirs()->getVendorRoot() . '/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';

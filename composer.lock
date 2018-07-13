@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4b352b387a394d36ae7651fdcf4ff392",
-    "content-hash": "0ce8d3133d589f02efe69a711888b15c",
+    "hash": "357a13f1c2e56b6efb9a4bf4f0771dd7",
+    "content-hash": "f49202871a6c49b34296420c9c4a0589",
     "packages": [
         {
             "name": "drd-plus/frontend-skeleton",
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "124a40ef985ecabecb8779dd7e5726920811ce9b"
+                "reference": "f35fbcc7c8984f963ed4004c164a9a0750f9f806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/124a40ef985ecabecb8779dd7e5726920811ce9b",
-                "reference": "124a40ef985ecabecb8779dd7e5726920811ce9b",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/f35fbcc7c8984f963ed4004c164a9a0750f9f806",
+                "reference": "f35fbcc7c8984f963ed4004c164a9a0750f9f806",
                 "shasum": ""
             },
             "require": {
@@ -46,20 +46,34 @@
                     "Tests\\": "Tests/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "scripts": {
+                "pre-autoload-dump": [
+                    "rm -f ./vendor/bin/assets && ln -s ../../bin/assets ./vendor/bin/"
+                ],
+                "post-update-cmd": [
+                    "php ./vendor/bin/assets --css --dir=css"
+                ],
+                "post-install-cmd": [
+                    "php ./vendor/bin/assets --css --dir=css"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "description": "Skeleton for DrD+ pages",
             "keywords": [
-                "Skeleton",
                 "drd plus",
                 "frontend",
                 "helper",
                 "pages",
+                "skeleton",
                 "view"
             ],
-            "time": "2018-07-13 09:00:54"
+            "support": {
+                "source": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton/tree/1.0.10",
+                "issues": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton/issues"
+            },
+            "time": "2018-07-13 14:04:19"
         },
         {
             "name": "granam/exceptions-hierarchy",
