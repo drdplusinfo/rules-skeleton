@@ -49,7 +49,7 @@ class DirsTest extends \DrdPlus\Tests\FrontendSkeleton\DirsTest
     public function I_can_change_web_root(): void
     {
         $dirs = new Dirs();
-        self::assertSame(\realpath($this->getWebFilesRoot()), \realpath($dirs->getWebRoot()));
+        self::assertSame(\realpath($this->getWebRoot()), \realpath($dirs->getWebRoot()));
         $dirs->setWebRoot('foo/bar/baz');
         self::assertSame('foo/bar/baz', $dirs->getWebRoot());
     }

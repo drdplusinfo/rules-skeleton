@@ -8,8 +8,13 @@ trait DirsForTestsTrait
 {
     use \DrdPlus\Tests\FrontendSkeleton\Partials\DirsForTestsTrait;
 
-    public function getWebFilesRoot(): string
+    public function getWebRoot(): string
     {
         return $this->getDocumentRoot() . '/web/passed';
+    }
+
+    protected function getGenericPartsRoot(): string
+    {
+        return __DIR__ . '/../../../../parts/rules-skeleton';
     }
 }
