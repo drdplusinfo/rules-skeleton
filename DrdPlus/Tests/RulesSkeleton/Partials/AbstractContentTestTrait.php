@@ -32,12 +32,10 @@ trait AbstractContentTestTrait
     protected function passIn(): bool
     {
         $_COOKIE[$this->getNameForLocalOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
-        $realDocumentRoot = \realpath($this->getDocumentRoot());
-        $usagePolicy = new UsagePolicy(\basename($realDocumentRoot), new Request(new Bot()), new CookiesService());
+        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService());
         self::assertTrue(
             $usagePolicy->hasVisitorConfirmedOwnership(),
             "Ownership has not been confirmed by cookie '{$this->getNameForLocalOwnershipConfirmation()}'"
-            . " (with document root {$realDocumentRoot})"
         );
         $this->needPassOut = false;
         $this->needPassIn = true;
@@ -48,12 +46,10 @@ trait AbstractContentTestTrait
     protected function passOut(): bool
     {
         unset($_COOKIE[$this->getNameForLocalOwnershipConfirmation()]);
-        $realDocumentRoot = \realpath($this->getDocumentRoot());
-        $usagePolicy = new UsagePolicy(\basename($realDocumentRoot), new Request(new Bot()), new CookiesService());
+        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService());
         self::assertFalse(
             $usagePolicy->hasVisitorConfirmedOwnership(),
             "Ownership is still confirmed by cookie '{$this->getNameForLocalOwnershipConfirmation()}'"
-            . " (with document root {$realDocumentRoot})"
         );
         $this->needPassOut = true;
         $this->needPassIn = false;
@@ -127,17 +123,15 @@ trait AbstractContentTestTrait
     {
         static $cookieName;
         if ($cookieName === null) {
-            $cookieName = $this->getNameForOwnershipConfirmation(
-                StringTools::toVariableName(\file_get_contents($this->getDocumentRoot() . '/name.txt'))
-            );
+            $cookieName = $this->getNameForOwnershipConfirmation();
         }
 
         return $cookieName;
     }
 
-    protected function getNameForOwnershipConfirmation(string $rulesDirBasename): string
+    protected function getNameForOwnershipConfirmation(): string
     {
-        $usagePolicy = new UsagePolicy($rulesDirBasename, new Request(new Bot()), new CookiesService());
+        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService());
         try {
             $usagePolicyReflection = new \ReflectionClass(UsagePolicy::class);
         } catch (\ReflectionException $reflectionException) {
@@ -148,6 +142,11 @@ trait AbstractContentTestTrait
         $getName->setAccessible(true);
 
         return $getName->invoke($usagePolicy);
+    }
+
+    protected function getVariablePartOfNameForPass(): string
+    {
+        return StringTools::toVariableName($this->getTestsConfiguration()->getExpectedWebName());
     }
 
     private function getDirName(string $fileName): string
