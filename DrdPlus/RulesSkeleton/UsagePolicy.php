@@ -32,7 +32,7 @@ class UsagePolicy extends StrictObject
         if ($articleName === '') {
             throw new Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy('Name of the article to confirm ownership can not be empty');
         }
-        if (!\preg_match('~\w~', $articleName)) {
+        if (!\preg_match('~\w~u', $articleName)) {
             throw new Exceptions\ArticleNameShouldBeValidName(
                 "Name of the article to confirm ownership should contain some meaningful name, got '$articleName'"
             );

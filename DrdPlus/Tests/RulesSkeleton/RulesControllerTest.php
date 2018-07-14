@@ -50,7 +50,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     {
         $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
         self::assertEquals(
-            new UsagePolicy(\basename(\realpath($this->getDocumentRoot())), new Request(new Bot()), new CookiesService()),
+            new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService()),
             $controller->getUsagePolicy()
         );
     }
