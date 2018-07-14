@@ -112,6 +112,8 @@ trait AbstractContentTestTrait
 
     private function fetchRulesContent(): string
     {
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        $latestVersion = $this->getTestsConfiguration()->getExpectedLastUnstableVersion();
         \ob_start();
         /** @noinspection PhpIncludeInspection */
         include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
