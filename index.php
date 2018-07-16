@@ -25,6 +25,9 @@ if (!require __DIR__ . '/parts/rules-skeleton/solve_version.php') {
             . ' or descendant, got ' . \get_class($controller)
         );
     }
+    if (!empty($hasFreeAccess)) {
+        $controller->setFreeAccess();
+    }
 
     /** @noinspection PhpIncludeInspection */
     require $dirs->getVendorRoot() . '/drd-plus/frontend-skeleton/index.php';
