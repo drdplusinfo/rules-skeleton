@@ -22,12 +22,7 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
     /** @var bool */
     private $freeAccess = false;
 
-    public function __construct(
-        string $googleAnalyticsId,
-        HtmlHelper $htmlHelper,
-        Dirs $dirs,
-        array $bodyClasses = []
-    )
+    public function __construct(string $googleAnalyticsId, HtmlHelper $htmlHelper, Dirs $dirs, array $bodyClasses = [])
     {
         parent::__construct($googleAnalyticsId, $htmlHelper, $dirs, $bodyClasses);
     }
