@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 
 class HtmlHelperTest extends \DrdPlus\Tests\FrontendSkeleton\HtmlHelperTest
@@ -39,7 +40,8 @@ class HtmlHelperTest extends \DrdPlus\Tests\FrontendSkeleton\HtmlHelperTest
             self::assertEmpty($blockNamesToExpectedContent, 'No blocks to test');
         }
         $document = $this->getHtmlDocument();
-        $htmlHelper = HtmlHelper::createFromGlobals($this->getDocumentRoot());
+        $dirs = new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot());
+        $htmlHelper = HtmlHelper::createFromGlobals($dirs);
         foreach ($blockNamesToExpectedContent as $blockName => $expectedContent) {
             $documentWithBlock = $htmlHelper->getDocumentWithBlock($blockName, $document);
             self::assertSame($expectedContent, $documentWithBlock->body->innerHTML);

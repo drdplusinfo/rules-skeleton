@@ -18,7 +18,7 @@ class DirsTest extends \DrdPlus\Tests\FrontendSkeleton\DirsTest
     {
         $expectedDocumentRoot = \realpath($this->getDocumentRoot());
         self::assertFileExists($expectedDocumentRoot, 'No real path found from document root ' . $this->getDocumentRoot());
-        self::assertSame($expectedDocumentRoot, \realpath((new Dirs())->getDocumentRoot()));
+        self::assertSame($expectedDocumentRoot, \realpath((new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot()))->getDocumentRoot()));
     }
 
     /**
@@ -28,7 +28,7 @@ class DirsTest extends \DrdPlus\Tests\FrontendSkeleton\DirsTest
     {
         $expectedPassedWebRoot = \realpath($this->getDocumentRoot() . '/web/passed');
         self::assertFileExists($expectedPassedWebRoot, 'No real path found from passed web root ' . $this->getDocumentRoot());
-        $dirs = new Dirs();
+        $dirs = new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot());
         self::assertSame($expectedPassedWebRoot, \realpath($dirs->getWebRoot()), "Unexpected {$dirs->getWebRoot()}");
     }
 
@@ -40,7 +40,7 @@ class DirsTest extends \DrdPlus\Tests\FrontendSkeleton\DirsTest
         $expectedGenericPartsRoot = __DIR__ . '/../../../parts/rules-skeleton';
         $expectedGenericPartsRootRealPath = \realpath(__DIR__ . '/../../../parts/rules-skeleton');
         self::assertFileExists($expectedGenericPartsRootRealPath, 'No real path found from rules skeleton parts dir ' . $expectedGenericPartsRoot);
-        self::assertSame($expectedGenericPartsRootRealPath, \realpath((new Dirs())->getGenericPartsRoot()));
+        self::assertSame($expectedGenericPartsRootRealPath, \realpath((new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot()))->getGenericPartsRoot()));
     }
 
     /**
@@ -48,7 +48,7 @@ class DirsTest extends \DrdPlus\Tests\FrontendSkeleton\DirsTest
      */
     public function I_can_change_web_root(): void
     {
-        $dirs = new Dirs();
+        $dirs = new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot());
         self::assertSame(\realpath($this->getWebRoot()), \realpath($dirs->getWebRoot()));
         $dirs->setWebRoot('foo/bar/baz');
         self::assertSame('foo/bar/baz', $dirs->getWebRoot());

@@ -5,7 +5,7 @@ namespace DrdPlus\RulesSkeleton;
 use DrdPlus\FrontendSkeleton\HtmlDocument;
 
 /**
- * @method static HtmlHelper createFromGlobals(string $documentRootDir)
+ * @method static HtmlHelper createFromGlobals(Dirs $dirs)
  */
 class HtmlHelper extends \DrdPlus\FrontendSkeleton\HtmlHelper
 {

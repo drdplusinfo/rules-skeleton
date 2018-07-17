@@ -20,7 +20,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     protected function createDirs(string $documentRoot = null): \DrdPlus\FrontendSkeleton\Dirs
     {
-        return new Dirs($documentRoot);
+        return new Dirs($this->getMasterDocumentRoot(), $documentRoot);
     }
 
     /**
@@ -28,7 +28,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     public function I_can_set_access_as_free_for_everyone(): void
     {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
+        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot()));
         self::assertFalse($controller->isFreeAccess(), 'Access should be protected by default');
         self::assertSame($controller, $controller->setFreeAccess());
         self::assertTrue($controller->isFreeAccess(), 'Access should be switched to free');
@@ -39,7 +39,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     public function I_can_get_request(): void
     {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
+        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot()));
         self::assertEquals(new Request(new Bot()), $controller->getRequest());
     }
 
@@ -48,7 +48,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     public function I_can_get_usage_policy(): void
     {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
+        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot()));
         self::assertEquals(
             new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService()),
             $controller->getUsagePolicy()
@@ -61,7 +61,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     public function I_can_activate_trial(): void
     {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
+        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot()));
         $trialUntil = new \DateTime();
         $usagePolicy = $this->mockery(UsagePolicy::class);
         $usagePolicy->expects('activateTrial')
@@ -106,7 +106,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     public function I_can_get_cookies_service(): void
     {
-        $controller = new RulesController('Google Anakytics ID foo', $this->createHtmlHelper(), new Dirs($this->getDocumentRoot()));
+        $controller = new RulesController('Google Anakytics ID foo', $this->createHtmlHelper(), new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot()));
         self::assertEquals(new CookiesService(), $controller->getCookiesService());
     }
 }

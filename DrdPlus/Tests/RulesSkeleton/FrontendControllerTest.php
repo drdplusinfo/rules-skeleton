@@ -21,7 +21,7 @@ class FrontendControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendCon
      */
     protected function createDirs(string $documentRoot = null): \DrdPlus\FrontendSkeleton\Dirs
     {
-        return new Dirs($documentRoot ?? $this->getDocumentRoot());
+        return new Dirs($this->getMasterDocumentRoot(), $documentRoot ?? $this->getDocumentRoot());
     }
 
     /**
