@@ -7,11 +7,6 @@ namespace DrdPlus\RulesSkeleton;
 
 class Dirs extends \DrdPlus\FrontendSkeleton\Dirs
 {
-    public function __construct(string $documentRoot = null)
-    {
-        parent::__construct($documentRoot);
-    }
-
     protected function populateSubRoots(string $documentRoot): void
     {
         parent::populateSubRoots($documentRoot);
