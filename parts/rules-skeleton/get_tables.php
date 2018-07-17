@@ -14,8 +14,8 @@ require_once $vendorRoot . '/autoload.php';
  * @var \DrdPlus\RulesSkeleton\HtmlHelper $htmlHelper
  */
 $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache(
-    $controller->getCacheRoot(),
     $controller->getWebVersions(),
+    $controller->getDirs(),
     $htmlHelper->isInProduction(),
     $controller->getDirs()->getWebRoot()
 );
