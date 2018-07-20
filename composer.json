@@ -52,8 +52,7 @@
       "php ./vendor/bin/assets --css --dir=css"
     ],
     "post-install-cmd": [
-      "php ./vendor/bin/assets --css --dir=css",
-      "wget https://rules.drdplus.info --post-data=\"trial=1\" --background --output-document=- --output-file=/dev/null >> /dev/null"
+      "php ./vendor/bin/assets --css --dir=css"
     ]
   }
 }

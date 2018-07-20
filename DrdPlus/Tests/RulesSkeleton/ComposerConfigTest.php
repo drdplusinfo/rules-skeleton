@@ -22,24 +22,6 @@ class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigT
     /**
      * @test
      */
-    public function Frontend_cache_is_warmed_up_after_libraries_installation(): void
-    {
-        $postInstallScripts = static::$composerConfig['scripts']['post-install-cmd'] ?? [];
-        self::assertNotEmpty($postInstallScripts, 'Missing post-install-cmd scripts');
-        $cacheWarmUpScript = 'wget ' . $this->getTestsConfiguration()->getPublicUrl()
-            . ($this->getTestsConfiguration()->hasProtectedAccess() ? ' --post-data="trial=1"' : '')
-            . ' --background --output-document=- --output-file=/dev/null >> /dev/null';
-        self::assertContains(
-            $cacheWarmUpScript,
-            $postInstallScripts,
-            'Missing script to warm up frontend cache, there are configs '
-            . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($postInstallScripts, true))
-        );
-    }
-
-    /**
-     * @test
-     */
     public function PHPUnit_config_is_copied_from_skeleton(): void
     {
         $preAutoloadDumpScripts = static::$composerConfig['scripts']['pre-autoload-dump'] ?? [];
