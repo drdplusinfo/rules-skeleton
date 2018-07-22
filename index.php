@@ -29,6 +29,12 @@ if (!require __DIR__ . '/parts/rules-skeleton/solve_version.php') {
     if (!empty($hasFreeAccess)) {
         $controller->setFreeAccess();
     }
+    if (!empty($hasContactsFixed)) {
+        $controller->setContactsFixed();
+    }
+    if (!empty($hasHiddenHomeButton)) {
+        $controller->hideHomeButton();
+    }
 
     /** @noinspection PhpIncludeInspection */
     require $dirs->getVendorRoot() . '/drd-plus/frontend-skeleton/index.php';
