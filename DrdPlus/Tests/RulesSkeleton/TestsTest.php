@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\Tests\FrontendSkeleton\FrontendControllerTest;
 use PHPUnit\Framework\TestCase;
 
 class TestsTest extends TestCase
@@ -17,11 +18,15 @@ class TestsTest extends TestCase
         $reflectionClass = new \ReflectionClass(\DrdPlus\Tests\FrontendSkeleton\ContentTest::class);
         $frontendSkeletonDir = \dirname($reflectionClass->getFileName());
         foreach ($this->getClassesFromDir($frontendSkeletonDir) as $frontendSkeletonTestClass) {
+            if (\is_a($frontendSkeletonTestClass, \Throwable::class, true)
+                || \is_a($frontendSkeletonTestClass, FrontendControllerTest::class, true) // it is solved via RulesSkeletonController
+            ) {
+                continue;
+            }
             $frontendSkeletonTestClassReflection = new \ReflectionClass($frontendSkeletonTestClass);
             if ($frontendSkeletonTestClassReflection->isAbstract()
                 || $frontendSkeletonTestClassReflection->isInterface()
                 || $frontendSkeletonTestClassReflection->isTrait()
-                || $frontendSkeletonTestClassReflection->isSubclassOf(\Throwable::class)
             ) {
                 continue;
             }

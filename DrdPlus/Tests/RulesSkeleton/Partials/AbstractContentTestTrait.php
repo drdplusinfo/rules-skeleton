@@ -3,12 +3,12 @@ namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
 use DeviceDetector\Parser\Bot;
 use DrdPlus\FrontendSkeleton\CookiesService;
+use DrdPlus\FrontendSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use Granam\String\StringTools;
 use Gt\Dom\HTMLDocument;
-use Mockery\MockInterface;
 
 /**
  * @method string getDocumentRoot
@@ -239,18 +239,21 @@ trait AbstractContentTestTrait
     }
 
     /**
-     * @param bool|null $inProductionMode
+     * @param Dirs $dirs
+     * @param bool $inDevMode
+     * @param bool $inForcedProductionMode
+     * @param bool $shouldHideCovered
+     * @param bool $showIntroductionOnly
      * @return HtmlHelper|\Mockery\MockInterface
      */
-    protected function createHtmlHelper(bool $inProductionMode = null): \DrdPlus\FrontendSkeleton\HtmlHelper
+    protected function createHtmlHelper(
+        Dirs $dirs = null,
+        bool $inForcedProductionMode = false,
+        bool $inDevMode = false,
+        bool $shouldHideCovered = false,
+        bool $showIntroductionOnly = false
+    ): \DrdPlus\FrontendSkeleton\HtmlHelper
     {
-        /** @var MockInterface $htmlHelper */
-        $htmlHelper = $this->mockery(HtmlHelper::class);
-        if ($inProductionMode !== null) {
-            $htmlHelper->shouldReceive('isInProduction')
-                ->andReturn($inProductionMode);
-        }
-
-        return $htmlHelper;
+        return new HtmlHelper($dirs ?? $this->createDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered, $showIntroductionOnly);
     }
 }
