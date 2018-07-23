@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bd1aac0d8a1c679d09991259569b0cce",
-    "content-hash": "26269cb40a34935e19f4836e817dcc63",
+    "hash": "87581d7c56c1d84b98759c7bb9a42082",
+    "content-hash": "409d1e29a5ae6cec8228ef0785929dd7",
     "packages": [
         {
             "name": "drd-plus/frontend-skeleton",
