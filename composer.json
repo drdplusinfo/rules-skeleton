@@ -14,12 +14,6 @@
       "DrdPlus\\": "DrdPlus/"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton"
-    }
-  ],
   "require": {
     "php": ">=7.1",
     "ext-mbstring": "*",
