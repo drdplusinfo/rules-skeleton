@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "drd-plus/frontend-skeleton",
-            "version": "1.0.21",
+            "version": "1.0.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "a2e5ec8bfd8d132ab13a2c381ba68026686c15f1"
+                "reference": "d9a91b7c8fe38a20d5ae47fce73cbcfd90c5d9dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/a2e5ec8bfd8d132ab13a2c381ba68026686c15f1",
-                "reference": "a2e5ec8bfd8d132ab13a2c381ba68026686c15f1",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/d9a91b7c8fe38a20d5ae47fce73cbcfd90c5d9dd",
+                "reference": "d9a91b7c8fe38a20d5ae47fce73cbcfd90c5d9dd",
                 "shasum": ""
             },
             "require": {
@@ -46,34 +46,20 @@
                     "Tests\\": "Tests/"
                 }
             },
-            "scripts": {
-                "pre-autoload-dump": [
-                    "rm -f ./vendor/bin/assets && ln -s ../../bin/assets ./vendor/bin/"
-                ],
-                "post-update-cmd": [
-                    "php ./vendor/bin/assets --css --dir=css"
-                ],
-                "post-install-cmd": [
-                    "php ./vendor/bin/assets --css --dir=css"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "Skeleton for DrD+ pages",
             "keywords": [
+                "Skeleton",
                 "drd plus",
                 "frontend",
                 "helper",
                 "pages",
-                "skeleton",
                 "view"
             ],
-            "support": {
-                "source": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton/tree/1.0.21",
-                "issues": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton/issues"
-            },
-            "time": "2018-07-23 11:29:39"
+            "time": "2018-07-24 13:13:50"
         },
         {
             "name": "granam/exceptions-hierarchy",
