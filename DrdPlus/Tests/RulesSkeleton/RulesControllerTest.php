@@ -61,18 +61,35 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
      */
     public function I_can_activate_trial(): void
     {
-        $controller = new RulesController('Google Analytics ID foo', $this->createHtmlHelper(), new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot()));
-        $trialUntil = new \DateTime();
+        $rulesController = new RulesController(
+            'Google Analytics ID foo',
+            $this->createHtmlHelper(),
+            new Dirs($this->getMasterDocumentRoot(),
+                $this->getDocumentRoot())
+        );
+        $now = new \DateTime();
+        $trialExpectedExpiration = (clone $now)->modify('+4 minutes');
         $usagePolicy = $this->mockery(UsagePolicy::class);
+        $usagePolicy->expects('getTrialExpiredAtName')
+            ->atLeast()->once()
+            ->andReturn('bar');
         $usagePolicy->expects('activateTrial')
-            ->with($trialUntil)
-            ->andReturn(true);
-        $usagePolicy->makePartial();
-        $controllerReflection = new \ReflectionClass($controller);
+            ->with($this->type(\DateTime::class))
+            ->andReturnUsing(function (\DateTime $expiresAt) use ($trialExpectedExpiration) {
+                self::assertEquals($trialExpectedExpiration, $expiresAt);
+
+                return true;
+            });
+        $controllerReflection = new \ReflectionClass($rulesController);
         $usagePolicyProperty = $controllerReflection->getProperty('usagePolicy');
         $usagePolicyProperty->setAccessible(true);
-        $usagePolicyProperty->setValue($controller, $usagePolicy);
-        self::assertTrue($controller->activateTrial($trialUntil));
+        $usagePolicyProperty->setValue($rulesController, $usagePolicy);
+        self::assertTrue($rulesController->activateTrial($now));
+        $redirect = $rulesController->getRedirect();
+        self::assertNotNull($redirect);
+        $trialExpectedExpirationTimestamp = $trialExpectedExpiration->getTimestamp();
+        self::assertSame('/?bar=' . $trialExpectedExpirationTimestamp, $redirect->getTarget());
+        self::assertSame($trialExpectedExpirationTimestamp - $now->getTimestamp(), $redirect->getAfterSeconds());
     }
 
     /**
