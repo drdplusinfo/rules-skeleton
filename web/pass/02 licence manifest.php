@@ -1,11 +1,13 @@
 <?php
 /** @var \DrdPlus\RulesSkeleton\RulesController $controller */
 ?>
-<h1>Prohlášení</h1>
 <?php
 $webName = $controller->getWebName();
 $eShopUrl = $controller->getEshopUrl();
 ?>
+<h1><?= $webName ?></h1>
+
+<h3>Zkusím</h3>
 <div class="row">
   <form class="manifest trial" action="/" method="post">
     <div class="col">
@@ -22,6 +24,7 @@ $eShopUrl = $controller->getEshopUrl();
     </div>
   </form>
 </div>
+<h2>Koupím</h2>
 <div class="row">
   <form class="manifest buy" action="<?= $eShopUrl ?>">
     <div class="col">
@@ -38,6 +41,7 @@ $eShopUrl = $controller->getEshopUrl();
     </div>
   </form>
 </div>
+<h3>Mám</h3>
 <div class="row">
   <form class="manifest owning" action="/" method="post"
         onsubmit="return window.confirm('A klidně to potvrdím dvakrát')">
