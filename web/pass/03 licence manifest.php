@@ -1,7 +1,5 @@
 <?php
 /** @var \DrdPlus\RulesSkeleton\RulesController $controller */
-?>
-<?php
 $webName = $controller->getWebName();
 $eShopUrl = $controller->getEshopUrl();
 ?>
@@ -46,6 +44,10 @@ $eShopUrl = $controller->getEshopUrl();
   <form class="manifest owning" action="/" method="post"
         onsubmit="return window.confirm('A klidně to potvrdím dvakrát')">
     <div class="col">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmOwnership">
+        Launch demo modal
+      </button>
+      <p><a data-toggle="modal" href="#confirmOwnership" class="btn btn-primary btn-large">Launch demo modal</a></p>
       <button type="submit" id="confirm" name="confirm" value="submit">Vlastním <?= $webName ?></button>
     </div>
     <div class="col">
