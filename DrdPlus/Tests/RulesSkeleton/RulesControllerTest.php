@@ -87,7 +87,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
         self::assertTrue($rulesController->activateTrial($now));
         $redirect = $rulesController->getRedirect();
         self::assertNotNull($redirect);
-        $trialExpectedExpirationTimestamp = $trialExpectedExpiration->getTimestamp();
+        $trialExpectedExpirationTimestamp = $trialExpectedExpiration->getTimestamp() + 1; // one second "insurance" overlap
         self::assertSame('/?bar=' . $trialExpectedExpirationTimestamp, $redirect->getTarget());
         self::assertSame($trialExpectedExpirationTimestamp - $now->getTimestamp(), $redirect->getAfterSeconds());
     }
@@ -102,7 +102,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
         $this->passOut();
         $controller = null;
         $now = \time();
-        $trialExpiredAt = $now + 240;
+        $trialExpiredAt = $now + 240 + 1;
         $trialExpiredAtSecondAfter = $trialExpiredAt++;
         if ($this->getTestsConfiguration()->hasProtectedAccess()) { // can be solved by POST
             $_POST['trial'] = 1;
@@ -115,7 +115,10 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
         $metaRefreshes = $this->getMetaRefreshes($document);
         self::assertCount(1, $metaRefreshes, 'One meta tag with refresh meaning expected');
         $metaRefresh = \current($metaRefreshes);
-        self::assertRegExp("~240; url=/[?]trialExpiredAt=($trialExpiredAt|$trialExpiredAtSecondAfter)~", $metaRefresh->getAttribute('content'));
+        self::assertRegExp(
+            "~241; url=/[?]trialExpiredAt=($trialExpiredAt|$trialExpiredAtSecondAfter)~",
+            $metaRefresh->getAttribute('content')
+        );
     }
 
     /**
