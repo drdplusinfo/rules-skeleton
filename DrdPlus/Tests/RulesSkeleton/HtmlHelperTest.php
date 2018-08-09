@@ -25,8 +25,8 @@ class HtmlHelperTest extends \DrdPlus\Tests\FrontendSkeleton\HtmlHelperTest
     public function providePublicAndLocalLinks(): array
     {
         return [
-            ['https://www.drdplus.info', 'http://www.drdplus.loc'],
-            ['https://hranicar.drdplus.info', 'http://hranicar.drdplus.loc'],
+            ['https://www.drdplus.info', 'http://www.drdplus.loc:88'],
+            ['https://hranicar.drdplus.info', 'http://hranicar.drdplus.loc:88'],
         ];
     }
 

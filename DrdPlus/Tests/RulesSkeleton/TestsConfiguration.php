@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\Tests\FrontendSkeleton\Exceptions\InvalidUrl;
 use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
 
@@ -58,32 +59,28 @@ HTML
     private $tooShortResultNames = ['Bonus', 'Postih'];
 
     /**
-     * @param string $localUrl
      * @param string $publicUrl
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidLocalUrl
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidPublicUrl
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\PublicUrlShouldUseHttps
      */
-    public function __construct(string $localUrl, string $publicUrl)
+    public function __construct(string $publicUrl)
     {
-        try {
-            $this->guardValidUrl($localUrl);
-        } catch (InvalidUrl $invalidUrl) {
-            throw new Exceptions\InvalidLocalUrl("Given local URL is not valid: '$localUrl'");
-        }
-        if (!$this->isLocalLinkAccessible($localUrl)) {
-            throw new Exceptions\InvalidLocalUrl("Given local URL can not be reached or is not local: '$localUrl'");
-        }
-        parent::__construct($localUrl);
         try {
             $this->guardValidUrl($publicUrl);
         } catch (InvalidUrl $invalidUrl) {
-            throw new Exceptions\InvalidPublicUrl("Given public URL is not valid: '$publicUrl'");
+            throw new Exceptions\InvalidPublicUrl("Given public URL is not valid: '$publicUrl'", $invalidUrl->getCode(), $invalidUrl);
         }
         if (\strpos($publicUrl, 'https://') !== 0) {
             throw new Exceptions\PublicUrlShouldUseHttps("Given public URL should use HTTPS: '$publicUrl'");
         }
         $this->publicUrl = $publicUrl;
+        $localUrl = HtmlHelper::turnToLocalLink($publicUrl);
+        if (!$this->isLocalLinkAccessible($localUrl)) {
+            throw new Exceptions\InvalidLocalUrl("Given local URL can not be reached or is not local: '$localUrl'");
+        }
+        parent::__construct($localUrl);
+        parent::__construct($localUrl);
     }
 
     protected function isLocalLinkAccessible(string $localUrl): bool

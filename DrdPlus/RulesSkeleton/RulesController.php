@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace DrdPlus\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
@@ -11,7 +13,6 @@ use Granam\String\StringTools;
  */
 class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
 {
-
     /** @var CookiesService */
     private $cookiesService;
     /** @var UsagePolicy */

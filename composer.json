@@ -18,6 +18,22 @@
     {
       "type": "vcs",
       "url": "/home/jaroslav/Projects/drd-plus/frontend-skeleton"
+    },
+    {
+      "type": "vcs",
+      "url": "/home/jaroslav/Projects/granam/exceptions-hierarchy"
+    },
+    {
+      "type": "vcs",
+      "url": "/home/jaroslav/Projects/granam/strict-object"
+    },
+    {
+      "type": "vcs",
+      "url": "/home/jaroslav/Projects/granam/tools"
+    },
+    {
+      "type": "vcs",
+      "url": "/home/jaroslav/Projects/granam/scalar"
     }
   ],
   "require": {
