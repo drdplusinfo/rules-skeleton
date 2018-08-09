@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
@@ -18,7 +19,7 @@ class HtmlHelper extends \DrdPlus\FrontendSkeleton\HtmlHelper
      */
     public static function turnToLocalLink(string $link): string
     {
-        return \preg_replace('~https?://((?:[[:alnum:]]+\.)*)drdplus\.info~', 'http://$1drdplus.loc', $link);
+        return \preg_replace('~https?://((?:[[:alnum:]]+\.)*)drdplus\.info~', 'http://$1drdplus.loc:88', $link);
     }
 
     /**
@@ -38,5 +39,4 @@ class HtmlHelper extends \DrdPlus\FrontendSkeleton\HtmlHelper
 
         return $documentWithBlock;
     }
-
 }

@@ -4,18 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "389373b3a295ae4fe287ac64d5c3f175",
-    "content-hash": "0e982c5e1db086d0c4ccd299cf9da2e5",
+    "hash": "7d2bb54e7a71414160ab3b2f0f11b288",
+    "content-hash": "07686c7c0b490eefa258fc5dc4a52de9",
     "packages": [
         {
             "name": "drd-plus/frontend-skeleton",
-            "version": "1.0.27",
+            "version": "1.0.33",
             "source": {
                 "type": "git",
                 "url": "/home/jaroslav/Projects/drd-plus/frontend-skeleton",
-                "reference": "41d3386222edd82483836e560fdc6715d43440ac"
+                "reference": "bc9080257a76c15776064545826499cdca1b68ca"
             },
             "require": {
+                "ext-dom": "*",
                 "ext-mbstring": "*",
                 "granam/exceptions-hierarchy": "^4.0",
                 "granam/string": "^3.0",
@@ -26,6 +27,7 @@
                 "tracy/tracy": "^2.4"
             },
             "require-dev": {
+                "ext-curl": "*",
                 "mockery/mockery": "~1.0",
                 "phpunit/phpunit": "~7.0",
                 "roave/security-advisories": "dev-master"
@@ -63,21 +65,15 @@
                 "skeleton",
                 "view"
             ],
-            "time": "2018-07-25 12:15:22"
+            "time": "2018-08-09 09:47:15"
         },
         {
             "name": "granam/exceptions-hierarchy",
             "version": "4.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy.git",
+                "url": "/home/jaroslav/Projects/granam/exceptions-hierarchy",
                 "reference": "846b8592c8b673818569bbb103016723130bbf98"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/granam-exceptions-hierarchy/zipball/846b8592c8b673818569bbb103016723130bbf98",
-                "reference": "846b8592c8b673818569bbb103016723130bbf98",
-                "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
@@ -91,7 +87,6 @@
                     "Granam\\": "Granam/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -104,21 +99,15 @@
                 "php",
                 "runtime"
             ],
-            "time": "2017-02-19 12:25:30"
+            "time": "2017-02-19 12:25:09"
         },
         {
             "name": "granam/scalar",
             "version": "4.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jaroslavtyc/granam-scalar.git",
+                "url": "/home/jaroslav/Projects/granam/scalar",
                 "reference": "e31a7ef14a25f9fb7a3e926773b1571c8dd35fb1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/granam-scalar/zipball/e31a7ef14a25f9fb7a3e926773b1571c8dd35fb1",
-                "reference": "e31a7ef14a25f9fb7a3e926773b1571c8dd35fb1",
-                "shasum": ""
             },
             "require": {
                 "granam/strict-object": "^3.0",
@@ -136,7 +125,6 @@
                     "Granam\\": "Granam/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -160,14 +148,8 @@
             "version": "3.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jaroslavtyc/granam-strict-object.git",
+                "url": "/home/jaroslav/Projects/granam/strict-object",
                 "reference": "58456d294ac6671316f0a688a682f85467c7a37b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/granam-strict-object/zipball/58456d294ac6671316f0a688a682f85467c7a37b",
-                "reference": "58456d294ac6671316f0a688a682f85467c7a37b",
-                "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
@@ -182,7 +164,6 @@
                     "Granam\\": "Granam/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -204,20 +185,20 @@
                 "strict",
                 "write"
             ],
-            "time": "2017-02-19 12:21:14"
+            "time": "2017-02-19 12:20:51"
         },
         {
             "name": "granam/string",
-            "version": "3.0.0",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/granam-string.git",
-                "reference": "dd856dd14a2216f07adbcfdbb66935f995b1aef4"
+                "reference": "1cebae4311a10029e9a1a94a668d871627b94143"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/dd856dd14a2216f07adbcfdbb66935f995b1aef4",
-                "reference": "dd856dd14a2216f07adbcfdbb66935f995b1aef4",
+                "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/1cebae4311a10029e9a1a94a668d871627b94143",
+                "reference": "1cebae4311a10029e9a1a94a668d871627b94143",
                 "shasum": ""
             },
             "require": {
@@ -232,7 +213,9 @@
                 "phpunit/phpunit": "~7.0"
             },
             "suggest": {
-                "ext-intl": "*"
+                "ext-iconv": "*",
+                "ext-intl": "*",
+                "ext-mbstring": "*"
             },
             "type": "project",
             "autoload": {
@@ -258,21 +241,15 @@
                 "php",
                 "string"
             ],
-            "time": "2018-07-10 14:17:18"
+            "time": "2018-07-31 07:12:46"
         },
         {
             "name": "granam/tools",
             "version": "3.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jaroslavtyc/granam-tools.git",
+                "url": "/home/jaroslav/Projects/granam/tools",
                 "reference": "281a08cf7e7d7665b20855f002a7b9180e94c86a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/granam-tools/zipball/281a08cf7e7d7665b20855f002a7b9180e94c86a",
-                "reference": "281a08cf7e7d7665b20855f002a7b9180e94c86a",
-                "shasum": ""
             },
             "require": {
                 "granam/strict-object": "^3.0",
@@ -290,7 +267,6 @@
                     "Granam\\": "Granam/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -304,12 +280,12 @@
             "description": "Toolbox",
             "homepage": "https://github.com/jaroslavtyc/granam-tools",
             "keywords": [
-                "Toolbox",
                 "object",
                 "php",
-                "string"
+                "string",
+                "toolbox"
             ],
-            "time": "2018-07-20 06:12:40"
+            "time": "2018-07-20 06:12:21"
         },
         {
             "name": "mustangostang/spyc",
@@ -506,16 +482,16 @@
         },
         {
             "name": "piwik/device-detector",
-            "version": "3.10.2",
+            "version": "3.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/device-detector.git",
-                "reference": "67e96595cd7649b7967533053fcbfbe02d5c55a3"
+                "reference": "9e778c0c046987c6c4a949d5d9e000f072301962"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/67e96595cd7649b7967533053fcbfbe02d5c55a3",
-                "reference": "67e96595cd7649b7967533053fcbfbe02d5c55a3",
+                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/9e778c0c046987c6c4a949d5d9e000f072301962",
+                "reference": "9e778c0c046987c6c4a949d5d9e000f072301962",
                 "shasum": ""
             },
             "require": {
@@ -556,7 +532,7 @@
                 "parser",
                 "useragent"
             ],
-            "time": "2018-05-07 19:33:29"
+            "time": "2018-07-31 15:47:21"
         },
         {
             "name": "symfony/css-selector",
@@ -1150,16 +1126,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.7.6",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712"
+                "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
-                "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
+                "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
                 "shasum": ""
             },
             "require": {
@@ -1171,12 +1147,12 @@
             },
             "require-dev": {
                 "phpspec/phpspec": "^2.5|^3.2",
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5 || ^7.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.7.x-dev"
+                    "dev-master": "1.8.x-dev"
                 }
             },
             "autoload": {
@@ -1209,7 +1185,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-04-18 13:57:24"
+            "time": "2018-08-05 17:53:17"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1462,16 +1438,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.2.7",
+            "version": "7.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "8e878aff7917ef66e702e03d1359b16eee254e2c"
+                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8e878aff7917ef66e702e03d1359b16eee254e2c",
-                "reference": "8e878aff7917ef66e702e03d1359b16eee254e2c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9b14c17860eccb440a0352a117a81eb754cff5a",
+                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a",
                 "shasum": ""
             },
             "require": {
@@ -1516,7 +1492,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "7.2-dev"
+                    "dev-master": "7.3-dev"
                 }
             },
             "autoload": {
@@ -1542,7 +1518,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-07-15 05:20:50"
+            "time": "2018-08-07 06:44:28"
         },
         {
             "name": "roave/security-advisories",
@@ -1550,12 +1526,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "053766d789f6393e5bc0896635d35abf8d2d362e"
+                "reference": "918748563a72c409d945531f7c21cb6ae4d7574e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/053766d789f6393e5bc0896635d35abf8d2d362e",
-                "reference": "053766d789f6393e5bc0896635d35abf8d2d362e",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/918748563a72c409d945531f7c21cb6ae4d7574e",
+                "reference": "918748563a72c409d945531f7c21cb6ae4d7574e",
                 "shasum": ""
             },
             "conflict": {
@@ -1642,7 +1618,7 @@
                 "symfony/dependency-injection": ">=2,<2.0.17",
                 "symfony/form": ">=2.3,<2.3.35|>=2.4,<2.6.12|>=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
                 "symfony/framework-bundle": ">=2,<2.3.18|>=2.4,<2.4.8|>=2.5,<2.5.2",
-                "symfony/http-foundation": ">=2,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
+                "symfony/http-foundation": ">=2,<2.7.49|>=2.8,<2.8.44|>=3,<3.3.18|>=3.4,<3.4.14|>=4,<4.0.14|>=4.1,<4.1.3",
                 "symfony/http-kernel": ">=2,<2.3.29|>=2.4,<2.5.12|>=2.6,<2.6.8",
                 "symfony/intl": ">=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
                 "symfony/routing": ">=2,<2.0.19",
@@ -1653,13 +1629,13 @@
                 "symfony/security-guard": ">=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
                 "symfony/security-http": ">=2.3,<2.3.41|>=2.4,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
                 "symfony/serializer": ">=2,<2.0.11",
-                "symfony/symfony": ">=2,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
+                "symfony/symfony": ">=2,<2.7.49|>=2.8,<2.8.44|>=3,<3.3.18|>=3.4,<3.4.14|>=4,<4.0.14|>=4.1,<4.1.3",
                 "symfony/translation": ">=2,<2.0.17",
                 "symfony/validator": ">=2,<2.0.24|>=2.1,<2.1.12|>=2.2,<2.2.5|>=2.3,<2.3.3",
                 "symfony/web-profiler-bundle": ">=2,<2.3.19|>=2.4,<2.4.9|>=2.5,<2.5.4",
                 "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
                 "thelia/backoffice-default-template": ">=2.1,<2.1.2",
-                "thelia/thelia": ">=2.1,<2.1.2|>=2.1.0-beta1,<2.1.3",
+                "thelia/thelia": ">=2.1.0-beta1,<2.1.3|>=2.1,<2.1.2",
                 "titon/framework": ">=0,<9.9.99",
                 "twig/twig": "<1.20",
                 "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.30|>=8,<8.7.17|>=9,<9.3.2",
@@ -1679,9 +1655,10 @@
                 "zendframework/zend-captcha": ">=2,<2.4.9|>=2.5,<2.5.2",
                 "zendframework/zend-crypt": ">=2,<2.4.9|>=2.5,<2.5.2",
                 "zendframework/zend-db": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.10|>=2.3,<2.3.5",
-                "zendframework/zend-diactoros": ">=1,<1.0.4",
+                "zendframework/zend-diactoros": ">=1,<1.8.4",
+                "zendframework/zend-feed": ">=1,<2.10.3",
                 "zendframework/zend-form": ">=2,<2.2.7|>=2.3,<2.3.1",
-                "zendframework/zend-http": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.3,<2.3.8|>=2.4,<2.4.1",
+                "zendframework/zend-http": ">=1,<2.8.1",
                 "zendframework/zend-json": ">=2.1,<2.1.6|>=2.2,<2.2.6",
                 "zendframework/zend-ldap": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.8|>=2.3,<2.3.3",
                 "zendframework/zend-mail": ">=2,<2.4.11|>=2.5,<2.7.2",
@@ -1712,7 +1689,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2018-07-18 13:51:34"
+            "time": "2018-08-07 14:47:17"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

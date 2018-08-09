@@ -43,7 +43,7 @@ $eShopUrl = $controller->getEshopUrl();
   </form>
 </div>
 
-<h3>Mám</h3>
+<h3>Vlastním</h3>
 <div class="row">
   <div class="manifest owning">
     <div class="col">
