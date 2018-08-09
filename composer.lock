@@ -9,11 +9,11 @@
     "packages": [
         {
             "name": "drd-plus/frontend-skeleton",
-            "version": "1.0.33",
+            "version": "1.0.34",
             "source": {
                 "type": "git",
                 "url": "/home/jaroslav/Projects/drd-plus/frontend-skeleton",
-                "reference": "bc9080257a76c15776064545826499cdca1b68ca"
+                "reference": "9300e5b94aaad1d6f85e1d6d9b567a97eee5dcf8"
             },
             "require": {
                 "ext-dom": "*",
@@ -65,7 +65,7 @@
                 "skeleton",
                 "view"
             ],
-            "time": "2018-08-09 09:47:15"
+            "time": "2018-08-09 11:40:18"
         },
         {
             "name": "granam/exceptions-hierarchy",
