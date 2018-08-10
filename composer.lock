@@ -4,16 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7d2bb54e7a71414160ab3b2f0f11b288",
-    "content-hash": "07686c7c0b490eefa258fc5dc4a52de9",
+    "hash": "50bddadac84e361c4660b84602ca9804",
+    "content-hash": "409d1e29a5ae6cec8228ef0785929dd7",
     "packages": [
         {
             "name": "drd-plus/frontend-skeleton",
-            "version": "1.0.34",
+            "version": "1.0.36",
             "source": {
                 "type": "git",
-                "url": "/home/jaroslav/Projects/drd-plus/frontend-skeleton",
-                "reference": "9300e5b94aaad1d6f85e1d6d9b567a97eee5dcf8"
+                "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
+                "reference": "34b4cb8f94b623b4f4a03134d9b7adb1dc5010c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/34b4cb8f94b623b4f4a03134d9b7adb1dc5010c5",
+                "reference": "34b4cb8f94b623b4f4a03134d9b7adb1dc5010c5",
+                "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
@@ -42,37 +48,27 @@
                     "Tests\\": "Tests/"
                 }
             },
-            "scripts": {
-                "pre-autoload-dump": [
-                    "rm -f ./vendor/bin/assets && ln -s ../../bin/assets ./vendor/bin/"
-                ],
-                "post-update-cmd": [
-                    "php ./vendor/bin/assets --css --dir=css"
-                ],
-                "post-install-cmd": [
-                    "php ./vendor/bin/assets --css --dir=css"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "Skeleton for DrD+ pages",
             "keywords": [
+                "Skeleton",
                 "drd plus",
                 "frontend",
                 "helper",
                 "pages",
-                "skeleton",
                 "view"
             ],
-            "time": "2018-08-09 11:40:18"
+            "time": "2018-08-10 08:22:31"
         },
         {
             "name": "granam/exceptions-hierarchy",
             "version": "4.0.2",
             "source": {
                 "type": "git",
-                "url": "/home/jaroslav/Projects/granam/exceptions-hierarchy",
+                "url": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy.git",
                 "reference": "846b8592c8b673818569bbb103016723130bbf98"
             },
             "require": {
@@ -106,7 +102,7 @@
             "version": "4.0.1",
             "source": {
                 "type": "git",
-                "url": "/home/jaroslav/Projects/granam/scalar",
+                "url": "https://github.com/jaroslavtyc/granam-scalar.git",
                 "reference": "e31a7ef14a25f9fb7a3e926773b1571c8dd35fb1"
             },
             "require": {
@@ -148,7 +144,7 @@
             "version": "3.0.1",
             "source": {
                 "type": "git",
-                "url": "/home/jaroslav/Projects/granam/strict-object",
+                "url": "https://github.com/jaroslavtyc/granam-strict-object.git",
                 "reference": "58456d294ac6671316f0a688a682f85467c7a37b"
             },
             "require": {
@@ -248,7 +244,7 @@
             "version": "3.0.3",
             "source": {
                 "type": "git",
-                "url": "/home/jaroslav/Projects/granam/tools",
+                "url": "https://github.com/jaroslavtyc/granam-tools.git",
                 "reference": "281a08cf7e7d7665b20855f002a7b9180e94c86a"
             },
             "require": {
