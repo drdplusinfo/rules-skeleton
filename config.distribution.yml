@@ -1,0 +1,7 @@
+web:
+  last_stable_version: '1.0'
+  repository: null
+  free_access: false
+  hide_home_button: false
+google:
+  analytics_id: UA-121206931-1
