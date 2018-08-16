@@ -36,7 +36,12 @@
     "roave/security-advisories": "dev-master"
   },
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "frontend-skeleton": {
+      "skip-injecting": [
+        "config.distribution.yml"
+      ]
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true
