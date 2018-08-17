@@ -13,25 +13,6 @@ class HtmlHelperTest extends \DrdPlus\Tests\FrontendSkeleton\HtmlHelperTest
 
     /**
      * @test
-     * @dataProvider providePublicAndLocalLinks
-     * @param string $publicLink
-     * @param string $expectedLocalLink
-     */
-    public function I_can_turn_public_link_to_local(string $publicLink, string $expectedLocalLink): void
-    {
-        self::assertSame($expectedLocalLink, HtmlHelper::turnToLocalLink($publicLink));
-    }
-
-    public function providePublicAndLocalLinks(): array
-    {
-        return [
-            ['https://www.drdplus.info', 'http://www.drdplus.loc:88'],
-            ['https://hranicar.drdplus.info', 'http://hranicar.drdplus.loc:88'],
-        ];
-    }
-
-    /**
-     * @test
      */
     public function I_can_get_html_document_with_block(): void
     {
@@ -40,8 +21,7 @@ class HtmlHelperTest extends \DrdPlus\Tests\FrontendSkeleton\HtmlHelperTest
             self::assertEmpty($blockNamesToExpectedContent, 'No blocks to test');
         }
         $document = $this->getHtmlDocument();
-        $dirs = new Dirs($this->getMasterDocumentRoot(), $this->getDocumentRoot());
-        $htmlHelper = HtmlHelper::createFromGlobals($dirs);
+        $htmlHelper = HtmlHelper::createFromGlobals($this->createDirs());
         foreach ($blockNamesToExpectedContent as $blockName => $expectedContent) {
             $documentWithBlock = $htmlHelper->getDocumentWithBlock($blockName, $document);
             self::assertSame($expectedContent, $documentWithBlock->body->innerHTML);

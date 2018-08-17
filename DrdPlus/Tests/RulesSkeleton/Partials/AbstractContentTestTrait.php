@@ -17,9 +17,13 @@ use Gt\Dom\HTMLDocument;
  * @method static assertFalse($value, $message = '')
  * @method static assertNotSame($expected, $actual, $message = '')
  * @method static fail($message)
+ * @method \DrdPlus\RulesSkeleton\Dirs createDirs(string $documentRoot = null)
  */
 trait AbstractContentTestTrait
 {
+
+    use DirsForTestsTrait;
+
     private static $rulesContentForDev = [];
     private static $rulesForDevHtmlDocument = [];
 

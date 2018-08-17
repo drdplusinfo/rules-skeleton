@@ -1,9 +1,9 @@
 <?php
 /** @var \DrdPlus\RulesSkeleton\RulesController $controller */
 /** @noinspection PhpIncludeInspection */
-if (require $controller->getDirs()->getGenericPartsRoot() . '/router.php') {
+if (require $controller->getConfiguration()->getDirs()->getGenericPartsRoot() . '/router.php') {
     return ''; // routing solved
 }
 
 /** @noinspection PhpIncludeInspection */
-return require $controller->getDirs()->getVendorRoot() . '/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';
+return require $controller->getConfiguration()->getDirs()->getVendorRoot() . '/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';

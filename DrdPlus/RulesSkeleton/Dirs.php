@@ -1,22 +1,34 @@
 <?php
 declare(strict_types=1);
-/** be strict for parameter types, https://www.quora.com/Are-strict_types-in-PHP-7-not-a-bad-idea */
 
 namespace DrdPlus\RulesSkeleton;
 
 class Dirs extends \DrdPlus\FrontendSkeleton\Dirs
 {
-    protected function populateSubRoots(string $masterDocumentRoot, string $documentRoot): void
+
+    /** @var bool */
+    private $restrictedWebRootActive;
+
+    protected function populateSubRoots(string $documentRoot): void
     {
-        parent::populateSubRoots($masterDocumentRoot, $documentRoot);
-        $this->setWebRoot($this->getDocumentRoot() . '/web/passed');
+        parent::populateSubRoots($documentRoot);
         $this->genericPartsRoot = __DIR__ . '/../../parts/rules-skeleton';
+        $this->restrictedWebRootActive = false;
     }
 
-    public function setWebRoot(string $webRoot): Dirs
+    public function activateRestrictedWebRoot(): void
     {
-        $this->webRoot = $webRoot;
+        $this->restrictedWebRootActive = true;
+    }
 
-        return $this;
+    public function getVersionWebRoot(string $forVersion): string
+    {
+        if (!$this->restrictedWebRootActive) {
+            return parent::getVersionWebRoot($forVersion);
+        }
+
+        return \file_exists($this->getVendorRoot() . '/drd-plus/rules-skeleton/web/pass')
+            ? $this->getVendorRoot() . '/drd-plus/rules-skeleton/web/pass'
+            : $this->getDocumentRoot() . '/web/pass';
     }
 }
