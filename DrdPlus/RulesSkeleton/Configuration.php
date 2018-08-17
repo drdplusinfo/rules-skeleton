@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use DrdPlus\FrontendSkeleton\Dirs;
-
 /**
  * @method static Configuration createFromYml(Dirs $dirs)
+ * @method Dirs getDirs
  */
 class Configuration extends \DrdPlus\FrontendSkeleton\Configuration
 {
@@ -27,7 +26,10 @@ class Configuration extends \DrdPlus\FrontendSkeleton\Configuration
     protected function guardValidEshopUrl(array $settings): void
     {
         if (!\filter_var($settings[self::WEB][self::ESHOP_URL] ?? '', FILTER_VALIDATE_URL)) {
-            throw new Exceptions\InvalidEshopUrl('Given e-shop URL from is not valid. Got ' . $settings[self::WEB][self::ESHOP_URL] ?? 'nothing');
+            throw new Exceptions\InvalidEshopUrl(
+                'Given e-shop URL from is not valid, expected some URL in configuration '
+                . static::WEB . ': ' . static::ESHOP_URL . ', got ' . ($settings[self::WEB][self::ESHOP_URL] ?? 'nothing')
+            );
         }
     }
 
