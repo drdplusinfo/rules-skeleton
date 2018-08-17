@@ -1,7 +1,8 @@
 web:
   last_stable_version: '1.0'
-  repository: null
+  repository_url: git@github.com:jaroslavtyc/drd-plus-rules-skeleton-web.git
   free_access: false
   hide_home_button: false
+  eshop_url: https://obchod.altar.cz/draci-doupe-a-jine-rpg-hry-draci-doupe-plus-c-1_7.html
 google:
   analytics_id: UA-121206931-1

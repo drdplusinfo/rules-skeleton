@@ -1,7 +1,2 @@
 web:
-  last_stable_version: '1.0'
-  repository: /home/jaroslav/Projects/drd-plus/rules/web/rules-skeleton # git@github.com:jaroslavtyc/drd-plus-rules-skeleton-web.git
-  free_access: false
-  hide_home_button: false
-google:
-  analytics_id: UA-121206931-1
+  repository_url: /home/jaroslav/Projects/drd-plus/rules/webs/rules-skeleton # git@github.com:jaroslavtyc/drd-plus-rules-skeleton-web.git
