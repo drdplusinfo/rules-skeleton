@@ -13,7 +13,7 @@
             "source": {
                 "type": "git",
                 "url": "/home/jaroslav/Projects/drd-plus/frontend-skeleton",
-                "reference": "24399fd65223ab40b8dc11cd1865271b577305dc"
+                "reference": "1975e43e189de7dd17b8532d4ea49eda438a32e5"
             },
             "require": {
                 "composer-plugin-api": "^1.0",
@@ -75,7 +75,7 @@
                 "skeleton",
                 "view"
             ],
-            "time": "2018-08-17 07:08:44"
+            "time": "2018-08-17 07:15:04"
         },
         {
             "name": "erusev/parsedown",
@@ -796,16 +796,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "1.7.1",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "5d9311d4555787c8a57fea15f82471499aedf712"
+                "reference": "576aab9b5abb2ed11a1c52353a759363216a4ad2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/5d9311d4555787c8a57fea15f82471499aedf712",
-                "reference": "5d9311d4555787c8a57fea15f82471499aedf712",
+                "url": "https://api.github.com/repos/composer/composer/zipball/576aab9b5abb2ed11a1c52353a759363216a4ad2",
+                "reference": "576aab9b5abb2ed11a1c52353a759363216a4ad2",
                 "shasum": ""
             },
             "require": {
@@ -872,7 +872,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2018-08-07 07:39:23"
+            "time": "2018-08-16 14:57:12"
         },
         {
             "name": "composer/semver",
@@ -999,16 +999,16 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "c919dc6c62e221fc6406f861ea13433c0aa24f08"
+                "reference": "e1809da56ce1bd1b547a752936817341ac244d8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/c919dc6c62e221fc6406f861ea13433c0aa24f08",
-                "reference": "c919dc6c62e221fc6406f861ea13433c0aa24f08",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/e1809da56ce1bd1b547a752936817341ac244d8e",
+                "reference": "e1809da56ce1bd1b547a752936817341ac244d8e",
                 "shasum": ""
             },
             "require": {
@@ -1039,7 +1039,7 @@
                 "Xdebug",
                 "performance"
             ],
-            "time": "2018-04-11 15:42:36"
+            "time": "2018-08-16 10:54:23"
         },
         {
             "name": "doctrine/instantiator",
