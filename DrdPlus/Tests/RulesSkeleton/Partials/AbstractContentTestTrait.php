@@ -269,10 +269,10 @@ trait AbstractContentTestTrait
      */
     protected function createConfiguration(Dirs $dirs = null): \DrdPlus\FrontendSkeleton\Configuration
     {
-        if ($dirs && $dirs instanceof Dirs) {
-            return \DrdPlus\FrontendSkeleton\Configuration::createFromYml($dirs);
+        if (!$dirs || $dirs instanceof \DrdPlus\RulesSkeleton\Dirs) {
+            return Configuration::createFromYml($dirs ?? $this->createDirs());
         }
 
-        return Configuration::createFromYml($dirs ?? $this->createDirs());
+        return \DrdPlus\FrontendSkeleton\Configuration::createFromYml($dirs ?? $this->createDirs());
     }
 }
