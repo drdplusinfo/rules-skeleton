@@ -34,7 +34,7 @@ class PartsTest extends AbstractContentTest
 
     private function getFrontendSkeletonGenericParts(): array
     {
-        $expectedGenericPartsDir = $this->getDocumentRoot() . '/vendor/drd-plus/frontend-skeleton/parts/frontend-skeleton';
+        $expectedGenericPartsDir = $this->getDocumentRoot() . '/vendor/drdplus/frontend-skeleton/parts/frontend-skeleton';
         self::assertDirectoryExists($expectedGenericPartsDir, 'Can not find frontend skeleton parts dir');
         $expectedGenericParts = $this->getDirFiles($expectedGenericPartsDir);
         self::assertNotEmpty($expectedGenericParts, "No frontend skeleton generic parts found in {$expectedGenericPartsDir}");

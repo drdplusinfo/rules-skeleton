@@ -17,7 +17,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "/home/jaroslav/Projects/drdplus/frontend-skeleton"
+      "url": "/home/jaroslav/projects/drdplus/frontend-skeleton"
     }
   ],
   "require": {

@@ -55,8 +55,6 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 
             return;
         }
-        self::assertFileExists($this->getEshopFileName());
-        $eshopUrl = \trim(\file_get_contents($this->getEshopFileName()));
         self::assertRegExp('~^https://obchod\.altar\.cz/[^/]+\.html$~', $eshopUrl);
         $link = $this->getLinkToEshopFromRulesAuthorsBlock();
 

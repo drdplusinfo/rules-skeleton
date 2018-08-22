@@ -236,7 +236,7 @@ trait AbstractContentTestTrait
     {
         return \file_exists($this->getDocumentRoot() . '/parts/rules-skeleton')
             ? $this->getDocumentRoot() . '/parts/rules-skeleton'
-            : $this->getVendorRoot() . '/drd-plus/rules-skeleton/parts/rules-skeleton';
+            : $this->getVendorRoot() . '/drdplus/rules-skeleton/parts/rules-skeleton';
     }
 
     protected function getVendorRoot(): string

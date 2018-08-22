@@ -21,7 +21,7 @@ if ($tablesCache->isCacheValid()) {
 }
 // must NOT include current content.php as it uses router and that requires this script so endless recursion happens
 /** @noinspection PhpIncludeInspection */
-$rawContent = require $controller->getDirs()->getDocumentRoot() . '/vendor/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';
+$rawContent = require $controller->getDirs()->getDocumentRoot() . '/vendor/drdplus/frontend-skeleton/parts/frontend-skeleton/content.php';
 $rawContentDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($rawContent);
 $tables = $htmlHelper->findTablesWithIds($rawContentDocument, $controller->getRequest()->getWantedTablesIds());
 $tablesContent = '';

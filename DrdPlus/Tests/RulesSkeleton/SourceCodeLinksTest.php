@@ -62,7 +62,7 @@ class SourceCodeLinksTest extends AbstractContentTest
 
     /**
      * @param string $link like
-     *     https://github.com/jaroslavtyc/drd-plus-professions/blob/master/DrdPlus/Professions/Priest.php
+     *     https://github.com/jaroslavtyc/drdplus-professions/blob/master/DrdPlus/Professions/Priest.php
      * @return string
      */
     private function toLocalPath(string $link): string
@@ -72,7 +72,7 @@ class SourceCodeLinksTest extends AbstractContentTest
         $withLocalSubDirs = \preg_replace_callback(
             '~^drd-(?:plus-)?(?<projectName>[^/]+)~',
             function (array $matches) {
-                return 'drd-plus/' . $matches['projectName'];
+                return 'drdplus/' . $matches['projectName'];
             },
             $withoutGithubSpecifics
         );

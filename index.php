@@ -16,9 +16,8 @@ if (PHP_SAPI !== 'cli') {
     \DrdPlus\FrontendSkeleton\TracyDebugger::enable($htmlHelper->isInProduction());
 }
 
-$htmlHelper = \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($dirs);
 $configuration = \DrdPlus\RulesSkeleton\Configuration::createFromYml($dirs);
 $controller = new \DrdPlus\RulesSkeleton\RulesController($configuration, $htmlHelper);
 
 /** @noinspection PhpIncludeInspection */
-require $dirs->getVendorRoot() . '/drd-plus/frontend-skeleton/index.php';
+require $dirs->getVendorRoot() . '/drdplus/frontend-skeleton/index.php';

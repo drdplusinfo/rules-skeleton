@@ -27,7 +27,7 @@ class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigT
         $preAutoloadDumpScripts = static::$composerConfig['scripts']['pre-autoload-dump'] ?? [];
         self::assertNotEmpty($preAutoloadDumpScripts, 'Missing pre-autoload-dump scripts');
         $sourceSkeleton = $this->isSkeletonChecked(__DIR__ . '/../../..') ? 'frontend-skeleton' : 'rules-skeleton';
-        $fileCopyScript = "cp ./vendor/drd-plus/$sourceSkeleton/phpunit.xml.dist .";
+        $fileCopyScript = "cp ./vendor/drdplus/$sourceSkeleton/phpunit.xml.dist .";
         self::assertContains(
             $fileCopyScript,
             $preAutoloadDumpScripts,
@@ -44,7 +44,7 @@ class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigT
         $preAutoloadDumpScripts = static::$composerConfig['scripts']['pre-autoload-dump'] ?? [];
         self::assertNotEmpty($preAutoloadDumpScripts, 'Missing pre-autoload-dump scripts');
         $sourceSkeleton = $this->isSkeletonChecked(__DIR__ . '/../../..') ? 'frontend-skeleton' : 'rules-skeleton';
-        $fileCopyScript = "cp ./vendor/drd-plus/$sourceSkeleton/google8d8724e0c2818dfc.html .";
+        $fileCopyScript = "cp ./vendor/drdplus/$sourceSkeleton/google8d8724e0c2818dfc.html .";
         self::assertContains(
             $fileCopyScript,
             $preAutoloadDumpScripts,
@@ -67,7 +67,7 @@ class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigT
         }
         foreach (['css', 'js', 'images'] as $assets) {
             self::assertContains(
-                "rm -fr ./$assets/generic && cp -r ./vendor/drd-plus/rules-skeleton/$assets/generic ./$assets/",
+                "rm -fr ./$assets/generic && cp -r ./vendor/drdplus/rules-skeleton/$assets/generic ./$assets/",
                 $preAutoloadDump,
                 "Missing script to copy $assets assets, there are only scripts "
                 . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($preAutoloadDump, true))

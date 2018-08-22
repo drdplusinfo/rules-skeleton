@@ -27,8 +27,8 @@ class Dirs extends \DrdPlus\FrontendSkeleton\Dirs
             return parent::getVersionWebRoot($forVersion);
         }
 
-        return \file_exists($this->getVendorRoot() . '/drd-plus/rules-skeleton/web/pass')
-            ? $this->getVendorRoot() . '/drd-plus/rules-skeleton/web/pass'
+        return \file_exists($this->getVendorRoot() . '/drdplus/rules-skeleton/web/pass')
+            ? $this->getVendorRoot() . '/drdplus/rules-skeleton/web/pass'
             : $this->getDocumentRoot() . '/web/pass';
     }
 }

@@ -4,16 +4,16 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5bd1ce128a9855d724e5ebda01286aa4",
-    "content-hash": "d49f815b0a37a9f692babf22fef0e83f",
+    "hash": "fe9dae0412b1058c4ea9fd4b0610ecae",
+    "content-hash": "2ce04bf66846babcfab0cd038f20c88b",
     "packages": [
         {
-            "name": "drd-plus/frontend-skeleton",
+            "name": "drdplus/frontend-skeleton",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "/home/jaroslav/Projects/drd-plus/frontend-skeleton",
-                "reference": "1975e43e189de7dd17b8532d4ea49eda438a32e5"
+                "url": "/home/jaroslav/projects/drdplus/frontend-skeleton",
+                "reference": "3b08f8595ec384e33bf993bcb162a775121d061e"
             },
             "require": {
                 "composer-plugin-api": "^1.0",
@@ -53,14 +53,11 @@
                 }
             },
             "scripts": {
-                "pre-autoload-dump": [
-                    "rm -f ./vendor/bin/assets && ln -s ../../bin/assets ./vendor/bin/"
-                ],
                 "post-update-cmd": [
-                    "php ./vendor/bin/assets --css --dir=css"
+                    "php bin/assets --css --dir=css"
                 ],
                 "post-install-cmd": [
-                    "php ./vendor/bin/assets --css --dir=css"
+                    "php bin/assets --css --dir=css"
                 ]
             },
             "license": [
@@ -75,7 +72,7 @@
                 "skeleton",
                 "view"
             ],
-            "time": "2018-08-17 07:15:04"
+            "time": "2018-08-22 12:16:30"
         },
         {
             "name": "erusev/parsedown",
@@ -1891,16 +1888,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.3.1",
+            "version": "7.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a"
+                "reference": "34705f81bddc3f505b9599a2ef96e2b4315ba9b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9b14c17860eccb440a0352a117a81eb754cff5a",
-                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/34705f81bddc3f505b9599a2ef96e2b4315ba9b8",
+                "reference": "34705f81bddc3f505b9599a2ef96e2b4315ba9b8",
                 "shasum": ""
             },
             "require": {
@@ -1971,7 +1968,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-08-07 06:44:28"
+            "time": "2018-08-22 06:39:21"
         },
         {
             "name": "psr/log",
@@ -3275,7 +3272,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drd-plus/frontend-skeleton": 20,
+        "drdplus/frontend-skeleton": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,
