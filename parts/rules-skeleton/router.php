@@ -6,8 +6,9 @@ if (\array_key_exists('tables', $_GET) || \array_key_exists('tabulky', $_GET)) {
     return true; // routing solved
 }
 
-if ((($_SERVER['QUERY_STRING'] ?? false) === 'pdf' || !\file_exists($controller->getConfiguration()->getDirs()->getDocumentRoot() . '/web'))
-    && \file_exists($controller->getConfiguration()->getDirs()->getDocumentRoot() . '/pdf') && \glob($controller->getConfiguration()->getDirs()->getDocumentRoot() . '/pdf/*.pdf')
+if (($_SERVER['QUERY_STRING'] ?? false) === 'pdf'
+    && \file_exists($controller->getConfiguration()->getDirs()->getDocumentRoot() . '/pdf')
+    && \glob($controller->getConfiguration()->getDirs()->getDocumentRoot() . '/pdf/*.pdf')
 ) {
     /** @noinspection PhpIncludeInspection */
     echo include $controller->getConfiguration()->getDirs()->getGenericPartsRoot() . '/get_pdf.php';
@@ -37,7 +38,7 @@ if (empty($visitorCanAccessContent) && !$controller->getConfiguration()->hasFree
 }
 
 if ($visitorCanAccessContent) {
-    $controller->getConfiguration()->getDirs()->allowAccessToWebFiles();
+    $controller->allowAccess();
 }
 
 return false; // routing passed to index

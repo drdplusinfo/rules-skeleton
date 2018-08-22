@@ -52,10 +52,10 @@ class DirsTest extends \DrdPlus\Tests\FrontendSkeleton\DirsTest
         $expectedPassWebRoot = $this->unifyPath($this->getDocumentRoot() . '/web/pass');
         $expectedPassedWebRoot = $this->unifyPath($this->getDocumentRoot() . '/versions/foo/web');
         $dirs = $this->createDirs();
-        self::assertTrue($dirs->isRestrictedWebRootActive(), 'Web files should be restricted by default');
+        self::assertFalse($dirs->isAllowedAccessToWebFiles(), 'Web files should be restricted by default');
         self::assertSame($expectedPassWebRoot, $this->unifyPath($dirs->getVersionWebRoot('foo')));
         $dirs->allowAccessToWebFiles();
-        self::assertFalse($dirs->isRestrictedWebRootActive(), 'Web files should be no more restricted');
+        self::assertTrue($dirs->isAllowedAccessToWebFiles(), 'Web files should be no more restricted');
         self::assertSame($expectedPassedWebRoot, $this->unifyPath($dirs->getVersionWebRoot('foo')));
     }
 

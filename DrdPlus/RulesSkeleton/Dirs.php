@@ -7,28 +7,28 @@ class Dirs extends \DrdPlus\FrontendSkeleton\Dirs
 {
 
     /** @var bool */
-    protected $restrictedWebRootActive;
+    protected $allowAccessToWebFiles;
 
     protected function populateSubRoots(string $documentRoot): void
     {
         parent::populateSubRoots($documentRoot);
         $this->genericPartsRoot = __DIR__ . '/../../parts/rules-skeleton';
-        $this->restrictedWebRootActive = true;
+        $this->allowAccessToWebFiles = false;
     }
 
-    public function isRestrictedWebRootActive(): bool
+    public function isAllowedAccessToWebFiles(): bool
     {
-        return $this->restrictedWebRootActive;
+        return $this->allowAccessToWebFiles;
     }
 
     public function allowAccessToWebFiles(): void
     {
-        $this->restrictedWebRootActive = false;
+        $this->allowAccessToWebFiles = true;
     }
 
     public function getVersionWebRoot(string $forVersion): string
     {
-        if (!$this->restrictedWebRootActive) {
+        if ($this->isAllowedAccessToWebFiles()) {
             return parent::getVersionWebRoot($forVersion);
         }
 

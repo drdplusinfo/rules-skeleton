@@ -80,4 +80,16 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
 
         return $visitorCanAccessContent;
     }
+
+    public function isAccessAllowed(): bool
+    {
+        return $this->getConfiguration()->getDirs()->isAllowedAccessToWebFiles();
+    }
+
+    public function allowAccess(): RulesController
+    {
+        $this->getConfiguration()->getDirs()->allowAccessToWebFiles();
+
+        return $this;
+    }
 }
