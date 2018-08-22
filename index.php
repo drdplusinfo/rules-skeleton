@@ -17,7 +17,7 @@ if (PHP_SAPI !== 'cli') {
 }
 
 $configuration = \DrdPlus\RulesSkeleton\Configuration::createFromYml($dirs);
-$controller = new \DrdPlus\RulesSkeleton\RulesController($configuration, $htmlHelper);
+$controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController($configuration, $htmlHelper);
 
 /** @noinspection PhpIncludeInspection */
 require $dirs->getVendorRoot() . '/drdplus/frontend-skeleton/index.php';
