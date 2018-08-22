@@ -38,6 +38,9 @@
   "config": {
     "sort-packages": true
   },
+  "extra": {
+    "class": "DrdPlus\\RulesSkeleton\\SkeletonInjectorComposerPlugin"
+  },
   "minimum-stability": "dev",
   "prefer-stable": true
 }

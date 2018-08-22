@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fe9dae0412b1058c4ea9fd4b0610ecae",
-    "content-hash": "2ce04bf66846babcfab0cd038f20c88b",
+    "hash": "aa086dcf93377d563b5032f6bb8abb79",
+    "content-hash": "fa91e17fb8dbc2bf1e9334646e054851",
     "packages": [
         {
             "name": "drdplus/frontend-skeleton",
@@ -13,7 +13,7 @@
             "source": {
                 "type": "git",
                 "url": "/home/jaroslav/projects/drdplus/frontend-skeleton",
-                "reference": "3b08f8595ec384e33bf993bcb162a775121d061e"
+                "reference": "bf8ec4eb9482cd7dc058e1c7217e5e99183891c5"
             },
             "require": {
                 "composer-plugin-api": "^1.0",
@@ -72,7 +72,7 @@
                 "skeleton",
                 "view"
             ],
-            "time": "2018-08-22 12:16:30"
+            "time": "2018-08-22 14:04:22"
         },
         {
             "name": "erusev/parsedown",

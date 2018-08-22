@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 
 class HtmlHelperTest extends \DrdPlus\Tests\FrontendSkeleton\HtmlHelperTest

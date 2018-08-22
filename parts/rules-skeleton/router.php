@@ -30,11 +30,14 @@ if (empty($visitorCanAccessContent) && !$controller->getConfiguration()->hasFree
                 $visitorCanAccessContent = $controller->activateTrial($now ?? new \DateTime());
             }
             if (!$visitorCanAccessContent) {
-                $controller->getConfiguration()->getDirs()->activateRestrictedWebRoot();
                 $controller->addBodyClass('pass');
             }
         }
     }
+}
+
+if ($visitorCanAccessContent) {
+    $controller->getConfiguration()->getDirs()->allowAccessToWebFiles();
 }
 
 return false; // routing passed to index

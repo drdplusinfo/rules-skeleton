@@ -3,6 +3,7 @@ namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
 use DeviceDetector\Parser\Bot;
 use DrdPlus\FrontendSkeleton\CookiesService;
+use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\FrontendSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
@@ -17,7 +18,6 @@ use Gt\Dom\HTMLDocument;
  * @method static assertFalse($value, $message = '')
  * @method static assertNotSame($expected, $actual, $message = '')
  * @method static fail($message)
- * @method \DrdPlus\RulesSkeleton\Dirs createDirs(string $documentRoot = null)
  */
 trait AbstractContentTestTrait
 {
@@ -261,5 +261,18 @@ trait AbstractContentTestTrait
     ): \DrdPlus\FrontendSkeleton\HtmlHelper
     {
         return new HtmlHelper($dirs ?? $this->createDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered, $showIntroductionOnly);
+    }
+
+    /**
+     * @param Dirs|null $dirs
+     * @return \DrdPlus\FrontendSkeleton\Configuration|Configuration
+     */
+    protected function createConfiguration(Dirs $dirs = null): \DrdPlus\FrontendSkeleton\Configuration
+    {
+        if ($dirs && $dirs instanceof Dirs) {
+            return \DrdPlus\FrontendSkeleton\Configuration::createFromYml($dirs);
+        }
+
+        return Configuration::createFromYml($dirs ?? $this->createDirs());
     }
 }

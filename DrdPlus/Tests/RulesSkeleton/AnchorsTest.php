@@ -1,6 +1,7 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\String\StringTools;
 use Gt\Dom\Element;
 
@@ -55,6 +56,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
 
             return;
         }
+        $eshopUrl = $this->createConfiguration()->getEshopUrl();
         self::assertRegExp('~^https://obchod\.altar\.cz/[^/]+\.html$~', $eshopUrl);
         $link = $this->getLinkToEshopFromRulesAuthorsBlock();
 
@@ -115,7 +117,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
     {
         $linksToCharacterSheet = [];
         foreach ($this->getExternalAnchors() as $link) {
-            $link = $this->turnToLocalLink($link);
+            $link = HtmlHelper::turnToLocalLink($link);
             if (\strpos($link, 'charakternik.pdf')) {
                 $linksToCharacterSheet[] = $link;
             }
@@ -127,7 +129,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
         }
         self::assertGreaterThan(0, \count($linksToCharacterSheet), 'PDF character sheet is missing');
         $expectedOriginalLink = 'https://www.drdplus.info/pdf/charakternik.pdf';
-        $expectedLink = $this->turnToLocalLink($expectedOriginalLink);
+        $expectedLink = HtmlHelper::turnToLocalLink($expectedOriginalLink);
         foreach ($linksToCharacterSheet as $linkToCharacterSheet) {
             self::assertSame(
                 $expectedLink,
@@ -144,7 +146,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
     {
         $linksToJournal = [];
         foreach ($this->getExternalAnchors() as $link) {
-            $link = $this->turnToLocalLink($link);
+            $link = HtmlHelper::turnToLocalLink($link);
             if (\preg_match('~/denik_\w+\.pdf$~', $link)) {
                 $linksToJournal[] = $link;
             }
@@ -168,7 +170,7 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
         }
         self::assertTrue($this->getTestsConfiguration()->hasLinksToJournals());
         $expectedOriginalLink = $this->getExpectedLinkToJournal();
-        $expectedLink = $this->turnToLocalLink($expectedOriginalLink);
+        $expectedLink = HtmlHelper::turnToLocalLink($expectedOriginalLink);
         foreach ($linksToJournal as $linkToJournal) {
             self::assertSame(
                 $expectedLink,

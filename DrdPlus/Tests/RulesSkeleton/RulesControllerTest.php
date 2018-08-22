@@ -15,15 +15,6 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     use Partials\AbstractContentTestTrait;
 
     /**
-     * @param string|null $documentRoot
-     * @return \DrdPlus\FrontendSkeleton\Dirs|Dirs
-     */
-    protected function createDirs(string $documentRoot = null): \DrdPlus\FrontendSkeleton\Dirs
-    {
-        return new Dirs($this->getMasterDocumentRoot(), $documentRoot);
-    }
-
-    /**
      * @test
      */
     public function I_can_set_access_as_free_for_everyone(): void
