@@ -67,7 +67,7 @@ class SourceCodeLinksTest extends AbstractContentTest
      */
     private function toLocalPath(string $link): string
     {
-        $withoutWebRoot = \str_replace('https://github.com/jaroslavtyc/', '', $link);
+        $withoutWebRoot = \preg_replace('~https://github[.]com/[^/]+/~', '', $link);
         $withoutGithubSpecifics = \preg_replace('~(?<type>blob|tree)/master/~', '', $withoutWebRoot);
         $withLocalSubDirs = \preg_replace_callback(
             '~^drd-(?:plus-)?(?<projectName>[^/]+)~',
@@ -76,7 +76,7 @@ class SourceCodeLinksTest extends AbstractContentTest
             },
             $withoutGithubSpecifics
         );
-        $localProjectsRootDir = '/home/jaroslav/Projects';
+        $localProjectsRootDir = '/home/jaroslav/projects';
 
         $localPath = $localProjectsRootDir . '/' . $withLocalSubDirs;
         if (\file_exists($localPath) && \preg_match('~(?<type>blob|tree)/master/~', $withoutWebRoot, $matches)) {
