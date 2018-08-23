@@ -25,6 +25,9 @@ class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigT
      */
     public function Package_is_injected(): void
     {
+        if (!$this->isSkeletonChecked()) {
+            self::assertFalse(false, 'Intended for skeleton only');
+        }
         self::assertSame('composer-plugin', static::$composerConfig['type']);
         self::assertSame(SkeletonInjectorComposerPlugin::class, static::$composerConfig['extra']['class']);
     }
