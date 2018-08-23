@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "aa086dcf93377d563b5032f6bb8abb79",
-    "content-hash": "fa91e17fb8dbc2bf1e9334646e054851",
+    "hash": "e8d327a6fdbe0867a4c6415867920542",
+    "content-hash": "790e9188785156ab6c36584236d03817",
     "packages": [
         {
             "name": "drdplus/frontend-skeleton",
@@ -1091,6 +1091,28 @@
                 "instantiate"
             ],
             "time": "2017-07-22 11:58:36"
+        },
+        {
+            "name": "drdplus/rules-skeleton-web",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "/home/jaroslav/projects/drdplus/rules/webs/rules-skeleton",
+                "reference": "775a0e6e279b68b38f48d55dd711992f944c9757"
+            },
+            "type": "library",
+            "license": [
+                "MIT"
+            ],
+            "description": "Content for DrD+ rules skeleton",
+            "keywords": [
+                "content",
+                "drd plus",
+                "helper",
+                "rules",
+                "skeleton"
+            ],
+            "time": "2018-08-22 18:56:54"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -3273,7 +3295,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drdplus/frontend-skeleton": 20,
-        "roave/security-advisories": 20
+        "roave/security-advisories": 20,
+        "drdplus/rules-skeleton-web": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

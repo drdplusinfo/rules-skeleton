@@ -18,6 +18,10 @@
     {
       "type": "vcs",
       "url": "/home/jaroslav/projects/drdplus/frontend-skeleton"
+    },
+    {
+      "type": "vcs",
+      "url": "/home/jaroslav/projects/drdplus/rules/webs/rules-skeleton"
     }
   ],
   "require": {
@@ -33,7 +37,8 @@
     "composer/composer": "^1.7",
     "mockery/mockery": "~1.0",
     "phpunit/phpunit": "~7.0",
-    "roave/security-advisories": "dev-master"
+    "roave/security-advisories": "dev-master",
+    "drdplus/rules-skeleton-web": "dev-master"
   },
   "config": {
     "sort-packages": true
