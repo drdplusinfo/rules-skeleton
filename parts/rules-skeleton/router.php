@@ -19,20 +19,20 @@ if (($_SERVER['QUERY_STRING'] ?? false) === 'pdf'
 if (empty($visitorCanAccessContent) && !$controller->getConfiguration()->hasFreeAccess()) { // can be defined externally by including script
     $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorBot();
     if (!$visitorCanAccessContent) {
-        $visitorCanAccessContent = $controller->getUsagePolicy()->hasVisitorConfirmedOwnership();
+        if (!empty($_POST['confirm'])) {
+            $visitorCanAccessContent = $controller->getUsagePolicy()->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
+        }
+        if (!$visitorCanAccessContent && !empty($_POST['trial'])) {
+            $visitorCanAccessContent = $controller->activateTrial($now ?? new \DateTime());
+        }
+        if (!$visitorCanAccessContent) {
+            $visitorCanAccessContent = $controller->getUsagePolicy()->hasVisitorConfirmedOwnership();
+        }
         if (!$visitorCanAccessContent) {
             $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorUsingValidTrial();
         }
         if (!$visitorCanAccessContent) {
-            if (!empty($_POST['confirm'])) {
-                $visitorCanAccessContent = $controller->getUsagePolicy()->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
-            }
-            if (!$visitorCanAccessContent && !empty($_POST['trial'])) {
-                $visitorCanAccessContent = $controller->activateTrial($now ?? new \DateTime());
-            }
-            if (!$visitorCanAccessContent) {
-                $controller->addBodyClass('pass');
-            }
+            $controller->addBodyClass('pass');
         }
     }
 }
