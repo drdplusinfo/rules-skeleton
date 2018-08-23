@@ -69,15 +69,9 @@ class SourceCodeLinksTest extends AbstractContentTest
     {
         $withoutWebRoot = \preg_replace('~https://github[.]com/[^/]+/~', '', $link);
         $withoutGithubSpecifics = \preg_replace('~(?<type>blob|tree)/master/~', '', $withoutWebRoot);
-        $withLocalSubDirs = \preg_replace_callback(
-            '~^drd-(?:plus-)?(?<projectName>[^/]+)~',
-            function (array $matches) {
-                return 'drdplus/' . $matches['projectName'];
-            },
-            $withoutGithubSpecifics
-        );
+        $withLocalSubDirs = \preg_replace('~^granam-~', '/granam/', $withoutGithubSpecifics);
+        $withLocalSubDirs = \preg_replace('~^drdplus-~', '/drdplus/', $withLocalSubDirs);
         $localProjectsRootDir = '/home/jaroslav/projects';
-
         $localPath = $localProjectsRootDir . '/' . $withLocalSubDirs;
         if (\file_exists($localPath) && \preg_match('~(?<type>blob|tree)/master/~', $withoutWebRoot, $matches)) {
             if (\is_file($localPath)) {
