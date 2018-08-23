@@ -62,7 +62,7 @@ class PassTest extends AbstractContentTest
     private function I_can_continue_after_confirmation_of_owning(Element $confirmForm): void
     {
         self::assertSame('post', $confirmForm->getAttribute('method'));
-        $buttons =$confirmForm->getElementsByTagName('button');
+        $buttons = $confirmForm->getElementsByTagName('button');
         self::assertNotEmpty($buttons);
         $confirmButton = null;
         foreach ($buttons as $button) {
@@ -96,11 +96,16 @@ class PassTest extends AbstractContentTest
      */
     public function Crawlers_can_pass_without_licence_owning_confirmation(): void
     {
+        $passContent = $this->getPassContent(true /* not cached */);
+        $this->passIn();
+        $rulesContent = $this->fetchNonCachedContent();
+        $this->passOut();
+        self::assertNotSame($passContent, $rulesContent);
         foreach (RequestTest::getCrawlerUserAgents() as $crawlerUserAgent) {
             $_SERVER['HTTP_USER_AGENT'] = $crawlerUserAgent;
             self::assertSame(
                 $this->getPassContent(true /* not cached */),
-                $this->getContent(),
+                $this->fetchNonCachedContent(),
                 'Expected rules content for a crawler, skipping ownership confirmation page'
             );
         }
