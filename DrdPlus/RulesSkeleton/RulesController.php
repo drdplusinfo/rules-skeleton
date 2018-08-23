@@ -31,7 +31,9 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
                 $this->getWebVersions(),
                 $this->getConfiguration()->getDirs(),
                 $this->getHtmlHelper()->isInProduction(),
-                \basename($this->getConfiguration()->getDirs()->getDocumentRoot()) // can vary in relation to pass
+                $this->isAccessAllowed()
+                    ? 'passed'
+                    : 'pass'
             );
         }
 
