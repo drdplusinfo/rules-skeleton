@@ -8,6 +8,7 @@ class PartsTest extends AbstractContentTest
 {
     /**
      * @test
+     * @backupGlobals enabled
      */
     public function All_parts_from_frontend_skeleton_are_accessible_in_current_generic_parts_dir(): void
     {

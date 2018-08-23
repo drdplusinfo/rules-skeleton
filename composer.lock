@@ -996,16 +996,16 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "e1809da56ce1bd1b547a752936817341ac244d8e"
+                "reference": "e37cbd80da64afe314c72de8d2d2fec0e40d9373"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/e1809da56ce1bd1b547a752936817341ac244d8e",
-                "reference": "e1809da56ce1bd1b547a752936817341ac244d8e",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/e37cbd80da64afe314c72de8d2d2fec0e40d9373",
+                "reference": "e37cbd80da64afe314c72de8d2d2fec0e40d9373",
                 "shasum": ""
             },
             "require": {
@@ -1036,7 +1036,7 @@
                 "Xdebug",
                 "performance"
             ],
-            "time": "2018-08-16 10:54:23"
+            "time": "2018-08-23 12:00:19"
         },
         {
             "name": "doctrine/instantiator",
@@ -1098,7 +1098,7 @@
             "source": {
                 "type": "git",
                 "url": "/home/jaroslav/projects/drdplus/rules/webs/rules-skeleton",
-                "reference": "775a0e6e279b68b38f48d55dd711992f944c9757"
+                "reference": "0306ad66eddb089de6a3efad432270e9b30b68eb"
             },
             "type": "library",
             "license": [
@@ -1112,7 +1112,7 @@
                 "rules",
                 "skeleton"
             ],
-            "time": "2018-08-22 18:56:54"
+            "time": "2018-08-23 14:56:26"
         },
         {
             "name": "hamcrest/hamcrest-php",
