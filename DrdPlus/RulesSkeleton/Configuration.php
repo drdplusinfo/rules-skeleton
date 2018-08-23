@@ -27,7 +27,7 @@ class Configuration extends \DrdPlus\FrontendSkeleton\Configuration
     {
         if (!\filter_var($settings[self::WEB][self::ESHOP_URL] ?? '', FILTER_VALIDATE_URL)) {
             throw new Exceptions\InvalidEshopUrl(
-                'Given e-shop URL from is not valid, expected some URL in configuration '
+                'Given e-shop URL is not valid, expected some URL in configuration '
                 . static::WEB . ': ' . static::ESHOP_URL . ', got ' . ($settings[self::WEB][self::ESHOP_URL] ?? 'nothing')
             );
         }

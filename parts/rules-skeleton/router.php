@@ -16,7 +16,8 @@ if (($_SERVER['QUERY_STRING'] ?? false) === 'pdf'
     return true; // routing solved
 }
 
-if (empty($visitorCanAccessContent) && !$controller->getConfiguration()->hasFreeAccess()) { // can be defined externally by including script
+$visitorCanAccessContent = $controller->getConfiguration()->hasFreeAccess();
+if (!$visitorCanAccessContent) {
     $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorBot();
     if (!$visitorCanAccessContent) {
         if (!empty($_POST['confirm'])) {
@@ -27,12 +28,12 @@ if (empty($visitorCanAccessContent) && !$controller->getConfiguration()->hasFree
         }
         if (!$visitorCanAccessContent) {
             $visitorCanAccessContent = $controller->getUsagePolicy()->hasVisitorConfirmedOwnership();
-        }
-        if (!$visitorCanAccessContent) {
-            $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorUsingValidTrial();
-        }
-        if (!$visitorCanAccessContent) {
-            $controller->addBodyClass('pass');
+            if (!$visitorCanAccessContent) {
+                $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorUsingValidTrial();
+                if (!$visitorCanAccessContent) {
+                    $controller->addBodyClass('pass');
+                }
+            }
         }
     }
 }
