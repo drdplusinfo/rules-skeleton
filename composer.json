@@ -14,16 +14,6 @@
       "DrdPlus\\": "DrdPlus/"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "/home/jaroslav/projects/drdplus/frontend-skeleton"
-    },
-    {
-      "type": "vcs",
-      "url": "/home/jaroslav/projects/drdplus/rules/webs/rules-skeleton"
-    }
-  ],
   "require": {
     "php": ">=7.1",
     "ext-mbstring": "*",
