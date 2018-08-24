@@ -1,9 +1,27 @@
 <?php
+\error_reporting(-1);
+if ((!empty($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1') || PHP_SAPI === 'cli') {
+    \ini_set('display_errors', '1');
+} else {
+    \ini_set('display_errors', '0');
+}
 if (PHP_SAPI !== 'cli') {
 // anyone can show content of this page
     \header('Access-Control-Allow-Origin: *', true);
 }
-require_once __DIR__ . '/safe_autoload.php';
+$documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER['SCRIPT_FILENAME']), '\/') : \getcwd());
+
+/** @noinspection PhpIncludeInspection */
+require_once $documentRoot . '/vendor/autoload.php';
+
+$dirs = new \DrdPlus\RulesSkeleton\Dirs($documentRoot);
+$htmlHelper = $htmlHelper ?? \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($dirs);
+if (PHP_SAPI !== 'cli') {
+    \DrdPlus\FrontendSkeleton\TracyDebugger::enable($htmlHelper->isInProduction());
+}
+
+$configuration = \DrdPlus\RulesSkeleton\Configuration::createFromYml($dirs);
+$controller = new \DrdPlus\RulesSkeleton\RulesController($configuration, $htmlHelper);
 
 /**
  * @var \DrdPlus\RulesSkeleton\RulesController $controller
@@ -11,17 +29,17 @@ require_once __DIR__ . '/safe_autoload.php';
  */
 $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache(
     $controller->getWebVersions(),
-    $controller->getDirs(),
+    $controller->getConfiguration()->getDirs(),
     $htmlHelper->isInProduction(),
-    $controller->getDirs()->getWebRoot()
+    $controller->getConfiguration()->getDirs()->getVersionWebRoot($controller->getWebVersions()->getCurrentVersion())
 );
-$controller->setFreeAccess();
+$controller->allowAccess();
 if ($tablesCache->isCacheValid()) {
     return $tablesCache->getCachedContent();
 }
 // must NOT include current content.php as it uses router and that requires this script so endless recursion happens
 /** @noinspection PhpIncludeInspection */
-$rawContent = require $controller->getDirs()->getDocumentRoot() . '/vendor/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';
+$rawContent = require $controller->getConfiguration()->getDirs()->getDocumentRoot() . '/vendor/drdplus/frontend-skeleton/parts/frontend-skeleton/content.php';
 $rawContentDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($rawContent);
 $tables = $htmlHelper->findTablesWithIds($rawContentDocument, $controller->getRequest()->getWantedTablesIds());
 $tablesContent = '';
@@ -34,7 +52,7 @@ unset($rawContent, $rawContentDocument);
   <!DOCTYPE html>
   <html lang="cs">
     <head>
-      <title>Tabulky pro Drd+ <?= \basename($controller->getDirs()->getDocumentRoot()) ?></title>
+      <title>Tabulky pro Drd+ <?= \basename($controller->getConfiguration()->getDirs()->getDocumentRoot()) ?></title>
       <link rel="shortcut icon" href="../../favicon.ico">
       <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">

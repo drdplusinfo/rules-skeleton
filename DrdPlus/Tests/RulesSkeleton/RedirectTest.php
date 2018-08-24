@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-class TracyTest extends \DrdPlus\Tests\FrontendSkeleton\TracyTest
+class RedirectTest extends \DrdPlus\Tests\FrontendSkeleton\RedirectTest
 {
 
 }

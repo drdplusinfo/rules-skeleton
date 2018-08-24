@@ -1,22 +1,39 @@
 <?php
 declare(strict_types=1);
-/** be strict for parameter types, https://www.quora.com/Are-strict_types-in-PHP-7-not-a-bad-idea */
 
 namespace DrdPlus\RulesSkeleton;
 
 class Dirs extends \DrdPlus\FrontendSkeleton\Dirs
 {
-    protected function populateSubRoots(string $masterDocumentRoot, string $documentRoot): void
+
+    /** @var bool */
+    protected $allowAccessToWebFiles;
+
+    protected function populateSubRoots(string $documentRoot): void
     {
-        parent::populateSubRoots($masterDocumentRoot, $documentRoot);
-        $this->setWebRoot($this->getDocumentRoot() . '/web/passed');
+        parent::populateSubRoots($documentRoot);
         $this->genericPartsRoot = __DIR__ . '/../../parts/rules-skeleton';
+        $this->allowAccessToWebFiles = false;
     }
 
-    public function setWebRoot(string $webRoot): Dirs
+    public function isAllowedAccessToWebFiles(): bool
     {
-        $this->webRoot = $webRoot;
+        return $this->allowAccessToWebFiles;
+    }
 
-        return $this;
+    public function allowAccessToWebFiles(): void
+    {
+        $this->allowAccessToWebFiles = true;
+    }
+
+    public function getVersionWebRoot(string $forVersion): string
+    {
+        if ($this->isAllowedAccessToWebFiles()) {
+            return parent::getVersionWebRoot($forVersion);
+        }
+
+        return \file_exists($this->getVendorRoot() . '/drdplus/rules-skeleton/web/pass')
+            ? $this->getVendorRoot() . '/drdplus/rules-skeleton/web/pass'
+            : __DIR__ . '/../../web/pass';
     }
 }

@@ -13,16 +13,6 @@ class HtmlHelper extends \DrdPlus\FrontendSkeleton\HtmlHelper
     public const CONTENT_CLASS = 'content';
 
     /**
-     * Turn link into local version
-     * @param string $link
-     * @return string
-     */
-    public static function turnToLocalLink(string $link): string
-    {
-        return \preg_replace('~https?://((?:[[:alnum:]]+\.)*)drdplus\.info~', 'http://$1drdplus.loc:88', $link);
-    }
-
-    /**
      * @param string $blockName
      * @param HtmlDocument $document
      * @return HtmlDocument

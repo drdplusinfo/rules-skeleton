@@ -3,6 +3,8 @@ namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
 use DeviceDetector\Parser\Bot;
 use DrdPlus\FrontendSkeleton\CookiesService;
+use DrdPlus\FrontendSkeleton\FrontendController;
+use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\FrontendSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
@@ -11,6 +13,8 @@ use Granam\String\StringTools;
 use Gt\Dom\HTMLDocument;
 
 /**
+ * @method string protected function getContent(array $get = [], array $post = [], array $cookies = [])
+ * @method string fetchNonCachedContent(FrontendController $controller = null, bool $backupGlobals = true)
  * @method string getDocumentRoot
  * @method TestsConfigurationReader getTestsConfiguration
  * @method static assertTrue($value, $message = '')
@@ -20,6 +24,9 @@ use Gt\Dom\HTMLDocument;
  */
 trait AbstractContentTestTrait
 {
+
+    use DirsForTestsTrait;
+
     private static $rulesContentForDev = [];
     private static $rulesForDevHtmlDocument = [];
 
@@ -84,7 +91,7 @@ trait AbstractContentTestTrait
         static $passDocument;
         if ($passDocument === null) {
             $this->removeOwnerShipConfirmation();
-            $passDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($this->fetchRulesContent());
+            $passDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($this->getPassContent($notCached));
         }
 
         return $passDocument;
@@ -99,26 +106,15 @@ trait AbstractContentTestTrait
         if ($notCached) {
             $this->removeOwnerShipConfirmation();
 
-            return $this->fetchRulesContent();
+            return $this->fetchNonCachedContent();
         }
         static $passContent;
         if ($passContent === null) {
             $this->removeOwnerShipConfirmation();
-            $passContent = $this->fetchRulesContent();
+            $passContent = $this->fetchNonCachedContent();
         }
 
         return $passContent;
-    }
-
-    private function fetchRulesContent(): string
-    {
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $latestVersion = $this->getTestsConfiguration()->getExpectedLastUnstableVersion();
-        \ob_start();
-        /** @noinspection PhpIncludeInspection */
-        include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
-
-        return \ob_get_clean();
     }
 
     private function getNameForLocalOwnershipConfirmation(): string
@@ -184,22 +180,15 @@ trait AbstractContentTestTrait
     protected function getRulesContentForDev(string $show = '', string $hide = ''): string
     {
         if (empty(self::$rulesContentForDev[$show][$hide])) {
-            $originalGet = $_GET;
-            $this->passIn();
-            $_GET['mode'] = 'dev';
+            $get['mode'] = 'dev';
             if ($show !== '') {
-                $_GET['show'] = $show;
+                $get['show'] = $show;
             }
             if ($hide !== '') {
-                $_GET['hide'] = $hide;
+                $get['hide'] = $hide;
             }
-            /** @noinspection PhpUnusedLocalVariableInspection */
-            $latestVersion = $this->getTestsConfiguration()->getExpectedLastUnstableVersion();
-            \ob_start();
-            /** @noinspection PhpIncludeInspection */
-            include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
-            self::$rulesContentForDev[$show][$hide] = \ob_get_clean();
-            $_GET = $originalGet;
+            $content = $this->getContent($get);
+            self::$rulesContentForDev[$show][$hide] = $content;
             self::assertNotSame($this->getPassContent(), self::$rulesContentForDev[$show]);
         }
 
@@ -232,7 +221,7 @@ trait AbstractContentTestTrait
     {
         return \file_exists($this->getDocumentRoot() . '/parts/rules-skeleton')
             ? $this->getDocumentRoot() . '/parts/rules-skeleton'
-            : $this->getVendorRoot() . '/drd-plus/rules-skeleton/parts/rules-skeleton';
+            : $this->getVendorRoot() . '/drdplus/rules-skeleton/parts/rules-skeleton';
     }
 
     protected function getVendorRoot(): string
@@ -257,5 +246,18 @@ trait AbstractContentTestTrait
     ): \DrdPlus\FrontendSkeleton\HtmlHelper
     {
         return new HtmlHelper($dirs ?? $this->createDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered, $showIntroductionOnly);
+    }
+
+    /**
+     * @param Dirs|null $dirs
+     * @return \DrdPlus\FrontendSkeleton\Configuration|Configuration
+     */
+    protected function createConfiguration(Dirs $dirs = null): \DrdPlus\FrontendSkeleton\Configuration
+    {
+        if (!$dirs || $dirs instanceof \DrdPlus\RulesSkeleton\Dirs) {
+            return Configuration::createFromYml($dirs ?? $this->createDirs());
+        }
+
+        return \DrdPlus\FrontendSkeleton\Configuration::createFromYml($dirs ?? $this->createDirs());
     }
 }

@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-/** be strict for parameter types, https://www.quora.com/Are-strict_types-in-PHP-7-not-a-bad-idea */
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
@@ -30,7 +29,7 @@ class ContactsTest extends AbstractContentTest
     {
         static $debugContactsContent;
         if ($debugContactsContent === null) {
-            $debugContactsContent = \file_get_contents($this->getGenericPartsRoot() . '/debug_contacts.html');
+            $debugContactsContent = \file_get_contents($this->getVendorRoot() . '/drdplus/rules-skeleton-web/web/shared/debug_contacts.html');
         }
 
         return $debugContactsContent;

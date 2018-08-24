@@ -4,29 +4,24 @@ declare(strict_types=1);
 namespace DrdPlus\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
-use DrdPlus\FrontendSkeleton\CookiesService;
+use DrdPlus\FrontendSkeleton\HtmlHelper;
 use DrdPlus\FrontendSkeleton\PageCache;
 use Granam\String\StringTools;
 
 /**
- * @method Dirs getDirs(): Dirs
+ * @method Configuration getConfiguration() : Configuration
+ * @method HtmlHelper getHtmlHelper() : HtmlHelper
  */
 class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
 {
-    /** @var CookiesService */
-    private $cookiesService;
     /** @var UsagePolicy */
     private $usagePolicy;
     /** @var Request */
     private $rulesSkeletonRequest;
-    /** @var string */
-    private $eshopUrl;
-    /** @var bool */
-    private $freeAccess = false;
 
-    public function __construct(string $googleAnalyticsId, HtmlHelper $htmlHelper, Dirs $dirs, array $bodyClasses = [])
+    public function __construct(Configuration $configuration, HtmlHelper $htmlHelper, array $bodyClasses = [])
     {
-        parent::__construct($googleAnalyticsId, $htmlHelper, $dirs, $bodyClasses);
+        parent::__construct($configuration, $htmlHelper, $bodyClasses);
     }
 
     public function getPageCache(): PageCache
@@ -34,28 +29,15 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
         if ($this->pageCache === null) {
             $this->pageCache = new PageCache(
                 $this->getWebVersions(),
-                $this->getDirs(),
+                $this->getConfiguration()->getDirs(),
                 $this->getHtmlHelper()->isInProduction(),
-                \basename($this->getDirs()->getWebRoot()) // can vary in relation to pass
+                $this->isAccessAllowed()
+                    ? 'passed'
+                    : 'pass'
             );
         }
 
         return $this->pageCache;
-    }
-
-    public function setFreeAccess(): RulesController
-    {
-        $this->freeAccess = true;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isFreeAccess(): bool
-    {
-        return $this->freeAccess;
     }
 
     public function getUsagePolicy(): UsagePolicy
@@ -71,15 +53,6 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
         return $this->usagePolicy;
     }
 
-    public function getCookiesService(): CookiesService
-    {
-        if ($this->cookiesService === null) {
-            $this->cookiesService = new CookiesService();
-        }
-
-        return $this->cookiesService;
-    }
-
     /**
      * @return \DrdPlus\FrontendSkeleton\Request|Request
      */
@@ -90,22 +63,6 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
         }
 
         return $this->rulesSkeletonRequest;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEshopUrl(): string
-    {
-        if ($this->eshopUrl === null) {
-            $eshopUrl = \trim(\file_get_contents($this->getDirs()->getDocumentRoot() . '/eshop_url.txt'));
-            if (!\filter_var($eshopUrl, FILTER_VALIDATE_URL)) {
-                throw new Exceptions\InvalidEshopUrl("Given e-shop URL from 'eshop_url.txt' is not valid: '$eshopUrl'");
-            }
-            $this->eshopUrl = $eshopUrl;
-        }
-
-        return $this->eshopUrl;
     }
 
     public function activateTrial(\DateTime $now): bool
@@ -124,5 +81,17 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
         }
 
         return $visitorCanAccessContent;
+    }
+
+    public function isAccessAllowed(): bool
+    {
+        return $this->getConfiguration()->getDirs()->isAllowedAccessToWebFiles();
+    }
+
+    public function allowAccess(): RulesController
+    {
+        $this->getConfiguration()->getDirs()->allowAccessToWebFiles();
+
+        return $this;
     }
 }

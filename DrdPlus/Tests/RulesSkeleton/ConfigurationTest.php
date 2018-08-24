@@ -5,7 +5,7 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTestTrait;
 
-class WebVersionsTest extends \DrdPlus\Tests\FrontendSkeleton\WebVersionsTest
+class ConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\ConfigurationTest
 {
     use AbstractContentTestTrait;
 }

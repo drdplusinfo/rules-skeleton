@@ -1,7 +1,7 @@
 <?php
 /** @var \DrdPlus\RulesSkeleton\RulesController $controller */
 $webName = $controller->getWebName();
-$eShopUrl = $controller->getEshopUrl();
+$eShopUrl = $controller->getConfiguration()->getEshopUrl();
 ?>
 <h1><?= $webName ?></h1>
 

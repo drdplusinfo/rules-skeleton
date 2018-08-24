@@ -62,22 +62,16 @@ class SourceCodeLinksTest extends AbstractContentTest
 
     /**
      * @param string $link like
-     *     https://github.com/jaroslavtyc/drd-plus-professions/blob/master/DrdPlus/Professions/Priest.php
+     *     https://github.com/jaroslavtyc/drdplus-professions/blob/master/DrdPlus/Professions/Priest.php
      * @return string
      */
     private function toLocalPath(string $link): string
     {
-        $withoutWebRoot = \str_replace('https://github.com/jaroslavtyc/', '', $link);
+        $withoutWebRoot = \preg_replace('~https://github[.]com/[^/]+/~', '', $link);
         $withoutGithubSpecifics = \preg_replace('~(?<type>blob|tree)/master/~', '', $withoutWebRoot);
-        $withLocalSubDirs = \preg_replace_callback(
-            '~^drd-(?:plus-)?(?<projectName>[^/]+)~',
-            function (array $matches) {
-                return 'drd-plus/' . $matches['projectName'];
-            },
-            $withoutGithubSpecifics
-        );
-        $localProjectsRootDir = '/home/jaroslav/Projects';
-
+        $withLocalSubDirs = \preg_replace('~^granam-~', '/granam/', $withoutGithubSpecifics);
+        $withLocalSubDirs = \preg_replace('~^drdplus-~', '/drdplus/', $withLocalSubDirs);
+        $localProjectsRootDir = '/home/jaroslav/projects';
         $localPath = $localProjectsRootDir . '/' . $withLocalSubDirs;
         if (\file_exists($localPath) && \preg_match('~(?<type>blob|tree)/master/~', $withoutWebRoot, $matches)) {
             if (\is_file($localPath)) {
