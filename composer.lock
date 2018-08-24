@@ -4,16 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dc1719c66fc004cdc34bf7184e57dce8",
-    "content-hash": "dbd694b64eea28b2a57122428ece4128",
+    "hash": "20e08cf42350de5ce7c727b763cc467a",
+    "content-hash": "92874364ef614469207cef2b8a8b2021",
     "packages": [
         {
             "name": "drdplus/frontend-skeleton",
-            "version": "dev-master",
+            "version": "1.0.47",
             "source": {
                 "type": "git",
-                "url": "/home/jaroslav/projects/drdplus/frontend-skeleton",
-                "reference": "f8a31f2b7e6cb7526d35b246cb06b508ca5bb784"
+                "url": "https://github.com/drdplusinfo/drdplus-frontend-skeleton.git",
+                "reference": "83278caa2bb029cc3ad201d52197be2fa9882839"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/drdplusinfo/drdplus-frontend-skeleton/zipball/83278caa2bb029cc3ad201d52197be2fa9882839",
+                "reference": "83278caa2bb029cc3ad201d52197be2fa9882839",
+                "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.0",
@@ -52,27 +58,20 @@
                     "Tests\\": "Tests/"
                 }
             },
-            "scripts": {
-                "post-update-cmd": [
-                    "php bin/assets --css --dir=css"
-                ],
-                "post-install-cmd": [
-                    "php bin/assets --css --dir=css"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "Skeleton for DrD+ pages",
             "keywords": [
+                "Skeleton",
                 "drd plus",
                 "frontend",
                 "helper",
                 "pages",
-                "skeleton",
                 "view"
             ],
-            "time": "2018-08-23 15:47:41"
+            "time": "2018-08-24 14:26:59"
         },
         {
             "name": "erusev/parsedown",
@@ -3294,7 +3293,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drdplus/frontend-skeleton": 20,
         "roave/security-advisories": 20,
         "drdplus/rules-skeleton-web": 20
     },
