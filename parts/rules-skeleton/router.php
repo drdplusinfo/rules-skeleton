@@ -16,7 +16,7 @@ if (($_SERVER['QUERY_STRING'] ?? false) === 'pdf'
     return true; // routing solved
 }
 
-$visitorCanAccessContent = $controller->getConfiguration()->hasFreeAccess();
+$visitorCanAccessContent = !$controller->getConfiguration()->hasProtectedAccess();
 if (!$visitorCanAccessContent) {
     $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorBot();
     if (!$visitorCanAccessContent) {
