@@ -100,12 +100,22 @@ class PassTest extends AbstractContentTest
         $this->passIn();
         $rulesContent = $this->fetchNonCachedContent();
         $this->passOut();
-        self::assertNotSame($passContent, $rulesContent);
+        $passContentDocument = new HTMLDocument($passContent);
+        $rulesContentDocument = new HTMLDocument($rulesContent);
+        self::assertNotSame(
+            $passContentDocument->body->innerHTML,
+            $rulesContentDocument->body->innerHTML,
+            'Expected pass for a non-bot visitor'
+        );
         foreach (RequestTest::getCrawlerUserAgents() as $crawlerUserAgent) {
             $_SERVER['HTTP_USER_AGENT'] = $crawlerUserAgent;
+            $passContent = $this->getPassContent(true /* not cached */);
+            $rulesContent = $this->fetchNonCachedContent();
+            $passContentDocument = new HTMLDocument($passContent);
+            $rulesContentDocument = new HTMLDocument($rulesContent);
             self::assertSame(
-                $this->getPassContent(true /* not cached */),
-                $this->fetchNonCachedContent(),
+                \preg_replace('~data-cached-at="[^"]+"~', '', $passContentDocument->body->innerHTML),
+                \preg_replace('~data-cached-at="[^"]+"~', '', $rulesContentDocument->body->innerHTML),
                 'Expected rules content for a crawler, skipping ownership confirmation page'
             );
         }
