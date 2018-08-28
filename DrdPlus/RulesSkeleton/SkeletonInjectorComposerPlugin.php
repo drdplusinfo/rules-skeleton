@@ -27,7 +27,6 @@ class SkeletonInjectorComposerPlugin extends AbstractSkeletonInjectorComposerPlu
         $this->publishSkeletonJs($documentRoot);
         $this->flushCache($documentRoot);
         $this->addVersionsToAssets($documentRoot);
-        $this->copyProjectConfig($documentRoot);
         $this->alreadyInjected = true;
         $this->io->write("Injection of {$this->skeletonPackageName} finished");
     }
@@ -70,10 +69,4 @@ class SkeletonInjectorComposerPlugin extends AbstractSkeletonInjectorComposerPlu
             $documentRoot
         );
     }
-
-    protected function copyProjectConfig(string $documentRoot): void
-    {
-        $this->passThrough(['cp --no-clobber ./vendor/drdplus/rules-skeleton/config.distribution.yml .'], $documentRoot);
-    }
-
 }
