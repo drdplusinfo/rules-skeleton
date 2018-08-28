@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "drdplus/frontend-skeleton",
-            "version": "1.0.48",
+            "version": "1.0.49",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drdplusinfo/drdplus-frontend-skeleton.git",
-                "reference": "1f89badf32481a8ff2a2c74b69ff8e4e4ad29425"
+                "reference": "bb855f477d2bea4632aab76d8a36be3c8380c000"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drdplusinfo/drdplus-frontend-skeleton/zipball/1f89badf32481a8ff2a2c74b69ff8e4e4ad29425",
-                "reference": "1f89badf32481a8ff2a2c74b69ff8e4e4ad29425",
+                "url": "https://api.github.com/repos/drdplusinfo/drdplus-frontend-skeleton/zipball/bb855f477d2bea4632aab76d8a36be3c8380c000",
+                "reference": "bb855f477d2bea4632aab76d8a36be3c8380c000",
                 "shasum": ""
             },
             "require": {
@@ -71,7 +71,7 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-08-28 07:01:25"
+            "time": "2018-08-28 09:08:29"
         },
         {
             "name": "erusev/parsedown",

@@ -3,9 +3,34 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-class SkeletonInjectorComposerPlugin extends \DrdPlus\FrontendSkeleton\SkeletonInjectorComposerPlugin
+use Composer\Installer\PackageEvent;
+use DrdPlus\FrontendSkeleton\AbstractSkeletonInjectorComposerPlugin;
+
+class SkeletonInjectorComposerPlugin extends AbstractSkeletonInjectorComposerPlugin
 {
     public const RULES_SKELETON_PACKAGE_NAME = 'drdplus/rules-skeleton';
+
+    public function __construct()
+    {
+        parent::__construct(static::RULES_SKELETON_PACKAGE_NAME);
+    }
+
+    public function plugInSkeleton(PackageEvent $event)
+    {
+        if ($this->alreadyInjected || !$this->isThisPackageChanged($event)) {
+            return;
+        }
+        $documentRoot = $GLOBALS['documentRoot'] ?? getcwd();
+        $this->io->write("Injecting {$this->skeletonPackageName} using document root $documentRoot");
+        $this->publishSkeletonImages($documentRoot);
+        $this->publishSkeletonCss($documentRoot);
+        $this->publishSkeletonJs($documentRoot);
+        $this->flushCache($documentRoot);
+        $this->addVersionsToAssets($documentRoot);
+        $this->copyProjectConfig($documentRoot);
+        $this->alreadyInjected = true;
+        $this->io->write("Injection of {$this->skeletonPackageName} finished");
+    }
 
     protected function isChangedPackageThisOne(string $changedPackageName): bool
     {
@@ -17,7 +42,6 @@ class SkeletonInjectorComposerPlugin extends \DrdPlus\FrontendSkeleton\SkeletonI
     {
         $this->passThrough(
             [
-                'rm -f ./images/generic/skeleton/frontend*',
                 'rm -f ./images/generic/skeleton/rules*',
                 'cp -r ./vendor/drdplus/rules-skeleton/images/generic ./images/'
             ],
@@ -29,11 +53,8 @@ class SkeletonInjectorComposerPlugin extends \DrdPlus\FrontendSkeleton\SkeletonI
     {
         $this->passThrough(
             [
-                'rm -f ./css/generic/skeleton/frontend*',
                 'rm -f ./css/generic/skeleton/rules*',
-                'rm -fr ./css/generic/skeleton/vendor/frontend',
                 'cp -r ./vendor/drdplus/rules-skeleton/css/generic ./css/',
-                'chmod -R g+w ./css/generic/skeleton/vendor/frontend'
             ],
             $documentRoot
         );
@@ -43,29 +64,11 @@ class SkeletonInjectorComposerPlugin extends \DrdPlus\FrontendSkeleton\SkeletonI
     {
         $this->passThrough(
             [
-                'rm -f ./js/generic/skeleton/frontend*',
                 'rm -f ./js/generic/skeleton/rules*',
-                'rm -fr ./js/generic/skeleton/vendor/frontend',
                 'cp -r ./vendor/drdplus/rules-skeleton/js/generic ./js/',
-                'chmod -R g+w ./js/generic/skeleton/vendor/frontend'
             ],
             $documentRoot
         );
-    }
-
-
-    protected function copyGoogleVerification(string $documentRoot): void
-    {
-        $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/google8d8724e0c2818dfc.html .'], $documentRoot);
-    }
-
-    protected function copyPhpUnitConfig(string $documentRoot): void
-    {
-        if ($this->shouldSkipFile('phpunit.xml.dist')) {
-            $this->io->write('Skipping copy of phpunit.xml.dist');
-        } else {
-            $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/phpunit.xml.dist .'], $documentRoot);
-        }
     }
 
     protected function copyProjectConfig(string $documentRoot): void
