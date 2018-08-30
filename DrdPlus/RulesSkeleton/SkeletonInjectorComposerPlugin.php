@@ -25,6 +25,7 @@ class SkeletonInjectorComposerPlugin extends AbstractSkeletonInjectorComposerPlu
         $this->publishSkeletonImages($documentRoot);
         $this->publishSkeletonCss($documentRoot);
         $this->publishSkeletonJs($documentRoot);
+        $this->copyProjectConfig($documentRoot);
         $this->flushCache($documentRoot);
         $this->addVersionsToAssets($documentRoot);
         $this->alreadyInjected = true;
