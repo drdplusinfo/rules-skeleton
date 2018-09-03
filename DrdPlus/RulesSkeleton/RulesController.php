@@ -3,78 +3,28 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use DeviceDetector\Parser\Bot;
-use DrdPlus\FrontendSkeleton\HtmlHelper;
-use DrdPlus\FrontendSkeleton\PageCache;
-use Granam\String\StringTools;
+use DrdPlus\RulesSkeleton\Web\Content;
 
 /**
- * @method Configuration getConfiguration() : Configuration
- * @method HtmlHelper getHtmlHelper() : HtmlHelper
+ * @method ServicesContainer getServicesContainer
  */
 class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
 {
-    /** @var UsagePolicy */
-    private $usagePolicy;
-    /** @var Request */
-    private $rulesSkeletonRequest;
-
-    public function __construct(Configuration $configuration, HtmlHelper $htmlHelper, array $bodyClasses = [])
+    public function __construct(ServicesContainer $servicesContainer)
     {
-        parent::__construct($configuration, $htmlHelper, $bodyClasses);
-    }
-
-    public function getPageCache(): PageCache
-    {
-        if ($this->pageCache === null) {
-            $this->pageCache = new PageCache(
-                $this->getWebVersions(),
-                $this->getConfiguration()->getDirs(),
-                $this->getHtmlHelper()->isInProduction(),
-                $this->isAccessAllowed()
-                    ? 'passed'
-                    : 'pass'
-            );
-        }
-
-        return $this->pageCache;
-    }
-
-    public function getUsagePolicy(): UsagePolicy
-    {
-        if ($this->usagePolicy === null) {
-            $this->usagePolicy = new UsagePolicy(
-                StringTools::toVariableName($this->getWebName()),
-                $this->getRequest(),
-                $this->getCookiesService()
-            );
-        }
-
-        return $this->usagePolicy;
-    }
-
-    /**
-     * @return \DrdPlus\FrontendSkeleton\Request|Request
-     */
-    public function getRequest(): \DrdPlus\FrontendSkeleton\Request
-    {
-        if ($this->rulesSkeletonRequest === null) {
-            $this->rulesSkeletonRequest = new Request(new Bot());
-        }
-
-        return $this->rulesSkeletonRequest;
+        parent::__construct($servicesContainer);
     }
 
     public function activateTrial(\DateTime $now): bool
     {
         $trialExpiration = (clone $now)->modify('+4 minutes');
-        $visitorCanAccessContent = $this->getUsagePolicy()->activateTrial($trialExpiration);
+        $visitorCanAccessContent = $this->getServicesContainer()->getUsagePolicy()->activateTrial($trialExpiration);
         if ($visitorCanAccessContent) {
             $at = $trialExpiration->getTimestamp() + 1; // one second "insurance" overlap
             $afterSeconds = $at - $now->getTimestamp();
             $this->setRedirect(
                 new \DrdPlus\FrontendSkeleton\Redirect(
-                    "/?{$this->getUsagePolicy()->getTrialExpiredAtName()}={$at}",
+                    "/?{$this->getServicesContainer()->getUsagePolicy()->getTrialExpiredAtName()}={$at}",
                     $afterSeconds
                 )
             );
@@ -83,15 +33,26 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
         return $visitorCanAccessContent;
     }
 
-    public function isAccessAllowed(): bool
-    {
-        return $this->getConfiguration()->getDirs()->isAllowedAccessToWebFiles();
-    }
-
     public function allowAccess(): RulesController
     {
-        $this->getConfiguration()->getDirs()->allowAccessToWebFiles();
+        $this->getServicesContainer()->getUsagePolicy()->allowAccess();
 
         return $this;
     }
+
+    /**
+     * @return Content|\DrdPlus\FrontendSkeleton\Web\Content
+     */
+    public function getContent(): \DrdPlus\FrontendSkeleton\Web\Content
+    {
+        if ($this->content === null) {
+            $this->content = new Content(
+                $this->getServicesContainer(),
+                $this->getRedirect()
+            );
+        }
+
+        return $this->content;
+    }
+
 }

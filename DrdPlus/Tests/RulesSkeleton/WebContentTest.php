@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-class ContentTest extends \DrdPlus\Tests\FrontendSkeleton\ContentTest
+class WebContentTest extends \DrdPlus\Tests\FrontendSkeleton\WebContentTest
 {
     use Partials\AbstractContentTestTrait;
 
