@@ -5,7 +5,7 @@ namespace DrdPlus\RulesSkeleton;
 
 use DrdPlus\FrontendSkeleton\Cache;
 
-class TablesCache extends Cache
+class TablesWebCache extends Cache
 {
     protected function getCachePrefix(): string
     {

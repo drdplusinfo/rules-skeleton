@@ -4,61 +4,116 @@ declare(strict_types=1);
 namespace DrdPlus\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
-use DrdPlus\FrontendSkeleton\PageCache;
-use DrdPlus\FrontendSkeleton\Web\Body;
+use DrdPlus\FrontendSkeleton\WebCache;
+use DrdPlus\RulesSkeleton\Web\EmptyHead;
+use DrdPlus\RulesSkeleton\Web\EmptyMenu;
+use DrdPlus\RulesSkeleton\Web\HeadForTables;
 use DrdPlus\RulesSkeleton\Web\Pass;
-use DrdPlus\RulesSkeleton\Web\Pdf;
+use DrdPlus\RulesSkeleton\Web\PassBody;
+use DrdPlus\RulesSkeleton\Web\PdfBody;
+use DrdPlus\RulesSkeleton\Web\TablesBody;
 use Granam\String\StringTools;
-use \DrdPlus\RulesSkeleton\Web\Body as RulesBody;
 
 /**
  * @method Configuration getConfiguration()
+ * @method HtmlHelper getHtmlHelper()
  * @method Dirs getDirs()
  */
 class ServicesContainer extends \DrdPlus\FrontendSkeleton\ServicesContainer
 {
+    /** @var TablesWebCache */
+    private $tablesWebCache;
+    /** @var TablesBody */
+    private $tablesBody;
+    /** @var WebCache */
+    private $passWebCache;
+    /** @var WebCache */
+    private $passedWebCache;
     /** @var UsagePolicy */
     private $usagePolicy;
     /** @var Pass */
     private $pass;
-    /** @var Pdf */
-    private $pdf;
+    /** @var PassBody */
+    private $passBody;
+    /** @var PdfBody */
+    private $pdfBody;
 
     public function __construct(Configuration $configuration, HtmlHelper $htmlHelper)
     {
         parent::__construct($configuration, $htmlHelper);
     }
 
-    public function getPageCache(): PageCache
+    public function getHeadForTables(): HeadForTables
     {
-        if ($this->pageCache === null) {
-            $this->pageCache = new PageCache(
+        return new HeadForTables(
+            $this->getConfiguration(),
+            $this->getHtmlHelper(),
+            $this->getCssFiles(),
+            $this->getJsFiles()
+        );
+    }
+
+    public function getTablesWebCache(): TablesWebCache
+    {
+        if ($this->tablesWebCache === null) {
+            $this->tablesWebCache = new TablesWebCache(
                 $this->getWebVersions(),
                 $this->getConfiguration()->getDirs(),
                 $this->getHtmlHelper()->isInProduction(),
-                $this->getConfiguration()->getDirs()->isAllowedAccessToWebFiles()
-                    ? 'passed'
-                    : 'pass'
+                'pass'
             );
         }
 
-        return $this->pageCache;
+        return $this->tablesWebCache;
+    }
+
+    public function getTablesBody(): TablesBody
+    {
+        if ($this->tablesBody === null) {
+            $this->tablesBody = new TablesBody($this->getWebFiles(), $this->getHtmlHelper(), $this->getRequest());
+        }
+
+        return $this->tablesBody;
+    }
+
+    public function getPassWebCache(): WebCache
+    {
+        if ($this->passWebCache === null) {
+            $this->passWebCache = new WebCache(
+                $this->getWebVersions(),
+                $this->getConfiguration()->getDirs(),
+                $this->getHtmlHelper()->isInProduction(),
+                'pass'
+            );
+        }
+
+        return $this->passWebCache;
+    }
+
+    public function getPassedWebCache(): WebCache
+    {
+        if ($this->passedWebCache === null) {
+            $this->passedWebCache = new WebCache(
+                $this->getWebVersions(),
+                $this->getConfiguration()->getDirs(),
+                $this->getHtmlHelper()->isInProduction(),
+                'passed'
+            );
+        }
+
+        return $this->passedWebCache;
     }
 
     /**
-     * @return Body|RulesBody
+     * @return PassBody
      */
-    public function getBody(): Body
+    public function getPassBody(): PassBody
     {
-        if ($this->body === null) {
-            $this->body = new RulesBody(
-                $this->getWebFiles(),
-                $this->getUsagePolicy(),
-                $this->getPass()
-            );
+        if ($this->passBody === null) {
+            $this->passBody = new PassBody($this->getWebFiles(), $this->getPass());
         }
 
-        return $this->body;
+        return $this->passBody;
     }
 
     public function getPass(): Pass
@@ -76,8 +131,7 @@ class ServicesContainer extends \DrdPlus\FrontendSkeleton\ServicesContainer
             $this->usagePolicy = new UsagePolicy(
                 StringTools::toVariableName($this->getConfiguration()->getWebName()),
                 $this->getRequest(),
-                $this->getCookiesService(),
-                $this->getConfiguration()
+                $this->getCookiesService()
             );
         }
 
@@ -96,12 +150,33 @@ class ServicesContainer extends \DrdPlus\FrontendSkeleton\ServicesContainer
         return $this->request;
     }
 
-    public function getPdf(): Pdf
+    public function getPdfBody(): PdfBody
     {
-        if ($this->pdf === null) {
-            $this->pdf = new Pdf($this->getDirs());
+        if ($this->pdfBody === null) {
+            $this->pdfBody = new PdfBody($this->getWebFiles(), $this->getDirs());
         }
 
-        return $this->pdf;
+        return $this->pdfBody;
     }
+
+    public function getEmptyHead(): EmptyHead
+    {
+        return new EmptyHead($this->getConfiguration(), $this->getHtmlHelper(), $this->getCssFiles(), $this->getJsFiles());
+    }
+
+    public function getEmptyMenu(): EmptyMenu
+    {
+        return new EmptyMenu($this->getConfiguration(), $this->getWebVersions(), $this->getRequest());
+    }
+
+    public function getEmptyWebCache(): EmptyWebCache
+    {
+        return new EmptyWebCache($this->getWebVersions(), $this->getDirs(), $this->getHtmlHelper()->isInProduction(), 'empty');
+    }
+
+    public function getNow(): \DateTime
+    {
+        return new \DateTime();
+    }
+
 }

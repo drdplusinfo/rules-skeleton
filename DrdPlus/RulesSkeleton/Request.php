@@ -29,4 +29,14 @@ class Request extends \DrdPlus\FrontendSkeleton\Request
     {
         return $_SERVER['PATH_INFO'] ?? '';
     }
+
+    public function getValueFromPost(string $name)
+    {
+        return $_POST[$name] ?? null;
+    }
+
+    public function getValueFromGet(string $name)
+    {
+        return $_GET[$name] ?? null;
+    }
 }

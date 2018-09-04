@@ -16,14 +16,11 @@ class UsagePolicy extends StrictObject
     private $request;
     /** @var CookiesService */
     private $cookiesService;
-    /** @var bool */
-    private $accessAllowed = false;
 
     /**
      * @param string $articleName
      * @param \DrdPlus\FrontendSkeleton\Request $request
      * @param CookiesService $cookiesService
-     * @param Configuration $configuration
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameShouldBeValidName
      * @throws \DrdPlus\FrontendSkeleton\Exceptions\CookieCanNotBeSet
@@ -31,8 +28,7 @@ class UsagePolicy extends StrictObject
     public function __construct(
         string $articleName,
         \DrdPlus\FrontendSkeleton\Request $request,
-        CookiesService $cookiesService,
-        Configuration $configuration
+        CookiesService $cookiesService
     )
     {
         $articleName = \trim($articleName);
@@ -47,7 +43,6 @@ class UsagePolicy extends StrictObject
         $this->articleName = $articleName;
         $this->request = $request;
         $this->cookiesService = $cookiesService;
-        $this->accessAllowed = !$configuration->hasProtectedAccess();
         $this->setCookie('ownershipCookieName', $this->getOwnershipName(), null /* expire on session end*/);
         $this->setCookie('trialCookieName', $this->getTrialName(), null /* expire on session end*/);
         $this->setCookie('trialExpiredAtName', $this->getTrialExpiredAtName(), null /* expire on session end*/);
@@ -118,15 +113,5 @@ class UsagePolicy extends StrictObject
     public function trialJustExpired(): bool
     {
         return !empty($_GET[static::TRIAL_EXPIRED_AT]) && ((int)$_GET[static::TRIAL_EXPIRED_AT]) <= \time();
-    }
-
-    public function isAccessAllowed(): bool
-    {
-        return $this->accessAllowed;
-    }
-
-    public function allowAccess(): void
-    {
-        $this->accessAllowed = true;
     }
 }

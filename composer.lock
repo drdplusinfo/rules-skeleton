@@ -9,11 +9,11 @@
     "packages": [
         {
             "name": "drdplus/frontend-skeleton",
-            "version": "1.0.62",
+            "version": "1.0.67",
             "source": {
                 "type": "git",
                 "url": "/home/jaroslav/projects/drdplus/frontend-skeleton",
-                "reference": "dac8081e204c6e6fba0e5db5b89ffe9779f6d22a"
+                "reference": "cd7930bfc19bcde9e903fac3e5403820f7d918e9"
             },
             "require": {
                 "composer-plugin-api": "^1.0",
@@ -72,7 +72,7 @@
                 "skeleton",
                 "view"
             ],
-            "time": "2018-09-03 14:25:09"
+            "time": "2018-09-04 06:51:46"
         },
         {
             "name": "erusev/parsedown",
