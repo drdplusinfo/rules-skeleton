@@ -283,4 +283,9 @@ trait AbstractContentTestTrait
             $htmlHelper ?? $this->createHtmlHelper($dirs, false, false, false, false)
         );
     }
+
+    protected function getControllerClass(): string
+    {
+        return RulesController::class;
+    }
 }
