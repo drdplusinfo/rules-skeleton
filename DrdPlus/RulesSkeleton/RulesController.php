@@ -100,7 +100,7 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
         return $visitorCanAccessContent;
     }
 
-    private function activateTrial(\DateTime $now): bool
+    protected function activateTrial(\DateTime $now): bool
     {
         $trialExpiration = (clone $now)->modify('+4 minutes');
         $visitorCanAccessContent = $this->getServicesContainer()->getUsagePolicy()->activateTrial($trialExpiration);
@@ -120,7 +120,6 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
 
     public function sendCustomHeaders(): void
     {
-        // $this->getServicesContainer()->getPdf()->sendPdf()
         if (\PHP_SAPI === 'cli') {
             return;
         }

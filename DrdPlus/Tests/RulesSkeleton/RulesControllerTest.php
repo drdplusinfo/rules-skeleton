@@ -1,12 +1,12 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DeviceDetector\Parser\Bot;
-use DrdPlus\FrontendSkeleton\CookiesService;
 use DrdPlus\FrontendSkeleton\HtmlDocument;
 use DrdPlus\FrontendSkeleton\Redirect;
+use DrdPlus\RulesSkeleton\Configuration;
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\RulesController;
-use DrdPlus\RulesSkeleton\Request;
+use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 
 class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendControllerTest
@@ -16,42 +16,8 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     /**
      * @test
      */
-    public function I_can_set_access_as_free_for_everyone(): void
-    {
-        $controller = new RulesController($this->createConfiguration(), $this->createHtmlHelper());
-        self::assertFalse($controller->isAccessAllowed(), 'Access should be protected by default');
-        self::assertSame($controller, $controller->allowAccess());
-        self::assertTrue($controller->isAccessAllowed(), 'Access should be switched to free');
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_get_request(): void
-    {
-        $controller = new RulesController($this->createConfiguration(), $this->createHtmlHelper());
-        self::assertEquals(new Request(new Bot()), $controller->getRequest());
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_get_usage_policy(): void
-    {
-        $controller = new RulesController($this->createConfiguration(), $this->createHtmlHelper());
-        self::assertEquals(
-            new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService()),
-            $controller->getUsagePolicy()
-        );
-    }
-
-    /**
-     * @test
-     * @throws \ReflectionException
-     */
     public function I_can_activate_trial(): void
     {
-        $controller = new RulesController($this->createConfiguration(), $this->createHtmlHelper());
         $now = new \DateTime();
         $trialExpectedExpiration = (clone $now)->modify('+4 minutes');
         $usagePolicy = $this->mockery(UsagePolicy::class);
@@ -65,16 +31,51 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
 
                 return true;
             });
-        $controllerReflection = new \ReflectionClass($controller);
-        $usagePolicyProperty = $controllerReflection->getProperty('usagePolicy');
-        $usagePolicyProperty->setAccessible(true);
-        $usagePolicyProperty->setValue($controller, $usagePolicy);
+        /** @var UsagePolicy $usagePolicy */
+        $controller = $this->createControllerForTrial($usagePolicy);
         self::assertTrue($controller->activateTrial($now));
         $redirect = $controller->getRedirect();
         self::assertNotNull($redirect);
         $trialExpectedExpirationTimestamp = $trialExpectedExpiration->getTimestamp() + 1; // one second "insurance" overlap
         self::assertSame('/?bar=' . $trialExpectedExpirationTimestamp, $redirect->getTarget());
         self::assertSame($trialExpectedExpirationTimestamp - $now->getTimestamp(), $redirect->getAfterSeconds());
+    }
+
+    private function createControllerForTrial(UsagePolicy $usagePolicy): RulesController
+    {
+        $servicesContainer = $this->createServicesContainerWithUsagePolicy($usagePolicy);
+
+        return new class($servicesContainer) extends RulesController
+        {
+            public function activateTrial(\DateTime $now): bool
+            {
+                return parent::activateTrial($now);
+            }
+        };
+    }
+
+    private function createServicesContainerWithUsagePolicy(UsagePolicy $usagePolicy)
+    {
+        $configuration = $this->createConfiguration();
+        $htmlHelper = $this->createHtmlHelper();
+
+        return new class($usagePolicy, $configuration, $htmlHelper) extends ServicesContainer
+        {
+            /** @var UsagePolicy */
+            private $usagePolicy;
+
+            public function __construct(usagePolicy $usagePolicy, Configuration $configuration, HtmlHelper $htmlHelper)
+            {
+                $this->usagePolicy = $usagePolicy;
+                parent::__construct($configuration, $htmlHelper);
+            }
+
+            public function getUsagePolicy(): UsagePolicy
+            {
+                return $this->usagePolicy;
+            }
+
+        };
     }
 
     /**
@@ -104,14 +105,5 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
             "~241; url=/[?]trialExpiredAt=($trialExpiredAt|$trialExpiredAtSecondAfter)~",
             $metaRefresh->getAttribute('content')
         );
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_get_cookies_service(): void
-    {
-        $controller = new RulesController($this->createConfiguration(), $this->createHtmlHelper());
-        self::assertEquals(new CookiesService(), $controller->getCookiesService());
     }
 }

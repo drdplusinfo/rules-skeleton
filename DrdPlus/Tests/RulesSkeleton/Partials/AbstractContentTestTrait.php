@@ -8,6 +8,8 @@ use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\FrontendSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
+use DrdPlus\RulesSkeleton\RulesController;
+use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use Granam\String\StringTools;
 use Gt\Dom\HTMLDocument;
@@ -21,6 +23,7 @@ use Gt\Dom\HTMLDocument;
  * @method static assertFalse($value, $message = '')
  * @method static assertNotSame($expected, $actual, $message = '')
  * @method static fail($message)
+ * @method RulesController createController(string $documentRoot = null, Configuration $configuration = null, HtmlHelper $htmlHelper = null)
  */
 trait AbstractContentTestTrait
 {
@@ -39,7 +42,7 @@ trait AbstractContentTestTrait
     protected function passIn(): bool
     {
         $_COOKIE[$this->getNameForLocalOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
-        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService(), $this->createConfiguration());
+        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService());
         self::assertTrue(
             $usagePolicy->hasVisitorConfirmedOwnership(),
             "Ownership has not been confirmed by cookie '{$this->getNameForLocalOwnershipConfirmation()}'"
@@ -53,7 +56,7 @@ trait AbstractContentTestTrait
     protected function passOut(): bool
     {
         unset($_COOKIE[$this->getNameForLocalOwnershipConfirmation()]);
-        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService(), $this->createConfiguration());
+        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService());
         self::assertFalse(
             $usagePolicy->hasVisitorConfirmedOwnership(),
             "Ownership is still confirmed by cookie '{$this->getNameForLocalOwnershipConfirmation()}'"
@@ -129,7 +132,7 @@ trait AbstractContentTestTrait
 
     protected function getNameForOwnershipConfirmation(): string
     {
-        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService(), $this->createConfiguration());
+        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService());
         try {
             $usagePolicyReflection = new \ReflectionClass(UsagePolicy::class);
         } catch (\ReflectionException $reflectionException) {
@@ -259,5 +262,25 @@ trait AbstractContentTestTrait
         }
 
         return \DrdPlus\FrontendSkeleton\Configuration::createFromYml($dirs ?? $this->createDirs());
+    }
+
+    /**
+     * @param string|null $documentRoot
+     * @param \DrdPlus\FrontendSkeleton\Configuration|null $configuration
+     * @param \DrdPlus\FrontendSkeleton\HtmlHelper|null $htmlHelper
+     * @return \DrdPlus\FrontendSkeleton\ServicesContainer|ServicesContainer
+     */
+    protected function createServicesContainer(
+        string $documentRoot = null,
+        \DrdPlus\FrontendSkeleton\Configuration $configuration = null,
+        \DrdPlus\FrontendSkeleton\HtmlHelper $htmlHelper = null
+    ): \DrdPlus\FrontendSkeleton\ServicesContainer
+    {
+        $dirs = $this->createDirs($documentRoot);
+
+        return new ServicesContainer(
+            $configuration ?? $this->createConfiguration(),
+            $htmlHelper ?? $this->createHtmlHelper($dirs, false, false, false, false)
+        );
     }
 }
