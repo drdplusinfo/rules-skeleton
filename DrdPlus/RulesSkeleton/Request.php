@@ -5,6 +5,9 @@ namespace DrdPlus\RulesSkeleton;
 
 class Request extends \DrdPlus\FrontendSkeleton\Request
 {
+    public const TABLES = 'tables';
+    public const TABULKY = 'tabulky';
+
     /**
      * @return array|string[]
      */
@@ -14,7 +17,7 @@ class Request extends \DrdPlus\FrontendSkeleton\Request
             function (string $id) {
                 return \trim($id);
             },
-            \explode(',', $_GET['tables'] ?? $_GET['tabulky'] ?? '')
+            \explode(',', $_GET[self::TABLES] ?? $_GET[self::TABULKY] ?? '')
         );
 
         return \array_filter(

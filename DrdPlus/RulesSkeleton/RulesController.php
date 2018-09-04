@@ -34,8 +34,8 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
                     Content::PDF,
                     $this->getRedirect()
                 );
-            } elseif ($this->getServicesContainer()->getRequest()->getValueFromGet('tables') !== null
-                || $this->getServicesContainer()->getRequest()->getValueFromGet('tabulky')
+            } elseif ($this->getServicesContainer()->getRequest()->getValueFromGet(Request::TABLES) !== null
+                || $this->getServicesContainer()->getRequest()->getValueFromGet(Request::TABULKY)
             ) { // we do not require licence confirmation for tables only
                 $this->content = new Content(
                     $this->getServicesContainer()->getHtmlHelper(),
