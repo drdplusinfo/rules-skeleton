@@ -33,7 +33,6 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
             });
         /** @var UsagePolicy $usagePolicy */
         $controller = $this->createControllerForTrial($usagePolicy);
-        /** @noinspection Annotator */
         self::assertTrue($controller->activateTrial($now));
         $redirect = $controller->getRedirect();
         self::assertNotNull($redirect);
@@ -91,8 +90,8 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
         $now = \time();
         $trialExpiredAt = $now + 240 + 1;
         $trialExpiredAtSecondAfter = $trialExpiredAt++;
-        if ($this->getTestsConfiguration()->hasProtectedAccess()) { // can be solved by POST
-            $_POST['trial'] = 1;
+        if ($this->getTestsConfiguration()->hasProtectedAccess()) {
+            $_POST['trial'] = 1; // can be solved by POST
         } else {
             $controller = $this->createController();
             $controller->setRedirect(new Redirect('/?' . UsagePolicy::TRIAL_EXPIRED_AT . '=' . $trialExpiredAt, 240));
