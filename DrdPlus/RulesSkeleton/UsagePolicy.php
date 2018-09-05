@@ -9,6 +9,9 @@ use Granam\Strict\Object\StrictObject;
 class UsagePolicy extends StrictObject
 {
     public const TRIAL_EXPIRED_AT = 'trialExpiredAt';
+    public const OWNERSHIP_COOKIE_NAME = 'ownershipCookieName';
+    public const TRIAL_COOKIE_NAME = 'trialCookieName';
+    public const TRIAL_EXPIRED_AT_NAME = 'trialExpiredAtName';
 
     /** @var string */
     private $articleName;
@@ -43,9 +46,9 @@ class UsagePolicy extends StrictObject
         $this->articleName = $articleName;
         $this->request = $request;
         $this->cookiesService = $cookiesService;
-        $this->setCookie('ownershipCookieName', $this->getOwnershipName(), null /* expire on session end*/);
-        $this->setCookie('trialCookieName', $this->getTrialName(), null /* expire on session end*/);
-        $this->setCookie('trialExpiredAtName', $this->getTrialExpiredAtName(), null /* expire on session end*/);
+        $this->setCookie(static::OWNERSHIP_COOKIE_NAME, $this->getOwnershipName(), null /* expire on session end*/);
+        $this->setCookie(static::TRIAL_COOKIE_NAME, $this->getTrialName(), null /* expire on session end*/);
+        $this->setCookie(static::TRIAL_EXPIRED_AT_NAME, $this->getTrialExpiredAtName(), null /* expire on session end*/);
     }
 
     /**

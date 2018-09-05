@@ -33,6 +33,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
             });
         /** @var UsagePolicy $usagePolicy */
         $controller = $this->createControllerForTrial($usagePolicy);
+        /** @noinspection Annotator */
         self::assertTrue($controller->activateTrial($now));
         $redirect = $controller->getRedirect();
         self::assertNotNull($redirect);
@@ -102,7 +103,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
         self::assertCount(1, $metaRefreshes, 'One meta tag with refresh meaning expected');
         $metaRefresh = \current($metaRefreshes);
         self::assertRegExp(
-            "~241; url=/[?]trialExpiredAt=($trialExpiredAt|$trialExpiredAtSecondAfter)~",
+            '~241; url=/[?]' . UsagePolicy::TRIAL_EXPIRED_AT . "=($trialExpiredAt|$trialExpiredAtSecondAfter)~",
             $metaRefresh->getAttribute('content')
         );
     }
