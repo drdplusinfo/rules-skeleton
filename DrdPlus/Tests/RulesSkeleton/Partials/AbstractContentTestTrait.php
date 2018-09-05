@@ -24,6 +24,7 @@ use Gt\Dom\HTMLDocument;
  * @method static assertNotSame($expected, $actual, $message = '')
  * @method static fail($message)
  * @method RulesController createController(string $documentRoot = null, Configuration $configuration = null, HtmlHelper $htmlHelper = null)
+ * @method Configuration getConfiguration(Dirs $dirs = null)
  */
 trait AbstractContentTestTrait
 {
@@ -220,18 +221,6 @@ trait AbstractContentTestTrait
         return $this->getDocumentRoot() . '/eshop_url.txt';
     }
 
-    protected function getGenericPartsRoot(): string
-    {
-        return \file_exists($this->getDocumentRoot() . '/parts/rules-skeleton')
-            ? $this->getDocumentRoot() . '/parts/rules-skeleton'
-            : $this->getVendorRoot() . '/drdplus/rules-skeleton/parts/rules-skeleton';
-    }
-
-    protected function getVendorRoot(): string
-    {
-        return $this->getDocumentRoot() . '/vendor';
-    }
-
     /**
      * @param Dirs $dirs
      * @param bool $inDevMode
@@ -250,19 +239,6 @@ trait AbstractContentTestTrait
     }
 
     /**
-     * @param Dirs|null $dirs
-     * @return \DrdPlus\FrontendSkeleton\Configuration|Configuration
-     */
-    protected function createConfiguration(Dirs $dirs = null): \DrdPlus\FrontendSkeleton\Configuration
-    {
-        if (!$dirs || $dirs instanceof \DrdPlus\RulesSkeleton\Dirs) {
-            return Configuration::createFromYml($dirs ?? $this->createDirs());
-        }
-
-        return \DrdPlus\FrontendSkeleton\Configuration::createFromYml($dirs ?? $this->createDirs());
-    }
-
-    /**
      * @param string|null $documentRoot
      * @param \DrdPlus\FrontendSkeleton\Configuration|null $configuration
      * @param \DrdPlus\FrontendSkeleton\HtmlHelper|null $htmlHelper
@@ -277,13 +253,22 @@ trait AbstractContentTestTrait
         $dirs = $this->createDirs($documentRoot);
 
         return new ServicesContainer(
-            $configuration ?? $this->createConfiguration(),
+            $configuration ?? $this->getConfiguration(),
             $htmlHelper ?? $this->createHtmlHelper($dirs, false, false, false, false)
         );
+    }
+
+    /**
+     * @return string|Configuration
+     */
+    protected function getConfigurationClass(): string
+    {
+        return Configuration::class;
     }
 
     protected function getControllerClass(): string
     {
         return RulesController::class;
     }
+
 }

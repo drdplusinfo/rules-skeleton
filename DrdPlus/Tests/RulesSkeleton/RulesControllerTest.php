@@ -56,7 +56,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
 
     private function createServicesContainerWithUsagePolicy(UsagePolicy $usagePolicy)
     {
-        $configuration = $this->createConfiguration();
+        $configuration = $this->getConfiguration();
         $htmlHelper = $this->createHtmlHelper();
 
         return new class($usagePolicy, $configuration, $htmlHelper) extends ServicesContainer
