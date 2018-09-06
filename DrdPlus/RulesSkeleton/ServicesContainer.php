@@ -58,7 +58,9 @@ class ServicesContainer extends \DrdPlus\FrontendSkeleton\ServicesContainer
         if ($this->tablesWebCache === null) {
             $this->tablesWebCache = new TablesWebCache(
                 $this->getWebVersions(),
-                $this->getConfiguration()->getDirs(),
+                $this->getDirs(),
+                $this->getRequest(),
+                $this->getGit(),
                 $this->getHtmlHelper()->isInProduction(),
                 'pass'
             );
@@ -81,7 +83,9 @@ class ServicesContainer extends \DrdPlus\FrontendSkeleton\ServicesContainer
         if ($this->passWebCache === null) {
             $this->passWebCache = new WebCache(
                 $this->getWebVersions(),
-                $this->getConfiguration()->getDirs(),
+                $this->getDirs(),
+                $this->getRequest(),
+                $this->getGit(),
                 $this->getHtmlHelper()->isInProduction(),
                 'pass'
             );
@@ -95,7 +99,9 @@ class ServicesContainer extends \DrdPlus\FrontendSkeleton\ServicesContainer
         if ($this->passedWebCache === null) {
             $this->passedWebCache = new WebCache(
                 $this->getWebVersions(),
-                $this->getConfiguration()->getDirs(),
+                $this->getDirs(),
+                $this->getRequest(),
+                $this->getGit(),
                 $this->getHtmlHelper()->isInProduction(),
                 'passed'
             );
@@ -171,7 +177,14 @@ class ServicesContainer extends \DrdPlus\FrontendSkeleton\ServicesContainer
 
     public function getEmptyWebCache(): EmptyWebCache
     {
-        return new EmptyWebCache($this->getWebVersions(), $this->getDirs(), $this->getHtmlHelper()->isInProduction(), 'empty');
+        return new EmptyWebCache(
+            $this->getWebVersions(),
+            $this->getDirs(),
+            $this->getRequest(),
+            $this->getGit(),
+            $this->getHtmlHelper()->isInProduction(),
+            'empty'
+        );
     }
 
     public function getNow(): \DateTime
