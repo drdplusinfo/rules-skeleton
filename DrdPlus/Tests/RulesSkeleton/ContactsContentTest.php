@@ -9,7 +9,7 @@ use Gt\Dom\Element;
 /**
  * @method TestsConfiguration getTestsConfiguration
  */
-class ContactsTest extends AbstractContentTest
+class ContactsContentTest extends AbstractContentTest
 {
     use Partials\AbstractContentTestTrait;
 

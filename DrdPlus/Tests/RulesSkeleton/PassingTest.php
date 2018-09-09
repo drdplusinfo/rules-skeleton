@@ -11,7 +11,7 @@ use Gt\Dom\HTMLDocument;
 /**
  * @method TestsConfigurationReader getTestsConfiguration
  */
-class PassTest extends AbstractContentTest
+class PassingTest extends AbstractContentTest
 {
 
     use Partials\AbstractContentTestTrait;
