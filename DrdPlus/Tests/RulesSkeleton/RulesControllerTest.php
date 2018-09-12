@@ -90,11 +90,11 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
         $now = \time();
         $trialExpiredAt = $now + 240 + 1;
         $trialExpiredAtSecondAfter = $trialExpiredAt++;
-        if ($this->getTestsConfiguration()->hasProtectedAccess()) {
-            $_POST['trial'] = 1; // can be solved by POST
-        } else {
+        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasProtectedAccess()) {
             $controller = $this->createController();
             $controller->setRedirect(new Redirect('/?' . UsagePolicy::TRIAL_EXPIRED_AT . '=' . $trialExpiredAt, 241));
+        } else {
+            $_POST['trial'] = 1; // can be solved by POST
         }
         $trialContent = $this->fetchNonCachedContent($controller);
         $document = new HtmlDocument($trialContent);

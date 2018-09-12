@@ -11,6 +11,9 @@ use DrdPlus\FrontendSkeleton\HtmlDocument;
 class HtmlHelper extends \DrdPlus\FrontendSkeleton\HtmlHelper
 {
     public const CONTENT_CLASS = 'content';
+    public const AUTHORS_ID = 'autori';
+    public const AUTHORS_CLASS = 'rules-authors';
+    public const ORIGIN_CLASS = 'origin';
 
     /**
      * @param string $blockName
