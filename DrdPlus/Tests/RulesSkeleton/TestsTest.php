@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\Tests\FrontendSkeleton\FrontendControllerTest;
-use DrdPlus\Tests\RulesSkeleton\Partials\ClassesTrait;
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTestTrait;
 use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReaderTest;
 
 class TestsTest extends \DrdPlus\Tests\FrontendSkeleton\TestsTest
 {
-    use ClassesTrait;
+    use AbstractContentTestTrait;
 
     /**
      * @test

@@ -7,11 +7,9 @@ use DeviceDetector\Parser\Bot;
 use DrdPlus\FrontendSkeleton\WebCache;
 use DrdPlus\RulesSkeleton\Web\EmptyHead;
 use DrdPlus\RulesSkeleton\Web\EmptyMenu;
-use DrdPlus\RulesSkeleton\Web\HeadForTables;
 use DrdPlus\RulesSkeleton\Web\Pass;
 use DrdPlus\RulesSkeleton\Web\PassBody;
 use DrdPlus\RulesSkeleton\Web\PdfBody;
-use DrdPlus\RulesSkeleton\Web\TablesBody;
 use Granam\String\StringTools;
 
 /**
@@ -21,10 +19,6 @@ use Granam\String\StringTools;
  */
 class ServicesContainer extends \DrdPlus\FrontendSkeleton\ServicesContainer
 {
-    /** @var TablesWebCache */
-    private $tablesWebCache;
-    /** @var TablesBody */
-    private $tablesBody;
     /** @var WebCache */
     private $passWebCache;
     /** @var WebCache */
@@ -41,41 +35,6 @@ class ServicesContainer extends \DrdPlus\FrontendSkeleton\ServicesContainer
     public function __construct(Configuration $configuration, HtmlHelper $htmlHelper)
     {
         parent::__construct($configuration, $htmlHelper);
-    }
-
-    public function getHeadForTables(): HeadForTables
-    {
-        return new HeadForTables(
-            $this->getConfiguration(),
-            $this->getHtmlHelper(),
-            $this->getCssFiles(),
-            $this->getJsFiles()
-        );
-    }
-
-    public function getTablesWebCache(): TablesWebCache
-    {
-        if ($this->tablesWebCache === null) {
-            $this->tablesWebCache = new TablesWebCache(
-                $this->getWebVersions(),
-                $this->getDirs(),
-                $this->getRequest(),
-                $this->getGit(),
-                $this->getHtmlHelper()->isInProduction(),
-                'pass'
-            );
-        }
-
-        return $this->tablesWebCache;
-    }
-
-    public function getTablesBody(): TablesBody
-    {
-        if ($this->tablesBody === null) {
-            $this->tablesBody = new TablesBody($this->getWebFiles(), $this->getHtmlHelper(), $this->getRequest());
-        }
-
-        return $this->tablesBody;
     }
 
     public function getPassWebCache(): WebCache

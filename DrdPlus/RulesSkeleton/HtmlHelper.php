@@ -13,7 +13,7 @@ class HtmlHelper extends \DrdPlus\FrontendSkeleton\HtmlHelper
     public const CONTENT_CLASS = 'content';
     public const AUTHORS_ID = 'autori';
     public const AUTHORS_CLASS = 'rules-authors';
-    public const ORIGIN_CLASS = 'origin';
+    public const RULES_ORIGIN_CLASS = 'rules-origin';
 
     /**
      * @param string $blockName

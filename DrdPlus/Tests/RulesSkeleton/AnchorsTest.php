@@ -61,15 +61,15 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
     private function getLinkToEshopFromLinkToOrigin(): Element
     {
         $body = $this->getHtmlDocument()->body;
-        $origins = $body->getElementsByClassName(HtmlHelper::ORIGIN_CLASS);
+        $origins = $body->getElementsByClassName(HtmlHelper::RULES_ORIGIN_CLASS);
         self::assertCount(
             1,
             $origins,
-            "Expected one '" . HtmlHelper::AUTHORS_CLASS . "' class, got " . $origins->count() . ' of them'
+            "Expected one '" . HtmlHelper::RULES_ORIGIN_CLASS . "' class, got {$origins->count()} of them"
         );
         $origin = $origins->current();
         $rulesLinks = $origin->getElementsByTagName('a');
-        self::assertNotEmpty($rulesLinks, "Missing a link to rules in '" . HtmlHelper::ORIGIN_CLASS . "'");
+        self::assertNotEmpty($rulesLinks, "Missing a link to rules in '" . HtmlHelper::RULES_ORIGIN_CLASS . "'");
         self::assertCount(1, $rulesLinks);
 
         return $rulesLinks->current();

@@ -21,7 +21,7 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
     public function getContent(): \DrdPlus\FrontendSkeleton\Web\Content
     {
         if ($this->content === null) {
-            if (($_SERVER['QUERY_STRING'] ?? false) === 'pdf'
+            if ($this->getServicesContainer()->getRequest()->getQueryString() === 'pdf'
                 && $this->getServicesContainer()->getPdfBody()->getPdfFile()
             ) {
                 $this->content = new Content(
@@ -34,20 +34,10 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
                     Content::PDF,
                     $this->getRedirect()
                 );
-            } elseif ($this->getServicesContainer()->getRequest()->getValueFromGet(Request::TABLES) !== null
-                || $this->getServicesContainer()->getRequest()->getValueFromGet(Request::TABULKY)
-            ) { // we do not require licence confirmation for tables only
-                $this->content = new Content(
-                    $this->getServicesContainer()->getHtmlHelper(),
-                    $this->getServicesContainer()->getWebVersions(),
-                    $this->getServicesContainer()->getHeadForTables(),
-                    $this->getServicesContainer()->getMenu(),
-                    $this->getServicesContainer()->getTablesBody(),
-                    $this->getServicesContainer()->getTablesWebCache(),
-                    Content::TABLES,
-                    $this->getRedirect()
-                );
-            } elseif (!$this->solveAccess()) {
+            } elseif ($this->getServicesContainer()->getRequest()->getValueFromGet(Request::TABLES) === null
+                && $this->getServicesContainer()->getRequest()->getValueFromGet(Request::TABULKY) === null
+                && !$this->solveAccess()
+            ) {
                 $this->content = new Content(
                     $this->getServicesContainer()->getHtmlHelper(),
                     $this->getServicesContainer()->getWebVersions(),
@@ -59,16 +49,7 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
                     $this->getRedirect()
                 );
             } else {
-                $this->content = new Content(
-                    $this->getServicesContainer()->getHtmlHelper(),
-                    $this->getServicesContainer()->getWebVersions(),
-                    $this->getServicesContainer()->getHead(),
-                    $this->getServicesContainer()->getMenu(),
-                    $this->getServicesContainer()->getBody(),
-                    $this->getServicesContainer()->getPassedWebCache(),
-                    Content::PASSED,
-                    $this->getRedirect()
-                );
+                $this->content = parent::getContent();
             }
         }
 
