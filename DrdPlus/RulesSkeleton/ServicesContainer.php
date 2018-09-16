@@ -150,5 +150,4 @@ class ServicesContainer extends \DrdPlus\FrontendSkeleton\ServicesContainer
     {
         return new \DateTime();
     }
-
 }

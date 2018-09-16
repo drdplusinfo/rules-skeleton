@@ -1,6 +1,7 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
 use DrdPlus\Tests\FrontendSkeleton\RequestTest;
@@ -119,8 +120,8 @@ class PassingTest extends AbstractContentTest
             $passContentDocument = new HTMLDocument($passContent);
             $rulesContentDocument = new HTMLDocument($rulesContent);
             self::assertSame(
-                \preg_replace('~data-cached-at="[^"]+"~', '', $passContentDocument->body->innerHTML),
-                \preg_replace('~data-cached-at="[^"]+"~', '', $rulesContentDocument->body->innerHTML),
+                \preg_replace('~' . HtmlHelper::DATA_CACHED_AT . '="[^"]+"~', '', $passContentDocument->body->innerHTML),
+                \preg_replace('~' . HtmlHelper::DATA_CACHED_AT . '="[^"]+"~', '', $rulesContentDocument->body->innerHTML),
                 'Expected rules content for a crawler, skipping ownership confirmation page'
             );
         }
@@ -128,6 +129,7 @@ class PassingTest extends AbstractContentTest
 
     /**
      * @test
+     * @backupGlobals enabled
      */
     public function I_see_message_about_trial_expiration_if_happens(): void
     {
