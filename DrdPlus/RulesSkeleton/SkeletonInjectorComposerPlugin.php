@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 namespace DrdPlus\RulesSkeleton;
 
 use Composer\Installer\PackageEvent;
