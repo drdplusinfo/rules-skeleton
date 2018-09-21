@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace DrdPlus\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\Web\Content;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * @method ServicesContainer getServicesContainer
@@ -20,7 +22,19 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
         parent::__construct($servicesContainer);
     }
 
+    public function registerRouters(RouteCollection $routeCollection): void
+    {
+        $routeCollection->add(
+            'default',
+            new \Symfony\Component\Routing\Route(
+                '',
+                ['_controller' => static::class . '::getContent', '_method' => ['GET', 'POST']]
+            )
+        );
+    }
+
     /**
+     * @Route(name="default",path="*",methods={GET,POST})
      * @return Content|\DrdPlus\FrontendSkeleton\Web\Content
      */
     public function getContent(): \DrdPlus\FrontendSkeleton\Web\Content

@@ -17,18 +17,21 @@
   "require": {
     "php": ">=7.1",
     "ext-mbstring": "*",
-    "phpgt/dom": "~1.0",
-    "piwik/device-detector": "^3.9",
-    "tracy/tracy": "^2.4",
-    "phpmailer/phpmailer": "^6.0",
     "composer-plugin-api": "^1.0",
-    "drdplus/frontend-skeleton": "~1.0"
+    "doctrine/annotations": "^1.6",
+    "drdplus/frontend-skeleton": "~1.0",
+    "phpgt/dom": "~1.0",
+    "phpmailer/phpmailer": "^6.0",
+    "piwik/device-detector": "^3.9",
+    "symfony/console": "^4.1",
+    "symfony/routing": "^4.1",
+    "symfony/skeleton": "v4.1.4.2",
+    "tracy/tracy": "^2.4"
   },
   "require-dev": {
     "composer/composer": "^1.7",
     "mockery/mockery": "~1.0",
     "phpunit/phpunit": "~7.0",
-    "roave/security-advisories": "dev-master",
     "drdplus/rules-skeleton-web": "dev-master"
   },
   "config": {
