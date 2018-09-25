@@ -14,9 +14,18 @@
       "DrdPlus\\": "DrdPlus/"
     }
   },
+  "bin": [
+    "bin/assets"
+  ],
   "require": {
     "php": ">=7.1",
     "ext-mbstring": "*",
+    "ext-dom": "*",
+    "ext-posix": "*",
+    "ext-zlib": "*",
+    "ext-yaml": "*",
+    "ext-json": "*",
+    "ext-curl": "*",
     "composer-plugin-api": "^1.0",
     "doctrine/annotations": "^1.6",
     "drdplus/frontend-skeleton": "~1.0",
@@ -40,6 +49,12 @@
   "extra": {
     "class": "DrdPlus\\RulesSkeleton\\SkeletonInjectorComposerPlugin"
   },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+  "scripts": {
+    "post-update-cmd": [
+      "php bin/assets --css --dir=css"
+    ],
+    "post-install-cmd": [
+      "php bin/assets --css --dir=css"
+    ]
+  }
 }
