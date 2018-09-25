@@ -43,7 +43,28 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->io = $io;
     }
 
-    protected function isThisPackageChanged(PackageEvent $event): bool
+    public function plugInSkeleton(PackageEvent $event)
+    {
+        if ($this->alreadyInjected || !$this->isThisPackageChanged($event)) {
+            return;
+        }
+        $documentRoot = $GLOBALS['documentRoot'] ?? getcwd();
+        $this->io->write("Injecting {$this->skeletonPackageName} using document root $documentRoot");
+        $this->publishSkeletonImages($documentRoot);
+        $this->publishSkeletonCss($documentRoot);
+        $this->publishSkeletonJs($documentRoot);
+        $this->copyProjectConfig($documentRoot);
+        $this->flushCache($documentRoot);
+        $this->addVersionsToAssets($documentRoot);
+        $this->copyGoogleVerification($documentRoot);
+        $this->copyPhpUnitConfig($documentRoot);
+        $this->copyGitignoreToCache($documentRoot);
+        $this->copyFavicon($documentRoot);
+        $this->alreadyInjected = true;
+        $this->io->write("Injection of {$this->skeletonPackageName} finished");
+    }
+
+    private function isThisPackageChanged(PackageEvent $event): bool
     {
         /** @var InstallOperation|UpdateOperation $operation */
         $operation = $event->getOperation();
@@ -58,21 +79,23 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         return $this->isChangedPackageThisOne($changedPackageName);
     }
 
-    protected function isChangedPackageThisOne(string $changedPackageName): bool
+    private function isChangedPackageThisOne(string $changedPackageName): bool
     {
         return $changedPackageName === $this->skeletonPackageName;
     }
 
-    protected function addVersionsToAssets(string $documentRoot)
+    private function publishSkeletonImages(string $documentRoot): void
     {
-        $assetsVersion = new AssetsVersion(true, false);
-        $changedFiles = $assetsVersion->addVersionsToAssetLinks($documentRoot, ['css'], [], [], false);
-        if ($changedFiles) {
-            $this->io->write('Those assets got versions to asset links: ' . \implode(', ', $changedFiles));
-        }
+        $this->passThrough(
+            [
+                'rm -f ./images/generic/skeleton/rules*',
+                'cp -r ./vendor/drdplus/rules-skeleton/images/generic ./images/',
+            ],
+            $documentRoot
+        );
     }
 
-    protected function passThrough(array $commands, string $workingDir = null): void
+    private function passThrough(array $commands, string $workingDir = null): void
     {
         if ($workingDir !== null) {
             $escapedWorkingDir = \escapeshellarg($workingDir);
@@ -97,37 +120,28 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         }
     }
 
-    protected function flushCache(string $documentRoot): void
+    private function copyGoogleVerification(string $documentRoot): void
+    {
+        $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/google8d8724e0c2818dfc.html .'], $documentRoot);
+    }
+
+    private function copyPhpUnitConfig(string $documentRoot): void
+    {
+        $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/phpunit.xml.dist .'], $documentRoot);
+    }
+
+    private function addVersionsToAssets(string $documentRoot)
+    {
+        $assetsVersion = new AssetsVersion(true, false);
+        $changedFiles = $assetsVersion->addVersionsToAssetLinks($documentRoot, ['css'], [], [], false);
+        if ($changedFiles) {
+            $this->io->write('Those assets got versions to asset links: ' . \implode(', ', $changedFiles));
+        }
+    }
+
+    private function flushCache(string $documentRoot): void
     {
         $this->passThrough(['find ./cache -mindepth 2 -type f -exec rm {} +'], $documentRoot);
-    }
-
-    public function plugInSkeleton(PackageEvent $event)
-    {
-        if ($this->alreadyInjected || !$this->isThisPackageChanged($event)) {
-            return;
-        }
-        $documentRoot = $GLOBALS['documentRoot'] ?? getcwd();
-        $this->io->write("Injecting {$this->skeletonPackageName} using document root $documentRoot");
-        $this->publishSkeletonImages($documentRoot);
-        $this->publishSkeletonCss($documentRoot);
-        $this->publishSkeletonJs($documentRoot);
-        $this->copyProjectConfig($documentRoot);
-        $this->flushCache($documentRoot);
-        $this->addVersionsToAssets($documentRoot);
-        $this->alreadyInjected = true;
-        $this->io->write("Injection of {$this->skeletonPackageName} finished");
-    }
-
-    private function publishSkeletonImages(string $documentRoot): void
-    {
-        $this->passThrough(
-            [
-                'rm -f ./images/generic/skeleton/rules*',
-                'cp -r ./vendor/drdplus/rules-skeleton/images/generic ./images/',
-            ],
-            $documentRoot
-        );
     }
 
     private function publishSkeletonCss(string $documentRoot): void
@@ -159,10 +173,28 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
 
             return;
         }
-        $frontendSkeletonConfigContent = \file_get_contents('vendor/drdplus/frontend-skeleton/config.distribution.yml');
-        if (\file_get_contents('config.distribution.yml') !== $frontendSkeletonConfigContent) {
+        $rulesSkeletonConfigContent = \file_get_contents('vendor/drdplus/rules-skeleton/config.distribution.yml');
+        if (\file_get_contents('config.distribution.yml') !== $rulesSkeletonConfigContent) {
             return;
         }
         $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/config.distribution.yml .'], $documentRoot);
+    }
+
+    private function copyGitignoreToCache(string $documentRoot): void
+    {
+        $this->passThrough(
+            [
+                'mkdir -p cache',
+                'chmod 0775 cache',
+                'chgrp www-data cache',
+                'cp ./vendor/drdplus/rules-skeleton/cache/.gitignore ./cache/.gitignore',
+            ],
+            $documentRoot
+        );
+    }
+
+    private function copyFavicon(string $documentRoot): void
+    {
+        $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/favicon.ico .'], $documentRoot);
     }
 }
