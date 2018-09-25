@@ -20,13 +20,6 @@ $servicesContainer = new \DrdPlus\RulesSkeleton\ServicesContainer($configuration
 
 $controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController($servicesContainer);
 $controller->sendCustomHeaders();
-$routeCollection = new \Symfony\Component\Routing\RouteCollection();
-$controller->registerRouters($routeCollection);
-
-$requestContext = new \Symfony\Component\Routing\RequestContext('/');
-$urlMatcher = new \Symfony\Component\Routing\Matcher\UrlMatcher($routeCollection, $requestContext);
-$parameters = $urlMatcher->matchRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
-$controllerMethod = $parameters['_controller'] ?? null;
 
 if ($controller->isRequestedWebVersionUpdate()) {
     $controller->updateWebVersion();

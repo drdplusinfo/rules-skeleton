@@ -93,7 +93,6 @@ class RulesController extends StrictObject
     }
 
     /**
-     * @Route(name="default",path="*",methods={GET,POST})
      * @return Content
      */
     public function getContent(): Content
