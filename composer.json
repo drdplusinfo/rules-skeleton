@@ -19,16 +19,18 @@
   ],
   "require": {
     "php": ">=7.1",
-    "ext-mbstring": "*",
-    "ext-dom": "*",
-    "ext-posix": "*",
-    "ext-zlib": "*",
-    "ext-yaml": "*",
-    "ext-json": "*",
     "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-posix": "*",
+    "ext-yaml": "*",
+    "ext-zlib": "*",
     "composer-plugin-api": "^1.0",
     "doctrine/annotations": "^1.6",
-    "drdplus/frontend-skeleton": "~1.0",
+    "granam/strict-object": "^3.0",
+    "granam/string": "^3.2",
+    "granam/tools": "^3.0",
     "phpgt/dom": "~1.0",
     "phpmailer/phpmailer": "^6.0",
     "piwik/device-detector": "^3.9",
@@ -39,9 +41,10 @@
   },
   "require-dev": {
     "composer/composer": "^1.7",
-    "mockery/mockery": "~1.0",
-    "phpunit/phpunit": "~7.0",
-    "drdplus/rules-skeleton-web": "dev-master"
+    "drdplus/rules-skeleton-web": "dev-master",
+    "granam/exceptions-hierarchy": "^4.0",
+    "mockery/mockery": "^1.1",
+    "phpunit/phpunit": "~7.0"
   },
   "config": {
     "sort-packages": true

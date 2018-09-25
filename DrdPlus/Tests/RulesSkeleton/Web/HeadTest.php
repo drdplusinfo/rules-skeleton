@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton\Web;
 
-use DrdPlus\FrontendSkeleton\HtmlDocument;
-use DrdPlus\FrontendSkeleton\Web\Head;
+use DrdPlus\RulesSkeleton\HtmlDocument;
+use DrdPlus\RulesSkeleton\Web\Head;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 
 class HeadTest extends AbstractContentTest

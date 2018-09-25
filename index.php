@@ -13,7 +13,7 @@ require_once $documentRoot . '/vendor/autoload.php';
 $dirs = new \DrdPlus\RulesSkeleton\Dirs($documentRoot);
 $htmlHelper = $htmlHelper ?? \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($dirs);
 if (\PHP_SAPI !== 'cli') {
-    \DrdPlus\FrontendSkeleton\TracyDebugger::enable($htmlHelper->isInProduction());
+    \DrdPlus\RulesSkeleton\TracyDebugger::enable($htmlHelper->isInProduction());
 }
 $configuration = \DrdPlus\RulesSkeleton\Configuration::createFromYml($dirs);
 $servicesContainer = new \DrdPlus\RulesSkeleton\ServicesContainer($configuration, $htmlHelper);
