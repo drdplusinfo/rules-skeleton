@@ -273,7 +273,7 @@ class WebVersionsTest extends AbstractContentTest
 
     /**
      * @test
-     * @expectedException \DrdPlus\FrontendSkeleton\Exceptions\NoPatchVersionsMatch
+     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\NoPatchVersionsMatch
      */
     public function I_can_not_get_last_patch_version_for_non_existing_version(): void
     {
@@ -339,7 +339,7 @@ class WebVersionsTest extends AbstractContentTest
 
     /**
      * @test
-     * @expectedException \DrdPlus\FrontendSkeleton\Exceptions\UnknownWebVersion
+     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\UnknownWebVersion
      * @expectedExceptionMessageRegExp ~999[.]999~
      */
     public function I_can_not_update_non_existing_web_version(): void
