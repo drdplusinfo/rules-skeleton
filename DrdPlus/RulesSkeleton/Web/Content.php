@@ -169,7 +169,7 @@ HTML;
         }
         $cachedContent = $this->getCachedContent();
         if ($cachedContent !== null) {
-            return $cachedContent;
+            return $this->injectRedirectIfAny($cachedContent);
         }
         $previousMemoryLimit = \ini_set('memory_limit', '1G');
         $content = $this->composeContent();
