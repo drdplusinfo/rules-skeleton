@@ -431,7 +431,7 @@ class HtmlHelper extends StrictObject
                 'src',
                 "https://{$remoteDrdPlusHost}/?tables=" . \htmlspecialchars(\implode(',', \array_unique($tableIds)))
             );
-            $iFrame->setAttribute('style', 'display:none');
+            $iFrame->setAttribute('class', static::HIDDEN_CLASS);
         }
 
         return $htmlDocument;
