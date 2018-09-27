@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\YamlReader;
 use Granam\Strict\Object\StrictObject;
 
 class Configuration extends StrictObject
