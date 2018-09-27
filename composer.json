@@ -27,7 +27,6 @@
     "ext-yaml": "*",
     "ext-zlib": "*",
     "composer-plugin-api": "^1.0",
-    "doctrine/annotations": "^1.6",
     "granam/strict-object": "^3.0",
     "granam/string": "^3.2",
     "granam/tools": "^3.0",
