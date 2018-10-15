@@ -5,8 +5,6 @@ namespace DrdPlus\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\Web\Content;
 use Granam\Strict\Object\StrictObject;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\RouteCollection;
 
 class RulesController extends StrictObject
 {
@@ -78,17 +76,6 @@ class RulesController extends StrictObject
     {
         return $this->getServicesContainer()->getCookiesService()->setMinorVersionCookie(
             $this->getServicesContainer()->getWebVersions()->getCurrentMinorVersion()
-        );
-    }
-
-    public function registerRouters(RouteCollection $routeCollection): void
-    {
-        $routeCollection->add(
-            'default',
-            new \Symfony\Component\Routing\Route(
-                '',
-                ['_controller' => static::class . '::getContent', '_method' => ['GET', 'POST']]
-            )
         );
     }
 
