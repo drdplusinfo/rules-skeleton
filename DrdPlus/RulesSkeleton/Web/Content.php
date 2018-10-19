@@ -60,93 +60,6 @@ class Content extends StrictObject
         return $this->getStringContent();
     }
 
-    protected function buildHtmlDocument(string $content): HtmlDocument
-    {
-        $htmlDocument = new HtmlDocument($content);
-        $this->getHtmlHelper()->prepareSourceCodeLinks($htmlDocument);
-        $this->getHtmlHelper()->addIdsToTablesAndHeadings($htmlDocument);
-        $this->getHtmlHelper()->replaceDiacriticsFromIds($htmlDocument);
-        $this->getHtmlHelper()->replaceDiacriticsFromAnchorHashes($htmlDocument);
-        $this->getHtmlHelper()->addAnchorsToIds($htmlDocument);
-        $this->getHtmlHelper()->resolveDisplayMode($htmlDocument);
-        $this->getHtmlHelper()->markExternalLinksByClass($htmlDocument);
-        $this->getHtmlHelper()->externalLinksTargetToBlank($htmlDocument);
-        $this->getHtmlHelper()->injectIframesWithRemoteTables($htmlDocument);
-        $this->getHtmlHelper()->addVersionHashToAssets($htmlDocument);
-        if (!$this->getHtmlHelper()->isInProduction()) {
-            $this->getHtmlHelper()->makeExternalDrdPlusLinksLocal($htmlDocument);
-        }
-        $this->injectCacheId($htmlDocument);
-
-        return $htmlDocument;
-    }
-
-    protected function getHtmlHelper(): HtmlHelper
-    {
-        return $this->htmlHelper;
-    }
-
-    protected function injectCacheId(HtmlDocument $htmlDocument): void
-    {
-        $htmlDocument->documentElement->setAttribute('data-cache-stamp', $this->getCache()->getCacheId());
-    }
-
-    protected function composeContent(): string
-    {
-        $patchVersion = $this->getWebVersions()->getCurrentPatchVersion();
-        $now = \date(\DATE_ATOM);
-        $head = $this->getHead()->getHeadString();
-        $menu = $this->getMenu()->getMenuString();
-        $body = $this->getBody()->getBodyString();
-
-        return <<<HTML
-<!DOCTYPE html>
-<html lang="cs" data-content-version="{$patchVersion}" data-cached-at="{$now}">
-<head>
-    {$head}
-</head>
-<body class="container">
-    {$menu}
-    {$body}
-</body>
-</html>
-HTML;
-    }
-
-    protected function getHead(): Head
-    {
-        return $this->head;
-    }
-
-    protected function getMenu(): Menu
-    {
-        return $this->menu;
-    }
-
-    protected function getBody(): Body
-    {
-        return $this->body;
-    }
-
-    protected function getWebVersions(): WebVersions
-    {
-        return $this->webVersions;
-    }
-
-    protected function getCachedContent(): ?string
-    {
-        if ($this->getCache()->isCacheValid()) {
-            return $this->getCache()->getCachedContent();
-        }
-
-        return null;
-    }
-
-    protected function getCache(): Cache
-    {
-        return $this->cache;
-    }
-
     public function containsTables(): bool
     {
         return $this->contentType === self::TABLES;
@@ -157,7 +70,7 @@ HTML;
         return $this->contentType === self::FULL;
     }
 
-    protected function getContentType(): string
+    private function getContentType(): string
     {
         return $this->contentType;
     }
@@ -189,7 +102,94 @@ HTML;
         return $this->injectRedirectIfAny($updatedContent);
     }
 
-    protected function injectRedirectIfAny(string $content): string
+    private function buildHtmlDocument(string $content): HtmlDocument
+    {
+        $htmlDocument = new HtmlDocument($content);
+        $this->getHtmlHelper()->prepareSourceCodeLinks($htmlDocument);
+        $this->getHtmlHelper()->addIdsToTablesAndHeadings($htmlDocument);
+        $this->getHtmlHelper()->replaceDiacriticsFromIds($htmlDocument);
+        $this->getHtmlHelper()->replaceDiacriticsFromAnchorHashes($htmlDocument);
+        $this->getHtmlHelper()->addAnchorsToIds($htmlDocument);
+        $this->getHtmlHelper()->resolveDisplayMode($htmlDocument);
+        $this->getHtmlHelper()->markExternalLinksByClass($htmlDocument);
+        $this->getHtmlHelper()->externalLinksTargetToBlank($htmlDocument);
+        $this->getHtmlHelper()->injectIframesWithRemoteTables($htmlDocument);
+        $this->getHtmlHelper()->addVersionHashToAssets($htmlDocument);
+        if (!$this->getHtmlHelper()->isInProduction()) {
+            $this->getHtmlHelper()->makeExternalDrdPlusLinksLocal($htmlDocument);
+        }
+        $this->injectCacheId($htmlDocument);
+
+        return $htmlDocument;
+    }
+
+    private function getHtmlHelper(): HtmlHelper
+    {
+        return $this->htmlHelper;
+    }
+
+    private function injectCacheId(HtmlDocument $htmlDocument): void
+    {
+        $htmlDocument->documentElement->setAttribute('data-cache-stamp', $this->getCache()->getCacheId());
+    }
+
+    private function composeContent(): string
+    {
+        $patchVersion = $this->getWebVersions()->getCurrentPatchVersion();
+        $now = \date(\DATE_ATOM);
+        $head = $this->getHead()->getHeadString();
+        $menu = $this->getMenu()->getMenuString();
+        $body = $this->getBody()->getBodyString();
+
+        return <<<HTML
+<!DOCTYPE html>
+<html lang="cs" data-content-version="{$patchVersion}" data-cached-at="{$now}">
+<head>
+    {$head}
+</head>
+<body class="container">
+    {$menu}
+    {$body}
+</body>
+</html>
+HTML;
+    }
+
+    private function getHead(): Head
+    {
+        return $this->head;
+    }
+
+    private function getMenu(): Menu
+    {
+        return $this->menu;
+    }
+
+    private function getBody(): Body
+    {
+        return $this->body;
+    }
+
+    private function getWebVersions(): WebVersions
+    {
+        return $this->webVersions;
+    }
+
+    private function getCachedContent(): ?string
+    {
+        if ($this->getCache()->isCacheValid()) {
+            return $this->getCache()->getCachedContent();
+        }
+
+        return null;
+    }
+
+    private function getCache(): Cache
+    {
+        return $this->cache;
+    }
+
+    private function injectRedirectIfAny(string $content): string
     {
         if (!$this->getRedirect()) {
             return $content;
@@ -204,7 +204,7 @@ HTML;
         return $cachedDocument->saveHTML();
     }
 
-    protected function getRedirect(): ?Redirect
+    private function getRedirect(): ?Redirect
     {
         return $this->redirect;
     }

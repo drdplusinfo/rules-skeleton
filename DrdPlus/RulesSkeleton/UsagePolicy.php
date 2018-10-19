@@ -27,11 +27,7 @@ class UsagePolicy extends StrictObject
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameShouldBeValidName
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CookieCanNotBeSet
      */
-    public function __construct(
-        string $articleName,
-        Request $request,
-        CookiesService $cookiesService
-    )
+    public function __construct(string $articleName, Request $request, CookiesService $cookiesService)
     {
         $articleName = \trim($articleName);
         if ($articleName === '') {
