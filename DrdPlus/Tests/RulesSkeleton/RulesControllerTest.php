@@ -233,8 +233,8 @@ class RulesControllerTest extends AbstractContentTest
         self::assertCount(0, $this->getMetaRefreshes($this->getHtmlDocument()), 'No meta tag with refresh meaning expected');
         $this->passOut();
         self::assertNull($_POST[Request::TRIAL] ?? null, 'Globals have not been reset');
+        $this->createServicesContainer()->getUsagePolicy()->activateTrial(new \DateTime('+1 year'));
         $_POST[Request::TRIAL] = '1';
-        $_POST[Request::CONFIRM] = '1';
         $content = $this->fetchNonCachedContent();
         $document = new HtmlDocument($content);
         $metaRefreshes = $this->getMetaRefreshes($document);
