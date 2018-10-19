@@ -134,6 +134,42 @@ class RequestTest extends TestWithMockery
     /**
      * @test
      * @backupGlobals enabled
+     */
+    public function I_can_get_value_from_cookie(): void
+    {
+        $request = new Request(new Bot());
+        unset($_COOKIE);
+        self::assertNull($request->getValueFromCookie('foo'));
+        global $_COOKIE; // because backup globals do not works for unset global
+        $_COOKIE = ['foo' => 'bar'];
+        self::assertSame('bar', $request->getValueFromCookie('foo'));
+    }
+
+    /**
+     * @test
+     * @backupGlobals enabled
+     */
+    public function I_can_get_value_from_request_with_priority_post_get_cookie(): void
+    {
+        $request = new Request(new Bot());
+        unset($_POST, $_GET, $_COOKIE);
+        self::assertNull($request->getValue('foo'));
+        global $_POST, $_GET, $_COOKIE; // because backup globals do not works for unset global
+        $_POST = ['foo' => 'from post'];
+        $_GET = ['foo' => 'from get'];
+        $_COOKIE = ['foo' => 'from cookie'];
+        self::assertSame('from post', $request->getValue('foo'));
+        unset($_POST['foo']);
+        self::assertSame('from get', $request->getValue('foo'));
+        unset($_GET['foo']);
+        self::assertSame('from cookie', $request->getValue('foo'));
+        unset($_COOKIE['foo']);
+        self::assertNull($request->getValue('foo'));
+    }
+
+    /**
+     * @test
+     * @backupGlobals enabled
      * @dataProvider provideTablesIdsParameterName
      * @param string $parameterName
      */

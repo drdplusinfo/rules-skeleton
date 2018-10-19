@@ -5,6 +5,7 @@ use DrdPlus\RulesSkeleton\HtmlDocument;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Redirect;
+use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
@@ -171,10 +172,12 @@ class RulesControllerTest extends AbstractContentTest
 
     /**
      * @test
+     * @dataProvider provideRequestType
      * @backupGlobals enabled
+     * @param string $requestType
      * @throws \ReflectionException
      */
-    public function I_will_be_redirected_via_html_meta_on_trial(): void
+    public function I_will_be_redirected_via_html_meta_on_trial(string $requestType): void
     {
         self::assertCount(0, $this->getMetaRefreshes($this->getHtmlDocument()), 'No meta tag with refresh meaning expected so far');
         $this->passOut();
@@ -183,7 +186,17 @@ class RulesControllerTest extends AbstractContentTest
         $trialExpiredAt = $now + 240 + 1;
         $trialExpiredAtSecondAfter = $trialExpiredAt++;
         if ($this->isSkeletonChecked() || $this->getTestsConfiguration()->hasProtectedAccess()) {
-            $_POST['trial'] = 1; // can be solved by POST
+            self::assertNull(
+                $_GET[Request::TRIAL] ?? $_POST[Request::TRIAL] ?? $_COOKIE[Request::TRIAL] ?? null,
+                'Globals have not been reset'
+            );
+            if ($requestType === 'get') {
+                $_GET[Request::TRIAL] = '1';
+            } elseif ($requestType === 'post') {
+                $_POST[Request::TRIAL] = '1';
+            } else {
+                $_COOKIE[Request::TRIAL] = '1';
+            }
         } else { // just a little hack
             $controller = $this->createController();
             $controllerReflection = new \ReflectionClass($controller);
@@ -200,5 +213,14 @@ class RulesControllerTest extends AbstractContentTest
             '~241; url=/[?]' . UsagePolicy::TRIAL_EXPIRED_AT . "=($trialExpiredAt|$trialExpiredAtSecondAfter)~",
             $metaRefresh->getAttribute('content')
         );
+    }
+
+    public function provideRequestType(): array
+    {
+        return [
+            ['get'],
+            ['post'],
+            ['cookie'],
+        ];
     }
 }

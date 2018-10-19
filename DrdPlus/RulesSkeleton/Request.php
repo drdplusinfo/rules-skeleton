@@ -15,6 +15,7 @@ class Request extends StrictObject
     public const TABLES = 'tables';
     public const TABULKY = 'tabulky';
     public const CONFIRM = 'confirm';
+    public const TRIAL = 'trial';
     public const PDF = 'pdf';
 
     /** @var Bot */
@@ -69,9 +70,9 @@ class Request extends StrictObject
         return '?' . \http_build_query($queryParameters);
     }
 
-    public function getValue(string $name): ?string
+    public function getValue(string $name)
     {
-        return $_GET[$name] ?? $_POST[$name] ?? $_COOKIE[$name] ?? null;
+        return $_POST[$name] ?? $_GET[$name] ?? $_COOKIE[$name] ?? null;
     }
 
     public function isCliRequest(): bool
@@ -92,6 +93,11 @@ class Request extends StrictObject
     public function getValueFromGet(string $name)
     {
         return $_GET[$name] ?? null;
+    }
+
+    public function getValueFromCookie(string $name)
+    {
+        return $_COOKIE[$name] ?? null;
     }
 
     /**
