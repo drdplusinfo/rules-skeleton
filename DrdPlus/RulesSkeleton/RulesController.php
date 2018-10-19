@@ -159,16 +159,16 @@ class RulesController extends StrictObject
             $usagePolicy = $this->getServicesContainer()->getUsagePolicy();
             $canPassIn = $usagePolicy->isVisitorBot();
             if (!$canPassIn) {
-                if ($this->getServicesContainer()->getRequest()->getValueFromPost(Request::CONFIRM)) {
-                    $canPassIn = $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
-                }
-                if (!$canPassIn && $this->getServicesContainer()->getRequest()->getValue(Request::TRIAL)) {
-                    $canPassIn = $this->activateTrial($this->getServicesContainer()->getNow());
-                }
+                $canPassIn = $usagePolicy->hasVisitorConfirmedOwnership();
                 if (!$canPassIn) {
-                    $canPassIn = $usagePolicy->hasVisitorConfirmedOwnership();
+                    $canPassIn = $usagePolicy->isVisitorUsingValidTrial();
                     if (!$canPassIn) {
-                        $canPassIn = $usagePolicy->isVisitorUsingValidTrial();
+                        if ($this->getServicesContainer()->getRequest()->getValueFromPost(Request::CONFIRM)) {
+                            $canPassIn = $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
+                        }
+                        if (!$canPassIn && $this->getServicesContainer()->getRequest()->getValue(Request::TRIAL)) {
+                            $canPassIn = $this->activateTrial($this->getServicesContainer()->getNow());
+                        }
                     }
                 }
             }

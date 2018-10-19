@@ -223,4 +223,22 @@ class RulesControllerTest extends AbstractContentTest
             ['cookie'],
         ];
     }
+
+    /**
+     * @test
+     * @backupGlobals enabled
+     */
+    public function I_will_not_be_redirected_as_owner_via_html_meta_even_on_trial(): void
+    {
+        self::assertCount(0, $this->getMetaRefreshes($this->getHtmlDocument()), 'No meta tag with refresh meaning expected');
+        $this->passOut();
+        self::assertNull($_POST[Request::TRIAL] ?? null, 'Globals have not been reset');
+        $_POST[Request::TRIAL] = '1';
+        $_POST[Request::CONFIRM] = '1';
+        $content = $this->fetchNonCachedContent();
+        $document = new HtmlDocument($content);
+        $metaRefreshes = $this->getMetaRefreshes($document);
+        self::assertCount(0, $metaRefreshes, 'No meta tag with refresh meaning expected as we are owners');
+    }
+
 }
