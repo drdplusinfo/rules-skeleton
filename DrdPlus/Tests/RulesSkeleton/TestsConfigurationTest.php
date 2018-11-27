@@ -109,6 +109,7 @@ class TestsConfigurationTest extends AbstractContentTest
     /**
      * @param array|\ReflectionMethod $setterReflections
      * @throws \LogicException
+     * @throws \ReflectionException
      */
     private function I_can_call_setters_in_chain(array $setterReflections): void
     {
@@ -274,7 +275,7 @@ class TestsConfigurationTest extends AbstractContentTest
     public function I_can_set_and_get_local_and_public_url(): void
     {
         $testsConfiguration = $this->createSut('https://drdplus.info');
-        self::assertSame('http://drdplus.loc:88', $testsConfiguration->getLocalUrl());
+        self::assertSame('http://drdplus.loc', $testsConfiguration->getLocalUrl());
         self::assertSame('https://drdplus.info', $testsConfiguration->getPublicUrl());
     }
 
