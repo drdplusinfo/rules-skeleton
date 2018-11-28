@@ -257,7 +257,7 @@ class TestsConfigurationTest extends AbstractContentTest
      * @param string $publicUrl
      * @return \DrdPlus\Tests\RulesSkeleton\TestsConfiguration|TestsConfiguration
      */
-    protected function createSut(string $publicUrl = 'https://drdplus.info'): TestsConfiguration
+    protected function createSut(string $publicUrl = 'https://rules.skeleton.drdplus.info'): TestsConfiguration
     {
         $sutClass = static::getSutClass();
 
