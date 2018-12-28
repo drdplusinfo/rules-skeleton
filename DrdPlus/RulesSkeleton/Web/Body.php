@@ -23,16 +23,13 @@ class Body extends StrictObject
     public function getBodyString(): string
     {
         $content = '';
-        foreach ($this->getWebFiles() as $webFile) {
+        foreach ($this->webFiles as $webFile) {
             if (\preg_match('~[.]php$~', $webFile)) {
-                \ob_start();
-                /** @noinspection PhpIncludeInspection */
-                include $webFile;
-                $content .= \ob_get_clean();
+                $content .= $this->fetchPhpFileContent($webFile);
             } elseif (\preg_match('~[.]md$~', $webFile)) {
-                $content .= \Parsedown::instance()->parse(\file_get_contents($webFile));
+                $content .= $this->fetchMarkdownFileContent($webFile);
             } else {
-                $content .= \file_get_contents($webFile);
+                $content .= $this->fetchFilePlainContent($webFile);
             }
         }
 
@@ -44,8 +41,22 @@ class Body extends StrictObject
 HTML;
     }
 
-    protected function getWebFiles(): WebFiles
+    protected function fetchPhpFileContent(string $file): string
     {
-        return $this->webFiles;
+        \ob_start();
+        /** @noinspection PhpIncludeInspection */
+        include $file;
+
+        return \ob_get_clean();
+    }
+
+    protected function fetchMarkdownFileContent(string $file): string
+    {
+        return \Parsedown::instance()->parse($this->fetchFilePlainContent($file));
+    }
+
+    protected function fetchFilePlainContent(string $file): string
+    {
+        return \file_get_contents($file);
     }
 }
