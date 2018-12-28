@@ -89,7 +89,7 @@ class Configuration extends StrictObject
             throw new Exceptions\InvalidWebRepositoryUrl(
                 'Expected something like git@github.com/foo/bar.git in configuration web.repository_url, got '
                 . ($repositoryUrl
-                    ? ('non-valid URL, non-existing dir ' . $repositoryUrl)
+                    ? "non-valid URL, non-existing dir '$repositoryUrl'"
                     : 'nothing'
                 )
             );
