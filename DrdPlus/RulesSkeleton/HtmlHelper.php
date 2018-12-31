@@ -31,7 +31,6 @@ class HtmlHelper extends StrictObject
     public const AUTHORS_ID = 'autori';
     public const META_REDIRECT_ID = 'meta_redirect';
     public const CONTENT_CLASS = 'content';
-    public const AUTHORS_CLASS = 'rules-authors';
     public const RULES_ORIGIN_CLASS = 'rules-origin';
     public const DATA_CACHE_STAMP = 'data-cache-stamp';
     public const DATA_CACHED_AT = 'data-cached-at';
