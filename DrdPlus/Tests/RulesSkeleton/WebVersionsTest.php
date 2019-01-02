@@ -141,12 +141,10 @@ class WebVersionsTest extends AbstractContentTest
     {
         $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
         $currentCommitHash = $webVersions->getCurrentCommitHash(); // called before reading .git/HEAD to ensure it exists
-        self::assertSame(
-            $this->getLastCommitHashFromHeadFile(
-                $this->createDirs()->getVersionRoot($this->getTestsConfiguration()->getExpectedLastVersion())
-            ),
-            $currentCommitHash
+        $lastCommitHashFromGitHeadFile = $this->getLastCommitHashFromGitHeadFile(
+            $this->createDirs()->getVersionRoot($this->getTestsConfiguration()->getExpectedLastVersion())
         );
+        self::assertSame($lastCommitHashFromGitHeadFile, $currentCommitHash);
     }
 
     /**
@@ -154,7 +152,7 @@ class WebVersionsTest extends AbstractContentTest
      * @return string
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\CanNotReadGitHead
      */
-    private function getLastCommitHashFromHeadFile(string $dir): string
+    private function getLastCommitHashFromGitHeadFile(string $dir): string
     {
         $head = \file_get_contents($dir . '/.git/HEAD');
         if (\preg_match('~^[[:alnum:]]{40,}$~', $head)) {
