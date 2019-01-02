@@ -8,6 +8,26 @@ use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReaderTest;
 
 class TestsTest extends AbstractContentTest
 {
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function Every_test_lives_in_drd_plus_tests_namespace(): void
+    {
+        $reflectionClass = new \ReflectionClass(static::class);
+        $testsDir = \dirname($reflectionClass->getFileName());
+        $testClasses = $this->getClassesFromDir($testsDir);
+        self::assertNotEmpty($testClasses, "No test classes found in {$testsDir}");
+        foreach ($testClasses as $testClass) {
+            self::assertStringStartsWith(
+                'DrdPlus\\Tests',
+                (new \ReflectionClass($testClass))->getNamespaceName(),
+                "Class {$testClass} should be in DrdPlus\\Test namespace"
+            );
+        }
+    }
+
     /**
      * @test
      * @throws \ReflectionException
