@@ -141,10 +141,14 @@ class WebVersionsTest extends AbstractContentTest
     {
         $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
         $currentCommitHash = $webVersions->getCurrentCommitHash(); // called before reading .git/HEAD to ensure it exists
-        $lastCommitHashFromGitHeadFile = $this->getLastCommitHashFromGitHeadFile(
-            $this->createDirs()->getVersionRoot($this->getTestsConfiguration()->getExpectedLastVersion())
+        $versionRoot = $this->createDirs()->getVersionRoot($this->getTestsConfiguration()->getExpectedLastVersion());
+        $lastCommitHashFromGitHeadFile = $this->getLastCommitHashFromGitHeadFile($versionRoot);
+        self::assertSame(
+            $lastCommitHashFromGitHeadFile,
+            $currentCommitHash,
+            'Expected different last commit for version ' . $this->getTestsConfiguration()->getExpectedLastVersion()
+            . ' taken from dir ' . $versionRoot
         );
-        self::assertSame($lastCommitHashFromGitHeadFile, $currentCommitHash);
     }
 
     /**
