@@ -49,6 +49,7 @@ class TestsTest extends AbstractContentTest
             TrialTest::class,
             WebContentTest::class,
             StandardModeTest::class,
+            self::class,
             static::class,
             CoveredPartsCanBeHiddenTest::class,
             PassingTest::class,
