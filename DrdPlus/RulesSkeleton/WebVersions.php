@@ -150,9 +150,9 @@ class WebVersions extends StrictObject implements CurrentMinorVersionProvider, C
 
     public function getCurrentMinorVersion(): string
     {
-        $minorVersion = $this->request->getValue(Request::VERSION);
-        if ($minorVersion && $this->hasMinorVersion($minorVersion)) {
-            return $minorVersion;
+        $requestedMinorVersion = $this->request->getValue(Request::VERSION);
+        if ($requestedMinorVersion && $this->hasMinorVersion($requestedMinorVersion)) {
+            return $requestedMinorVersion;
         }
 
         return $this->configuration->getWebLastStableMinorVersion();
