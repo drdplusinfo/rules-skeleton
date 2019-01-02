@@ -22,12 +22,6 @@ class WebVersionsTest extends AbstractContentTest
             $requestedVersion ?? $this->getTestsConfiguration()->getExpectedLastVersion(),
             $webVersions->getCurrentMinorVersion()
         );
-        $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
-        self::assertSame(
-            $webVersions->getCurrentMinorVersion(),
-            $this->getTestsConfiguration()->getExpectedLastVersion(),
-            'Expected last web version to be tested'
-        );
     }
 
     public function provideWebVersion(): array
