@@ -12,24 +12,15 @@ class WebVersionsTest extends AbstractContentTest
 
     /**
      * @test
-     * @dataProvider provideWebVersion
-     * @param string|null $requestedVersion
      */
-    public function I_can_get_current_version(?string $requestedVersion): void
+    public function I_can_get_current_version(): void
     {
-        $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest($requestedVersion), $this->createGit());
-        self::assertSame(
-            $requestedVersion ?? $this->getTestsConfiguration()->getExpectedLastVersion(),
-            $webVersions->getCurrentMinorVersion()
+        $webVersions = new WebVersions(
+            $this->getConfiguration(),
+            $this->createRequest(WebVersions::LAST_UNSTABLE_VERSION),
+            $this->createGit()
         );
-    }
-
-    public function provideWebVersion(): array
-    {
-        return [
-            ['none' => null],
-            ['last unstable version' => WebVersions::LAST_UNSTABLE_VERSION],
-        ];
+        self::assertSame(WebVersions::LAST_UNSTABLE_VERSION, $webVersions->getCurrentMinorVersion());
     }
 
     /**

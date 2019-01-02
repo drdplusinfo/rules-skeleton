@@ -204,4 +204,15 @@ class ConfigurationTest extends AbstractContentTest
 
         return $configurationClass::createFromYml($this->createDirs($this->getSkeletonDocumentRoot()));
     }
+
+    /**
+     * @test
+     */
+    public function I_have_expected_last_stable_version(): void
+    {
+        self::assertSame(
+            $this->getTestsConfiguration()->getExpectedLastVersion(),
+            $this->getConfiguration()->getWebLastStableMinorVersion()
+        );
+    }
 }
