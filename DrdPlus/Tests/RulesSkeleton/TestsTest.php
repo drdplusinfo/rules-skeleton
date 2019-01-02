@@ -16,13 +16,13 @@ class TestsTest extends AbstractContentTest
     {
         $referenceTestClass = new \ReflectionClass($this->getControllerTestClass());
         $referenceTestDir = \dirname($referenceTestClass->getFileName());
-        $notClassesTestingTests = $this->getNotClassesTestingTests();
+        $testingClassesWithoutSut = $this->getTestingClassesWithoutSut();
         foreach ($this->getClassesFromDir($referenceTestDir) as $testClass) {
             $testClassReflection = new \ReflectionClass($testClass);
             if ($testClassReflection->isAbstract()
                 || $testClassReflection->isInterface()
                 || $testClassReflection->isTrait()
-                || \in_array($testClass, $notClassesTestingTests, true)
+                || \in_array($testClass, $testingClassesWithoutSut, true)
             ) {
                 continue;
             }
@@ -34,7 +34,7 @@ class TestsTest extends AbstractContentTest
         }
     }
 
-    private function getNotClassesTestingTests(): array
+    protected function getTestingClassesWithoutSut(): array
     {
         return [
             AnchorsTest::class,
