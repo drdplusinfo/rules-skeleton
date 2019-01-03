@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DrdPlus\RulesSkeleton;
 
 use Granam\Strict\Object\StrictObject;
+use Granam\YamlReader\YamlFileReader;
 
 class Configuration extends StrictObject
 {
@@ -12,11 +13,11 @@ class Configuration extends StrictObject
 
     public static function createFromYml(Dirs $dirs): Configuration
     {
-        $globalConfig = new YamlReader($dirs->getDocumentRoot() . '/' . static::CONFIG_DISTRIBUTION_YML);
+        $globalConfig = new YamlFileReader($dirs->getDocumentRoot() . '/' . static::CONFIG_DISTRIBUTION_YML);
         $config = $globalConfig->getValues();
         $localConfigFile = $dirs->getDocumentRoot() . '/' . static::CONFIG_LOCAL_YML;
         if (\file_exists($localConfigFile)) {
-            $localConfig = new YamlReader($dirs->getDocumentRoot() . '/' . static::CONFIG_LOCAL_YML);
+            $localConfig = new YamlFileReader($dirs->getDocumentRoot() . '/' . static::CONFIG_LOCAL_YML);
             $config = \array_replace_recursive($config, $localConfig->getValues());
         }
 
