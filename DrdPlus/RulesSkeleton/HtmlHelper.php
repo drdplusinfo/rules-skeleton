@@ -240,24 +240,6 @@ class HtmlHelper extends StrictObject
         }
     }
 
-    private function containsOnlyTextAndSpans(\DOMNode $element): bool
-    {
-        if (!$element->hasChildNodes()) {
-            return true;
-        }
-        /** @var \DOMNode $childNode */
-        foreach ($element->childNodes as $childNode) {
-            if ($childNode->nodeName !== 'span' && $childNode->nodeType !== XML_TEXT_NODE) {
-                return false;
-            }
-            if (!$this->containsOnlyTextAndSpans($childNode)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     /**
      * @param HtmlDocument $html
      */
@@ -343,25 +325,6 @@ class HtmlHelper extends StrictObject
         }
 
         return \array_intersect_key($tablesWithIds, $unifiedRequiredIds);
-    }
-
-    /**
-     * @param HTMLCollection $children
-     * @return string|bool
-     */
-    private function getChildId(HTMLCollection $children)
-    {
-        foreach ($children as $child) {
-            if ($child->getAttribute('id')) {
-                return $child->getAttribute('id');
-            }
-            $grandChildId = $this->getChildId($child->children);
-            if ($grandChildId !== false) {
-                return $grandChildId;
-            }
-        }
-
-        return false;
     }
 
     public function markExternalLinksByClass(HtmlDocument $htmlDocument): HtmlDocument
@@ -514,23 +477,5 @@ class HtmlHelper extends StrictObject
     public function isInProduction(): bool
     {
         return $this->inForcedProductionMode || (\PHP_SAPI !== 'cli' && ($_SERVER['REMOTE_ADDR'] ?? null) !== '127.0.0.1');
-    }
-
-    /**
-     * @param string $blockName
-     * @param HtmlDocument $document
-     * @return HtmlDocument
-     */
-    public function getDocumentWithBlock(string $blockName, HtmlDocument $document): HtmlDocument
-    {
-        $blockParts = $document->getElementsByClassName('block-' . $blockName);
-        $block = '';
-        foreach ($blockParts as $blockPart) {
-            $block .= $blockPart->outerHTML;
-        }
-        $documentWithBlock = clone $document;
-        $documentWithBlock->body->innerHTML = $block;
-
-        return $documentWithBlock;
     }
 }

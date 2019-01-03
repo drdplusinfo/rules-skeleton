@@ -323,21 +323,4 @@ HTML
         $linkWithoutAnchor = $htmlDocument->getElementById('link_without_anchor');
         self::assertFalse($linkWithoutAnchor->classList->contains(HtmlHelper::EXTERNAL_URL_CLASS));
     }
-
-    /**
-     * @test
-     */
-    public function I_can_get_html_document_with_block(): void
-    {
-        $blockNamesToExpectedContent = $this->getTestsConfiguration()->getBlockNamesToExpectedContent();
-        if (!$blockNamesToExpectedContent) {
-            self::assertEmpty($blockNamesToExpectedContent, 'No blocks to test');
-        }
-        $document = $this->getHtmlDocument();
-        $htmlHelper = HtmlHelper::createFromGlobals($this->createDirs());
-        foreach ($blockNamesToExpectedContent as $blockName => $expectedContent) {
-            $documentWithBlock = $htmlHelper->getDocumentWithBlock($blockName, $document);
-            self::assertSame($expectedContent, $documentWithBlock->body->innerHTML);
-        }
-    }
 }

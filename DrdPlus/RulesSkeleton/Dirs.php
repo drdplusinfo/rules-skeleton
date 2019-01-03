@@ -12,8 +12,6 @@ class Dirs extends StrictObject
     /** @var string */
     private $vendorRoot;
     /** @var string */
-    private $partsRoot;
-    /** @var string */
     private $cssRoot;
     /** @var string */
     private $jsRoot;
@@ -33,7 +31,6 @@ class Dirs extends StrictObject
     private function populateSubRoots(string $documentRoot): void
     {
         $this->vendorRoot = $documentRoot . '/vendor';
-        $this->partsRoot = $documentRoot . '/parts';
         $this->cssRoot = $documentRoot . '/css';
         $this->jsRoot = $documentRoot . '/js';
         $this->dirForVersions = $documentRoot . '/versions';

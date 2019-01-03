@@ -7,5 +7,4 @@ $testsConfiguration->setExpectedPageTitle('☠️ HTML kostra pro DrDPlus, jakob
 $testsConfiguration->setExpectedLicence(\DrdPlus\Tests\RulesSkeleton\TestsConfiguration::LICENCE_MIT);
 $testsConfiguration->setTooShortFailureNames(['nevšiml si'])
     ->setTooShortSuccessNames(['všiml si'])
-    ->setTooShortResultNames(['Bonus'])
-    ->setTooShortResultNames(['Postih']);
+    ->setTooShortResultNames(['Bonus', 'Postih']);

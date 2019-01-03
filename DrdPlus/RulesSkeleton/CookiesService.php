@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use Granam\Scalar\Tools\ToString;
 use Granam\Strict\Object\StrictObject;
 
 class CookiesService extends StrictObject
@@ -13,11 +12,6 @@ class CookiesService extends StrictObject
     public function setMinorVersionCookie(string $version): bool
     {
         return $this->setCookie(static::VERSION, $version, true /* not accessible from JS */, new \DateTime('+ 1 year'));
-    }
-
-    public function getVersionCookie(string $version): ?string
-    {
-        return ToString::toStringOrNull($this->getCookie($version));
     }
 
     /**
