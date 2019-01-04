@@ -510,11 +510,6 @@ abstract class AbstractContentTest extends SkeletonTestCase
         return $this->getRulesContentForDev('', 'covered');
     }
 
-    protected function getEshopFileName(): string
-    {
-        return $this->getDocumentRoot() . '/eshop_url.txt';
-    }
-
     /**
      * @return string|Configuration
      */
