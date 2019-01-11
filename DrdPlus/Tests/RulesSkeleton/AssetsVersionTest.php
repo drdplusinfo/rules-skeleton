@@ -34,10 +34,7 @@ class AssetsVersionTest extends AbstractContentTest
 
     protected function getBinAssetsFile(): string
     {
-        $assetsFile = $this->getProjectRoot() . '/bin/assets';
-        if (!\file_exists($assetsFile)) {
-            $assetsFile = $this->getProjectRoot() . '/bin/assets';
-        }
+        $assetsFile = $this->getVendorRoot() . '/bin/assets';
         if (!\file_exists($assetsFile)) {
             throw new \LogicException('Can not find bin/assets file');
         }
