@@ -145,7 +145,7 @@ class WebVersionsTest extends AbstractContentTest
     {
         $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
         $currentCommitHash = $webVersions->getCurrentCommitHash(); // called before reading .git/HEAD to ensure it exists
-        $versionRoot = $this->createDirs()->getVersionRoot($this->getTestsConfiguration()->getExpectedLastVersion());
+        $versionRoot = $this->getDirs()->getVersionRoot($this->getTestsConfiguration()->getExpectedLastVersion());
         $lastCommitHashFromGitHeadFile = $this->getLastCommitHashFromGitHeadFile($versionRoot);
         self::assertSame(
             $lastCommitHashFromGitHeadFile,
@@ -330,7 +330,7 @@ class WebVersionsTest extends AbstractContentTest
     public function I_can_update_web_version_even_if_not_yet_fetched_locally(): void
     {
         $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
-        $dirs = $this->createDirs();
+        $dirs = $this->getDirs();
         foreach ($webVersions->getAllMinorVersions() as $version) {
             $versionRoot = $dirs->getVersionRoot($version);
             if (\file_exists($versionRoot)) {

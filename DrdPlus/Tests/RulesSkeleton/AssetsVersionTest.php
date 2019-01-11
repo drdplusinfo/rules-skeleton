@@ -17,8 +17,8 @@ class AssetsVersionTest extends AbstractContentTest
         /** @var AssetsVersion $assetsVersion */
         $assetsVersion = new $assetsVersionClass(true /* scan for CSS */);
         $changedFiles = $assetsVersion->addVersionsToAssetLinks(
-            $this->getDocumentRoot(),
-            [$this->getDocumentRoot() . '/css'],
+            $this->getProjectRoot(),
+            [$this->getProjectRoot() . '/css'],
             [],
             [],
             true // dry run
@@ -34,9 +34,9 @@ class AssetsVersionTest extends AbstractContentTest
 
     protected function getBinAssetsFile(): string
     {
-        $assetsFile = $this->getVendorRoot() . '/bin/assets';
+        $assetsFile = $this->getProjectRoot() . '/bin/assets';
         if (!\file_exists($assetsFile)) {
-            $assetsFile = $this->getDocumentRoot() . '/bin/assets';
+            $assetsFile = $this->getProjectRoot() . '/bin/assets';
         }
         if (!\file_exists($assetsFile)) {
             throw new \LogicException('Can not find bin/assets file');

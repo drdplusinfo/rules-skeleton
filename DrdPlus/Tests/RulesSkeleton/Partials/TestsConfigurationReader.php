@@ -53,8 +53,6 @@ interface TestsConfigurationReader
 
     public function hasAuthors(): bool;
 
-    public function getBlockNamesToExpectedContent(): array;
-
     public function getExpectedLicence(): string;
 
     public function getTooShortFailureNames(): array;

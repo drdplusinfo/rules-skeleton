@@ -107,7 +107,7 @@ class WebContentTest extends AbstractContentTest
      */
     public function Authors_got_heading(): void
     {
-        $authorsHeading = $this->getHtmlDocument()->getElementById(HtmlHelper::AUTHORS_ID);
+        $authorsHeading = $this->getHtmlDocument()->getElementById(HtmlHelper::ID_AUTHORS);
         if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasAuthors()) {
             self::assertEmpty($authorsHeading, 'Authors are not expected');
 
@@ -127,7 +127,7 @@ class WebContentTest extends AbstractContentTest
     public function Authors_are_mentioned(): void
     {
         $body = $this->getHtmlDocument()->body;
-        $rulesAuthors = $body->getElementsByClassName(HtmlHelper::RULES_AUTHORS_CLASS);
+        $rulesAuthors = $body->getElementsByClassName(HtmlHelper::CLASS_RULES_AUTHORS);
         if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasAuthors()) {
             self::assertCount(0, $rulesAuthors, 'No rules authors expected due to tests configuration');
 
@@ -136,7 +136,7 @@ class WebContentTest extends AbstractContentTest
         self::assertCount(
             1,
             $rulesAuthors,
-            "Expected one '" . HtmlHelper::RULES_AUTHORS_CLASS . "' HTML class in rules content, got {$rulesAuthors->count()} of them"
+            "Expected one '" . HtmlHelper::CLASS_RULES_AUTHORS . "' HTML class in rules content, got {$rulesAuthors->count()} of them"
         );
         $rulesAuthors = $rulesAuthors->current();
         self::assertNotEmpty(\trim($rulesAuthors->textContent), 'Expected some content of rules authors');

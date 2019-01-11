@@ -7,8 +7,9 @@ use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\WebVersions;
 use Granam\Strict\Object\StrictObject;
+use Granam\String\StringInterface;
 
-class Menu extends StrictObject
+class Menu extends StrictObject implements StringInterface
 {
     /** @var Configuration */
     private $configuration;
@@ -26,10 +27,10 @@ class Menu extends StrictObject
 
     public function __toString()
     {
-        return $this->getMenuString();
+        return $this->getValue();
     }
 
-    public function getMenuString(): string
+    public function getValue(): string
     {
         $fixed = $this->getConfiguration()->isMenuPositionFixed()
             ? 'fixed'
@@ -39,7 +40,7 @@ class Menu extends StrictObject
             $homeButton = <<<HTML
 <span class="menu">
     <a id="homeButton" class="internal-url" href="https://www.drdplus.info">
-        <img class="home" src="/images/generic/skeleton/rules-drd-plus-dragon-menu-2x22.png">
+        <img class="home" alt="Small dragon menu" src="/images/generic/skeleton/rules-drd-plus-dragon-menu-2x22.png">
     </a>
 </span>
 HTML;

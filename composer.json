@@ -27,6 +27,7 @@
     "ext-yaml": "*",
     "ext-zlib": "*",
     "composer-plugin-api": "^1.0",
+    "drdplus/rules-skeleton-web": "dev-master",
     "erusev/parsedown": "^1.7",
     "granam/exceptions-hierarchy": "^4.0",
     "granam/strict-object": "^3.0",
@@ -40,11 +41,22 @@
     "piwik/device-detector": "^3.9",
     "tracy/tracy": "^2.4"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "/var/www/rules.skeleton/web"
+    },
+    {
+      "type": "vcs",
+      "url": "/home/jaroslav/projects/granam/web-content-builder"
+    }
+  ],
   "require-dev": {
     "roave/security-advisories": "dev-master",
-    "composer/composer": "^1.7",
-    "drdplus/rules-skeleton-web": "dev-master"
+    "composer/composer": "^1.7"
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "config": {
     "sort-packages": true
   },

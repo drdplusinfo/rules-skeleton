@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\CookiesService;
-use DrdPlus\RulesSkeleton\HtmlDocument;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\WebVersions;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
+use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
 
 class WebContentVersionTest extends AbstractContentTest
@@ -57,6 +57,7 @@ class WebContentVersionTest extends AbstractContentTest
      * @test
      * @dataProvider provideRequestSource
      * @param string $source
+     * @throws \Exception
      */
     public function I_can_switch_to_every_version(string $source): void
     {
@@ -150,18 +151,18 @@ class WebContentVersionTest extends AbstractContentTest
             return;
         }
         $webVersions = new WebVersions($configuration = $this->getConfiguration(), $this->createRequest(), $this->createGit());
-        $documentRoot = $configuration->getDirs()->getDocumentRoot();
+        $projectRoot = $configuration->getDirs()->getProjectRoot();
         $checked = 0;
         foreach ($webVersions->getAllStableMinorVersions() as $stableVersion) {
             $htmlDocument = $this->getHtmlDocument([Request::VERSION => $stableVersion]);
             foreach ($htmlDocument->getElementsByTagName('img') as $image) {
-                $checked += $this->Asset_file_exists($image, 'src', $documentRoot);
+                $checked += $this->Asset_file_exists($image, 'src', $projectRoot);
             }
             foreach ($htmlDocument->getElementsByTagName('link') as $link) {
-                $checked += $this->Asset_file_exists($link, 'href', $documentRoot);
+                $checked += $this->Asset_file_exists($link, 'href', $projectRoot);
             }
             foreach ($htmlDocument->getElementsByTagName('script') as $script) {
-                $checked += $this->Asset_file_exists($script, 'src', $documentRoot);
+                $checked += $this->Asset_file_exists($script, 'src', $projectRoot);
             }
         }
         self::assertGreaterThan(0, $checked, 'No assets has been checked');

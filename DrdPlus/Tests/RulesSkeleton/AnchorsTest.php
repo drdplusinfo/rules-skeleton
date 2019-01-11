@@ -302,12 +302,12 @@ class AnchorsTest extends AbstractContentTest
     public function Original_ids_do_not_have_links_to_self(): void
     {
         $document = $this->getHtmlDocument();
-        $originalIds = $document->getElementsByClassName(HtmlHelper::INVISIBLE_ID_CLASS);
+        $originalIds = $document->getElementsByClassName(HtmlHelper::CLASS_INVISIBLE_ID);
         if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasIds()) {
             self::assertCount(
                 0,
                 $originalIds,
-                'No original IDs, identified by CSS class ' . HtmlHelper::INVISIBLE_ID_CLASS . ' expected, got '
+                'No original IDs, identified by CSS class ' . HtmlHelper::CLASS_INVISIBLE_ID . ' expected, got '
                 . \implode("\n", \array_map(function (Element $element) {
                     return $element->outerHTML;
                 }, $this->collectionToArray($originalIds)))
@@ -363,7 +363,7 @@ class AnchorsTest extends AbstractContentTest
     public function I_can_navigate_to_every_calculation_as_it_has_its_id_with_anchor(): void
     {
         $document = $this->getHtmlDocument();
-        $calculations = $document->getElementsByClassName(HtmlHelper::CALCULATION_CLASS);
+        $calculations = $document->getElementsByClassName(HtmlHelper::CLASS_CALCULATION);
         if (\count($calculations) === 0 && !$this->isSkeletonChecked()) {
             self::assertFalse(false, 'No calculations in current document');
 
@@ -399,7 +399,7 @@ class AnchorsTest extends AbstractContentTest
     public function Calculation_does_not_have_another_calculation_inside(): void
     {
         $document = $this->getHtmlDocument();
-        $calculations = $document->getElementsByClassName(HtmlHelper::CALCULATION_CLASS);
+        $calculations = $document->getElementsByClassName(HtmlHelper::CLASS_CALCULATION);
         if (\count($calculations) === 0 && !$this->isSkeletonChecked()) {
             self::assertFalse(false, 'No calculations in current document');
 
@@ -408,7 +408,7 @@ class AnchorsTest extends AbstractContentTest
         self::assertNotEmpty($calculations);
         foreach ($calculations as $calculation) {
             foreach ($calculation->children as $child) {
-                $innerCalculations = $child->getElementsByClassName(HtmlHelper::CALCULATION_CLASS);
+                $innerCalculations = $child->getElementsByClassName(HtmlHelper::CLASS_CALCULATION);
                 self::assertCount(
                     0,
                     $innerCalculations,
@@ -538,15 +538,15 @@ class AnchorsTest extends AbstractContentTest
     private function getLinkToEshopFromLinkToOrigin(): Element
     {
         $body = $this->getHtmlDocument()->body;
-        $origins = $body->getElementsByClassName(HtmlHelper::RULES_ORIGIN_CLASS);
+        $origins = $body->getElementsByClassName(HtmlHelper::CLASS_RULES_ORIGIN);
         self::assertCount(
             1,
             $origins,
-            "Expected one '" . HtmlHelper::RULES_ORIGIN_CLASS . "' class, got {$origins->count()} of them"
+            "Expected one '" . HtmlHelper::CLASS_RULES_ORIGIN . "' class, got {$origins->count()} of them"
         );
         $origin = $origins->current();
         $rulesLinks = $origin->getElementsByTagName('a');
-        self::assertNotEmpty($rulesLinks, "Missing a link to rules in '" . HtmlHelper::RULES_ORIGIN_CLASS . "'");
+        self::assertNotEmpty($rulesLinks, "Missing a link to rules in '" . HtmlHelper::CLASS_RULES_ORIGIN . "'");
         self::assertCount(1, $rulesLinks);
 
         return $rulesLinks->current();
