@@ -18,6 +18,11 @@ class TrialTest extends AbstractContentTest
      */
     public function I_will_get_cached_content_with_injected_trial_timeout(): void
     {
+        if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
+            self::assertFalse(false, 'Nothing to test here');
+
+            return;
+        }
         $controller = $this->createController();
         $cacheStamp = $this->There_is_no_meta_redirect_if_licence_owning_has_been_confirmed($controller);
         $this->There_is_meta_redirect_in_passing_by_trial($controller, $cacheStamp);
