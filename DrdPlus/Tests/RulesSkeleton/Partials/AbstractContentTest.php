@@ -379,7 +379,7 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
     protected function getDirs(): \Granam\WebContentBuilder\Dirs
     {
         if ($this->dirs === null) {
-            $this->dirs = new Dirs($this->getProjectRoot());
+            $this->dirs = $this->createDirs($this->getProjectRoot());
         }
 
         return $this->dirs;
@@ -387,7 +387,14 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
 
     protected function createDirs(string $projectRoot): Dirs
     {
-        return new Dirs($projectRoot);
+        $dirsClass = $this->getDirsClass();
+
+        return new $dirsClass($projectRoot);
+    }
+
+    protected function getDirsClass(): string
+    {
+        return Dirs::class;
     }
 
     /**
