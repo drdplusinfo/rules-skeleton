@@ -5,6 +5,8 @@ namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
+use Granam\WebContentBuilder\HtmlDocument;
+use Granam\WebContentBuilder\Web\Body;
 
 class TablesBody extends Body
 {
@@ -20,10 +22,10 @@ class TablesBody extends Body
         $this->request = $request;
     }
 
-    public function getBodyString(): string
+    public function getValue(): string
     {
-        $rawContent = parent::getBodyString();
-        $rawContentDocument = new \DrdPlus\RulesSkeleton\HtmlDocument($rawContent);
+        $rawContent = parent::getValue();
+        $rawContentDocument = new HtmlDocument($rawContent);
         $tables = $this->htmlHelper->findTablesWithIds($rawContentDocument, $this->request->getWantedTablesIds());
         $tablesContent = '';
         foreach ($tables as $table) {

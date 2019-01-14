@@ -18,11 +18,11 @@ class ConfigurationTest extends AbstractContentTest
     {
         if ($this->isSkeletonChecked()) {
             self::assertFileExists(
-                $this->getDocumentRoot() . '/' . Configuration::CONFIG_LOCAL_YML,
+                $this->getProjectRoot() . '/' . Configuration::CONFIG_LOCAL_YML,
                 'Local configuration expected on skeleton for testing purpose'
             );
         }
-        self::assertFileExists($this->getDocumentRoot() . '/' . Configuration::CONFIG_DISTRIBUTION_YML);
+        self::assertFileExists($this->getProjectRoot() . '/' . Configuration::CONFIG_DISTRIBUTION_YML);
     }
 
     /**
@@ -123,7 +123,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $completeSettings = $this->getSomeCompleteSettings();
         $completeSettings[Configuration::WEB][Configuration::LAST_STABLE_VERSION] = 'master';
-        $configuration = new Configuration($this->createDirs(), $completeSettings);
+        $configuration = new Configuration($this->getDirs(), $completeSettings);
         self::assertSame('master', $configuration->getWebLastStableMinorVersion());
     }
 
@@ -136,7 +136,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $completeSettings = $this->getSomeCompleteSettings();
         $completeSettings[Configuration::WEB][Configuration::LAST_STABLE_VERSION] = 'public enemy';
-        new Configuration($this->createDirs(), $completeSettings);
+        new Configuration($this->getDirs(), $completeSettings);
     }
 
     /**
@@ -148,7 +148,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $completeSettings = $this->getSomeCompleteSettings();
         $completeSettings[Configuration::WEB][Configuration::REPOSITORY_URL] = '/somewhere://over.the?rainbow=GPS';
-        new Configuration($this->createDirs(), $completeSettings);
+        new Configuration($this->getDirs(), $completeSettings);
     }
 
     /**
@@ -160,7 +160,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $completeSettings = $this->getSomeCompleteSettings();
         $completeSettings[Configuration::GOOGLE][Configuration::ANALYTICS_ID] = 'GoogleItself';
-        new Configuration($this->createDirs(), $completeSettings);
+        new Configuration($this->getDirs(), $completeSettings);
     }
 
     /**
@@ -171,7 +171,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $completeSettings = $this->getSomeCompleteSettings();
         unset($completeSettings[Configuration::WEB][Configuration::MENU_POSITION_FIXED]);
-        new Configuration($this->createDirs(), $completeSettings);
+        new Configuration($this->getDirs(), $completeSettings);
     }
 
     /**
@@ -182,7 +182,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $completeSettings = $this->getSomeCompleteSettings();
         unset($completeSettings[Configuration::WEB][Configuration::SHOW_HOME_BUTTON]);
-        new Configuration($this->createDirs(), $completeSettings);
+        new Configuration($this->getDirs(), $completeSettings);
     }
 
     /**
@@ -193,7 +193,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $completeSettings = $this->getSomeCompleteSettings();
         $completeSettings[Configuration::WEB][Configuration::NAME] = '';
-        new Configuration($this->createDirs(), $completeSettings);
+        new Configuration($this->getDirs(), $completeSettings);
     }
 
     /**
@@ -204,7 +204,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $completeSettings = $this->getSomeCompleteSettings();
         unset($completeSettings[Configuration::WEB][Configuration::TITLE_SMILEY]);
-        new Configuration($this->createDirs(), $completeSettings);
+        new Configuration($this->getDirs(), $completeSettings);
     }
 
     /**
@@ -214,7 +214,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $completeSettings = $this->getSomeCompleteSettings();
         $completeSettings[Configuration::WEB][Configuration::TITLE_SMILEY] = null;
-        $configuration = new Configuration($this->createDirs(), $completeSettings);
+        $configuration = new Configuration($this->getDirs(), $completeSettings);
         self::assertSame('', $configuration->getTitleSmiley());
     }
 
@@ -241,7 +241,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $configurationClass = $this->getConfigurationClass();
 
-        return $configurationClass::createFromYml($this->createDirs($this->getSkeletonDocumentRoot()));
+        return $configurationClass::createFromYml($this->createDirs($this->getSkeletonProjectRoot()));
     }
 
     /**

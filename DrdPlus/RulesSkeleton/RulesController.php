@@ -72,9 +72,6 @@ class RulesController extends StrictObject
         );
     }
 
-    /**
-     * @return Content
-     */
     public function getContent(): Content
     {
         if ($this->content) {
@@ -83,11 +80,10 @@ class RulesController extends StrictObject
         $servicesContainer = $this->servicesContainer;
         if ($servicesContainer->getRequest()->areRequestedTables()) {
             $this->content = new Content(
+                $servicesContainer->getRulesTablesWebContent(),
                 $servicesContainer->getHtmlHelper(),
                 $servicesContainer->getWebVersions(),
-                $servicesContainer->getHeadForTables(),
                 $servicesContainer->getMenu(),
-                $servicesContainer->getTablesBody(),
                 $servicesContainer->getTablesWebCache(),
                 Content::TABLES,
                 $this->getRedirect()
@@ -97,12 +93,11 @@ class RulesController extends StrictObject
         }
         if ($servicesContainer->getRequest()->isRequestedPdf() && $servicesContainer->getPdfBody()->getPdfFile()) {
             $this->content = new Content(
+                $servicesContainer->getRulesPdfWebContent(),
                 $servicesContainer->getHtmlHelper(),
                 $servicesContainer->getWebVersions(),
-                $servicesContainer->getEmptyHead(),
                 $servicesContainer->getEmptyMenu(),
-                $servicesContainer->getPdfBody(),
-                $servicesContainer->getEmptyWebCache(),
+                $servicesContainer->getDummyWebCache(),
                 Content::PDF,
                 $this->getRedirect()
             );
@@ -111,11 +106,10 @@ class RulesController extends StrictObject
         }
         if (!$this->canPassIn()) {
             $this->content = new Content(
+                $servicesContainer->getRulesPassWebContent(),
                 $servicesContainer->getHtmlHelper(),
                 $servicesContainer->getWebVersions(),
-                $servicesContainer->getHead(),
                 $servicesContainer->getMenu(),
-                $servicesContainer->getPassBody(),
                 $servicesContainer->getPassWebCache(),
                 Content::PASS,
                 $this->getRedirect()
@@ -124,11 +118,10 @@ class RulesController extends StrictObject
             return $this->content;
         }
         $this->content = new Content(
+            $servicesContainer->getRulesWebContent(),
             $servicesContainer->getHtmlHelper(),
             $servicesContainer->getWebVersions(),
-            $servicesContainer->getHead(),
             $servicesContainer->getMenu(),
-            $servicesContainer->getBody(),
             $servicesContainer->getWebCache(),
             Content::FULL,
             $this->getRedirect()
@@ -157,6 +150,7 @@ class RulesController extends StrictObject
                     $canPassIn = $usagePolicy->isVisitorUsingValidTrial();
                     if (!$canPassIn) {
                         if ($this->servicesContainer->getRequest()->getValueFromPost(Request::CONFIRM)) {
+                            /** @noinspection PhpUnhandledExceptionInspection */
                             $canPassIn = $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
                         }
                         if (!$canPassIn && $this->servicesContainer->getRequest()->getValue(Request::TRIAL)) {
@@ -170,9 +164,9 @@ class RulesController extends StrictObject
         return $this->canPassIn = $canPassIn;
     }
 
-    private function activateTrial(\DateTime $now): bool
+    private function activateTrial(\DateTimeImmutable $now): bool
     {
-        $trialExpiration = (clone $now)->modify('+4 minutes');
+        $trialExpiration = $now->modify('+4 minutes');
         $visitorCanAccessContent = $this->servicesContainer->getUsagePolicy()->activateTrial($trialExpiration);
         if ($visitorCanAccessContent) {
             $at = $trialExpiration->getTimestamp() + 1; // one second "insurance" overlap
@@ -198,7 +192,7 @@ class RulesController extends StrictObject
                 return;
             }
             // anyone can show content of this page
-            \header('Access-Control-Allow-Origin: *', true);
+            \header('Access-Control-Allow-Origin: *');
         } elseif ($this->getContent()->containsPdf()) {
             $pdfFile = $this->servicesContainer->getPdfBody()->getPdfFile();
             $pdfFileBasename = \basename($pdfFile);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Dirs;
+use Granam\WebContentBuilder\Web\Body;
 
 class PdfBody extends Body
 {
@@ -22,7 +23,7 @@ class PdfBody extends Body
      * @return string
      * @throws \DrdPlus\RulesSkeleton\Web\Exceptions\CanNotReadPdfFile
      */
-    public function getBodyString(): string
+    public function getValue(): string
     {
         $pdfFile = $this->getPdfFile();
         if (!$pdfFile) {

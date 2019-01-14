@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton\Exceptions;
 
-class ExternalUrlsHaveToBeMarkedFirst extends InvalidConfiguration
+class ExpectedAnchorElement extends \InvalidArgumentException implements Logic
 {
 
 }

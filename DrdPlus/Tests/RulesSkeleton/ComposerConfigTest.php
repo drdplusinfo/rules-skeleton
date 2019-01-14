@@ -16,7 +16,7 @@ class ComposerConfigTest extends AbstractContentTest
     {
         parent::setUp();
         if (static::$composerConfig === null) {
-            $composerFilePath = $this->getDocumentRoot() . '/composer.json';
+            $composerFilePath = $this->getProjectRoot() . '/composer.json';
             self::assertFileExists($composerFilePath, 'composer.json has not been found in document root');
             $content = \file_get_contents($composerFilePath);
             self::assertNotEmpty($content, "Nothing has been fetched from $composerFilePath, is readable?");

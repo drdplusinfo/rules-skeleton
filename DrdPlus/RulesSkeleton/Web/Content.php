@@ -4,19 +4,25 @@ declare(strict_types=1);
 namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Cache;
-use DrdPlus\RulesSkeleton\HtmlDocument;
-use DrdPlus\RulesSkeleton\WebVersions;
 use DrdPlus\RulesSkeleton\HtmlHelper;
+use DrdPlus\RulesSkeleton\WebVersions;
 use DrdPlus\RulesSkeleton\Redirect;
+use DrdPlus\RulesSkeletonWeb\RulesWebContent;
 use Granam\Strict\Object\StrictObject;
+use Granam\String\StringInterface;
+use Granam\WebContentBuilder\HtmlDocument;
+use Granam\WebContentBuilder\Web\Body;
+use Gt\Dom\Element;
 
-class Content extends StrictObject
+class Content extends StrictObject implements StringInterface
 {
     public const TABLES = 'tables';
     public const FULL = ' full';
     public const PDF = 'pdf';
     public const PASS = 'pass';
 
+    /** @var RulesWebContent */
+    private $rulesWebContent;
     /** @var HtmlHelper */
     private $htmlHelper;
     /** @var WebVersions */
@@ -33,31 +39,26 @@ class Content extends StrictObject
     private $contentType;
     /** @var Redirect|null */
     private $redirect;
+    /** @var HtmlDocument */
+    private $htmlDocument;
 
     public function __construct(
+        RulesWebContent $rulesWebContent,
         HtmlHelper $htmlHelper,
         WebVersions $webVersions,
-        Head $head,
         Menu $menu,
-        Body $body,
         Cache $cache,
         string $contentType,
         ?Redirect $redirect
     )
     {
+        $this->rulesWebContent = $rulesWebContent;
         $this->htmlHelper = $htmlHelper;
         $this->webVersions = $webVersions;
-        $this->head = $head;
         $this->menu = $menu;
-        $this->body = $body;
         $this->cache = $cache;
         $this->contentType = $contentType;
         $this->redirect = $redirect;
-    }
-
-    public function __toString()
-    {
-        return $this->getStringContent();
     }
 
     public function containsTables(): bool
@@ -70,23 +71,23 @@ class Content extends StrictObject
         return $this->contentType === self::FULL;
     }
 
-    public function getStringContent(): string
+    public function __toString()
+    {
+        return $this->getValue();
+    }
+
+    public function getValue(): string
     {
         if ($this->containsPdf()) {
-            return $this->body->getBodyString();
+            return $this->rulesWebContent->getValue();
         }
         $cachedContent = $this->getCachedContent();
         if ($cachedContent !== null) {
+            // redirection is not cached
             return $this->injectRedirectIfAny($cachedContent);
         }
         $previousMemoryLimit = \ini_set('memory_limit', '1G');
-        $content = $this->composeContent();
-        try {
-            $this->cache->saveContentForDebug($content);
-        } catch (\RuntimeException $runtimeException) {
-            \trigger_error($runtimeException->getMessage() . "\n" . $runtimeException->getTraceAsString(), \E_USER_WARNING);
-        }
-        $htmlDocument = $this->buildHtmlDocument($content);
+        $htmlDocument = $this->buildHtmlDocument();
         $updatedContent = $htmlDocument->saveHTML();
         $this->cache->cacheContent($updatedContent);
         if ($previousMemoryLimit !== false) {
@@ -97,52 +98,46 @@ class Content extends StrictObject
         return $this->injectRedirectIfAny($updatedContent);
     }
 
-    private function buildHtmlDocument(string $content): HtmlDocument
+    protected function buildHtmlDocument(): HtmlDocument
     {
-        $htmlDocument = new HtmlDocument($content);
-        $this->htmlHelper->prepareSourceCodeLinks($htmlDocument);
-        $this->htmlHelper->addIdsToTablesAndHeadings($htmlDocument);
-        $this->htmlHelper->replaceDiacriticsFromIds($htmlDocument);
-        $this->htmlHelper->replaceDiacriticsFromAnchorHashes($htmlDocument);
-        $this->htmlHelper->addAnchorsToIds($htmlDocument);
-        $this->htmlHelper->resolveDisplayMode($htmlDocument);
-        $this->htmlHelper->markExternalLinksByClass($htmlDocument);
-        $this->htmlHelper->externalLinksTargetToBlank($htmlDocument);
-        $this->htmlHelper->injectIframesWithRemoteTables($htmlDocument);
-        $this->htmlHelper->addVersionHashToAssets($htmlDocument);
-        if (!$this->htmlHelper->isInProduction()) {
-            $this->htmlHelper->makeExternalDrdPlusLinksLocal($htmlDocument);
-        }
-        $this->injectCacheId($htmlDocument);
+        if ($this->htmlDocument === null) {
+            $htmlDocument = $this->rulesWebContent->getHtmlDocument();
 
-        return $htmlDocument;
+            $patchVersion = $this->webVersions->getCurrentPatchVersion();
+            $htmlDocument->documentElement->setAttribute('data-content-version', $patchVersion);
+            $htmlDocument->documentElement->setAttribute('data-cached-at', \date(\DATE_ATOM));
+
+            /** @var Element $headElement */
+            $headElement = $htmlDocument->createElement('div');
+            $headElement->setAttribute('id', HtmlHelper::ID_MENU_WRAPPER);
+            $headElement->prop_set_innerHTML($this->menu->getValue());
+            $htmlDocument->body->insertBefore($headElement, $htmlDocument->body->firstElementChild);
+
+            $htmlHelper = $this->htmlHelper;
+            $htmlHelper->addIdsToTables($htmlDocument);
+            $htmlHelper->markExternalLinksByClass($htmlDocument);
+            $htmlHelper->injectIframesWithRemoteTables($htmlDocument);
+            $htmlHelper->prepareSourceCodeLinks($htmlDocument);
+            $htmlHelper->addIdsToTables($htmlDocument);
+            $htmlHelper->replaceDiacriticsFromIds($htmlDocument);
+            $htmlHelper->replaceDiacriticsFromAnchorHashes($htmlDocument);
+            $htmlHelper->resolveDisplayMode($htmlDocument);
+            $htmlHelper->markExternalLinksByClass($htmlDocument);
+            $htmlHelper->injectIframesWithRemoteTables($htmlDocument);
+            if (!$htmlHelper->isInProduction()) {
+                $htmlHelper->makeExternalDrdPlusLinksLocal($htmlDocument);
+            }
+            $this->injectCacheId($htmlDocument);
+
+            $this->htmlDocument = $htmlDocument;
+        }
+
+        return $this->htmlDocument;
     }
 
     private function injectCacheId(HtmlDocument $htmlDocument): void
     {
-        $htmlDocument->documentElement->setAttribute('data-cache-stamp', $this->cache->getCacheId());
-    }
-
-    private function composeContent(): string
-    {
-        $patchVersion = $this->webVersions->getCurrentPatchVersion();
-        $now = \date(\DATE_ATOM);
-        $head = $this->head->getHeadString();
-        $menu = $this->menu->getMenuString();
-        $body = $this->body->getBodyString();
-
-        return <<<HTML
-<!DOCTYPE html>
-<html lang="cs" data-content-version="{$patchVersion}" data-cached-at="{$now}">
-<head>
-    {$head}
-</head>
-<body class="container">
-    {$menu}
-    {$body}
-</body>
-</html>
-HTML;
+        $htmlDocument->documentElement->setAttribute(HtmlHelper::DATA_CACHE_STAMP, $this->cache->getCacheId());
     }
 
     private function getCachedContent(): ?string

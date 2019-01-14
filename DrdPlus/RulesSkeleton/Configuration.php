@@ -13,11 +13,11 @@ class Configuration extends StrictObject
 
     public static function createFromYml(Dirs $dirs): Configuration
     {
-        $globalConfig = new YamlFileReader($dirs->getDocumentRoot() . '/' . static::CONFIG_DISTRIBUTION_YML);
+        $globalConfig = new YamlFileReader($dirs->getProjectRoot() . '/' . static::CONFIG_DISTRIBUTION_YML);
         $config = $globalConfig->getValues();
-        $localConfigFile = $dirs->getDocumentRoot() . '/' . static::CONFIG_LOCAL_YML;
+        $localConfigFile = $dirs->getProjectRoot() . '/' . static::CONFIG_LOCAL_YML;
         if (\file_exists($localConfigFile)) {
-            $localConfig = new YamlFileReader($dirs->getDocumentRoot() . '/' . static::CONFIG_LOCAL_YML);
+            $localConfig = new YamlFileReader($dirs->getProjectRoot() . '/' . static::CONFIG_LOCAL_YML);
             $config = \array_replace_recursive($config, $localConfig->getValues());
         }
 
@@ -35,6 +35,7 @@ class Configuration extends StrictObject
     public const PROTECTED_ACCESS = 'protected_access';
     public const HIDE_HOME_BUTTON = 'hide_home_button';
     public const ESHOP_URL = 'eshop_url';
+    public const FAVICON = 'favicon';
     // google
     public const GOOGLE = 'google';
     public const ANALYTICS_ID = 'analytics_id';
@@ -62,6 +63,7 @@ class Configuration extends StrictObject
         $this->guardValidEshopUrl($settings);
         $this->guardSetIfHasProtectedAccess($settings);
         $this->guardSetIfHasShownHomeButton($settings);
+        $this->guardValidFaviconUrl($settings);
         $this->settings = $settings;
     }
 
@@ -163,57 +165,6 @@ class Configuration extends StrictObject
     }
 
     /**
-     * @return Dirs
-     */
-    public function getDirs(): Dirs
-    {
-        return $this->dirs;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSettings(): array
-    {
-        return $this->settings;
-    }
-
-    public function getWebLastStableMinorVersion(): string
-    {
-        return $this->getSettings()[static::WEB][static::LAST_STABLE_VERSION];
-    }
-
-    public function getGoogleAnalyticsId(): string
-    {
-        return $this->getSettings()['google'][static::ANALYTICS_ID];
-    }
-
-    public function getWebRepositoryUrl(): string
-    {
-        return $this->getSettings()[static::WEB][static::REPOSITORY_URL];
-    }
-
-    public function isMenuPositionFixed(): bool
-    {
-        return (bool)$this->getSettings()[static::WEB][static::MENU_POSITION_FIXED];
-    }
-
-    public function isShowHomeButton(): bool
-    {
-        return (bool)$this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON];
-    }
-
-    public function getWebName(): string
-    {
-        return $this->getSettings()[static::WEB][static::NAME];
-    }
-
-    public function getTitleSmiley(): string
-    {
-        return (string)$this->getSettings()[static::WEB][static::TITLE_SMILEY];
-    }
-
-    /**
      * @param array $settings
      * @throws \DrdPlus\RulesSkeleton\Exceptions\InvalidEshopUrl
      */
@@ -247,6 +198,64 @@ class Configuration extends StrictObject
         }
     }
 
+    protected function guardValidFaviconUrl(array $settings): void
+    {
+        $favicon = $settings[static::WEB][static::FAVICON] ?? null;
+        if ($favicon === null) {
+            return;
+        }
+        if (!\filter_var($favicon, \ FILTER_VALIDATE_URL)
+            && !\file_exists($this->getDirs()->getProjectRoot() . '/' . \ltrim($favicon, '/'))
+        ) {
+            throw new Exceptions\GivenFaviconHasNotBeenFound("Favicon $favicon is not an URL neither readable file");
+        }
+    }
+
+    public function getDirs(): Dirs
+    {
+        return $this->dirs;
+    }
+
+    public function getSettings(): array
+    {
+        return $this->settings;
+    }
+
+    public function getWebLastStableMinorVersion(): string
+    {
+        return $this->getSettings()[static::WEB][static::LAST_STABLE_VERSION];
+    }
+
+    public function getGoogleAnalyticsId(): string
+    {
+        return $this->getSettings()[static::GOOGLE][static::ANALYTICS_ID];
+    }
+
+    public function getWebRepositoryUrl(): string
+    {
+        return $this->getSettings()[static::WEB][static::REPOSITORY_URL];
+    }
+
+    public function isMenuPositionFixed(): bool
+    {
+        return (bool)$this->getSettings()[static::WEB][static::MENU_POSITION_FIXED];
+    }
+
+    public function isShowHomeButton(): bool
+    {
+        return (bool)$this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON];
+    }
+
+    public function getWebName(): string
+    {
+        return $this->getSettings()[static::WEB][static::NAME];
+    }
+
+    public function getTitleSmiley(): string
+    {
+        return (string)$this->getSettings()[static::WEB][static::TITLE_SMILEY];
+    }
+
     public function hasProtectedAccess(): bool
     {
         return (bool)$this->getSettings()[self::WEB][self::PROTECTED_ACCESS];
@@ -260,5 +269,10 @@ class Configuration extends StrictObject
     public function getEshopUrl(): string
     {
         return $this->getSettings()[self::WEB][self::ESHOP_URL];
+    }
+
+    public function getFavicon(): string
+    {
+        return $this->getSettings()[static::WEB][static::FAVICON] ?? '';
     }
 }

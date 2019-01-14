@@ -4,19 +4,20 @@ declare(strict_types=1);
 namespace DrdPlus\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
-use DrdPlus\RulesSkeleton\Web\Body;
-use DrdPlus\RulesSkeleton\Web\EmptyHead;
 use DrdPlus\RulesSkeleton\Web\EmptyMenu;
 use DrdPlus\RulesSkeleton\Web\Head;
-use DrdPlus\RulesSkeleton\Web\JsFiles;
 use DrdPlus\RulesSkeleton\Web\Menu;
 use DrdPlus\RulesSkeleton\Web\Pass;
 use DrdPlus\RulesSkeleton\Web\PassBody;
 use DrdPlus\RulesSkeleton\Web\PdfBody;
 use DrdPlus\RulesSkeleton\Web\TablesBody;
 use DrdPlus\RulesSkeleton\Web\WebFiles;
+use DrdPlus\RulesSkeletonWeb\RulesWebContent;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringTools;
+use Granam\WebContentBuilder\Web\Body;
+use Granam\WebContentBuilder\Web\CssFiles;
+use Granam\WebContentBuilder\Web\JsFiles;
 
 class ServicesContainer extends StrictObject
 {
@@ -41,7 +42,7 @@ class ServicesContainer extends StrictObject
     protected $tablesBody;
     /** @var Cache */
     private $tablesWebCache;
-    /** @var CssFiles` */
+    /** @var CssFiles */
     protected $cssFiles;
     /** @var JsFiles */
     protected $jsFiles;
@@ -51,8 +52,18 @@ class ServicesContainer extends StrictObject
     protected $request;
     /** @var Bot */
     protected $botParser;
+    /** @var RulesWebContent */
+    protected $rulesWebContent;
+    /** @var RulesWebContent */
+    protected $rulesTablesWebContent;
+    /** @var RulesWebContent */
+    protected $rulesPdfWebContent;
+    /** @var RulesWebContent */
+    protected $rulesPassWebContent;
     /** @var CookiesService */
     private $cookiesService;
+    /** @var \DateTimeImmutable */
+    private $now;
     /** @var WebCache */
     private $passWebCache;
     /** @var WebCache */
@@ -111,6 +122,54 @@ class ServicesContainer extends StrictObject
         }
 
         return $this->botParser;
+    }
+
+    public function getRulesWebContent(): RulesWebContent
+    {
+        if ($this->rulesWebContent === null) {
+            $this->rulesWebContent = new RulesWebContent(
+                $this->getHtmlHelper(),
+                $this->getHead(),
+                $this->getBody()
+            );
+        }
+
+        return $this->rulesWebContent;
+    }
+
+    public function getRulesTablesWebContent(): RulesWebContent
+    {
+        if ($this->rulesTablesWebContent === null) {
+            $this->rulesTablesWebContent = new RulesWebContent(
+                $this->getHtmlHelper(),
+                $this->getHeadForTables(),
+                $this->getTablesBody()
+            );
+        }
+
+        return $this->rulesTablesWebContent;
+    }
+
+    public function getRulesPdfWebContent(): RulesWebContent
+    {
+        if ($this->rulesPdfWebContent === null) {
+            $this->rulesPdfWebContent = new PdfContent($this->getPdfBody());
+        }
+
+        return $this->rulesPdfWebContent;
+    }
+
+    public function getRulesPassWebContent(): RulesWebContent
+    {
+        if ($this->rulesPassWebContent === null) {
+            $this->rulesPassWebContent = new RulesWebContent(
+                $this->getHtmlHelper(),
+                $this->getHead(),
+                $this->getPassBody()
+            );
+        }
+
+        return $this->rulesPassWebContent;
     }
 
     public function getHtmlHelper(): HtmlHelper
@@ -199,7 +258,7 @@ class ServicesContainer extends StrictObject
     public function getCssFiles(): CssFiles
     {
         if ($this->cssFiles === null) {
-            $this->cssFiles = new CssFiles($this->getHtmlHelper()->isInProduction(), $this->getConfiguration()->getDirs());
+            $this->cssFiles = new CssFiles($this->getDirs(), $this->getHtmlHelper()->isInProduction());
         }
 
         return $this->cssFiles;
@@ -237,9 +296,14 @@ class ServicesContainer extends StrictObject
         return $this->cookiesService;
     }
 
-    public function getNow(): \DateTime
+    public function getNow(): \DateTimeImmutable
     {
-        return new \DateTime();
+        if ($this->now === null) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $this->now = new \DateTimeImmutable();
+        }
+
+        return $this->now;
     }
 
     public function getPassWebCache(): WebCache
@@ -274,9 +338,6 @@ class ServicesContainer extends StrictObject
         return $this->passedWebCache;
     }
 
-    /**
-     * @return PassBody
-     */
     public function getPassBody(): PassBody
     {
         if ($this->passBody === null) {
@@ -317,19 +378,14 @@ class ServicesContainer extends StrictObject
         return $this->pdfBody;
     }
 
-    public function getEmptyHead(): EmptyHead
-    {
-        return new EmptyHead($this->getConfiguration(), $this->getHtmlHelper(), $this->getCssFiles(), $this->getJsFiles());
-    }
-
     public function getEmptyMenu(): EmptyMenu
     {
         return new EmptyMenu($this->getConfiguration(), $this->getWebVersions(), $this->getRequest());
     }
 
-    public function getEmptyWebCache(): EmptyWebCache
+    public function getDummyWebCache(): DummyWebCache
     {
-        return new EmptyWebCache(
+        return new DummyWebCache(
             $this->getWebVersions(),
             $this->getDirs(),
             $this->getRequest(),

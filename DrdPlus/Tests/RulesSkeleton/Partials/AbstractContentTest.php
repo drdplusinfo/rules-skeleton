@@ -13,12 +13,14 @@ use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
+use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
+use DrdPlus\Tests\RulesSkeletonWeb\WebTestsConfiguration;
 use Granam\String\StringTools;
+use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
-use Gt\Dom\HTMLDocument;
 use Mockery\MockInterface;
 
-abstract class AbstractContentTest extends SkeletonTestCase
+abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\AbstractContentTest
 {
     use ClassesTrait;
 
@@ -27,6 +29,10 @@ abstract class AbstractContentTest extends SkeletonTestCase
     private static $rulesContentForDev = [];
     private static $rulesForDevHtmlDocument = [];
     private static $rulesSkeletonChecked;
+    /** @var Dirs */
+    private $dirs;
+    /** @var TestsConfiguration */
+    private $testsConfiguration;
     protected $needPassIn = true;
     protected $needPassOut = false;
     /** @var Configuration */
@@ -41,6 +47,18 @@ abstract class AbstractContentTest extends SkeletonTestCase
         if ($this->getTestsConfiguration()->hasProtectedAccess()) {
             $this->passIn();
         }
+    }
+
+    /**
+     * @return WebTestsConfiguration|TestsConfiguration
+     */
+    protected function getTestsConfiguration(): WebTestsConfiguration
+    {
+        if ($this->testsConfiguration === null) {
+            $this->testsConfiguration = TestsConfiguration::createFromYaml(\DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml');
+        }
+
+        return $this->testsConfiguration;
     }
 
     protected function passIn(): bool
@@ -138,13 +156,13 @@ abstract class AbstractContentTest extends SkeletonTestCase
      * @param array $get
      * @param array $post
      * @param array $cookies
-     * @return \DrdPlus\RulesSkeleton\HtmlDocument
+     * @return HtmlDocument
      */
-    protected function getHtmlDocument(array $get = [], array $post = [], array $cookies = []): \DrdPlus\RulesSkeleton\HtmlDocument
+    protected function getHtmlDocument(array $get = [], array $post = [], array $cookies = []): HtmlDocument
     {
         $key = $this->createKey($get, $post, $cookies);
         if (empty(self::$htmlDocuments[$key])) {
-            self::$htmlDocuments[$key] = new \DrdPlus\RulesSkeleton\HtmlDocument($this->getContent($get, $post, $cookies));
+            self::$htmlDocuments[$key] = new HtmlDocument($this->getContent($get, $post, $cookies));
         }
 
         return self::$htmlDocuments[$key];
@@ -179,7 +197,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
         bool $shouldHideCovered = false
     ): HtmlHelper
     {
-        return new HtmlHelper($dirs ?? $this->createDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered);
+        return new HtmlHelper($dirs ?? $this->getDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered);
     }
 
     protected function fetchNonCachedContent(RulesController $controller = null, bool $backupGlobals = true): string
@@ -192,7 +210,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
         $_GET[Request::CACHE] = Request::DISABLE;
         \ob_start();
         /** @noinspection PhpIncludeInspection */
-        include $this->getDocumentRoot() . '/index.php';
+        include $this->getProjectRoot() . '/index.php';
         $content = \ob_get_clean();
         if ($backupGlobals) {
             $_GET = $originalGet;
@@ -275,7 +293,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
 
     protected function getGitFolderIgnoring(string $dirToCheck): array
     {
-        $documentRootEscaped = \escapeshellarg($this->getDocumentRoot());
+        $documentRootEscaped = \escapeshellarg($this->getProjectRoot());
         $dirToCheckEscaped = \escapeshellarg($dirToCheck);
         $command = "git -C $documentRootEscaped check-ignore $dirToCheckEscaped 2>&1";
         \exec($command, $output, $result);
@@ -294,7 +312,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
     {
         if ($this->configuration === null) {
             $configurationClass = $this->getConfigurationClass();
-            $this->configuration = $configurationClass::createFromYml($dirs ?? $this->createDirs());
+            $this->configuration = $configurationClass::createFromYml($dirs ?? $this->getDirs());
         }
 
         return $this->configuration;
@@ -334,28 +352,49 @@ abstract class AbstractContentTest extends SkeletonTestCase
     }
 
     protected function createController(
-        string $documentRoot = null,
         Configuration $configuration = null,
         HtmlHelper $htmlHelper = null
     ): RulesController
     {
         $controllerClass = $this->getControllerClass();
 
-        return new $controllerClass($this->createServicesContainer($documentRoot, $configuration, $htmlHelper));
+        return new $controllerClass($this->createServicesContainer($configuration, $htmlHelper));
     }
 
     protected function createServicesContainer(
-        string $documentRoot = null,
         Configuration $configuration = null,
         HtmlHelper $htmlHelper = null
     ): ServicesContainer
     {
-        $dirs = $this->createDirs($documentRoot);
 
         return new ServicesContainer(
             $configuration ?? $this->getConfiguration(),
-            $htmlHelper ?? $this->createHtmlHelper($dirs, false, false, false)
+            $htmlHelper ?? $this->createHtmlHelper($this->getDirs())
         );
+    }
+
+    /**
+     * @return Dirs|\Granam\WebContentBuilder\Dirs
+     */
+    protected function getDirs(): \Granam\WebContentBuilder\Dirs
+    {
+        if ($this->dirs === null) {
+            $this->dirs = $this->createDirs($this->getProjectRoot());
+        }
+
+        return $this->dirs;
+    }
+
+    protected function createDirs(string $projectRoot): Dirs
+    {
+        $dirsClass = $this->getDirsClass();
+
+        return new $dirsClass($projectRoot);
+    }
+
+    protected function getDirsClass(): string
+    {
+        return Dirs::class;
     }
 
     /**
@@ -369,27 +408,27 @@ abstract class AbstractContentTest extends SkeletonTestCase
     protected function isSkeletonChecked(string $skeletonDocumentRoot = null): bool
     {
         if (self::$rulesSkeletonChecked === null) {
-            $documentRootRealPath = \realpath($this->getDocumentRoot());
-            self::assertNotEmpty($documentRootRealPath, 'Can not find out real path of document root ' . \var_export($this->getDocumentRoot(), true));
+            $projectRootRealPath = \realpath($this->getProjectRoot());
+            self::assertNotEmpty($projectRootRealPath, 'Can not find out real path of project root ' . \var_export($this->getProjectRoot(), true));
             $skeletonRootRealPath = \realpath($skeletonDocumentRoot ?? __DIR__ . '/../../../..');
             self::assertNotEmpty($skeletonRootRealPath, 'Can not find out real path of skeleton root ' . \var_export($skeletonRootRealPath, true));
-            self::assertRegExp('~^rules[.-]skeleton$~', \basename($skeletonRootRealPath), 'Expected different trailing dir of skeleton document root');
+            self::assertRegExp('~^rules[.-]skeleton$~', \basename($skeletonRootRealPath), 'Expected different trailing dir of skeleton project root');
 
-            self::$rulesSkeletonChecked = $documentRootRealPath === $skeletonRootRealPath;
+            self::$rulesSkeletonChecked = $projectRootRealPath === $skeletonRootRealPath;
         }
 
         return self::$rulesSkeletonChecked;
     }
 
-    protected function getPassDocument(bool $notCached = false): \DrdPlus\RulesSkeleton\HtmlDocument
+    protected function getPassDocument(bool $notCached = false): HtmlDocument
     {
         if ($notCached) {
-            return new \DrdPlus\RulesSkeleton\HtmlDocument($this->getPassContent($notCached));
+            return new HtmlDocument($this->getPassContent($notCached));
         }
         static $passDocument;
         if ($passDocument === null) {
             $this->removeOwnerShipConfirmation();
-            $passDocument = new \DrdPlus\RulesSkeleton\HtmlDocument($this->getPassContent($notCached));
+            $passDocument = new HtmlDocument($this->getPassContent($notCached));
         }
 
         return $passDocument;
@@ -434,6 +473,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
             self::fail($reflectionException->getMessage());
             exit;
         }
+        /** @noinspection PhpUnhandledExceptionInspection */
         $getName = $usagePolicyReflection->getMethod('getOwnershipName');
         $getName->setAccessible(true);
 
@@ -443,26 +483,6 @@ abstract class AbstractContentTest extends SkeletonTestCase
     protected function getVariablePartOfNameForPass(): string
     {
         return StringTools::toVariableName($this->getTestsConfiguration()->getExpectedWebName());
-    }
-
-    private function getDirName(string $fileName): string
-    {
-        $dirName = $fileName;
-        $upLevels = 0;
-        while (\basename($dirName) === '.' || \basename($dirName) === '..' || !\is_dir($dirName)) {
-            if (\basename($dirName) === '..') {
-                $upLevels++;
-            }
-            $dirName = \dirname($dirName);
-            if ($dirName === '/') {
-                throw new \RuntimeException("Could not find name of dir by $fileName");
-            }
-        }
-        for ($upLevel = 1; $upLevel <= $upLevels; $upLevel++) {
-            $dirName = $this->getDirName(\dirname($dirName) /* up by a single level */);
-        }
-
-        return $dirName;
     }
 
     private function removeOwnerShipConfirmation(): void
@@ -523,31 +543,6 @@ abstract class AbstractContentTest extends SkeletonTestCase
         return RulesController::class;
     }
 
-    protected function createDirs(string $documentRoot = null): Dirs
-    {
-        return new Dirs($documentRoot ?? $this->getDocumentRoot());
-    }
-
-    protected function getDocumentRoot(): string
-    {
-        static $masterDocumentRoot;
-        if ($masterDocumentRoot === null) {
-            $masterDocumentRoot = \dirname(\DRD_PLUS_INDEX_FILE_NAME_TO_TEST);
-        }
-
-        return $masterDocumentRoot;
-    }
-
-    protected function getDirForVersions(): string
-    {
-        return $this->getDocumentRoot() . '/versions';
-    }
-
-    protected function getVendorRoot(): string
-    {
-        return $this->getDocumentRoot() . '/vendor';
-    }
-
     protected function unifyPath(string $path): string
     {
         $path = \str_replace('\\', '/', $path);
@@ -567,12 +562,17 @@ abstract class AbstractContentTest extends SkeletonTestCase
         return $this->squashTwoDots($path);
     }
 
-    protected function getSkeletonDocumentRoot(): string
+    protected function getSkeletonProjectRoot(): string
     {
         if ($this->isSkeletonChecked()) {
-            return $this->getDocumentRoot();
+            return $this->getProjectRoot();
         }
 
-        return $this->createDirs()->getVendorRoot() . '/drdplus/rules-skeleton';
+        return $this->getDirs()->getVendorRoot() . '/drdplus/rules-skeleton';
+    }
+
+    protected function getVendorRoot(): string
+    {
+        return $this->getDirs()->getVendorRoot();
     }
 }

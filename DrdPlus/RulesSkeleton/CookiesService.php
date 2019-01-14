@@ -18,11 +18,11 @@ class CookiesService extends StrictObject
      * @param string $cookieName
      * @param $value
      * @param bool $httpOnly forbidden for JS ?
-     * @param \DateTime|null $expiresAt null for at end of browser sessions
+     * @param \DateTimeInterface|null $expiresAt null for at end of browser sessions
      * @return bool
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CookieCanNotBeSet
      */
-    public function setCookie(string $cookieName, string $value, bool $httpOnly = true, \DateTime $expiresAt = null): bool
+    public function setCookie(string $cookieName, string $value, bool $httpOnly = true, \DateTimeInterface $expiresAt = null): bool
     {
         if (PHP_SAPI !== 'cli') {
             $cookieSet = \setcookie(
