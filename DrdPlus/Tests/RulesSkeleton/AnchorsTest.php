@@ -532,24 +532,33 @@ class AnchorsTest extends AbstractContentTest
         }
         $eshopUrl = $this->getConfiguration()->getEshopUrl();
         self::assertRegExp('~^https://obchod\.altar\.cz/[^/]+\.html$~', $eshopUrl);
-        self::assertSame($eshopUrl, $this->getLinkToEshopFromLinkToOrigin()->getAttribute('href'), 'Expected different link to e-shop');
+        self::assertSame($eshopUrl, $this->getLinkToEshop()->getAttribute('href'), 'Expected different link to e-shop');
     }
 
-    private function getLinkToEshopFromLinkToOrigin(): Element
+    private function getLinkToEshop(): Element
     {
         $body = $this->getHtmlDocument()->body;
-        $origins = $body->getElementsByClassName(HtmlHelper::CLASS_RULES_ORIGIN);
+        $rulesAuthorsElements = $body->getElementsByClassName(HtmlHelper::CLASS_RULES_AUTHORS);
         self::assertCount(
             1,
-            $origins,
-            "Expected one '" . HtmlHelper::CLASS_RULES_ORIGIN . "' class, got {$origins->count()} of them"
+            $rulesAuthorsElements,
+            \sprintf("Expected one '%s' class, got %d of them", HtmlHelper::CLASS_RULES_AUTHORS, $rulesAuthorsElements->count())
         );
-        $origin = $origins->current();
-        $rulesLinks = $origin->getElementsByTagName('a');
-        self::assertNotEmpty($rulesLinks, "Missing a link to rules in '" . HtmlHelper::CLASS_RULES_ORIGIN . "'");
-        self::assertCount(1, $rulesLinks);
-
-        return $rulesLinks->current();
+        $rulesAuthors = $rulesAuthorsElements->current();
+        $links = $rulesAuthors->getElementsByTagName('a');
+        foreach ($links as $link) {
+            $href = $link->getAttribute('href');
+            $host = \parse_url($href, \PHP_URL_HOST);
+            if ($host === 'obchod.altar.cz') {
+                return $link;
+            }
+        }
+        self::fail(
+            sprintf(
+                'Missing a link to eshop obchod.altar.cz in ' . HtmlHelper::CLASS_RULES_AUTHORS,
+                $rulesAuthors->outerHTML
+            )
+        );
     }
 
     /**
