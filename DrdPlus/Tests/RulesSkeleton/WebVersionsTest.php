@@ -370,26 +370,14 @@ class WebVersionsTest extends AbstractContentTest
 
     /**
      * @test
-     * @throws \ReflectionException
      */
     public function I_can_get_current_minor_version(): void
     {
-        $webVersions = $this->createWebVersions();
-        $webVersionsClass = \get_class($webVersions);
-        $webVersionsReflection = new \ReflectionClass($webVersionsClass);
-
-        self::assertTrue($webVersionsReflection->hasProperty('configuration'), $webVersionsClass . ' has missing "configuration" property');
-        $configurationProperty = $webVersionsReflection->getProperty('configuration');
-        $configurationProperty->setAccessible(true);
-
-        self::assertTrue($webVersionsReflection->hasProperty('request'), $webVersionsClass . ' has missing "request" property');
-        $requestProperty = $webVersionsReflection->getProperty('request');
-        $requestProperty->setAccessible(true);
-        $requestProperty->setValue($webVersions, $this->createRequest(null /* no version */));
-        $configuration = $this->mockery(Configuration::class);
+        $configuration = $this->mockery($this->getConfigurationClass());
         $configuration->expects('getWebLastStableMinorVersion')
             ->andReturn('foo.bar.baz');
-        $configurationProperty->setValue($webVersions, $configuration);
+        /** @var Configuration $configuration */
+        $webVersions = $this->createWebVersions($configuration, $this->createRequest(null /* no version */));
 
         self::assertSame('foo.bar.baz', $webVersions->getCurrentMinorVersion());
     }
