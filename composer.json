@@ -38,16 +38,6 @@
     "piwik/device-detector": "^3.9",
     "tracy/tracy": "^2.4"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "/var/www/rules.skeleton/web"
-    },
-    {
-      "type": "vcs",
-      "url": "/home/jaroslav/projects/granam/web-content-builder"
-    }
-  ],
   "require-dev": {
     "roave/security-advisories": "dev-master",
     "composer/composer": "^1.7"
