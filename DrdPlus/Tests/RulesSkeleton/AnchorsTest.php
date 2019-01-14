@@ -545,13 +545,16 @@ class AnchorsTest extends AbstractContentTest
             \sprintf("Expected one '%s' class, got %d of them", HtmlHelper::CLASS_RULES_AUTHORS, $rulesAuthorsElements->count())
         );
         $rulesAuthors = $rulesAuthorsElements->current();
-        $links = $rulesAuthors->getElementsByTagName('a');
-        foreach ($links as $link) {
-            $href = $link->getAttribute('href');
-            $host = \parse_url($href, \PHP_URL_HOST);
-            if ($host === 'obchod.altar.cz') {
-                return $link;
-            }
+        $lastElement = $rulesAuthors->lastElementChild;
+        self::assertSame(
+            'a',
+            $lastElement->tagName,
+            'Expected link to eshop to be the last child of ' . HtmlHelper::CLASS_RULES_AUTHORS
+        );
+        $href = $lastElement->getAttribute('href');
+        $host = \parse_url($href, \PHP_URL_HOST);
+        if ($host === 'obchod.altar.cz') {
+            return $lastElement;
         }
         self::fail(
             sprintf(
