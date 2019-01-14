@@ -14,12 +14,6 @@
       "DrdPlus\\": "DrdPlus/"
     }
   },
-  "repositories": [
-    {
-      "url": "/var/www/rules.skeleton/web",
-      "type": "vcs"
-    }
-  ],
   "require": {
     "php": ">=7.1",
     "ext-curl": "*",
