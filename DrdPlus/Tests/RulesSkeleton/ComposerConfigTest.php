@@ -52,16 +52,16 @@ class ComposerConfigTest extends AbstractContentTest
         $postInstallScripts = static::$composerConfig['scripts']['post-install-cmd'] ?? [];
         self::assertNotEmpty(
             $postInstallScripts,
-            'Missing post-install-cmd scripts, expected at least "php bin/assets --css --dir=css"'
+            'Missing post-install-cmd scripts, expected at least "php vendor/bin/assets --css --dir=css"'
         );
         $postUpdateScripts = static::$composerConfig['scripts']['post-update-cmd'] ?? [];
         self::assertNotEmpty(
             $postUpdateScripts,
-            'Missing post-update-cmd scripts, expected at least "php bin/assets --css --dir=css"'
+            'Missing post-update-cmd scripts, expected at least "php vendor/bin/assets --css --dir=css"'
         );
         foreach ([$postInstallScripts, $postUpdateScripts] as $postChangeScripts) {
             self::assertContains(
-                'php bin/assets --css --dir=css',
+                'php vendor/bin/assets --css --dir=css',
                 $postChangeScripts,
                 'Missing script to compile assets, there are only scripts '
                 . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($postChangeScripts, true))
