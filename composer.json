@@ -24,7 +24,7 @@
     "ext-yaml": "*",
     "ext-zlib": "*",
     "composer-plugin-api": "^1.0",
-    "drdplus/rules-skeleton-web": "dev-master",
+    "drdplus/rules-skeleton-web": "^1.0",
     "erusev/parsedown": "^1.7",
     "granam/exceptions-hierarchy": "^4.0",
     "granam/strict-object": "^3.0",
@@ -52,10 +52,10 @@
   },
   "scripts": {
     "post-update-cmd": [
-      "php bin/assets --css --dir=css"
+      "php vendor/bin/assets --css --dir=css"
     ],
     "post-install-cmd": [
-      "php bin/assets --css --dir=css"
+      "php vendor/bin/assets --css --dir=css"
     ]
   }
 }
