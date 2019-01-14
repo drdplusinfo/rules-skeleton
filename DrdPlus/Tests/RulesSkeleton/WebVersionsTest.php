@@ -375,14 +375,14 @@ class WebVersionsTest extends AbstractContentTest
     public function I_can_get_current_minor_version(): void
     {
         $webVersions = $this->createWebVersions();
-        $webVersionsClass = static::getSutClass();
+        $webVersionsClass = \get_class($webVersions);
         $webVersionsReflection = new \ReflectionClass($webVersionsClass);
 
-        self::assertTrue($webVersionsReflection->hasProperty('configuration'), $webVersionsClass . ' no more has "configuration" property');
+        self::assertTrue($webVersionsReflection->hasProperty('configuration'), $webVersionsClass . ' has missing "configuration" property');
         $configurationProperty = $webVersionsReflection->getProperty('configuration');
         $configurationProperty->setAccessible(true);
 
-        self::assertTrue($webVersionsReflection->hasProperty('request'), $webVersionsClass . ' no more has "request" property');
+        self::assertTrue($webVersionsReflection->hasProperty('request'), $webVersionsClass . ' has missing "request" property');
         $requestProperty = $webVersionsReflection->getProperty('request');
         $requestProperty->setAccessible(true);
         $requestProperty->setValue($webVersions, $this->createRequest(null /* no version */));
