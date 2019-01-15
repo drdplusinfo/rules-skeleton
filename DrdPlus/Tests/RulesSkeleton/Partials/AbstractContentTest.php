@@ -24,11 +24,6 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
 {
     use ClassesTrait;
 
-    private static $contents = [];
-    private static $htmlDocuments = [];
-    private static $rulesContentForDev = [];
-    private static $rulesForDevHtmlDocument = [];
-    private static $rulesSkeletonChecked;
     /** @var Dirs */
     private $dirs;
     /** @var TestsConfiguration */
@@ -54,11 +49,12 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
      */
     protected function getTestsConfiguration(): WebTestsConfiguration
     {
-        if ($this->testsConfiguration === null) {
-            $this->testsConfiguration = TestsConfiguration::createFromYaml(\DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml');
+        static $testsConfiguration;
+        if ($testsConfiguration === null) {
+            $testsConfiguration = TestsConfiguration::createFromYaml(\DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml');
         }
 
-        return $this->testsConfiguration;
+        return $testsConfiguration;
     }
 
     protected function passIn(): bool
@@ -97,8 +93,9 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
      */
     protected function getContent(array $get = [], array $post = [], array $cookies = []): string
     {
+        static $contents = [];
         $key = $this->createKey($get, $post, $cookies);
-        if ((self::$contents[$key] ?? null) === null) {
+        if (($contents[$key] ?? null) === null) {
             $originalGet = $_GET;
             $originalPost = $_POST;
             $originalCookies = $_COOKIE;
@@ -122,19 +119,19 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
-            self::$contents[$key] = \ob_get_clean();
+            $contents[$key] = \ob_get_clean();
             $_POST = $originalPost;
             $_GET = $originalGet;
             $_COOKIE = $originalCookies;
             self::assertNotEmpty(
-                self::$contents[$key],
+                $contents[$key],
                 'Nothing has been fetched with GET ' . \var_export($get, true) . ', POST ' . \var_export($post, true)
                 . ' and COOKIE ' . \var_export($cookies, true)
                 . ' from ' . DRD_PLUS_INDEX_FILE_NAME_TO_TEST
             );
         }
 
-        return self::$contents[$key];
+        return $contents[$key];
     }
 
     protected function createKey(array $get, array $post, array $cookies): string
@@ -160,12 +157,13 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
      */
     protected function getHtmlDocument(array $get = [], array $post = [], array $cookies = []): HtmlDocument
     {
+        static $htmlDocuments = [];
         $key = $this->createKey($get, $post, $cookies);
-        if (empty(self::$htmlDocuments[$key])) {
-            self::$htmlDocuments[$key] = new HtmlDocument($this->getContent($get, $post, $cookies));
+        if (($htmlDocuments[$key] ?? null) === null) {
+            $htmlDocuments[$key] = new HtmlDocument($this->getContent($get, $post, $cookies));
         }
 
-        return self::$htmlDocuments[$key];
+        return $htmlDocuments[$key];
     }
 
     protected function getCurrentPageTitle(HTMLDocument $document = null): string
@@ -223,40 +221,45 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
 
     protected function fetchContentFromLink(string $link, bool $withBody, array $post = [], array $cookies = [], array $headers = []): array
     {
-        $curl = \curl_init($link);
-        \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, 1);
-        \curl_setopt($curl, \CURLOPT_CONNECTTIMEOUT, 7);
-        if (!$withBody) {
-            // to get headers only
-            \curl_setopt($curl, \CURLOPT_HEADER, 1);
-            \curl_setopt($curl, \CURLOPT_NOBODY, 1);
-        }
-        \curl_setopt($curl, \CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'); // to get headers only
-        if ($post) {
-            \curl_setopt($curl, \CURLOPT_POSTFIELDS, $post);
-        }
-        if ($cookies) {
-            $cookieData = [];
-            foreach ($cookies as $name => $value) {
-                $cookieData[] = "$name=$value";
+        static $cachedContent = [];
+        $key = $link . ($withBody ? '1' : '0') . $this->createKey($headers, $post, $cookies);
+        if (($cachedContent[$key] ?? null) === null) {
+            $curl = \curl_init($link);
+            \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, 1);
+            \curl_setopt($curl, \CURLOPT_CONNECTTIMEOUT, 7);
+            if (!$withBody) {
+                // to get headers only
+                \curl_setopt($curl, \CURLOPT_HEADER, 1);
+                \curl_setopt($curl, \CURLOPT_NOBODY, 1);
             }
-            \curl_setopt($curl, \CURLOPT_COOKIE, \implode('; ', $cookieData));
+            \curl_setopt($curl, \CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'); // to get headers only
+            if ($post) {
+                \curl_setopt($curl, \CURLOPT_POSTFIELDS, $post);
+            }
+            if ($cookies) {
+                $cookieData = [];
+                foreach ($cookies as $name => $value) {
+                    $cookieData[] = "$name=$value";
+                }
+                \curl_setopt($curl, \CURLOPT_COOKIE, \implode('; ', $cookieData));
+            }
+            foreach ($headers as $headerName => $headerValue) {
+                \curl_setopt($curl, \CURLOPT_HEADER, "$headerName=$headerValue");
+            }
+            $content = \curl_exec($curl);
+            $responseHttpCode = \curl_getinfo($curl, \CURLINFO_HTTP_CODE);
+            $redirectUrl = \curl_getinfo($curl, \CURLINFO_REDIRECT_URL);
+            $curlError = \curl_error($curl);
+            \curl_close($curl);
+            $cachedContent[$key] = [
+                'responseHttpCode' => $responseHttpCode,
+                'redirectUrl' => $redirectUrl,
+                'content' => $content,
+                'error' => $curlError,
+            ];
         }
-        foreach ($headers as $headerName => $headerValue) {
-            \curl_setopt($curl, \CURLOPT_HEADER, "$headerName=$headerValue");
-        }
-        $content = \curl_exec($curl);
-        $responseHttpCode = \curl_getinfo($curl, \CURLINFO_HTTP_CODE);
-        $redirectUrl = \curl_getinfo($curl, \CURLINFO_REDIRECT_URL);
-        $curlError = \curl_error($curl);
-        \curl_close($curl);
 
-        return [
-            'responseHttpCode' => $responseHttpCode,
-            'redirectUrl' => $redirectUrl,
-            'content' => $content,
-            'error' => $curlError,
-        ];
+        return $cachedContent[$key];
     }
 
     protected function runCommand(string $command): array
@@ -407,17 +410,17 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
 
     protected function isSkeletonChecked(string $skeletonDocumentRoot = null): bool
     {
-        if (self::$rulesSkeletonChecked === null) {
+        static $rulesSkeletonChecked;
+        if ($rulesSkeletonChecked === null) {
             $projectRootRealPath = \realpath($this->getProjectRoot());
             self::assertNotEmpty($projectRootRealPath, 'Can not find out real path of project root ' . \var_export($this->getProjectRoot(), true));
             $skeletonRootRealPath = \realpath($skeletonDocumentRoot ?? __DIR__ . '/../../../..');
             self::assertNotEmpty($skeletonRootRealPath, 'Can not find out real path of skeleton root ' . \var_export($skeletonRootRealPath, true));
             self::assertRegExp('~^rules[.-]skeleton$~', \basename($skeletonRootRealPath), 'Expected different trailing dir of skeleton project root');
-
-            self::$rulesSkeletonChecked = $projectRootRealPath === $skeletonRootRealPath;
+            $rulesSkeletonChecked = $projectRootRealPath === $skeletonRootRealPath;
         }
 
-        return self::$rulesSkeletonChecked;
+        return $rulesSkeletonChecked;
     }
 
     protected function getPassDocument(bool $notCached = false): HtmlDocument
@@ -466,18 +469,22 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
 
     protected function getNameForOwnershipConfirmation(): string
     {
-        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService());
-        try {
-            $usagePolicyReflection = new \ReflectionClass(UsagePolicy::class);
-        } catch (\ReflectionException $reflectionException) {
-            self::fail($reflectionException->getMessage());
-            exit;
+        static $nameOfOwnershipConfirmation;
+        if ($nameOfOwnershipConfirmation === null) {
+            $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService());
+            try {
+                $usagePolicyReflection = new \ReflectionClass(UsagePolicy::class);
+            } catch (\ReflectionException $reflectionException) {
+                self::fail($reflectionException->getMessage());
+                exit;
+            }
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $getName = $usagePolicyReflection->getMethod('getOwnershipName');
+            $getName->setAccessible(true);
+            $nameOfOwnershipConfirmation = $getName->invoke($usagePolicy);
         }
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $getName = $usagePolicyReflection->getMethod('getOwnershipName');
-        $getName->setAccessible(true);
 
-        return $getName->invoke($usagePolicy);
+        return $nameOfOwnershipConfirmation;
     }
 
     protected function getVariablePartOfNameForPass(): string
@@ -497,7 +504,8 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
      */
     protected function getRulesContentForDev(string $show = '', string $hide = ''): string
     {
-        if (empty(self::$rulesContentForDev[$show][$hide])) {
+        static $rulesContentForDev = [];
+        if (($rulesContentForDev[$show][$hide] ?? null) === null) {
             $get['mode'] = 'dev';
             if ($show !== '') {
                 $get['show'] = $show;
@@ -506,20 +514,21 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
                 $get['hide'] = $hide;
             }
             $content = $this->getContent($get);
-            self::$rulesContentForDev[$show][$hide] = $content;
-            self::assertNotSame($this->getPassContent(), self::$rulesContentForDev[$show]);
+            $rulesContentForDev[$show][$hide] = $content;
+            self::assertNotSame($this->getPassContent(), $rulesContentForDev[$show]);
         }
 
-        return self::$rulesContentForDev[$show][$hide];
+        return $rulesContentForDev[$show][$hide];
     }
 
     protected function getRulesForDevHtmlDocument(string $show = '', string $hide = ''): HTMLDocument
     {
-        if (empty(self::$rulesForDevHtmlDocument[$show][$hide])) {
-            self::$rulesForDevHtmlDocument[$show][$hide] = new HTMLDocument($this->getRulesContentForDev($show, $hide));
+        static $rulesForDevHtmlDocument = [];
+        if (($rulesForDevHtmlDocument[$show][$hide] ?? null) === null) {
+            $rulesForDevHtmlDocument[$show][$hide] = new HTMLDocument($this->getRulesContentForDev($show, $hide));
         }
 
-        return self::$rulesForDevHtmlDocument[$show][$hide];
+        return $rulesForDevHtmlDocument[$show][$hide];
     }
 
     /**
