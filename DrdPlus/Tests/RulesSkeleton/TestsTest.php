@@ -67,7 +67,7 @@ class TestsTest extends AbstractContentTest
             ComposerConfigTest::class,
             TracyTest::class,
             TrialTest::class,
-            WebContentTest::class,
+            PageTitleTest::class,
             StandardModeTest::class,
             self::class,
             static::class,

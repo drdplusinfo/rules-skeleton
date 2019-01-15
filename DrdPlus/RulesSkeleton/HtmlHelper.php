@@ -6,11 +6,10 @@ namespace DrdPlus\RulesSkeleton;
 use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
 
-class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
+class HtmlHelper extends \DrdPlus\RulesSkeletonWeb\HtmlHelper
 {
     public const ID_MENU = 'menu';
     public const ID_MENU_WRAPPER = 'menu_wrapper';
-    public const ID_AUTHORS = 'autori';
     public const ID_META_REDIRECT = 'meta_redirect';
     public const CLASS_CALCULATION = 'calculation';
     public const CLASS_COVERED_BY_CODE = 'covered-by-code';
@@ -19,7 +18,6 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public const CLASS_GENERIC = 'generic';
     public const CLASS_NOTE = 'note';
     public const CLASS_EXCLUDED = 'excluded';
-    public const CLASS_RULES_AUTHORS = 'rules-authors';
     public const CLASS_INVISIBLE = 'invisible';
     public const CLASS_DELIMITER = 'delimiter';
     public const CLASS_CONTENT = 'content';

@@ -28,11 +28,9 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
     public const EXPECTED_GOOGLE_ANALYTICS_ID = 'expected_google_analytics_id';
     public const EXPECTED_LAST_VERSION = 'expected_last_version';
     public const EXPECTED_LAST_UNSTABLE_VERSION = 'expected_last_unstable_version';
-    public const HAS_HEADINGS = 'has_headings';
     public const HAS_PROTECTED_ACCESS = 'has_protected_access';
     public const CAN_BE_BOUGHT_ON_ESHOP = 'can_be_bought_on_eshop';
     public const HAS_DEBUG_CONTACTS = 'has_debug_contacts';
-    public const HAS_AUTHORS = 'has_authors';
     public const EXPECTED_LICENCE = 'expected_licence';
     public const HAS_CHARACTER_SHEET = 'has_character_sheet';
     public const HAS_LINKS_TO_JOURNALS = 'has_links_to_journals';
@@ -71,8 +69,6 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
     private $expectedLastVersion = '1.0';
     /** @var string */
     private $expectedLastUnstableVersion = 'master';
-    /** @var bool */
-    private $hasHeadings = true;
     /** @var string */
     private $publicUrl;
     /** @var bool */
@@ -87,8 +83,6 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
     private $hasLinkToSingleJournal = true;
     /** @var bool */
     private $hasDebugContacts = true;
-    /** @var bool */
-    private $hasAuthors = true;
     /** @var string */
     private $expectedLicence = self::LICENCE_BY_ACCESS;
     /** @var array|string[] */
@@ -122,11 +116,9 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
         $this->setExpectedGoogleAnalyticsId($values);
         $this->setExpectedLastVersion($values);
         $this->setExpectedLastUnstableVersion($values);
-        $this->setHasHeadings($values);
         $this->setHasProtectedAccess($values);
         $this->setCanBeBoughtOnEshop($values);
         $this->setHasDebugContacts($values);
-        $this->setHasAuthors($values);
         $this->setExpectedLicence($values);
         $this->setHasCharacterSheet($values);
         $this->setHasLinksToJournals($values);
@@ -277,11 +269,6 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
         $this->expectedLastUnstableVersion = \trim($values[self::EXPECTED_LAST_UNSTABLE_VERSION] ?? 'master');
     }
 
-    private function setHasHeadings(array $values)
-    {
-        $this->hasHeadings = (bool)($values[self::HAS_HEADINGS] ?? $this->hasHeadings);
-    }
-
     private function setHasProtectedAccess(array $values)
     {
         $this->hasProtectedAccess = (bool)($values[self::HAS_PROTECTED_ACCESS] ?? $this->hasProtectedAccess);
@@ -295,11 +282,6 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
     private function setHasDebugContacts(array $values)
     {
         $this->hasDebugContacts = (bool)($values[self::HAS_DEBUG_CONTACTS] ?? $this->hasDebugContacts);
-    }
-
-    private function setHasAuthors(array $values)
-    {
-        $this->hasAuthors = (bool)($values[self::HAS_AUTHORS] ?? $this->hasAuthors);
     }
 
     private function setExpectedLicence(array $values)
@@ -437,11 +419,6 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
         return $this->expectedLastUnstableVersion;
     }
 
-    public function hasHeadings(): bool
-    {
-        return $this->hasHeadings;
-    }
-
     public function hasProtectedAccess(): bool
     {
         return $this->hasProtectedAccess;
@@ -470,11 +447,6 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
     public function hasDebugContacts(): bool
     {
         return $this->hasDebugContacts;
-    }
-
-    public function hasAuthors(): bool
-    {
-        return $this->hasAuthors;
     }
 
     public function getExpectedLicence(): string

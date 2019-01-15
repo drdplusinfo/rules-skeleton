@@ -562,6 +562,7 @@ class AnchorsTest extends AbstractContentTest
                 $rulesAuthors->outerHTML
             )
         );
+        throw new \RuntimeException('Something simply can not happen');
     }
 
     /**
