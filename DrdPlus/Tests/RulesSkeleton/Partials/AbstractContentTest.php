@@ -7,7 +7,6 @@ use DeviceDetector\Parser\Bot;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\Dirs;
-use DrdPlus\RulesSkeleton\Git;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesController;
@@ -15,6 +14,7 @@ use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
 use DrdPlus\Tests\RulesSkeletonWeb\WebTestsConfiguration;
+use Granam\Git\Git;
 use Granam\String\StringTools;
 use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
@@ -321,12 +321,12 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
         return $this->configuration;
     }
 
-    protected function createRequest(string $currentVersion = null): Request
+    protected function createRequest(string $requestedVersion = null): Request
     {
         $request = $this->mockery($this->getRequestClass());
         $request->allows('getValue')
             ->with(Request::VERSION)
-            ->andReturn($currentVersion);
+            ->andReturn($requestedVersion);
         $request->makePartial();
 
         /** @var Request $request */

@@ -5,7 +5,7 @@ namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Cache;
 use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\RulesSkeleton\WebVersions;
+use DrdPlus\RulesSkeleton\CurrentWebVersions;
 use DrdPlus\RulesSkeleton\Redirect;
 use DrdPlus\RulesSkeletonWeb\RulesWebContent;
 use Granam\Strict\Object\StrictObject;
@@ -25,7 +25,7 @@ class Content extends StrictObject implements StringInterface
     private $rulesWebContent;
     /** @var HtmlHelper */
     private $htmlHelper;
-    /** @var WebVersions */
+    /** @var CurrentWebVersions */
     private $webVersions;
     /** @var Head */
     private $head;
@@ -45,7 +45,7 @@ class Content extends StrictObject implements StringInterface
     public function __construct(
         RulesWebContent $rulesWebContent,
         HtmlHelper $htmlHelper,
-        WebVersions $webVersions,
+        CurrentWebVersions $webVersions,
         Menu $menu,
         Cache $cache,
         string $contentType,

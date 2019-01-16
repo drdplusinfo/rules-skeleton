@@ -5,7 +5,7 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\Cache;
 use DrdPlus\RulesSkeleton\Dirs;
-use DrdPlus\RulesSkeleton\WebVersions;
+use DrdPlus\RulesSkeleton\CurrentWebVersions;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
 
@@ -34,7 +34,7 @@ class CacheTest extends AbstractContentTest
             ->andReturn($version);
         // using temporary NON-existing dir to use more code
         $dirs = $this->createDirs($this->getTemporaryRootDir());
-        /** @var WebVersions $webVersions */
+        /** @var CurrentWebVersions $webVersions */
         $cacheClass = $this->getCacheClass();
         /** @var Cache $cache */
         $cache = new $cacheClass($webVersions, $dirs, $this->createRequest(), $this->createGit(), false, 'foo');

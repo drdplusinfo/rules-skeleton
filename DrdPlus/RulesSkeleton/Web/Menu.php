@@ -5,7 +5,7 @@ namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\Request;
-use DrdPlus\RulesSkeleton\WebVersions;
+use DrdPlus\RulesSkeleton\CurrentWebVersions;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringInterface;
 
@@ -13,12 +13,12 @@ class Menu extends StrictObject implements StringInterface
 {
     /** @var Configuration */
     private $configuration;
-    /** @var WebVersions */
+    /** @var CurrentWebVersions */
     private $webVersions;
     /** @var Request */
     private $request;
 
-    public function __construct(Configuration $configuration, WebVersions $webVersions, Request $request)
+    public function __construct(Configuration $configuration, CurrentWebVersions $webVersions, Request $request)
     {
         $this->configuration = $configuration;
         $this->webVersions = $webVersions;
@@ -113,7 +113,7 @@ HTML;
         return $this->configuration;
     }
 
-    protected function getWebVersions(): WebVersions
+    protected function getWebVersions(): CurrentWebVersions
     {
         return $this->webVersions;
     }

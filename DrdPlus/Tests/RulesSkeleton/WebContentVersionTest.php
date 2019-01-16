@@ -5,7 +5,7 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\Request;
-use DrdPlus\RulesSkeleton\WebVersions;
+use DrdPlus\RulesSkeleton\CurrentWebVersions;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
@@ -61,7 +61,7 @@ class WebContentVersionTest extends AbstractContentTest
      */
     public function I_can_switch_to_every_version(string $source): void
     {
-        $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
+        $webVersions = new CurrentWebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
         foreach ($webVersions->getAllMinorVersions() as $webVersion) {
             $post = [];
             $cookies = [];
@@ -109,7 +109,7 @@ class WebContentVersionTest extends AbstractContentTest
 
             return;
         }
-        $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
+        $webVersions = new CurrentWebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
         $tags = $this->runCommand('git tag | grep -P "([[:digit:]]+[.]){2}[[:alnum:]]+([.][[:digit:]]+)?" --only-matching');
         self::assertNotEmpty(
             $tags,
@@ -150,7 +150,7 @@ class WebContentVersionTest extends AbstractContentTest
 
             return;
         }
-        $webVersions = new WebVersions($configuration = $this->getConfiguration(), $this->createRequest(), $this->createGit());
+        $webVersions = new CurrentWebVersions($configuration = $this->getConfiguration(), $this->createRequest(), $this->createGit());
         $projectRoot = $configuration->getDirs()->getProjectRoot();
         $checked = 0;
         foreach ($webVersions->getAllStableMinorVersions() as $stableVersion) {
@@ -186,7 +186,7 @@ class WebContentVersionTest extends AbstractContentTest
     public function I_will_get_content_of_last_stable_version_if_requested_does_not_exists(): void
     {
         $patchVersion = $this->getHtmlDocument([Request::VERSION => '999.9'])->documentElement->getAttribute('data-content-version');
-        $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
+        $webVersions = new CurrentWebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
         self::assertSame($webVersions->getLastStablePatchVersion(), $patchVersion);
     }
 }

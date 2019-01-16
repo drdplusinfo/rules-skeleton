@@ -17,7 +17,7 @@ class ServicesContainerTest extends AbstractContentTest
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
         $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
-        self::assertNotEmpty($servicesContainer->getWebVersions());
+        self::assertNotEmpty($servicesContainer->getCurrentWebVersions());
     }
 
     /**
