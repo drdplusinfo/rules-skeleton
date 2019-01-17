@@ -176,6 +176,17 @@ class ConfigurationTest extends AbstractContentTest
         self::assertSame('', $configuration->getTitleSmiley());
     }
 
+    /**
+     * @test
+     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\MissingShownHomeButtonConfiguration
+     */
+    public function I_can_not_create_it_without_set_showing_of_debug_contacts(): void
+    {
+        $completeSettings = $this->getSomeCompleteSettings();
+        unset($completeSettings[Configuration::WEB][Configuration::SHOW_DEBUG_CONTACTS]);
+        new Configuration($this->getDirs(), $completeSettings);
+    }
+
     protected function getSkeletonConfiguration(): Configuration
     {
         $configurationClass = $this->getConfigurationClass();
