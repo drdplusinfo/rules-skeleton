@@ -148,9 +148,4 @@ class Request extends StrictObject
     {
         return \PHP_SAPI;
     }
-
-    public function getRequestedVersion(): ?string
-    {
-        return $this->getValue(static::VERSION);
-    }
 }

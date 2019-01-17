@@ -23,7 +23,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
 
     public const PUBLIC_URL = 'public_url';
     public const HAS_EXTERNAL_ANCHORS_WITH_HASHES = 'has_external_anchors_with_hashes';
-    public const HAS_MORE_VERSIONS = 'has_more_versions';
     public const HAS_CUSTOM_BODY_CONTENT = 'has_custom_body_content';
     public const HAS_NOTES = 'has_notes';
     public const HAS_IDS = 'has_ids';
@@ -33,8 +32,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const ALLOWED_CALCULATION_ID_PREFIXES = 'allowed_calculation_id_prefixes';
     public const EXPECTED_PAGE_TITLE = 'expected_page_title';
     public const EXPECTED_GOOGLE_ANALYTICS_ID = 'expected_google_analytics_id';
-    public const EXPECTED_LAST_VERSION = 'expected_last_version';
-    public const EXPECTED_LAST_UNSTABLE_VERSION = 'expected_last_unstable_version';
     public const HAS_PROTECTED_ACCESS = 'has_protected_access';
     public const CAN_BE_BOUGHT_ON_ESHOP = 'can_be_bought_on_eshop';
     public const HAS_DEBUG_CONTACTS = 'has_debug_contacts';
@@ -68,8 +65,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     /** @var bool */
     private $hasExternalAnchorsWithHashes = true;
     /** @var bool */
-    private $hasMoreVersions = true;
-    /** @var bool */
     private $hasCustomBodyContent = true;
     /** @var bool */
     private $hasNotes = true;
@@ -87,10 +82,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private $expectedGoogleAnalyticsId = 'UA-121206931-1';
     /** @var array|string[] */
     private $allowedCalculationIdPrefixes = ['Hod proti', 'Hod na', 'Výpočet'];
-    /** @var string */
-    private $expectedLastVersion = '1.0';
-    /** @var string */
-    private $expectedLastUnstableVersion = 'master';
     /** @var string */
     private $publicUrl;
     /** @var bool */
@@ -130,7 +121,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setPublicUrl($values);
         $this->setLocalUrl($this->publicUrl);
         $this->setHasExternalAnchorsWithHashes($values);
-        $this->setHasMoreVersions($values);
         $this->setHasCustomBodyContent($values);
         $this->setHasNotes($values);
         $this->setHasIds($values);
@@ -140,8 +130,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setAllowedCalculationIdPrefixes($values);
         $this->setExpectedPageTitle($values);
         $this->setExpectedGoogleAnalyticsId($values);
-        $this->setExpectedLastVersion($values);
-        $this->setExpectedLastUnstableVersion($values);
         $this->setHasProtectedAccess($values);
         $this->setCanBeBoughtOnEshop($values);
         $this->setHasDebugContacts($values);
@@ -289,11 +277,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->hasExternalAnchorsWithHashes = (bool)($values[self::HAS_EXTERNAL_ANCHORS_WITH_HASHES] ?? $this->hasExternalAnchorsWithHashes);
     }
 
-    private function setHasMoreVersions(array $values)
-    {
-        $this->hasMoreVersions = (bool)($values[self::HAS_MORE_VERSIONS] ?? $this->hasMoreVersions);
-    }
-
     private function setHasCustomBodyContent(array $values)
     {
         $this->hasCustomBodyContent = (bool)($values[self::HAS_CUSTOM_BODY_CONTENT] ?? $this->hasCustomBodyContent);
@@ -360,25 +343,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
             throw new Exceptions\MissingExpectedGoogleAnalyticsId('Expected some Google analytics ID under key ' . self::EXPECTED_GOOGLE_ANALYTICS_ID);
         }
         $this->expectedGoogleAnalyticsId = $expectedGoogleAnalyticsId;
-    }
-
-    private function setExpectedLastVersion(array $values)
-    {
-        $givenExpectedLastVersion = \trim($values[self::EXPECTED_LAST_VERSION] ?? $this->expectedLastVersion);
-        if ($givenExpectedLastVersion === ''
-            || ($givenExpectedLastVersion !== 'master' && \version_compare($givenExpectedLastVersion, $this->expectedLastVersion) < 0)
-        ) {
-            throw new Exceptions\MissingExpectedLastVersion(
-                sprintf('Expected some last version under key %s, got %s', self::EXPECTED_LAST_VERSION, \var_export($givenExpectedLastVersion, true))
-
-            );
-        }
-        $this->expectedLastVersion = $givenExpectedLastVersion;
-    }
-
-    private function setExpectedLastUnstableVersion(array $values)
-    {
-        $this->expectedLastUnstableVersion = \trim($values[self::EXPECTED_LAST_UNSTABLE_VERSION] ?? 'master');
     }
 
     private function setHasProtectedAccess(array $values)
@@ -470,11 +434,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         return $this->hasExternalAnchorsWithHashes;
     }
 
-    public function hasMoreVersions(): bool
-    {
-        return $this->hasMoreVersions;
-    }
-
     public function hasCustomBodyContent(): bool
     {
         return $this->hasCustomBodyContent;
@@ -519,16 +478,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public function getAllowedCalculationIdPrefixes(): array
     {
         return $this->allowedCalculationIdPrefixes;
-    }
-
-    public function getExpectedLastVersion(): string
-    {
-        return $this->expectedLastVersion;
-    }
-
-    public function getExpectedLastUnstableVersion(): string
-    {
-        return $this->expectedLastUnstableVersion;
     }
 
     public function hasProtectedAccess(): bool

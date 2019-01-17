@@ -107,9 +107,6 @@ abstract class AbstractContentTest extends TestWithMockery
             if ($cookies) {
                 $_COOKIE = \array_merge($_COOKIE, $cookies);
             }
-            if (empty($_GET[Request::VERSION]) && empty($_COOKIE[CookiesService::VERSION])) {
-                $_GET[Request::VERSION] = $this->getTestsConfiguration()->getExpectedLastUnstableVersion();
-            }
             if ($this->needPassIn()) {
                 $this->passIn();
             } elseif ($this->needPassOut()) {
@@ -163,6 +160,14 @@ abstract class AbstractContentTest extends TestWithMockery
         }
 
         return $htmlDocuments[$key];
+    }
+
+    protected function fetchHtmlDocumentFromLocalUrl(): HtmlDocument
+    {
+        $content = $this->fetchContentFromLink($this->getTestsConfiguration()->getLocalUrl(), true)['content'];
+        self::assertNotEmpty($content);
+
+        return new HtmlDocument($content);
     }
 
     protected function getCurrentPageTitle(HTMLDocument $document = null): string
@@ -590,8 +595,7 @@ abstract class AbstractContentTest extends TestWithMockery
     }
 
     protected function createCurrentWebVersion(
-        Configuration $configuration = null,
-        Request $request = null,
+        Dirs $dirs = null,
         Git $git = null,
         WebVersions $webVersions = null
     ): CurrentWebVersion
@@ -600,8 +604,7 @@ abstract class AbstractContentTest extends TestWithMockery
         $currentWebVersionClass = $this->getCurrentWebVersionClass();
 
         return new $currentWebVersionClass(
-            $configuration ?? $this->getConfiguration(),
-            $request ?? $this->createRequest(),
+            $dirs ?? $this->getDirs(),
             $git ?? $this->createGit(),
             $webVersions ?? $this->createWebVersions($git)
         );

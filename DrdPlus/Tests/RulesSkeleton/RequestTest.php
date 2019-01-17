@@ -227,24 +227,4 @@ class RequestTest extends TestWithMockery
         $request = new Request(new Bot());
         self::assertSame(\PHP_SAPI, $request->getPhpSapi());
     }
-
-    /**
-     * @test
-     * @backupGlobals enabled
-     */
-    public function I_can_get_requested_version(): void
-    {
-        $request = new Request(new Bot());
-        self::assertNull($request->getRequestedVersion());
-        $_GET[Request::VERSION] = '1.2.3';
-        self::assertSame('1.2.3', $request->getRequestedVersion());
-        $_GET[Request::VERSION] = null;
-        $_POST[Request::VERSION] = '4.5.6';
-        self::assertSame('4.5.6', $request->getRequestedVersion());
-        $_POST[Request::VERSION] = null;
-        $_COOKIE[Request::VERSION] = '123.456.789';
-        self::assertSame('123.456.789', $request->getRequestedVersion());
-        $_COOKIE[Request::VERSION] = null;
-        self::assertNull($request->getRequestedVersion());
-    }
 }

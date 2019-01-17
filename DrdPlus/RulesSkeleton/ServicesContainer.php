@@ -101,8 +101,7 @@ class ServicesContainer extends StrictObject
     {
         if ($this->currentWebVersion === null) {
             $this->currentWebVersion = new CurrentWebVersion(
-                $this->getConfiguration(),
-                $this->getRequest(),
+                $this->getDirs(),
                 $this->getGit(),
                 $this->getWebVersions()
             );

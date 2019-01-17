@@ -26,8 +26,6 @@ class Configuration extends StrictObject
 
     // web
     public const WEB = 'web';
-    public const LAST_STABLE_VERSION = 'last_stable_version';
-    public const REPOSITORY_URL = 'repository_url';
     public const MENU_POSITION_FIXED = 'menu_position_fixed';
     public const SHOW_HOME_BUTTON = 'show_home_button';
     public const NAME = 'name';
@@ -48,13 +46,10 @@ class Configuration extends StrictObject
     /**
      * @param Dirs $dirs
      * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\InvalidMinorVersion
      */
     public function __construct(Dirs $dirs, array $settings)
     {
         $this->dirs = $dirs;
-        $this->guardValidLastMinorVersion($settings);
-        $this->guardValidWebRepositoryUrl($settings);
         $this->guardValidGoogleAnalyticsId($settings);
         $this->guardSetIfUseFixedMenuPosition($settings);
         $this->guardSetIfShowHomeButton($settings);
@@ -65,38 +60,6 @@ class Configuration extends StrictObject
         $this->guardSetIfHasShownHomeButton($settings);
         $this->guardValidFaviconUrl($settings);
         $this->settings = $settings;
-    }
-
-    /**
-     * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\InvalidMinorVersion
-     */
-    protected function guardValidLastMinorVersion(array $settings): void
-    {
-        if (!\preg_match('~^(\d+[.]\d+|master)$~', (string)($settings[static::WEB][static::LAST_STABLE_VERSION] ?? ''))) {
-            throw new Exceptions\InvalidMinorVersion(
-                'Expected something like 1.13 or master in configuration web.last_stable_version, got '
-                . ($settings[static::WEB]['last_stable_version'] ?? 'nothing')
-            );
-        }
-    }
-
-    /**
-     * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\InvalidWebRepositoryUrl
-     */
-    protected function guardValidWebRepositoryUrl(array $settings): void
-    {
-        $repositoryUrl = $settings[static::WEB][static::REPOSITORY_URL] ?? '';
-        if (!\preg_match('~^.+[.git]$~', $repositoryUrl) && !\file_exists($repositoryUrl)) {
-            throw new Exceptions\InvalidWebRepositoryUrl(
-                'Expected something like git@github.com/foo/bar.git in configuration web.repository_url, got '
-                . ($repositoryUrl
-                    ? "non-valid URL, non-existing dir '$repositoryUrl'"
-                    : 'nothing'
-                )
-            );
-        }
     }
 
     /**
@@ -221,19 +184,9 @@ class Configuration extends StrictObject
         return $this->settings;
     }
 
-    public function getWebLastStableMinorVersion(): string
-    {
-        return $this->getSettings()[static::WEB][static::LAST_STABLE_VERSION];
-    }
-
     public function getGoogleAnalyticsId(): string
     {
         return $this->getSettings()[static::GOOGLE][static::ANALYTICS_ID];
-    }
-
-    public function getWebRepositoryUrl(): string
-    {
-        return $this->getSettings()[static::WEB][static::REPOSITORY_URL];
     }
 
     public function isMenuPositionFixed(): bool

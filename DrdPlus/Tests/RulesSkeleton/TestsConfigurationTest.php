@@ -145,41 +145,6 @@ class TestsConfigurationTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_will_get_some_stable_version_if_has_more_versions(): void
-    {
-        $testsConfiguration = $this->createTestsConfiguration();
-        if (!$this->isSkeletonChecked() && !$testsConfiguration->hasMoreVersions()) {
-            self::assertSame('master', $testsConfiguration->getExpectedLastVersion(), 'Expected master as a single version');
-
-            return;
-        }
-        self::assertTrue($testsConfiguration->hasMoreVersions(), 'More versions expected');
-        self::assertRegExp(
-            '~^\d+[.]\d+([.]\d+)?$~',
-            $testsConfiguration->getExpectedLastVersion(),
-            'Expected stable version in format x.y[.z]'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_get_last_unstable_version(): void
-    {
-        $testsConfiguration = $this->createTestsConfiguration();
-        self::assertSame('master', $testsConfiguration->getExpectedLastUnstableVersion());
-        if (!$testsConfiguration->hasMoreVersions()) {
-            self::assertSame(
-                $testsConfiguration->getExpectedLastVersion(),
-                $testsConfiguration->getExpectedLastUnstableVersion(),
-                'Expected same last version and last unstable version as only a single version is expected'
-            );
-        }
-    }
-
-    /**
-     * @test
-     */
     public function I_can_disable_test_of_headings(): void
     {
         $testsConfiguration = $this->createTestsConfiguration();

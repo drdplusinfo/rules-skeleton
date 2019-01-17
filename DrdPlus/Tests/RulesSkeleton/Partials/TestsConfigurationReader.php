@@ -11,8 +11,6 @@ interface TestsConfigurationReader
 
     public function hasExternalAnchorsWithHashes(): bool;
 
-    public function hasMoreVersions(): bool;
-
     public function hasCustomBodyContent(): bool;
 
     public function hasNotes(): bool;
@@ -30,10 +28,6 @@ interface TestsConfigurationReader
     public function getExpectedGoogleAnalyticsId(): string;
 
     public function getAllowedCalculationIdPrefixes(): array;
-
-    public function getExpectedLastVersion(): string;
-
-    public function getExpectedLastUnstableVersion(): string;
 
     public function hasHeadings(): bool;
 

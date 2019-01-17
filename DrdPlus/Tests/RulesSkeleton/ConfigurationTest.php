@@ -39,8 +39,6 @@ class ConfigurationTest extends AbstractContentTest
         $this->createYamlDistributionConfig($distributionYamlContent, $yamlTestingDir);
         $configuration = Configuration::createFromYml($dirs = $this->createDirs($yamlTestingDir));
         self::assertSame($expectedYamlContent, $configuration->getSettings());
-        self::assertSame($expectedYamlContent[Configuration::WEB][Configuration::LAST_STABLE_VERSION], $configuration->getWebLastStableMinorVersion());
-        self::assertSame($expectedYamlContent[Configuration::WEB][Configuration::REPOSITORY_URL], $configuration->getWebRepositoryUrl());
         self::assertSame($expectedYamlContent[Configuration::GOOGLE][Configuration::ANALYTICS_ID], $configuration->getGoogleAnalyticsId());
         self::assertSame($dirs, $configuration->getDirs());
     }
@@ -87,9 +85,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $completeYamlContent = $this->getSomeCompleteSettings();
         $limitedWebSection = $completeYamlContent;
-        $limitedWebSection[Configuration::WEB] = [Configuration::LAST_STABLE_VERSION => '456.789'];
         $changedCompleteYamlContent = $completeYamlContent;
-        $changedCompleteYamlContent[Configuration::WEB][Configuration::LAST_STABLE_VERSION] = '456.789';
 
         return [
             [$completeYamlContent, [], $completeYamlContent],
@@ -102,8 +98,6 @@ class ConfigurationTest extends AbstractContentTest
     {
         return [
             Configuration::WEB => [
-                Configuration::LAST_STABLE_VERSION => '123.456',
-                Configuration::REPOSITORY_URL => \sys_get_temp_dir(),
                 Configuration::MENU_POSITION_FIXED => false,
                 Configuration::SHOW_HOME_BUTTON => true,
                 Configuration::NAME => 'Foo',
@@ -114,41 +108,6 @@ class ConfigurationTest extends AbstractContentTest
             ],
             Configuration::GOOGLE => [Configuration::ANALYTICS_ID => 'UA-121206931-999'],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_create_it_with_master_as_last_stable_version(): void
-    {
-        $completeSettings = $this->getSomeCompleteSettings();
-        $completeSettings[Configuration::WEB][Configuration::LAST_STABLE_VERSION] = 'master';
-        $configuration = new Configuration($this->getDirs(), $completeSettings);
-        self::assertSame('master', $configuration->getWebLastStableMinorVersion());
-    }
-
-    /**
-     * @test
-     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\InvalidMinorVersion
-     * @expectedExceptionMessageRegExp ~public enemy~
-     */
-    public function I_can_not_create_it_with_invalid_last_stable_version(): void
-    {
-        $completeSettings = $this->getSomeCompleteSettings();
-        $completeSettings[Configuration::WEB][Configuration::LAST_STABLE_VERSION] = 'public enemy';
-        new Configuration($this->getDirs(), $completeSettings);
-    }
-
-    /**
-     * @test
-     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\InvalidWebRepositoryUrl
-     * @expectedExceptionMessageRegExp ~/somewhere://over[.]the\?rainbow=GPS~
-     */
-    public function I_can_not_create_it_with_invalid_web_repository_url(): void
-    {
-        $completeSettings = $this->getSomeCompleteSettings();
-        $completeSettings[Configuration::WEB][Configuration::REPOSITORY_URL] = '/somewhere://over.the?rainbow=GPS';
-        new Configuration($this->getDirs(), $completeSettings);
     }
 
     /**
@@ -218,40 +177,10 @@ class ConfigurationTest extends AbstractContentTest
         self::assertSame('', $configuration->getTitleSmiley());
     }
 
-    /**
-     * @test
-     */
-    public function Web_repository_is_changed_from_skeleton(): void
-    {
-        if ($this->isSkeletonChecked()) {
-            self::assertFalse(false, 'We are still in skeleton, nothing to test here');
-
-            return;
-        }
-        $skeletonConfiguration = $this->getSkeletonConfiguration();
-        $currentConfiguration = $this->getConfiguration();
-        self::assertNotSame(
-            $skeletonConfiguration->getWebRepositoryUrl(),
-            $currentConfiguration->getWebRepositoryUrl(),
-            'Current web repository seems to be forgotten from skeleton copy'
-        );
-    }
-
     protected function getSkeletonConfiguration(): Configuration
     {
         $configurationClass = $this->getConfigurationClass();
 
         return $configurationClass::createFromYml($this->createDirs($this->getSkeletonProjectRoot()));
-    }
-
-    /**
-     * @test
-     */
-    public function I_have_expected_last_stable_version(): void
-    {
-        self::assertSame(
-            $this->getTestsConfiguration()->getExpectedLastVersion(),
-            $this->getConfiguration()->getWebLastStableMinorVersion()
-        );
     }
 }
