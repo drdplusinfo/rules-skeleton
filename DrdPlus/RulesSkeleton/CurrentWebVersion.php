@@ -97,6 +97,16 @@ class CurrentWebVersion extends StrictObject implements CurrentMinorVersionProvi
         return $this->currentPatchVersion;
     }
 
+    /**
+     * @param string $superiorVersion
+     * @return string
+     * @throws \Granam\Git\Exceptions\NoPatchVersionsMatch
+     */
+    private function getLastPatchVersionOf(string $superiorVersion): string
+    {
+        return $this->getWebVersions()->getLastPatchVersionOf($superiorVersion);
+    }
+
     public function getCurrentMinorVersion(): string
     {
         $requestedMinorVersion = $this->request->getRequestedVersion();
@@ -164,13 +174,4 @@ class CurrentWebVersion extends StrictObject implements CurrentMinorVersionProvi
         return $this->git->updateBranch($minorVersion, $toMinorVersionDir);
     }
 
-    /**
-     * @param string $superiorVersion
-     * @return string
-     * @throws \Granam\Git\Exceptions\NoPatchVersionsMatch
-     */
-    public function getLastPatchVersionOf(string $superiorVersion): string
-    {
-        return $this->getWebVersions()->getLastPatchVersionOf($superiorVersion);
-    }
 }
