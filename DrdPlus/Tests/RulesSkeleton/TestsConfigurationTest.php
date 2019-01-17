@@ -268,4 +268,13 @@ class TestsConfigurationTest extends AbstractContentTest
         ]);
         self::assertSame(['foo', 'bar', 'baz'], $testsConfiguration->getTooShortResultNames());
     }
+
+    /**
+     * @test
+     * @expectedException \DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidPublicUrl
+     */
+    public function I_am_stopped_if_public_url_is_missing(): void
+    {
+        $this->createTestsConfiguration([TestsConfiguration::PUBLIC_URL => null]);
+    }
 }
