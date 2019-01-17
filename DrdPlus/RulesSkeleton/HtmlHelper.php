@@ -13,6 +13,7 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public const ID_MENU_WRAPPER = 'menu_wrapper';
     public const ID_META_REDIRECT = 'meta_redirect';
     public const ID_DEBUG_CONTACTS = 'debug_contacts';
+    public const ID_HOME_BUTTON = 'home_button';
     public const CLASS_RULES_AUTHORS = 'rules-authors';
     public const CLASS_CALCULATION = 'calculation';
     public const CLASS_COVERED_BY_CODE = 'covered-by-code';

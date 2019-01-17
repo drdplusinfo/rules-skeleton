@@ -74,36 +74,6 @@ class RulesControllerTest extends AbstractContentTest
 
     /**
      * @test
-     */
-    public function I_can_hide_home_button(): void
-    {
-        $configurationWithShownHomeButton = $this->createCustomConfiguration([Configuration::WEB => [Configuration::SHOW_HOME_BUTTON => true]]);
-        self::assertTrue($configurationWithShownHomeButton->isShowHomeButton(), 'Expected configuration with shown home button');
-        $controller = $this->createController($configurationWithShownHomeButton);
-        self::assertTrue($controller->isShownHomeButton(), 'Home button should be set as shown');
-        if ($this->isSkeletonChecked()) {
-            /** @var Element $homeButton */
-            $homeButton = $this->getHtmlDocument()->getElementById('home_button');
-            self::assertNotEmpty($homeButton, 'Home button is missing');
-            self::assertSame(
-                HtmlHelper::turnToLocalLink('https://www.drdplus.info'),
-                $homeButton->getAttribute('href'), 'Link of home button should lead to home'
-            );
-        }
-        $configurationWithHiddenHomeButton = $this->createCustomConfiguration([Configuration::WEB => [Configuration::SHOW_HOME_BUTTON => false]]);
-        self::assertFalse($configurationWithHiddenHomeButton->isShowHomeButton(), 'Expected configuration with hidden home button');
-        $controller = $this->createController($configurationWithHiddenHomeButton);
-        self::assertFalse($controller->isShownHomeButton(), 'Home button should be hidden');
-        if ($this->isSkeletonChecked()) {
-            $content = $this->fetchNonCachedContent($controller);
-            $htmlDocument = new HtmlDocument($content);
-            $homeButton = $htmlDocument->getElementById('home_button');
-            self::assertEmpty($homeButton, 'Home button should not be used at all');
-        }
-    }
-
-    /**
-     * @test
      * @throws \ReflectionException
      */
     public function I_can_activate_trial(): void

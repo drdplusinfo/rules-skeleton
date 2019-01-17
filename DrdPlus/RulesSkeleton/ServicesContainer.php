@@ -150,6 +150,7 @@ class ServicesContainer extends StrictObject
     {
         if ($this->rulesWebContent === null) {
             $this->rulesWebContent = new RulesMainContent(
+                $this->getConfiguration(),
                 $this->getHtmlHelper(),
                 $this->getHead(),
                 $this->getBody(),

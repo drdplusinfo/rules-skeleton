@@ -104,7 +104,6 @@ class ConfigurationTest extends AbstractContentTest
                 Configuration::TITLE_SMILEY => '',
                 Configuration::PROTECTED_ACCESS => true,
                 Configuration::ESHOP_URL => 'https://example.com',
-                Configuration::HIDE_HOME_BUTTON => false,
             ],
             Configuration::GOOGLE => [Configuration::ANALYTICS_ID => 'UA-121206931-999'],
         ];
@@ -135,7 +134,7 @@ class ConfigurationTest extends AbstractContentTest
 
     /**
      * @test
-     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\InvalidShowOfHomeButton
+     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\MissingShownHomeButtonConfiguration
      */
     public function I_can_not_create_it_without_defining_if_show_home_button(): void
     {

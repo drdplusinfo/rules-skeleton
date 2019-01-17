@@ -28,10 +28,10 @@ class Configuration extends StrictObject
     public const WEB = 'web';
     public const MENU_POSITION_FIXED = 'menu_position_fixed';
     public const SHOW_HOME_BUTTON = 'show_home_button';
+    public const SHOW_DEBUG_CONTACTS = 'show_debug_contacts';
     public const NAME = 'name';
     public const TITLE_SMILEY = 'title_smiley';
     public const PROTECTED_ACCESS = 'protected_access';
-    public const HIDE_HOME_BUTTON = 'hide_home_button';
     public const ESHOP_URL = 'eshop_url';
     public const FAVICON = 'favicon';
     // google
@@ -52,12 +52,11 @@ class Configuration extends StrictObject
         $this->dirs = $dirs;
         $this->guardValidGoogleAnalyticsId($settings);
         $this->guardSetIfUseFixedMenuPosition($settings);
-        $this->guardSetIfShowHomeButton($settings);
         $this->guardNonEmptyWebName($settings);
         $this->guardSetTitleSmiley($settings);
         $this->guardValidEshopUrl($settings);
-        $this->guardSetIfHasProtectedAccess($settings);
-        $this->guardSetIfHasShownHomeButton($settings);
+        $this->guardSetProtectedAccess($settings);
+        $this->guardSetShowHomeButton($settings);
         $this->guardValidFaviconUrl($settings);
         $this->settings = $settings;
     }
@@ -84,19 +83,6 @@ class Configuration extends StrictObject
         if (($settings[static::WEB][static::MENU_POSITION_FIXED] ?? null) === null) {
             throw new Exceptions\InvalidMenuPosition(
                 'Expected explicitly defined menu position fix to true or false in configuration web.menu_position_fixed, got nothing'
-            );
-        }
-    }
-
-    /**
-     * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\InvalidShowOfHomeButton
-     */
-    protected function guardSetIfShowHomeButton(array $settings): void
-    {
-        if (($settings[static::WEB][static::SHOW_HOME_BUTTON] ?? null) === null) {
-            throw new Exceptions\InvalidShowOfHomeButton(
-                'Expected explicitly defined if show home button to true or false in configuration web.show_home_button, got nothing'
             );
         }
     }
@@ -141,7 +127,7 @@ class Configuration extends StrictObject
         }
     }
 
-    protected function guardSetIfHasProtectedAccess(array $settings): void
+    protected function guardSetProtectedAccess(array $settings): void
     {
         if (($settings[static::WEB][static::PROTECTED_ACCESS] ?? null) === null) {
             throw new Exceptions\MissingProtectedAccessConfiguration(
@@ -151,12 +137,22 @@ class Configuration extends StrictObject
         }
     }
 
-    protected function guardSetIfHasShownHomeButton(array $settings): void
+    protected function guardSetShowHomeButton(array $settings): void
     {
         if (($settings[static::WEB][static::SHOW_HOME_BUTTON] ?? null) === null) {
             throw new Exceptions\MissingShownHomeButtonConfiguration(
                 'Configuration if home button should be shown is missing in configuration '
                 . static::WEB . ': ' . static::SHOW_HOME_BUTTON
+            );
+        }
+    }
+
+    protected function guardSetShowDebugContacts(array $settings): void
+    {
+        if (($settings[static::WEB][static::SHOW_DEBUG_CONTACTS] ?? null) === null) {
+            throw new Exceptions\MissingShownHomeButtonConfiguration(
+                'Configuration if debug contacts should be shown is missing in configuration '
+                . static::WEB . ': ' . static::SHOW_DEBUG_CONTACTS
             );
         }
     }
@@ -199,6 +195,11 @@ class Configuration extends StrictObject
         return (bool)$this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON];
     }
 
+    public function isShowDebugContacts(): bool
+    {
+        return (bool)$this->getSettings()[static::WEB][static::SHOW_DEBUG_CONTACTS];
+    }
+
     public function getWebName(): string
     {
         return $this->getSettings()[static::WEB][static::NAME];
@@ -212,11 +213,6 @@ class Configuration extends StrictObject
     public function hasProtectedAccess(): bool
     {
         return (bool)$this->getSettings()[self::WEB][self::PROTECTED_ACCESS];
-    }
-
-    public function shouldHideHomeButton(): bool
-    {
-        return (bool)$this->getSettings()[self::WEB][self::HIDE_HOME_BUTTON];
     }
 
     public function getEshopUrl(): string
