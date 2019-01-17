@@ -230,9 +230,9 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
 
     private function setPublicUrl(array $values)
     {
-        $publicUrl = $values[self::PUBLIC_URL];
+        $publicUrl = \trim($values[self::PUBLIC_URL] ?? '');
         try {
-            $this->guardValidUrl($values[self::PUBLIC_URL] ?? '');
+            $this->guardValidUrl($publicUrl);
         } catch (InvalidUrl $invalidUrl) {
             throw new Exceptions\InvalidPublicUrl("Given public URL is not valid: '$publicUrl'", $invalidUrl->getCode(), $invalidUrl);
         }
