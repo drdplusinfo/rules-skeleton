@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton\Exceptions;
 
-class MissingExpectedGoogleAnalyticsId extends \InvalidArgumentException implements Logic
+class MissingExpectedGoogleAnalyticsId extends InvalidTestsConfiguration
 {
 
 }

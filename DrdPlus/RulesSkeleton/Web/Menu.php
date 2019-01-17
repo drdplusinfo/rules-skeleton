@@ -49,40 +49,11 @@ class Menu extends StrictObject implements StringInterface
 </span>
 HTML;
         }
-        $webVersions = $this->getWebVersions();
-        $allVersions = $webVersions->getAllMinorVersions();
-        $versions = '';
-        if (\count($allVersions) > 1) {
-            $currentVersion = $this->getCurrentWebVersion()->getCurrentMinorVersion();
-            $otherVersionsArray = [];
-            foreach ($webVersions->getAllMinorVersions() as $webVersion) {
-                if ($webVersion === $currentVersion) {
-                    continue;
-                }
-                $otherVersionsArray[] = <<<HTML
-<li>
-    <a href="{$this->getRequest()->getCurrentUrl([Request::VERSION => $webVersion])}">
-        {$webVersions->getVersionHumanName($webVersion)}
-    </a>
-</li>
-HTML;
-            }
-            $otherVersions = \implode("\n", $otherVersionsArray);
-            $versions = <<<HTML
-<span class="current-version">{$webVersions->getVersionHumanName($currentVersion)}</span>
-<ul class="other-versions">
-  {$otherVersions}
-</ul>
-HTML;
-        }
 
         return <<<HTML
   <div class="contacts visible top permanent $fixed" id="menu">
     <div class="container">
       {$homeButton}
-      <div class="version">
-          {$versions}
-      </div>
       <span class="contact">
         <a href="mailto:info@drdplus.info">
           <span class="mobile"><i class="fas fa-envelope"></i></span>

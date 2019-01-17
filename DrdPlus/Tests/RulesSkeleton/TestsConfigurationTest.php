@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\Tests\RulesSkeletonWeb\WebTestsConfiguration;
-use DrdPlus\Tests\RulesSkeletonWeb\WebTestsConfigurationTest;
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 
-class TestsConfigurationTest extends WebTestsConfigurationTest
+class TestsConfigurationTest extends AbstractContentTest
 {
+
     /**
      * @test
      * @throws \ReflectionException
@@ -34,6 +34,75 @@ class TestsConfigurationTest extends WebTestsConfigurationTest
     /**
      * @test
      */
+    public function I_can_disable_test_of_table_of_contents(): void
+    {
+        $testsConfiguration = $this->createTestsConfiguration();
+        self::assertTrue($testsConfiguration->hasTableOfContents(), 'Table of contents should be expected to test by default');
+        $testsConfiguration = $this->createTestsConfiguration([TestsConfiguration::HAS_TABLE_OF_CONTENTS => false]);
+        self::assertFalse($testsConfiguration->hasTableOfContents(), 'Test of table of contents should be disabled now');
+    }
+
+    protected function createTestsConfiguration(array $config = []): TestsConfiguration
+    {
+        $sutClass = static::getSutClass();
+
+        return new $sutClass(\array_merge($this->getTestsConfigurationDefaultValues(), $config));
+    }
+
+    protected function getTestsConfigurationDefaultValues(): array
+    {
+        return [
+            TestsConfiguration::SOME_EXPECTED_TABLE_IDS => [],
+            TestsConfiguration::PUBLIC_URL => 'https://www.drdplus.info',
+            TestsConfiguration::EXPECTED_WEB_NAME => 'foo',
+            TestsConfiguration::EXPECTED_PAGE_TITLE => 'foo',
+            TestsConfiguration::EXPECTED_GOOGLE_ANALYTICS_ID => 'UA-UB-1',
+        ];
+    }
+
+    protected static function getSutClass(string $sutTestClass = null, string $regexp = '~(.+)Test$~'): string
+    {
+        return parent::getSutClass($sutTestClass, $regexp);
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_disable_test_of_tables(): void
+    {
+        $testsConfiguration = $this->createTestsConfiguration();
+        self::assertTrue($testsConfiguration->hasTables(), 'Tables should be expected to test by default');
+        $testsConfiguration = $this->createTestsConfiguration([TestsConfiguration::HAS_TABLES => false]);
+        self::assertFalse($testsConfiguration->hasTables(), 'Test of tables should be disabled now');
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_disable_expected_table_ids(): void
+    {
+        $testsConfiguration = $this->createTestsConfiguration([TestsConfiguration::SOME_EXPECTED_TABLE_IDS => ['foo', 'bar']]);
+        self::assertSame(['foo', 'bar'], $testsConfiguration->getSomeExpectedTableIds());
+    }
+
+    /**
+     * @test
+     */
+    public function Expected_some_table_ids_are_empty_if_no_tables_are_expected_at_all(): void
+    {
+        $testsConfiguration = $this->createTestsConfiguration([TestsConfiguration::SOME_EXPECTED_TABLE_IDS => ['foo', 'bar']]);
+        self::assertTrue($testsConfiguration->hasTables(), 'Tables should be expected to test by default');
+        self::assertSame(['foo', 'bar'], $testsConfiguration->getSomeExpectedTableIds());
+        $testsConfiguration = $this->createTestsConfiguration(
+            [TestsConfiguration::HAS_TABLES => false, TestsConfiguration::SOME_EXPECTED_TABLE_IDS => ['foo', 'bar']]
+        );
+        self::assertFalse($testsConfiguration->hasTables(), 'Test of tables should be disabled now');
+        self::assertSame([], $testsConfiguration->getSomeExpectedTableIds(), 'No table IDs expected as tables tests have been disabled');
+    }
+
+    /**
+     * @test
+     */
     public function I_can_set_allowed_calculation_id_prefixes(): void
     {
         $testsConfiguration = $this->createTestsConfiguration();
@@ -43,30 +112,6 @@ class TestsConfigurationTest extends WebTestsConfigurationTest
             [TestsConfiguration::ALLOWED_CALCULATION_ID_PREFIXES => ['Foo allowed calculation id prefix']]
         );
         self::assertSame(['Foo allowed calculation id prefix'], $testsConfiguration->getAllowedCalculationIdPrefixes());
-    }
-
-    /**
-     * @param array $config
-     * @return WebTestsConfiguration|TestsConfiguration
-     */
-    protected function createTestsConfiguration(array $config = []): WebTestsConfiguration
-    {
-        $sutClass = static::getSutClass();
-
-        return new $sutClass(\array_merge($this->getTestsConfigurationDefaultValues(), $config));
-    }
-
-    protected function getTestsConfigurationDefaultValues(): array
-    {
-        return array_merge(
-            parent::getTestsConfigurationDefaultValues(),
-            [
-                TestsConfiguration::PUBLIC_URL => 'https://www.drdplus.info',
-                TestsConfiguration::EXPECTED_WEB_NAME => 'foo',
-                TestsConfiguration::EXPECTED_PAGE_TITLE => 'foo',
-                TestsConfiguration::EXPECTED_GOOGLE_ANALYTICS_ID => 'UA-UB-1',
-            ]
-        );
     }
 
     /**
@@ -257,16 +302,5 @@ class TestsConfigurationTest extends WebTestsConfigurationTest
             TestsConfiguration::TOO_SHORT_RESULT_NAMES => ['foo', 'foo', 'bar', 'bar', 'bar', 'foo', 'baz'],
         ]);
         self::assertSame(['foo', 'bar', 'baz'], $testsConfiguration->getTooShortResultNames());
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_disable_test_of_table_of_contents(): void
-    {
-        $testsConfiguration = $this->createTestsConfiguration();
-        self::assertTrue($testsConfiguration->hasTableOfContents(), 'Table of contents should be expected to test by default');
-        $testsConfiguration = $this->createTestsConfiguration([TestsConfiguration::HAS_TABLE_OF_CONTENTS => false]);
-        self::assertFalse($testsConfiguration->hasTableOfContents(), 'Test of table of contents should be disabled now');
     }
 }

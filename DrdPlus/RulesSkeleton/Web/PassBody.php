@@ -12,7 +12,6 @@ class PassBody extends Body
 
     public function __construct(WebFiles $webFiles, Pass $pass)
     {
-        parent::__construct($webFiles);
         $this->pass = $pass;
     }
 

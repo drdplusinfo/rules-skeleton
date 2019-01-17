@@ -30,7 +30,7 @@ class TrialTest extends AbstractContentTest
 
     private function There_is_no_meta_redirect_if_licence_owning_has_been_confirmed(RulesController $controller): string
     {
-        $content = $controller->getContent()->getValue();
+        $content = $controller->getRulesContent()->getValue();
         $firstWithoutRedirect = new HtmlDocument($content);
         self::assertNull($firstWithoutRedirect->getElementById(HtmlHelper::ID_META_REDIRECT));
         $cacheStamp = $firstWithoutRedirect->documentElement->getAttribute(HtmlHelper::DATA_CACHE_STAMP);
@@ -50,7 +50,7 @@ class TrialTest extends AbstractContentTest
         $setRedirect = $controllerReflection->getMethod('setRedirect');
         $setRedirect->setAccessible(true);
         $setRedirect->invoke($controller, new Redirect('/foo', 12345));
-        $content = $controller->getContent()->getValue();
+        $content = $controller->getRulesContent()->getValue();
         $firstWithRedirect = new HtmlDocument($content);
         self::assertSame(
             $previousCacheStamp,

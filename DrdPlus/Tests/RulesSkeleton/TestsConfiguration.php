@@ -7,12 +7,20 @@ use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidUrl;
 use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
 use DrdPlus\Tests\RulesSkeletonWeb\WebTestsConfiguration;
+use Granam\Strict\Object\StrictObject;
+use Granam\YamlReader\YamlFileReader;
 
-class TestsConfiguration extends WebTestsConfiguration implements TestsConfigurationReader
+class TestsConfiguration extends StrictObject implements TestsConfigurationReader
 {
     public const LICENCE_BY_ACCESS = '*by access*';
     public const LICENCE_MIT = 'MIT';
     public const LICENCE_PROPRIETARY = 'proprietary';
+
+    public const HAS_TABLES = 'has_tables';
+    public const SOME_EXPECTED_TABLE_IDS = 'some_expected_table_ids';
+    public const HAS_TABLE_OF_CONTENTS = 'has_table_of_contents';
+    public const HAS_HEADINGS = 'has_headings';
+    public const HAS_AUTHORS = 'has_authors';
 
     public const PUBLIC_URL = 'public_url';
     public const HAS_EXTERNAL_ANCHORS_WITH_HASHES = 'has_external_anchors_with_hashes';
@@ -39,8 +47,23 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
     public const TOO_SHORT_SUCCESS_NAMES = 'too_short_success_names';
     public const TOO_SHORT_RESULT_NAMES = 'too_short_result_names';
 
+    public static function createFromYaml(string $yamlConfigFile)
+    {
+        return new static((new YamlFileReader($yamlConfigFile))->getValues());
+    }
+
     // every setting SHOULD be strict (expecting instead of ignoring)
 
+    /** @var bool */
+    private $hasTables = true;
+    /** @var array|string[] */
+    private $someExpectedTableIds = [];
+    /** @var bool */
+    private $hasTableOfContents = true;
+    /** @var bool */
+    private $hasHeadings = true;
+    /** @var bool */
+    private $hasAuthors = true;
     /** @var string */
     private $localUrl;
     /** @var bool */
@@ -100,7 +123,11 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
      */
     public function __construct(array $values)
     {
-        parent::__construct($values);
+        $this->setHasTables($values);
+        $this->setSomeExpectedTableIds($values, $this->hasTables());
+        $this->setHasTableOfContents($values);
+        $this->setHasHeadings($values);
+        $this->setHasAuthors($values);
         $this->setPublicUrl($values);
         $this->setLocalUrl($this->publicUrl);
         $this->setHasExternalAnchorsWithHashes($values);
@@ -126,6 +153,92 @@ class TestsConfiguration extends WebTestsConfiguration implements TestsConfigura
         $this->setTooShortFailureNames($values);
         $this->setTooShortSuccessNames($values);
         $this->setTooShortResultNames($values);
+    }
+
+    /**
+     * @param array $values
+     */
+    private function setHasTables(array $values): void
+    {
+        $this->hasTables = (bool)($values[self::HAS_TABLES] ?? $this->hasTables);
+    }
+
+    public function hasTables(): bool
+    {
+        return $this->hasTables;
+    }
+
+    /**
+     * @param array $values
+     * @param bool $hasTables
+     * @throws \DrdPlus\Tests\RulesSkeletonWeb\Exceptions\MissingSomeExpectedTableIdsInTestsConfiguration
+     */
+    private function setSomeExpectedTableIds(array $values, bool $hasTables): void
+    {
+        if (!$hasTables) {
+            $this->someExpectedTableIds = [];
+
+            return;
+        }
+        $someExpectedTableIds = $values[self::SOME_EXPECTED_TABLE_IDS] ?? null;
+        if (!\is_array($someExpectedTableIds)) {
+            throw new Exceptions\MissingSomeExpectedTableIdsInTestsConfiguration(
+                "Expected some '" . self::SOME_EXPECTED_TABLE_IDS . "', got "
+                . ($someExpectedTableIds === null
+                    ? 'nothing'
+                    : \var_export($someExpectedTableIds, true)
+                )
+            );
+        }
+        $structureOk = true;
+        foreach ($someExpectedTableIds as $someExpectedTableId) {
+            if (!\is_string($someExpectedTableId)) {
+                $structureOk = false;
+                break;
+            }
+        }
+        if (!$structureOk) {
+            throw new Exceptions\MissingSomeExpectedTableIdsInTestsConfiguration(
+                "Expected flat array of strings for '" . self::SOME_EXPECTED_TABLE_IDS . "', got "
+                . \var_export($someExpectedTableIds, true)
+            );
+        }
+        $this->someExpectedTableIds = $someExpectedTableIds;
+    }
+
+    private function setHasTableOfContents(array $values): void
+    {
+        $this->hasTableOfContents = (bool)($values[self::HAS_TABLE_OF_CONTENTS] ?? true);
+    }
+
+    private function setHasHeadings(array $values): void
+    {
+        $this->hasHeadings = (bool)($values[self::HAS_HEADINGS] ?? $this->hasHeadings);
+    }
+
+    public function getSomeExpectedTableIds(): array
+    {
+        return $this->someExpectedTableIds;
+    }
+
+    public function hasTableOfContents(): bool
+    {
+        return $this->hasTableOfContents;
+    }
+
+    public function hasHeadings(): bool
+    {
+        return $this->hasHeadings;
+    }
+
+    private function setHasAuthors(array $values): void
+    {
+        $this->hasAuthors = (bool)($values[self::HAS_AUTHORS] ?? $this->hasAuthors);
+    }
+
+    public function hasAuthors(): bool
+    {
+        return $this->hasAuthors;
     }
 
     private function setPublicUrl(array $values)

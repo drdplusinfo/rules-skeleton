@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\Web\Content;
+use DrdPlus\RulesSkeleton\Web\RulesContent;
 use Granam\Strict\Object\StrictObject;
 
 class RulesController extends StrictObject
@@ -14,7 +14,7 @@ class RulesController extends StrictObject
     private $configuration;
     /** @var array */
     private $bodyClasses;
-    /** @var Content */
+    /** @var RulesContent */
     private $content;
     /** @var Redirect */
     private $redirect;
@@ -68,58 +68,62 @@ class RulesController extends StrictObject
         );
     }
 
-    public function getContent(): Content
+    public function getRulesContent(): RulesContent
     {
         if ($this->content) {
             return $this->content;
         }
         $servicesContainer = $this->servicesContainer;
         if ($servicesContainer->getRequest()->areRequestedTables()) {
-            $this->content = new Content(
+            $this->content = new RulesContent(
                 $servicesContainer->getRulesTablesWebContent(),
-                $servicesContainer->getHtmlHelper(),
-                $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getMenu(),
+                $servicesContainer->getDebugContactsBody(),
+                $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getTablesWebCache(),
-                Content::TABLES,
+                $servicesContainer->getHtmlHelper(),
+                RulesContent::TABLES,
                 $this->getRedirect()
             );
 
             return $this->content;
         }
         if ($servicesContainer->getRequest()->isRequestedPdf() && $servicesContainer->getPdfBody()->getPdfFile()) {
-            $this->content = new Content(
+            $this->content = new RulesContent(
                 $servicesContainer->getRulesPdfWebContent(),
-                $servicesContainer->getHtmlHelper(),
-                $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getEmptyMenu(),
+                $servicesContainer->getDebugContactsBody(),
+                $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getDummyWebCache(),
-                Content::PDF,
+                $servicesContainer->getHtmlHelper(),
+                RulesContent::PDF,
                 $this->getRedirect()
             );
 
             return $this->content;
         }
         if (!$this->canPassIn()) {
-            $this->content = new Content(
+            $this->content = new RulesContent(
                 $servicesContainer->getRulesPassWebContent(),
-                $servicesContainer->getHtmlHelper(),
-                $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getMenu(),
+                $servicesContainer->getDebugContactsBody(),
+                $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getPassWebCache(),
-                Content::PASS,
+                $servicesContainer->getHtmlHelper(),
+                RulesContent::PASS,
                 $this->getRedirect()
             );
 
             return $this->content;
         }
-        $this->content = new Content(
+        $this->content = new RulesContent(
             $servicesContainer->getRulesWebContent(),
-            $servicesContainer->getHtmlHelper(),
-            $servicesContainer->getCurrentWebVersion(),
             $servicesContainer->getMenu(),
+            $servicesContainer->getDebugContactsBody(),
+            $servicesContainer->getCurrentWebVersion(),
             $servicesContainer->getWebCache(),
-            Content::FULL,
+            $servicesContainer->getHtmlHelper(),
+            RulesContent::FULL,
             $this->getRedirect()
         );
 
@@ -183,13 +187,13 @@ class RulesController extends StrictObject
 
     public function sendCustomHeaders(): void
     {
-        if ($this->getContent()->containsTables()) {
+        if ($this->getRulesContent()->containsTables()) {
             if (\PHP_SAPI === 'cli') {
                 return;
             }
             // anyone can show content of this page
             \header('Access-Control-Allow-Origin: *');
-        } elseif ($this->getContent()->containsPdf()) {
+        } elseif ($this->getRulesContent()->containsPdf()) {
             $pdfFile = $this->servicesContainer->getPdfBody()->getPdfFile();
             $pdfFileBasename = \basename($pdfFile);
             if (\PHP_SAPI === 'cli') {

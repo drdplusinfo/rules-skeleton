@@ -14,15 +14,15 @@ use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
-use DrdPlus\Tests\RulesSkeletonWeb\WebTestsConfiguration;
 use DrdPlus\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\String\StringTools;
+use Granam\Tests\Tools\TestWithMockery;
 use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
 use Mockery\MockInterface;
 
-abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\AbstractContentTest
+abstract class AbstractContentTest extends TestWithMockery
 {
     use ClassesTrait;
 
@@ -46,10 +46,7 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
         }
     }
 
-    /**
-     * @return WebTestsConfiguration|TestsConfiguration
-     */
-    protected function getTestsConfiguration(): WebTestsConfiguration
+    protected function getTestsConfiguration(): TestsConfiguration
     {
         static $testsConfiguration;
         if ($testsConfiguration === null) {
@@ -592,7 +589,12 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
         return new WebVersions($git ?? $this->createGit(), $repositoryDir ?? $this->getDirs()->getProjectRoot());
     }
 
-    protected function createCurrentWebVersion(Configuration $configuration = null, Request $request = null, Git $git = null): CurrentWebVersion
+    protected function createCurrentWebVersion(
+        Configuration $configuration = null,
+        Request $request = null,
+        Git $git = null,
+        WebVersions $webVersions = null
+    ): CurrentWebVersion
     {
         /** @var CurrentWebVersion $currentWebVersionClass */
         $currentWebVersionClass = $this->getCurrentWebVersionClass();
@@ -600,8 +602,19 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
         return new $currentWebVersionClass(
             $configuration ?? $this->getConfiguration(),
             $request ?? $this->createRequest(),
-            $git ?? $this->createGit()
+            $git ?? $this->createGit(),
+            $webVersions ?? $this->createWebVersions($git)
         );
     }
 
+    protected function getProjectRoot(): string
+    {
+        static $projectRoot;
+        if ($projectRoot === null) {
+            self::assertDirectoryExists(\DRD_PLUS_PROJECT_ROOT, 'Project root has not been found');
+            $projectRoot = \DRD_PLUS_PROJECT_ROOT;
+        }
+
+        return $projectRoot;
+    }
 }

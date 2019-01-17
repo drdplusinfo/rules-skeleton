@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\HtmlHelper;
+use DrdPlus\RulesSkeleton\Web\DebugContactsBody;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 
@@ -24,16 +26,21 @@ class ContactsContentTest extends AbstractContentTest
     {
         static $debugContactsContent;
         if ($debugContactsContent === null) {
-            $debugContactsFile = $this->getVendorRoot() . '/drdplus/rules-skeleton-web/web/shared/debug_contacts.html';
-            if (!\file_exists($debugContactsFile)) {
-                throw new \LogicException(
-                    "Missing file $debugContactsFile, run 'composer require --dev drdplus/rules-skeleton-web' first"
-                );
-            }
-            $debugContactsContent = \file_get_contents($debugContactsFile);
+            $debugContactsBodyClass = $this->getDebugContactsBodyClass();
+            /** @var DebugContactsBody $debugContactsBody */
+            $debugContactsBody = new $debugContactsBodyClass();
+            $debugContactsContent = $debugContactsBody->getValue();
         }
 
         return $debugContactsContent;
+    }
+
+    /**
+     * @return string|DebugContactsBody
+     */
+    protected function getDebugContactsBodyClass(): string
+    {
+        return DebugContactsBody::class;
     }
 
     /**
@@ -89,7 +96,7 @@ class ContactsContentTest extends AbstractContentTest
     private function getDebugContactsElement(): ?Element
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->getHtmlDocument()->getElementById('debug_contacts');
+        return $this->getHtmlDocument()->getElementById(HtmlHelper::ID_DEBUG_CONTACTS);
     }
 
     private function guardDebugContactsAreNotEmpty(?Element $debugContactsElement): void

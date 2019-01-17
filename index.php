@@ -27,4 +27,4 @@ if ($controller->isRequestedWebVersionUpdate()) {
     return;
 }
 $controller->persistCurrentVersion();
-echo $controller->getContent()->getValue();
+echo $controller->getRulesContent()->getValue();

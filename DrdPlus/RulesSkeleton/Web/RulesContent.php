@@ -7,28 +7,29 @@ use DrdPlus\RulesSkeleton\Cache;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Redirect;
-use DrdPlus\RulesSkeletonWeb\RulesWebContent;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringInterface;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\Body;
 use Gt\Dom\Element;
 
-class Content extends StrictObject implements StringInterface
+class RulesContent extends StrictObject implements StringInterface
 {
     public const TABLES = 'tables';
     public const FULL = ' full';
     public const PDF = 'pdf';
     public const PASS = 'pass';
 
-    /** @var RulesWebContent */
-    private $rulesWebContent;
+    /** @var RulesMainContent */
+    private $rulesMainContent;
     /** @var HtmlHelper */
     private $htmlHelper;
     /** @var CurrentWebVersion */
     private $currentWebVersion;
     /** @var Head */
     private $head;
+    /** @var DebugContactsBody */
+    private $debugContactsBody;
     /** @var Menu */
     private $menu;
     /** @var Body */
@@ -43,19 +44,21 @@ class Content extends StrictObject implements StringInterface
     private $htmlDocument;
 
     public function __construct(
-        RulesWebContent $rulesWebContent,
-        HtmlHelper $htmlHelper,
-        CurrentWebVersion $currentWebVersion,
+        RulesMainContent $rulesMainContent,
         Menu $menu,
+        DebugContactsBody $debugContactsBody,
+        CurrentWebVersion $currentWebVersion,
         Cache $cache,
+        HtmlHelper $htmlHelper,
         string $contentType,
         ?Redirect $redirect
     )
     {
-        $this->rulesWebContent = $rulesWebContent;
+        $this->rulesMainContent = $rulesMainContent;
         $this->htmlHelper = $htmlHelper;
         $this->currentWebVersion = $currentWebVersion;
         $this->menu = $menu;
+        $this->debugContactsBody = $debugContactsBody;
         $this->cache = $cache;
         $this->contentType = $contentType;
         $this->redirect = $redirect;
@@ -79,7 +82,7 @@ class Content extends StrictObject implements StringInterface
     public function getValue(): string
     {
         if ($this->containsPdf()) {
-            return $this->rulesWebContent->getValue();
+            return $this->rulesMainContent->getValue();
         }
         $cachedContent = $this->getCachedContent();
         if ($cachedContent !== null) {
@@ -101,7 +104,7 @@ class Content extends StrictObject implements StringInterface
     protected function buildHtmlDocument(): HtmlDocument
     {
         if ($this->htmlDocument === null) {
-            $htmlDocument = $this->rulesWebContent->getHtmlDocument();
+            $htmlDocument = $this->rulesMainContent->getHtmlDocument();
 
             $patchVersion = $this->currentWebVersion->getCurrentPatchVersion();
             $htmlDocument->documentElement->setAttribute('data-content-version', $patchVersion);
@@ -112,6 +115,12 @@ class Content extends StrictObject implements StringInterface
             $headElement->setAttribute('id', HtmlHelper::ID_MENU_WRAPPER);
             $headElement->prop_set_innerHTML($this->menu->getValue());
             $htmlDocument->body->insertBefore($headElement, $htmlDocument->body->firstElementChild);
+
+            /** @var Element $debugContactsElement */
+            $debugContactsElement = $htmlDocument->createElement('div');
+            $debugContactsElement->setAttribute('id', HtmlHelper::ID_DEBUG_CONTACTS);
+            $debugContactsElement->prop_set_innerHTML($this->debugContactsBody->getValue());
+            $htmlDocument->body->appendChild($debugContactsElement);
 
             $htmlHelper = $this->htmlHelper;
             $htmlHelper->addIdsToTables($htmlDocument);
