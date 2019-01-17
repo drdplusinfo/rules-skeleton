@@ -57,6 +57,7 @@ class Configuration extends StrictObject
         $this->guardValidEshopUrl($settings);
         $this->guardSetProtectedAccess($settings);
         $this->guardSetShowHomeButton($settings);
+        $this->guardSetShowDebugContacts($settings);
         $this->guardValidFaviconUrl($settings);
         $this->settings = $settings;
     }
