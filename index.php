@@ -22,8 +22,7 @@ $controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController($service
 $controller->sendCustomHeaders();
 
 if ($controller->isRequestedWebVersionUpdate()) {
-    $controller->updateWebVersion();
-    echo 'OK';
+    echo $controller->updateCode();
 
     return;
 }

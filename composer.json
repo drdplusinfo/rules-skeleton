@@ -22,6 +22,10 @@
     {
       "type": "vcs",
       "url": "/home/jaroslav/projects/drdplus/web-versions"
+    },
+    {
+      "type": "vcs",
+      "url": "/home/jaroslav/projects/granam/git"
     }
   ],
   "require": {

@@ -53,7 +53,7 @@ class ServicesContainerTest extends AbstractContentTest
         self::assertTrue($servicesContainer->getWebCache()->isInProduction(), 'Expected page cache to be in production mode');
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper(null, false /* not in production */));
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
         self::assertFalse($servicesContainer->getWebCache()->isInProduction(), 'Expected page cache to be not in production mode');
     }
 

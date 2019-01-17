@@ -589,10 +589,7 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
 
     protected function createWebVersions(Git $git = null, string $repositoryDir = null): WebVersions
     {
-        return new WebVersions(
-            $git ?? $this->createGit(),
-            $repositoryDir ?? $this->getDirs()->getVersionRoot($this->getConfiguration()->getWebLastStableMinorVersion())
-        );
+        return new WebVersions($git ?? $this->createGit(), $repositoryDir ?? $this->getDirs()->getProjectRoot());
     }
 
     protected function createCurrentWebVersion(Configuration $configuration = null, Request $request = null, Git $git = null): CurrentWebVersion

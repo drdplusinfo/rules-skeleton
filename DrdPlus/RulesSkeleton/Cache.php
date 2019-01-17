@@ -91,21 +91,11 @@ class Cache extends StrictObject
         return $this->getCacheFileBaseNamePartWithoutRequest() . '_' . $this->getCurrentRequestHash();
     }
 
-    /**
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
-     */
     private function getCacheFileName(): string
     {
         return $this->getCacheDir() . "/{$this->getCacheId()}.html";
     }
 
-    /**
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
-     */
     private function getCacheFileBaseNamePartWithoutRequest(): string
     {
         $prefix = \md5($this->getCachePrefix() . $this->getGitStamp());
@@ -118,10 +108,6 @@ class Cache extends StrictObject
         return $this->cachePrefix;
     }
 
-    /**
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
-     */
     private function getGitStamp(): string
     {
         if ($this->isInProduction()) {
@@ -174,11 +160,6 @@ class Cache extends StrictObject
         return $this->getCacheDir() . "/{$this->geCacheDebugFileBaseNamePartWithoutGet()}_{$this->getCurrentRequestHash()}.html";
     }
 
-    /**
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
-     */
     private function geCacheDebugFileBaseNamePartWithoutGet(): string
     {
         return 'debug_' . $this->getCacheFileBaseNamePartWithoutRequest();

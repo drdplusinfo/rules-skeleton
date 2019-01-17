@@ -88,6 +88,7 @@ class ContactsContentTest extends AbstractContentTest
 
     private function getDebugContactsElement(): ?Element
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getHtmlDocument()->getElementById('debug_contacts');
     }
 

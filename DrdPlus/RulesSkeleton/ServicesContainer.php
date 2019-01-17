@@ -95,7 +95,12 @@ class ServicesContainer extends StrictObject
     public function getCurrentWebVersion(): CurrentWebVersion
     {
         if ($this->currentWebVersion === null) {
-            $this->currentWebVersion = new CurrentWebVersion($this->getConfiguration(), $this->getRequest(), $this->getGit());
+            $this->currentWebVersion = new CurrentWebVersion(
+                $this->getConfiguration(),
+                $this->getRequest(),
+                $this->getGit(),
+                $this->getWebVersions()
+            );
         }
 
         return $this->currentWebVersion;
@@ -104,7 +109,7 @@ class ServicesContainer extends StrictObject
     public function getWebVersions(): WebVersions
     {
         if ($this->webVersions === null) {
-            $this->webVersions = new WebVersions($this->getGit(), $this->getCurrentWebVersion()->getCurrentVersionRoot());
+            $this->webVersions = new WebVersions($this->getGit(), $this->getDirs()->getProjectRoot());
         }
 
         return $this->webVersions;
@@ -294,7 +299,7 @@ class ServicesContainer extends StrictObject
     public function getWebFiles(): WebFiles
     {
         if ($this->webFiles === null) {
-            $this->webFiles = new WebFiles($this->getDirs(), $this->getCurrentWebVersion());
+            $this->webFiles = new WebFiles($this->getDirs());
         }
 
         return $this->webFiles;

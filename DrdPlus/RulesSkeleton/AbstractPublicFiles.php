@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton\Partials;
+namespace DrdPlus\RulesSkeleton;
 
 use Granam\Strict\Object\StrictObject;
 

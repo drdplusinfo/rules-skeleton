@@ -53,16 +53,12 @@ class RulesController extends StrictObject
         return $this->servicesContainer->getRequest()->getValue(Request::UPDATE) === 'web';
     }
 
-    public function updateWebVersion(): int
+    public function updateCode(): string
     {
-        $updatedVersions = 0;
-        // sadly we do not know which version has been updated, so we will update all of them
-        foreach ($this->servicesContainer->getWebVersions()->getAllMinorVersions() as $version) {
-            $this->servicesContainer->getCurrentWebVersion()->update($version);
-            $updatedVersions++;
-        }
-
-        return $updatedVersions;
+        return \implode(
+            "\n",
+            $this->servicesContainer->getGit()->update($this->servicesContainer->getDirs()->getProjectRoot())
+        );
     }
 
     public function persistCurrentVersion(): bool

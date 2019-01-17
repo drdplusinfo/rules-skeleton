@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\Cache;
-use DrdPlus\RulesSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;

@@ -6,7 +6,7 @@ namespace DrdPlus\RulesSkeleton;
 class Dirs extends \Granam\WebContentBuilder\Dirs
 {
     /** @var string */
-    private $dirForVersions;
+    private $webRoot;
     /** @var string */
     private $cacheRoot;
     /** @var string */
@@ -18,31 +18,16 @@ class Dirs extends \Granam\WebContentBuilder\Dirs
         $this->populateSubRoots($projectRoot);
     }
 
-    private function populateSubRoots(string $documentRoot): void
+    private function populateSubRoots(string $projectRoot): void
     {
-        $this->dirForVersions = $documentRoot . '/versions';
-        $this->cacheRoot = $documentRoot . '/cache/' . \PHP_SAPI;
-        $this->pdfRoot = $documentRoot . '/pdf';
-    }
-
-    public function getDirForVersions(): string
-    {
-        return $this->dirForVersions;
+        $this->webRoot = $projectRoot . '/web';
+        $this->cacheRoot = $projectRoot . '/cache/' . \PHP_SAPI;
+        $this->pdfRoot = $projectRoot . '/pdf';
     }
 
     public function getCacheRoot(): string
     {
         return $this->cacheRoot;
-    }
-
-    public function getVersionRoot(string $forVersion): string
-    {
-        return $this->getDirForVersions() . '/' . $forVersion;
-    }
-
-    public function getVersionWebRoot(string $forVersion): string
-    {
-        return $this->getVersionRoot($forVersion) . '/web';
     }
 
     public function getPdfRoot(): string
