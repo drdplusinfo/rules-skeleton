@@ -6,6 +6,7 @@ namespace DrdPlus\Tests\RulesSkeleton\Partials;
 use DeviceDetector\Parser\Bot;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\CookiesService;
+use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
@@ -14,6 +15,7 @@ use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
 use DrdPlus\Tests\RulesSkeletonWeb\WebTestsConfiguration;
+use DrdPlus\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\String\StringTools;
 use Granam\WebContentBuilder\HtmlDocument;
@@ -584,4 +586,25 @@ abstract class AbstractContentTest extends \DrdPlus\Tests\RulesSkeletonWeb\Abstr
     {
         return $this->getDirs()->getVendorRoot();
     }
+
+    protected function createWebVersions(Git $git = null, string $repositoryDir = null): WebVersions
+    {
+        return new WebVersions(
+            $git ?? $this->createGit(),
+            $repositoryDir ?? $this->getDirs()->getVersionRoot($this->getConfiguration()->getWebLastStableMinorVersion())
+        );
+    }
+
+    protected function createCurrentWebVersion(Configuration $configuration = null, Request $request = null, Git $git = null): CurrentWebVersion
+    {
+        /** @var CurrentWebVersion $currentWebVersionClass */
+        $currentWebVersionClass = $this->getCurrentWebVersionClass();
+
+        return new $currentWebVersionClass(
+            $configuration ?? $this->getConfiguration(),
+            $request ?? $this->createRequest(),
+            $git ?? $this->createGit()
+        );
+    }
+
 }

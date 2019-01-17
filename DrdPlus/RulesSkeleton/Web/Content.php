@@ -5,7 +5,7 @@ namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Cache;
 use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\RulesSkeleton\CurrentWebVersions;
+use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Redirect;
 use DrdPlus\RulesSkeletonWeb\RulesWebContent;
 use Granam\Strict\Object\StrictObject;
@@ -25,8 +25,8 @@ class Content extends StrictObject implements StringInterface
     private $rulesWebContent;
     /** @var HtmlHelper */
     private $htmlHelper;
-    /** @var CurrentWebVersions */
-    private $webVersions;
+    /** @var CurrentWebVersion */
+    private $currentWebVersion;
     /** @var Head */
     private $head;
     /** @var Menu */
@@ -45,7 +45,7 @@ class Content extends StrictObject implements StringInterface
     public function __construct(
         RulesWebContent $rulesWebContent,
         HtmlHelper $htmlHelper,
-        CurrentWebVersions $webVersions,
+        CurrentWebVersion $currentWebVersion,
         Menu $menu,
         Cache $cache,
         string $contentType,
@@ -54,7 +54,7 @@ class Content extends StrictObject implements StringInterface
     {
         $this->rulesWebContent = $rulesWebContent;
         $this->htmlHelper = $htmlHelper;
-        $this->webVersions = $webVersions;
+        $this->currentWebVersion = $currentWebVersion;
         $this->menu = $menu;
         $this->cache = $cache;
         $this->contentType = $contentType;
@@ -103,7 +103,7 @@ class Content extends StrictObject implements StringInterface
         if ($this->htmlDocument === null) {
             $htmlDocument = $this->rulesWebContent->getHtmlDocument();
 
-            $patchVersion = $this->webVersions->getCurrentPatchVersion();
+            $patchVersion = $this->currentWebVersion->getCurrentPatchVersion();
             $htmlDocument->documentElement->setAttribute('data-content-version', $patchVersion);
             $htmlDocument->documentElement->setAttribute('data-cached-at', \date(\DATE_ATOM));
 

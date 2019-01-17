@@ -13,6 +13,7 @@ use DrdPlus\RulesSkeleton\Web\PdfBody;
 use DrdPlus\RulesSkeleton\Web\TablesBody;
 use DrdPlus\RulesSkeleton\Web\WebFiles;
 use DrdPlus\RulesSkeletonWeb\RulesWebContent;
+use DrdPlus\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringTools;
@@ -23,8 +24,10 @@ use Granam\WebContentBuilder\Web\JsFiles;
 class ServicesContainer extends StrictObject
 {
 
-    /** @var CurrentWebVersions */
-    protected $currentWebVersions;
+    /** @var CurrentWebVersion */
+    protected $currentWebVersion;
+    /** @var WebVersions */
+    protected $webVersions;
     /** @var Git */
     protected $git;
     /** @var Configuration */
@@ -89,13 +92,22 @@ class ServicesContainer extends StrictObject
         return $this->configuration;
     }
 
-    public function getCurrentWebVersions(): CurrentWebVersions
+    public function getCurrentWebVersion(): CurrentWebVersion
     {
-        if ($this->currentWebVersions === null) {
-            $this->currentWebVersions = new CurrentWebVersions($this->getConfiguration(), $this->getRequest(), $this->getGit());
+        if ($this->currentWebVersion === null) {
+            $this->currentWebVersion = new CurrentWebVersion($this->getConfiguration(), $this->getRequest(), $this->getGit());
         }
 
-        return $this->currentWebVersions;
+        return $this->currentWebVersion;
+    }
+
+    public function getWebVersions(): WebVersions
+    {
+        if ($this->webVersions === null) {
+            $this->webVersions = new WebVersions($this->getGit(), $this->getCurrentWebVersion()->getCurrentVersionRoot());
+        }
+
+        return $this->webVersions;
     }
 
     public function getRequest(): Request
@@ -182,7 +194,7 @@ class ServicesContainer extends StrictObject
     {
         if ($this->webCache === null) {
             $this->webCache = new WebCache(
-                $this->getCurrentWebVersions(),
+                $this->getCurrentWebVersion(),
                 $this->getConfiguration()->getDirs(),
                 $this->getRequest(),
                 $this->getGit(),
@@ -196,7 +208,7 @@ class ServicesContainer extends StrictObject
     public function getMenu(): Menu
     {
         if ($this->menu === null) {
-            $this->menu = new Menu($this->getConfiguration(), $this->getCurrentWebVersions(), $this->getRequest());
+            $this->menu = new Menu($this->getConfiguration(), $this->getWebVersions(), $this->getCurrentWebVersion(), $this->getRequest());
         }
 
         return $this->menu;
@@ -244,7 +256,7 @@ class ServicesContainer extends StrictObject
     {
         if ($this->tablesWebCache === null) {
             $this->tablesWebCache = new Cache(
-                $this->getCurrentWebVersions(),
+                $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 $this->getRequest(),
                 $this->getGit(),
@@ -282,7 +294,7 @@ class ServicesContainer extends StrictObject
     public function getWebFiles(): WebFiles
     {
         if ($this->webFiles === null) {
-            $this->webFiles = new WebFiles($this->getDirs(), $this->getCurrentWebVersions());
+            $this->webFiles = new WebFiles($this->getDirs(), $this->getCurrentWebVersion());
         }
 
         return $this->webFiles;
@@ -311,7 +323,7 @@ class ServicesContainer extends StrictObject
     {
         if ($this->passWebCache === null) {
             $this->passWebCache = new WebCache(
-                $this->getCurrentWebVersions(),
+                $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 $this->getRequest(),
                 $this->getGit(),
@@ -327,7 +339,7 @@ class ServicesContainer extends StrictObject
     {
         if ($this->passedWebCache === null) {
             $this->passedWebCache = new WebCache(
-                $this->getCurrentWebVersions(),
+                $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 $this->getRequest(),
                 $this->getGit(),
@@ -381,13 +393,18 @@ class ServicesContainer extends StrictObject
 
     public function getEmptyMenu(): EmptyMenu
     {
-        return new EmptyMenu($this->getConfiguration(), $this->getCurrentWebVersions(), $this->getRequest());
+        return new EmptyMenu(
+            $this->getConfiguration(),
+            $this->getWebVersions(),
+            $this->getCurrentWebVersion(),
+            $this->getRequest()
+        );
     }
 
     public function getDummyWebCache(): DummyWebCache
     {
         return new DummyWebCache(
-            $this->getCurrentWebVersions(),
+            $this->getCurrentWebVersion(),
             $this->getDirs(),
             $this->getRequest(),
             $this->getGit(),

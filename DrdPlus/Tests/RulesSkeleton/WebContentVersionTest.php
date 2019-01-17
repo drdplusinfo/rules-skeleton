@@ -5,7 +5,6 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\Request;
-use DrdPlus\RulesSkeleton\CurrentWebVersions;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
@@ -61,7 +60,7 @@ class WebContentVersionTest extends AbstractContentTest
      */
     public function I_can_switch_to_every_version(string $source): void
     {
-        $webVersions = new CurrentWebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
+        $webVersions = $this->createWebVersions();
         foreach ($webVersions->getAllMinorVersions() as $webVersion) {
             $post = [];
             $cookies = [];
@@ -109,21 +108,21 @@ class WebContentVersionTest extends AbstractContentTest
 
             return;
         }
-        $webVersions = new CurrentWebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
+        $webVersions = $this->createWebVersions();
         $tags = $this->runCommand('git tag | grep -P "([[:digit:]]+[.]){2}[[:alnum:]]+([.][[:digit:]]+)?" --only-matching');
         self::assertNotEmpty(
             $tags,
             'Some patch-version tags expected for versions: '
             . \implode(',', $webVersions->getAllStableMinorVersions())
         );
-        foreach ($webVersions->getAllStableMinorVersions() as $stableVersion) {
+        foreach ($webVersions->getAllStableMinorVersions() as $stableMinorVersion) {
             $stableVersionTags = [];
             foreach ($tags as $tag) {
-                if (\strpos($tag, $stableVersion) === 0) {
+                if (\strpos($tag, $stableMinorVersion) === 0) {
                     $stableVersionTags[] = $tag;
                 }
             }
-            self::assertNotEmpty($stableVersionTags, "No tags found for $stableVersion, got only " . \print_r($tags, true));
+            self::assertNotEmpty($stableVersionTags, "No tags found for $stableMinorVersion, got only " . \print_r($tags, true));
         }
     }
 
@@ -150,8 +149,8 @@ class WebContentVersionTest extends AbstractContentTest
 
             return;
         }
-        $webVersions = new CurrentWebVersions($configuration = $this->getConfiguration(), $this->createRequest(), $this->createGit());
-        $projectRoot = $configuration->getDirs()->getProjectRoot();
+        $webVersions = $this->createWebVersions();
+        $projectRoot = $this->getProjectRoot();
         $checked = 0;
         foreach ($webVersions->getAllStableMinorVersions() as $stableVersion) {
             $htmlDocument = $this->getHtmlDocument([Request::VERSION => $stableVersion]);
@@ -186,7 +185,6 @@ class WebContentVersionTest extends AbstractContentTest
     public function I_will_get_content_of_last_stable_version_if_requested_does_not_exists(): void
     {
         $patchVersion = $this->getHtmlDocument([Request::VERSION => '999.9'])->documentElement->getAttribute('data-content-version');
-        $webVersions = new CurrentWebVersions($this->getConfiguration(), $this->createRequest(), $this->createGit());
-        self::assertSame($webVersions->getLastStablePatchVersion(), $patchVersion);
+        self::assertSame($this->createWebVersions()->getLastStablePatchVersion(), $patchVersion);
     }
 }

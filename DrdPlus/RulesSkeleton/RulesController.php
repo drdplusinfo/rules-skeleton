@@ -57,8 +57,8 @@ class RulesController extends StrictObject
     {
         $updatedVersions = 0;
         // sadly we do not know which version has been updated, so we will update all of them
-        foreach ($this->servicesContainer->getCurrentWebVersions()->getAllMinorVersions() as $version) {
-            $this->servicesContainer->getCurrentWebVersions()->update($version);
+        foreach ($this->servicesContainer->getWebVersions()->getAllMinorVersions() as $version) {
+            $this->servicesContainer->getCurrentWebVersion()->update($version);
             $updatedVersions++;
         }
 
@@ -68,7 +68,7 @@ class RulesController extends StrictObject
     public function persistCurrentVersion(): bool
     {
         return $this->servicesContainer->getCookiesService()->setMinorVersionCookie(
-            $this->servicesContainer->getCurrentWebVersions()->getCurrentMinorVersion()
+            $this->servicesContainer->getCurrentWebVersion()->getCurrentMinorVersion()
         );
     }
 
@@ -82,7 +82,7 @@ class RulesController extends StrictObject
             $this->content = new Content(
                 $servicesContainer->getRulesTablesWebContent(),
                 $servicesContainer->getHtmlHelper(),
-                $servicesContainer->getCurrentWebVersions(),
+                $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getMenu(),
                 $servicesContainer->getTablesWebCache(),
                 Content::TABLES,
@@ -95,7 +95,7 @@ class RulesController extends StrictObject
             $this->content = new Content(
                 $servicesContainer->getRulesPdfWebContent(),
                 $servicesContainer->getHtmlHelper(),
-                $servicesContainer->getCurrentWebVersions(),
+                $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getEmptyMenu(),
                 $servicesContainer->getDummyWebCache(),
                 Content::PDF,
@@ -108,7 +108,7 @@ class RulesController extends StrictObject
             $this->content = new Content(
                 $servicesContainer->getRulesPassWebContent(),
                 $servicesContainer->getHtmlHelper(),
-                $servicesContainer->getCurrentWebVersions(),
+                $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getMenu(),
                 $servicesContainer->getPassWebCache(),
                 Content::PASS,
@@ -120,7 +120,7 @@ class RulesController extends StrictObject
         $this->content = new Content(
             $servicesContainer->getRulesWebContent(),
             $servicesContainer->getHtmlHelper(),
-            $servicesContainer->getCurrentWebVersions(),
+            $servicesContainer->getCurrentWebVersion(),
             $servicesContainer->getMenu(),
             $servicesContainer->getWebCache(),
             Content::FULL,

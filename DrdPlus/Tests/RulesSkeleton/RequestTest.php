@@ -173,15 +173,15 @@ class RequestTest extends TestWithMockery
      * @dataProvider provideTablesIdsParameterName
      * @param string $parameterName
      */
-    public function I_can_get_wanted_tables_ids(string $parameterName): void
+    public function I_can_get_requested_tables_ids(string $parameterName): void
     {
-        self::assertSame([], (new Request(new Bot()))->getWantedTablesIds());
+        self::assertSame([], (new Request(new Bot()))->getRequestedTablesIds());
         $_GET[$parameterName] = '    ';
-        self::assertSame([], (new Request(new Bot()))->getWantedTablesIds());
+        self::assertSame([], (new Request(new Bot()))->getRequestedTablesIds());
         $_GET[$parameterName] = 'foo';
-        self::assertSame(['foo'], (new Request(new Bot()))->getWantedTablesIds());
+        self::assertSame(['foo'], (new Request(new Bot()))->getRequestedTablesIds());
         $_GET[$parameterName] .= ',bar,baz';
-        self::assertSame(['foo', 'bar', 'baz'], (new Request(new Bot()))->getWantedTablesIds());
+        self::assertSame(['foo', 'bar', 'baz'], (new Request(new Bot()))->getRequestedTablesIds());
         unset($_GET[$parameterName]); // to avoid using this in next iteration as @backupGlobals does not work
     }
 
@@ -226,5 +226,25 @@ class RequestTest extends TestWithMockery
     {
         $request = new Request(new Bot());
         self::assertSame(\PHP_SAPI, $request->getPhpSapi());
+    }
+
+    /**
+     * @test
+     * @backupGlobals enabled
+     */
+    public function I_can_get_requested_version(): void
+    {
+        $request = new Request(new Bot());
+        self::assertNull($request->getRequestedVersion());
+        $_GET[Request::VERSION] = '1.2.3';
+        self::assertSame('1.2.3', $request->getRequestedVersion());
+        $_GET[Request::VERSION] = null;
+        $_POST[Request::VERSION] = '4.5.6';
+        self::assertSame('4.5.6', $request->getRequestedVersion());
+        $_POST[Request::VERSION] = null;
+        $_COOKIE[Request::VERSION] = '123.456.789';
+        self::assertSame('123.456.789', $request->getRequestedVersion());
+        $_COOKIE[Request::VERSION] = null;
+        self::assertNull($request->getRequestedVersion());
     }
 }

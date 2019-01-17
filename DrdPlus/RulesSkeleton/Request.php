@@ -107,7 +107,7 @@ class Request extends StrictObject
     /**
      * @return array|string[]
      */
-    public function getWantedTablesIds(): array
+    public function getRequestedTablesIds(): array
     {
         $wantedTableIds = \array_map(
             function (string $id) {
@@ -147,5 +147,10 @@ class Request extends StrictObject
     public function getPhpSapi(): string
     {
         return \PHP_SAPI;
+    }
+
+    public function getRequestedVersion(): ?string
+    {
+        return $this->getValue(static::VERSION);
     }
 }

@@ -26,7 +26,7 @@ class TablesBody extends Body
     {
         $rawContent = parent::getValue();
         $rawContentDocument = new HtmlDocument($rawContent);
-        $tables = $this->htmlHelper->findTablesWithIds($rawContentDocument, $this->request->getWantedTablesIds());
+        $tables = $this->htmlHelper->findTablesWithIds($rawContentDocument, $this->request->getRequestedTablesIds());
         $tablesContent = '';
         foreach ($tables as $table) {
             $tablesContent .= $table->outerHTML . "\n";

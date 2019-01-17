@@ -8,7 +8,7 @@ use Granam\Git\Git;
 class WebCache extends Cache
 {
     public function __construct(
-        CurrentWebVersions $webVersions,
+        CurrentWebVersion $currentWebVersion,
         Dirs $dirs,
         Request $request,
         Git $git,
@@ -16,6 +16,6 @@ class WebCache extends Cache
         string $cachePrefix = null
     )
     {
-        parent::__construct($webVersions, $dirs, $request, $git, $isInProduction, $cachePrefix ?? 'page-' . \md5($dirs->getCacheRoot()));
+        parent::__construct($currentWebVersion, $dirs, $request, $git, $isInProduction, $cachePrefix ?? 'page-' . \md5($dirs->getCacheRoot()));
     }
 }

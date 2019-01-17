@@ -7,16 +7,16 @@ use DrdPlus\RulesSkeleton\Cache;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesController;
-use DrdPlus\RulesSkeleton\CurrentWebVersions;
+use DrdPlus\RulesSkeleton\CurrentWebVersion;
 
 trait ClassesTrait
 {
     /**
-     * @return string|CurrentWebVersions
+     * @return string|CurrentWebVersion
      */
-    protected function getWebVersionsClass(): string
+    protected function getCurrentWebVersionClass(): string
     {
-        return CurrentWebVersions::class;
+        return CurrentWebVersion::class;
     }
 
     /**

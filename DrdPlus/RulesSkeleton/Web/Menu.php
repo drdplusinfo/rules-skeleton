@@ -5,7 +5,8 @@ namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\Request;
-use DrdPlus\RulesSkeleton\CurrentWebVersions;
+use DrdPlus\RulesSkeleton\CurrentWebVersion;
+use DrdPlus\WebVersions\WebVersions;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringInterface;
 
@@ -13,15 +14,18 @@ class Menu extends StrictObject implements StringInterface
 {
     /** @var Configuration */
     private $configuration;
-    /** @var CurrentWebVersions */
+    /** @var WebVersions */
     private $webVersions;
+    /** @var CurrentWebVersion */
+    private $currentWebVersion;
     /** @var Request */
     private $request;
 
-    public function __construct(Configuration $configuration, CurrentWebVersions $webVersions, Request $request)
+    public function __construct(Configuration $configuration, WebVersions $webVersions, CurrentWebVersion $currentWebVersion, Request $request)
     {
         $this->configuration = $configuration;
         $this->webVersions = $webVersions;
+        $this->currentWebVersion = $currentWebVersion;
         $this->request = $request;
     }
 
@@ -49,7 +53,7 @@ HTML;
         $allVersions = $webVersions->getAllMinorVersions();
         $versions = '';
         if (\count($allVersions) > 1) {
-            $currentVersion = $webVersions->getCurrentMinorVersion();
+            $currentVersion = $this->getCurrentWebVersion()->getCurrentMinorVersion();
             $otherVersionsArray = [];
             foreach ($webVersions->getAllMinorVersions() as $webVersion) {
                 if ($webVersion === $currentVersion) {
@@ -113,7 +117,12 @@ HTML;
         return $this->configuration;
     }
 
-    protected function getWebVersions(): CurrentWebVersions
+    protected function getCurrentWebVersion(): CurrentWebVersion
+    {
+        return $this->currentWebVersion;
+    }
+
+    protected function getWebVersions(): WebVersions
     {
         return $this->webVersions;
     }

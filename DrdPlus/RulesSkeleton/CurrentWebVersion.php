@@ -11,15 +11,13 @@ use Granam\Strict\Object\StrictObject;
 /**
  * Reader of GIT tags defining available versions of web filesF
  */
-class CurrentWebVersions extends StrictObject implements CurrentMinorVersionProvider, CurrentPatchVersionProvider
+class CurrentWebVersion extends StrictObject implements CurrentMinorVersionProvider, CurrentPatchVersionProvider
 {
 
     public const LAST_UNSTABLE_VERSION = 'master';
 
     /** @var Configuration */
     private $configuration;
-    /** @var string */
-    private $lastStableMinorVersion;
     /** @var string */
     private $currentCommitHash;
     /** @var string */
@@ -28,6 +26,8 @@ class CurrentWebVersions extends StrictObject implements CurrentMinorVersionProv
     private $existingMinorVersions = [];
     /** @var string */
     private $lastUnstableVersionRoot;
+    /** @var string */
+    private $currentVersionRoot;
     /** @var Request */
     private $request;
     /** @var Git */
@@ -42,26 +42,35 @@ class CurrentWebVersions extends StrictObject implements CurrentMinorVersionProv
         $this->git = $git;
     }
 
+    public function getCurrentVersionRoot(): string
+    {
+        if ($this->currentVersionRoot === null) {
+            $this->ensureMinorVersionExists($this->getCurrentMinorVersion());
+            $this->currentVersionRoot = $this->configuration->getDirs()->getVersionRoot($this->getCurrentMinorVersion());
+        }
+
+        return $this->currentVersionRoot;
+    }
+
     /**
-     * Intentionally are versions taken from branches only, not tags, to lower amount of versions to switch into.
-     * @return array|string[]
+     * @return string probably 'master'
      */
-    public function getAllMinorVersions(): array
+    private function getLastUnstableVersion(): string
     {
-        return $this->getWebVersionsReader()->getAllMinorVersions();
+        return static::LAST_UNSTABLE_VERSION;
     }
 
-    public function getAllStableMinorVersions(): array
+    private function hasMinorVersion(string $version): bool
     {
-        return $this->getWebVersionsReader()->getAllStableMinorVersions();
+        return $this->getWebVersions()->hasMinorVersion($version);
     }
 
-    private function getWebVersionsReader(): \DrdPlus\WebVersions\WebVersions
+    private function getWebVersions(): \DrdPlus\WebVersions\WebVersions
     {
         if (($this->webVersions ?? null) === null) {
             $this->webVersions = new \DrdPlus\WebVersions\WebVersions(
                 $this->git,
-                $this->getLastUnstableVersionWebRoot(),
+                $this->getLastUnstableVersionRoot(),
                 $this->getLastUnstableVersion()
             );
         }
@@ -69,7 +78,7 @@ class CurrentWebVersions extends StrictObject implements CurrentMinorVersionProv
         return $this->webVersions;
     }
 
-    private function getLastUnstableVersionWebRoot(): string
+    private function getLastUnstableVersionRoot(): string
     {
         if ($this->lastUnstableVersionRoot === null) {
             $this->ensureMinorVersionExists($this->getLastUnstableVersion());
@@ -77,41 +86,6 @@ class CurrentWebVersions extends StrictObject implements CurrentMinorVersionProv
         }
 
         return $this->lastUnstableVersionRoot;
-    }
-
-    /**
-     * Gives last STABLE version, if any, or 'master' if not
-     * @return string
-     */
-    public function getLastStableMinorVersion(): string
-    {
-        return $this->lastStableMinorVersion = $this->getWebVersionsReader()->getLastStableMinorVersion();
-    }
-
-    /**
-     * Gives last STABLE patch version, if any, or 'master' if not
-     * @return string
-     */
-    public function getLastStablePatchVersion(): string
-    {
-        return $this->getWebVersionsReader()->getLastStablePatchVersion();
-    }
-
-    /**
-     * @return string probably 'master'
-     */
-    public function getLastUnstableVersion(): string
-    {
-        return static::LAST_UNSTABLE_VERSION;
-    }
-
-    /**
-     * @param string $version
-     * @return bool
-     */
-    public function hasMinorVersion(string $version): bool
-    {
-        return $this->getWebVersionsReader()->hasMinorVersion($version);
     }
 
     public function getCurrentPatchVersion(): string
@@ -125,17 +99,12 @@ class CurrentWebVersions extends StrictObject implements CurrentMinorVersionProv
 
     public function getCurrentMinorVersion(): string
     {
-        $requestedMinorVersion = $this->request->getValue(Request::VERSION);
+        $requestedMinorVersion = $this->request->getRequestedVersion();
         if ($requestedMinorVersion && $this->hasMinorVersion($requestedMinorVersion)) {
             return $requestedMinorVersion;
         }
 
         return $this->configuration->getWebLastStableMinorVersion();
-    }
-
-    public function getVersionHumanName(string $version): string
-    {
-        return $this->getWebVersionsReader()->getVersionHumanName($version);
     }
 
     /**
@@ -202,16 +171,6 @@ class CurrentWebVersions extends StrictObject implements CurrentMinorVersionProv
      */
     public function getLastPatchVersionOf(string $superiorVersion): string
     {
-        return $this->getWebVersionsReader()->getLastPatchVersionOf($superiorVersion);
-    }
-
-    public function getAllPatchVersions(): array
-    {
-        return $this->getWebVersionsReader()->getAllPatchVersions();
-    }
-
-    public function isCurrentVersionStable(): bool
-    {
-        return $this->getCurrentMinorVersion() !== $this->getLastUnstableVersion();
+        return $this->getWebVersions()->getLastPatchVersionOf($superiorVersion);
     }
 }
