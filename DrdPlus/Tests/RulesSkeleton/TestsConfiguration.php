@@ -6,7 +6,6 @@ namespace DrdPlus\Tests\RulesSkeleton;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidUrl;
 use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
-use DrdPlus\Tests\RulesSkeletonWeb\WebTestsConfiguration;
 use Granam\Strict\Object\StrictObject;
 use Granam\YamlReader\YamlFileReader;
 
@@ -171,7 +170,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     /**
      * @param array $values
      * @param bool $hasTables
-     * @throws \DrdPlus\Tests\RulesSkeletonWeb\Exceptions\MissingSomeExpectedTableIdsInTestsConfiguration
+     * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\MissingSomeExpectedTableIdsInTestsConfiguration
      */
     private function setSomeExpectedTableIds(array $values, bool $hasTables): void
     {

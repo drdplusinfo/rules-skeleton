@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton\Web;
 
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 
-class RulesWebContentTest extends AbstractContentTest
+class MainContentTest extends AbstractContentTest
 {
     /**
      * @test

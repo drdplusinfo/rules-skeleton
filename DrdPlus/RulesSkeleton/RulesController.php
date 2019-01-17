@@ -78,7 +78,6 @@ class RulesController extends StrictObject
             $this->content = new RulesContent(
                 $servicesContainer->getRulesTablesWebContent(),
                 $servicesContainer->getMenu(),
-                $servicesContainer->getDebugContactsBody(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getTablesWebCache(),
                 $servicesContainer->getHtmlHelper(),
@@ -92,7 +91,6 @@ class RulesController extends StrictObject
             $this->content = new RulesContent(
                 $servicesContainer->getRulesPdfWebContent(),
                 $servicesContainer->getEmptyMenu(),
-                $servicesContainer->getDebugContactsBody(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getDummyWebCache(),
                 $servicesContainer->getHtmlHelper(),
@@ -106,7 +104,6 @@ class RulesController extends StrictObject
             $this->content = new RulesContent(
                 $servicesContainer->getRulesPassWebContent(),
                 $servicesContainer->getMenu(),
-                $servicesContainer->getDebugContactsBody(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getPassWebCache(),
                 $servicesContainer->getHtmlHelper(),
@@ -119,7 +116,6 @@ class RulesController extends StrictObject
         $this->content = new RulesContent(
             $servicesContainer->getRulesWebContent(),
             $servicesContainer->getMenu(),
-            $servicesContainer->getDebugContactsBody(),
             $servicesContainer->getCurrentWebVersion(),
             $servicesContainer->getWebCache(),
             $servicesContainer->getHtmlHelper(),

@@ -1,14 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeletonWeb;
+namespace DrdPlus\Tests\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 use Gt\Dom\Node;
 
-class WebContentTest extends AbstractContentTest
+class RulesMainContentTest extends MainContentTest
 {
 
     /**

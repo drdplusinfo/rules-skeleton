@@ -149,15 +149,14 @@ class CurrentWebVersionTest extends AbstractContentTest
     {
         $webVersions = $this->createCurrentWebVersion();
         $currentCommitHash = $webVersions->getCurrentCommitHash(); // called before reading .git/HEAD to ensure it exists
-        $webRoot = $this->getDirs()->getWebRoot();
-        $lastCommitHashFromGitHeadFile = $this->getLastCommitHashFromGitHeadFile($webRoot);
+        $lastCommitHashFromGitHeadFile = $this->getLastCommitHashFromGitHeadFile($this->getProjectRoot());
         self::assertSame(
             $lastCommitHashFromGitHeadFile,
             $currentCommitHash,
-            sprintf(
+            \sprintf(
                 'Expected different last commit for version %s taken from dir %s',
                 $this->getTestsConfiguration()->getExpectedLastVersion(),
-                $webRoot
+                $this->getProjectRoot()
             )
         );
     }
@@ -225,12 +224,10 @@ class CurrentWebVersionTest extends AbstractContentTest
      */
     public function I_can_get_patch_versions(): void
     {
-        $tags = $this->runCommand(
-            'git -C ' . \escapeshellarg($this->getConfiguration()->getDirs()->getWebRoot()) . ' tag'
-        );
+        $tags = $this->runCommand(\sprintf('git -C %s tag', \escapeshellarg($this->getProjectRoot())));
         $expectedVersionTags = [];
         foreach ($tags as $tag) {
-            if (\preg_match('~^(\d+[.]){2}[[:alnum:]]+([.]\d+)?$~', $tag)) {
+            if (\preg_match('~^v?(\d+[.]){2}\d+$~', $tag)) {
                 $expectedVersionTags[] = $tag;
             }
         }

@@ -3,23 +3,30 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use DrdPlus\RulesSkeletonWeb\RulesWebContent;
+use DrdPlus\RulesSkeleton\Web\PdfBody;
+use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\Body;
+use Granam\WebContentBuilder\Web\HtmlContentInterface;
 
-class PdfContent extends RulesWebContent
+class PdfContent extends StrictObject implements HtmlContentInterface
 {
     /** @var Body */
-    private $body;
+    private $pdfBody;
 
-    public function __construct(Body $body)
+    public function __construct(PdfBody $pdfBody)
     {
-        $this->body = $body;
+        $this->pdfBody = $pdfBody;
+    }
+
+    public function __toString()
+    {
+        return $this->getValue();
     }
 
     public function getValue(): string
     {
-        return $this->body->getValue();
+        return $this->pdfBody->getValue();
     }
 
     public function getHtmlDocument(): HtmlDocument

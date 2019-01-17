@@ -61,6 +61,7 @@ class TestsTest extends AbstractContentTest
             GraphicsTest::class,
             TestsConfigurationTest::class,
             RulesSkeletonExceptionsHierarchyTest::class,
+            RulesSkeletonTestsExceptionsHierarchyTest::class,
             TablesTest::class,
             GoogleTest::class,
             WebContentVersionTest::class,

@@ -7,6 +7,7 @@ use DeviceDetector\Parser\Bot;
 use DrdPlus\RulesSkeleton\Web\DebugContactsBody;
 use DrdPlus\RulesSkeleton\Web\EmptyMenu;
 use DrdPlus\RulesSkeleton\Web\Head;
+use DrdPlus\RulesSkeleton\Web\MainContent;
 use DrdPlus\RulesSkeleton\Web\Menu;
 use DrdPlus\RulesSkeleton\Web\Pass;
 use DrdPlus\RulesSkeleton\Web\PassBody;
@@ -20,6 +21,7 @@ use Granam\Strict\Object\StrictObject;
 use Granam\String\StringTools;
 use Granam\WebContentBuilder\Web\Body;
 use Granam\WebContentBuilder\Web\CssFiles;
+use Granam\WebContentBuilder\Web\HtmlContentInterface;
 use Granam\WebContentBuilder\Web\JsFiles;
 
 class ServicesContainer extends StrictObject
@@ -61,7 +63,7 @@ class ServicesContainer extends StrictObject
     protected $rulesWebContent;
     /** @var RulesMainContent */
     protected $rulesTablesWebContent;
-    /** @var RulesMainContent */
+    /** @var HtmlContentInterface */
     protected $rulesPdfWebContent;
     /** @var RulesMainContent */
     protected $rulesPassWebContent;
@@ -151,17 +153,18 @@ class ServicesContainer extends StrictObject
             $this->rulesWebContent = new RulesMainContent(
                 $this->getHtmlHelper(),
                 $this->getHead(),
-                $this->getBody()
+                $this->getBody(),
+                $this->getDebugContactsBody()
             );
         }
 
         return $this->rulesWebContent;
     }
 
-    public function getRulesTablesWebContent(): RulesMainContent
+    public function getRulesTablesWebContent(): MainContent
     {
         if ($this->rulesTablesWebContent === null) {
-            $this->rulesTablesWebContent = new RulesMainContent(
+            $this->rulesTablesWebContent = new MainContent(
                 $this->getHtmlHelper(),
                 $this->getHeadForTables(),
                 $this->getTablesBody()
@@ -171,7 +174,7 @@ class ServicesContainer extends StrictObject
         return $this->rulesTablesWebContent;
     }
 
-    public function getRulesPdfWebContent(): RulesMainContent
+    public function getRulesPdfWebContent(): HtmlContentInterface
     {
         if ($this->rulesPdfWebContent === null) {
             $this->rulesPdfWebContent = new PdfContent($this->getPdfBody());
@@ -180,10 +183,10 @@ class ServicesContainer extends StrictObject
         return $this->rulesPdfWebContent;
     }
 
-    public function getRulesPassWebContent(): RulesMainContent
+    public function getRulesPassWebContent(): MainContent
     {
         if ($this->rulesPassWebContent === null) {
-            $this->rulesPassWebContent = new RulesMainContent(
+            $this->rulesPassWebContent = new MainContent(
                 $this->getHtmlHelper(),
                 $this->getHead(),
                 $this->getPassBody()
@@ -362,7 +365,7 @@ class ServicesContainer extends StrictObject
     public function getPassBody(): PassBody
     {
         if ($this->passBody === null) {
-            $this->passBody = new PassBody($this->getWebFiles(), $this->getPass());
+            $this->passBody = new PassBody($this->getPass());
         }
 
         return $this->passBody;
@@ -402,7 +405,7 @@ class ServicesContainer extends StrictObject
     public function getPdfBody(): PdfBody
     {
         if ($this->pdfBody === null) {
-            $this->pdfBody = new PdfBody($this->getWebFiles(), $this->getDirs());
+            $this->pdfBody = new PdfBody($this->getDirs());
         }
 
         return $this->pdfBody;

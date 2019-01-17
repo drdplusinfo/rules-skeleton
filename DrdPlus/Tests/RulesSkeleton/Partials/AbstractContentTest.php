@@ -554,7 +554,7 @@ abstract class AbstractContentTest extends TestWithMockery
     protected function unifyPath(string $path): string
     {
         $path = \str_replace('\\', '/', $path);
-        $path = \preg_replace('~/\.(?:/|$)~', '/', $path);
+        $path = \preg_replace('~/[.](?:/|$)~', '/', $path);
 
         return $this->squashTwoDots($path);
     }
@@ -562,7 +562,7 @@ abstract class AbstractContentTest extends TestWithMockery
     private function squashTwoDots(string $path): string
     {
         $originalPath = $path;
-        $path = \preg_replace('~/[^/.]+/\.\.~', '', $path);
+        $path = \preg_replace('~/[^/.]+/[.]{2}~', '', $path);
         if ($originalPath === $path) {
             return $originalPath; // nothing has been squashed
         }
