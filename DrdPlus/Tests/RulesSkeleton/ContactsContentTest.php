@@ -13,12 +13,12 @@ class ContactsContentTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Proper_email_is_used_in_debug_contacts(): void
+    public function Proper_facebook_link_is_used_in_debug_contacts(): void
     {
-        self::assertRegExp(
-            '~[^[:alnum:]]info@drdplus[.]info[^[:alnum:]]~',
+        self::assertContains(
+            '"https://www.facebook.com/drdplus.info"',
             $this->getDebugContactsContent(),
-            'Email to info@drdplus.info has not been found in debug contacts template'
+            'Link to facebook.com/drdplus.info has not been found in debug contacts template'
         );
     }
 
@@ -46,22 +46,10 @@ class ContactsContentTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Proper_facebook_link_is_used_in_debug_contacts(): void
-    {
-        self::assertRegExp(
-            '~[^[:alnum:]]https://www[.]facebook[.]com/drdplus[.]info[^[:alnum:]]~',
-            $this->getDebugContactsContent(),
-            'Link to facebook.com/drdplus.info has not been found in debug contacts template'
-        );
-    }
-
-    /**
-     * @test
-     */
     public function Proper_rpg_forum_link_is_used_in_debug_contacts(): void
     {
-        self::assertRegExp(
-            '~[^[:alnum:]]https://rpgforum[.]cz/forum/viewtopic[.]php[?]f=238&t=14870[^[:alnum:]]~',
+        self::assertContains(
+            '"https://rpgforum.cz/forum/viewtopic.php?f=238&t=14870"',
             $this->getDebugContactsContent(),
             'Link to RPG forum has not been found in debug contacts template'
         );
@@ -70,7 +58,7 @@ class ContactsContentTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_use_link_to_drdplus_info_email(): void
+    public function I_can_use_mail_to_link_to_drdplus_info_email(): void
     {
         $debugContactsElement = $this->getDebugContactsElement();
         if (!$this->getTestsConfiguration()->hasDebugContacts()) {
