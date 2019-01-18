@@ -23,8 +23,6 @@ class RulesContent extends StrictObject implements StringInterface
 
     /** @var HtmlContentInterface */
     private $htmlContent;
-    /** @var HtmlHelper */
-    private $htmlHelper;
     /** @var CurrentWebVersion */
     private $currentWebVersion;
     /** @var Head */
@@ -47,13 +45,11 @@ class RulesContent extends StrictObject implements StringInterface
         Menu $menu,
         CurrentWebVersion $currentWebVersion,
         Cache $cache,
-        HtmlHelper $htmlHelper,
         string $contentType,
         ?Redirect $redirect
     )
     {
         $this->htmlContent = $htmlContent;
-        $this->htmlHelper = $htmlHelper;
         $this->currentWebVersion = $currentWebVersion;
         $this->menu = $menu;
         $this->cache = $cache;
@@ -113,20 +109,6 @@ class RulesContent extends StrictObject implements StringInterface
             $headElement->prop_set_innerHTML($this->menu->getValue());
             $htmlDocument->body->insertBefore($headElement, $htmlDocument->body->firstElementChild);
 
-            $htmlHelper = $this->htmlHelper;
-            $htmlHelper->addIdsToTables($htmlDocument);
-            $htmlHelper->markExternalLinksByClass($htmlDocument);
-            $htmlHelper->injectIframesWithRemoteTables($htmlDocument);
-            $htmlHelper->prepareSourceCodeLinks($htmlDocument);
-            $htmlHelper->addIdsToTables($htmlDocument);
-            $htmlHelper->replaceDiacriticsFromIds($htmlDocument);
-            $htmlHelper->replaceDiacriticsFromAnchorHashes($htmlDocument);
-            $htmlHelper->resolveDisplayMode($htmlDocument);
-            $htmlHelper->markExternalLinksByClass($htmlDocument);
-            $htmlHelper->injectIframesWithRemoteTables($htmlDocument);
-            if (!$htmlHelper->isInProduction()) {
-                $htmlHelper->makeExternalDrdPlusLinksLocal($htmlDocument);
-            }
             $this->injectCacheId($htmlDocument);
 
             $this->htmlDocument = $htmlDocument;

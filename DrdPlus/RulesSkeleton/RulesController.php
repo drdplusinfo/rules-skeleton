@@ -80,7 +80,6 @@ class RulesController extends StrictObject
                 $servicesContainer->getMenu(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getTablesWebCache(),
-                $servicesContainer->getHtmlHelper(),
                 RulesContent::TABLES,
                 $this->getRedirect()
             );
@@ -93,7 +92,6 @@ class RulesController extends StrictObject
                 $servicesContainer->getEmptyMenu(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getDummyWebCache(),
-                $servicesContainer->getHtmlHelper(),
                 RulesContent::PDF,
                 $this->getRedirect()
             );
@@ -106,7 +104,6 @@ class RulesController extends StrictObject
                 $servicesContainer->getMenu(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getPassWebCache(),
-                $servicesContainer->getHtmlHelper(),
                 RulesContent::PASS,
                 $this->getRedirect()
             );
@@ -118,7 +115,6 @@ class RulesController extends StrictObject
             $servicesContainer->getMenu(),
             $servicesContainer->getCurrentWebVersion(),
             $servicesContainer->getWebCache(),
-            $servicesContainer->getHtmlHelper(),
             RulesContent::FULL,
             $this->getRedirect()
         );
