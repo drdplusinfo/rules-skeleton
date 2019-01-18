@@ -234,7 +234,11 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         try {
             $this->guardValidUrl($publicUrl);
         } catch (InvalidUrl $invalidUrl) {
-            throw new Exceptions\InvalidPublicUrl("Given public URL is not valid: '$publicUrl'", $invalidUrl->getCode(), $invalidUrl);
+            throw new Exceptions\InvalidPublicUrl(
+                sprintf("Given public URL under key '%s' is not valid: '%s'", self::PUBLIC_URL, $publicUrl),
+                $invalidUrl->getCode(),
+                $invalidUrl
+            );
         }
         if (\strpos($publicUrl, 'https://') !== 0) {
             throw new Exceptions\PublicUrlShouldUseHttps("Given public URL should use HTTPS: '$publicUrl'");
