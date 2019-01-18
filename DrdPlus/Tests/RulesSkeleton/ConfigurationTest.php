@@ -104,6 +104,7 @@ class ConfigurationTest extends AbstractContentTest
                 Configuration::TITLE_SMILEY => '',
                 Configuration::PROTECTED_ACCESS => true,
                 Configuration::ESHOP_URL => 'https://example.com',
+                Configuration::SHOW_DEBUG_CONTACTS => true,
             ],
             Configuration::GOOGLE => [Configuration::ANALYTICS_ID => 'UA-121206931-999'],
         ];
