@@ -76,7 +76,7 @@ class RulesController extends StrictObject
         $servicesContainer = $this->servicesContainer;
         if ($servicesContainer->getRequest()->areRequestedTables()) {
             $this->content = new RulesContent(
-                $servicesContainer->getRulesTablesWebContent(),
+                $servicesContainer->getTablesContent(),
                 $servicesContainer->getMenu(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getTablesWebCache(),
@@ -89,7 +89,7 @@ class RulesController extends StrictObject
         }
         if ($servicesContainer->getRequest()->isRequestedPdf() && $servicesContainer->getPdfBody()->getPdfFile()) {
             $this->content = new RulesContent(
-                $servicesContainer->getRulesPdfWebContent(),
+                $servicesContainer->getPdfContent(),
                 $servicesContainer->getEmptyMenu(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getDummyWebCache(),
@@ -102,7 +102,7 @@ class RulesController extends StrictObject
         }
         if (!$this->canPassIn()) {
             $this->content = new RulesContent(
-                $servicesContainer->getRulesPassWebContent(),
+                $servicesContainer->getPassContent(),
                 $servicesContainer->getMenu(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getPassWebCache(),
@@ -114,7 +114,7 @@ class RulesController extends StrictObject
             return $this->content;
         }
         $this->content = new RulesContent(
-            $servicesContainer->getRulesWebContent(),
+            $servicesContainer->getRulesMainContent(),
             $servicesContainer->getMenu(),
             $servicesContainer->getCurrentWebVersion(),
             $servicesContainer->getWebCache(),

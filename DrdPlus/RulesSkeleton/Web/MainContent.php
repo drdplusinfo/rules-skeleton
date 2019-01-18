@@ -6,7 +6,7 @@ namespace DrdPlus\RulesSkeleton\Web;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\Content;
 
-class MainContent extends Content
+abstract class MainContent extends Content
 {
     protected function buildHtmlDocument(string $content): HtmlDocument
     {
