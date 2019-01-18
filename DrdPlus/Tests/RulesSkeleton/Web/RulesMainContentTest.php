@@ -3,86 +3,12 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\RulesSkeleton\Web\DebugContactsBody;
-use DrdPlus\RulesSkeleton\Web\Head;
-use DrdPlus\RulesSkeleton\Web\RulesMainContent;
-use Granam\WebContentBuilder\HtmlDocument;
-use Granam\WebContentBuilder\Web\Body;
 use Gt\Dom\Element;
 use Gt\Dom\Node;
 
 class RulesMainContentTest extends MainContentTest
 {
-    /**
-     * @test
-     */
-    public function I_can_hide_debug_contacts(): void
-    {
-        $configurationWithShownDebugContacts = $this->createCustomConfiguration(
-            [Configuration::WEB => [Configuration::SHOW_DEBUG_CONTACTS => true]]
-        );
-        self::assertTrue($configurationWithShownDebugContacts->isShowDebugContacts(), 'Expected configuration with shown debug contacts');
-        $rulesMainContentWithDebugContacts = $this->createRulesMainContent($configurationWithShownDebugContacts);
-        if ($this->isSkeletonChecked()) {
-            $htmlDocument = new HtmlDocument(<<<HTML
-<html lang="cs">
-<body>
-{$rulesMainContentWithDebugContacts->getValue()}
-</body>
-</html>
-HTML
-            );
-            /** @var Element $debugContacts */
-            $debugContacts = $htmlDocument->getElementById('debug_contacts');
-            self::assertNotEmpty($debugContacts, 'Debug contacts are missing');
-            self::assertContains('mailto:info@drdplus.info', $debugContacts->outerHTML);
-            self::assertContains('https://www.facebook.com/drdplus.info', $debugContacts->outerHTML);
-            self::assertContains(
-                'https://rpgforum.cz/forum/viewtopic.php?f=238&amp;t=14870"',
-                $debugContacts->outerHTML
-            );
-        }
-        $configurationWithHiddenDebugContacts = $this->createCustomConfiguration(
-            [Configuration::WEB => [Configuration::SHOW_DEBUG_CONTACTS => false]]
-        );
-        self::assertFalse($configurationWithHiddenDebugContacts->isShowDebugContacts(), 'Expected configuration with hidden debug contacts');
-        $rulesMainContentWithoutDebugContacts = $this->createRulesMainContent($configurationWithHiddenDebugContacts);
-        if ($this->isSkeletonChecked()) {
-            $htmlDocument = new HtmlDocument(<<<HTML
-<html lang="cs">
-<body>
-{$rulesMainContentWithoutDebugContacts->getValue()}
-</body>
-</html>
-HTML
-            );
-            $debugContacts = $htmlDocument->getElementById('debug_contacts');
-            self::assertEmpty($debugContacts, 'Debug contacts should not be used at all');
-        }
-    }
-
-    private function createRulesMainContent(Configuration $configuration): RulesMainContent
-    {
-        $head = $this->mockery(Head::class);
-        $head->shouldReceive('getValue')
-            ->andReturn('');
-        $body = $this->mockery(Body::class);
-        $body->shouldReceive('getValue')
-            ->andReturn('');
-        /** @var Head $head */
-        /** @var Body $body */
-
-        return new RulesMainContent(
-            $configuration,
-            $this->createHtmlHelper(),
-            $head,
-            $body,
-            new DebugContactsBody()
-        );
-    }
-
     /**
      * @test
      */

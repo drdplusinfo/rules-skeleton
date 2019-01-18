@@ -12,6 +12,7 @@ use DrdPlus\RulesSkeleton\Web\Menu;
 use DrdPlus\RulesSkeleton\Web\Pass;
 use DrdPlus\RulesSkeleton\Web\PassBody;
 use DrdPlus\RulesSkeleton\Web\PdfBody;
+use DrdPlus\RulesSkeleton\Web\RulesMainBody;
 use DrdPlus\RulesSkeleton\Web\RulesMainContent;
 use DrdPlus\RulesSkeleton\Web\TablesBody;
 use DrdPlus\RulesSkeleton\Web\WebFiles;
@@ -44,7 +45,7 @@ class ServicesContainer extends StrictObject
     /** @var Menu */
     protected $menu;
     /** @var Body */
-    protected $body;
+    protected $rulesMainBody;
     /** @var TablesBody */
     protected $tablesBody;
     /** @var Cache */
@@ -150,11 +151,9 @@ class ServicesContainer extends StrictObject
     {
         if ($this->rulesWebContent === null) {
             $this->rulesWebContent = new RulesMainContent(
-                $this->getConfiguration(),
                 $this->getHtmlHelper(),
                 $this->getHead(),
-                $this->getBody(),
-                $this->getDebugContactsBody()
+                $this->getRulesMainBody()
             );
         }
 
@@ -234,13 +233,13 @@ class ServicesContainer extends StrictObject
         return $this->head;
     }
 
-    public function getBody(): Body
+    public function getRulesMainBody(): RulesMainBody
     {
-        if ($this->body === null) {
-            $this->body = new Body($this->getWebFiles());
+        if ($this->rulesMainBody === null) {
+            $this->rulesMainBody = new RulesMainBody($this->getWebFiles(), $this->getDebugContactsBody());
         }
 
-        return $this->body;
+        return $this->rulesMainBody;
     }
 
     public function getHeadForTables(): Head
@@ -257,7 +256,7 @@ class ServicesContainer extends StrictObject
     public function getTablesBody(): TablesBody
     {
         if ($this->tablesBody === null) {
-            $this->tablesBody = new TablesBody($this->getWebFiles(), $this->getHtmlHelper(), $this->getRequest());
+            $this->tablesBody = new TablesBody($this->getRulesMainBody(), $this->getHtmlHelper(), $this->getRequest());
         }
 
         return $this->tablesBody;

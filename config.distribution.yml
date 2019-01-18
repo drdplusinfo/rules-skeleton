@@ -5,6 +5,5 @@ web:
   show_home_button: true
   name: 'HTML kostra pro DrDPlus, jakoby pravidla čaroděje'
   title_smiley: '☠️'
-  show_debug_contacts: true
 google:
   analytics_id: 'UA-121206931-1'

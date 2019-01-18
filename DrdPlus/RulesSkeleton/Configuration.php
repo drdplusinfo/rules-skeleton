@@ -28,7 +28,6 @@ class Configuration extends StrictObject
     public const WEB = 'web';
     public const MENU_POSITION_FIXED = 'menu_position_fixed';
     public const SHOW_HOME_BUTTON = 'show_home_button';
-    public const SHOW_DEBUG_CONTACTS = 'show_debug_contacts';
     public const NAME = 'name';
     public const TITLE_SMILEY = 'title_smiley';
     public const PROTECTED_ACCESS = 'protected_access';
@@ -57,7 +56,6 @@ class Configuration extends StrictObject
         $this->guardValidEshopUrl($settings);
         $this->guardSetProtectedAccess($settings);
         $this->guardSetShowHomeButton($settings);
-        $this->guardSetShowDebugContacts($settings);
         $this->guardValidFaviconUrl($settings);
         $this->settings = $settings;
     }
@@ -148,16 +146,6 @@ class Configuration extends StrictObject
         }
     }
 
-    protected function guardSetShowDebugContacts(array $settings): void
-    {
-        if (($settings[static::WEB][static::SHOW_DEBUG_CONTACTS] ?? null) === null) {
-            throw new Exceptions\MissingShownHomeButtonConfiguration(
-                'Configuration if debug contacts should be shown is missing in configuration '
-                . static::WEB . ': ' . static::SHOW_DEBUG_CONTACTS
-            );
-        }
-    }
-
     protected function guardValidFaviconUrl(array $settings): void
     {
         $favicon = $settings[static::WEB][static::FAVICON] ?? null;
@@ -194,11 +182,6 @@ class Configuration extends StrictObject
     public function isShowHomeButton(): bool
     {
         return (bool)$this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON];
-    }
-
-    public function isShowDebugContacts(): bool
-    {
-        return (bool)$this->getSettings()[static::WEB][static::SHOW_DEBUG_CONTACTS];
     }
 
     public function getWebName(): string

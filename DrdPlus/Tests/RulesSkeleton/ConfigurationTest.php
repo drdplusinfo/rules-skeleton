@@ -104,7 +104,6 @@ class ConfigurationTest extends AbstractContentTest
                 Configuration::TITLE_SMILEY => '',
                 Configuration::PROTECTED_ACCESS => true,
                 Configuration::ESHOP_URL => 'https://example.com',
-                Configuration::SHOW_DEBUG_CONTACTS => true,
             ],
             Configuration::GOOGLE => [Configuration::ANALYTICS_ID => 'UA-121206931-999'],
         ];
@@ -175,23 +174,5 @@ class ConfigurationTest extends AbstractContentTest
         $completeSettings[Configuration::WEB][Configuration::TITLE_SMILEY] = null;
         $configuration = new Configuration($this->getDirs(), $completeSettings);
         self::assertSame('', $configuration->getTitleSmiley());
-    }
-
-    /**
-     * @test
-     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\MissingShownHomeButtonConfiguration
-     */
-    public function I_can_not_create_it_without_set_showing_of_debug_contacts(): void
-    {
-        $completeSettings = $this->getSomeCompleteSettings();
-        unset($completeSettings[Configuration::WEB][Configuration::SHOW_DEBUG_CONTACTS]);
-        new Configuration($this->getDirs(), $completeSettings);
-    }
-
-    protected function getSkeletonConfiguration(): Configuration
-    {
-        $configurationClass = $this->getConfigurationClass();
-
-        return $configurationClass::createFromYml($this->createDirs($this->getSkeletonProjectRoot()));
     }
 }
