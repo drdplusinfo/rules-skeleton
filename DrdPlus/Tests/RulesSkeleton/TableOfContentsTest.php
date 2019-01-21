@@ -7,7 +7,7 @@ use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 
-class TableOfContentTest extends AbstractContentTest
+class TableOfContentsTest extends AbstractContentTest
 {
 
     /**
@@ -15,28 +15,28 @@ class TableOfContentTest extends AbstractContentTest
      */
     public function I_can_navigate_to_chapter_with_same_name_as_table_of_contents_mentions(): void
     {
-        /** @var Element $tableOfContent */
-        $tableOfContent = $this->getHtmlDocument()->getElementById(HtmlHelper::toId('table_of_content'));
+        /** @var Element $tableOfContents */
+        $tableOfContents = $this->getHtmlDocument()->getElementById(HtmlHelper::toId(HtmlHelper::ID_TABLE_OF_CONTENTS));
         if (!$this->getTestsConfiguration()->hasTableOfContents()) {
             self::assertEmpty(
-                $tableOfContent,
+                $tableOfContents,
                 'No items of table of contents expected due to tests configuration'
             );
 
             return;
         }
         self::assertNotEmpty(
-            $tableOfContent,
-            sprintf("Missing table of content with ID '%s' as tests configuration requests", HtmlHelper::toId('table_of_content'))
+            $tableOfContents,
+            \sprintf("Missing table of contents with ID '%s' as tests configuration requests", HtmlHelper::toId(HtmlHelper::ID_TABLE_OF_CONTENTS))
         );
-        $contents = $tableOfContent->getElementsByClassName('content');
+        $contents = $tableOfContents->getElementsByClassName('content');
         self::assertNotEmpty(
             $contents,
-            'Expected some ".content" elements as items of a table of contents #tableOfContents' . $tableOfContent->outerHTML
+            'Expected some ".content" elements as items of a table of contents #tableOfContents' . $tableOfContents->outerHTML
         );
         foreach ($contents as $content) {
             $anchors = $content->getElementsByTagName('a');
-            self::assertNotEmpty($anchors->count(), 'Expected some anchors in table of content ' . $content->outerHTML);
+            self::assertNotEmpty($anchors->count(), 'Expected some anchors in table of contents ' . $content->outerHTML);
             foreach ($anchors as $anchor) {
                 $link = $anchor->getAttribute('href');
                 if (\strpos($link, '#') !== 0) {

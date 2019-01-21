@@ -79,7 +79,7 @@ class TestsTest extends AbstractContentTest
             CalculationsTest::class,
             SourceCodeLinksTest::class,
             TestsConfigurationReaderTest::class,
-            TableOfContentTest::class,
+            TableOfContentsTest::class,
             GitTest::class,
         ];
     }
