@@ -57,7 +57,14 @@ class TablesTest extends AbstractContentTest
         $implodedTables = \implode(',', $this->getTestsConfiguration()->getSomeExpectedTableIds());
         $htmlDocument = $this->getHtmlDocument([Request::TABLES => $implodedTables]);
         $tables = $htmlDocument->body->getElementsByTagName('table');
-        self::assertNotEmpty($tables, 'No tables have been fetched, when required IDs ' . $implodedTables);
+        self::assertNotEmpty(
+            $tables,
+            \sprintf(
+                'No tables have been fetched from %s, when required IDs %s',
+                $this->getTestsConfiguration()->getLocalUrl() . '?' . Request::TABLES . '=' . \urlencode($implodedTables),
+                $implodedTables
+            )
+        );
         foreach ($this->getTestsConfiguration()->getSomeExpectedTableIds() as $tableId) {
             self::assertNotNull(
                 $htmlDocument->getElementById(HtmlHelper::toId($tableId)), 'Missing table of ID ' . $tableId
