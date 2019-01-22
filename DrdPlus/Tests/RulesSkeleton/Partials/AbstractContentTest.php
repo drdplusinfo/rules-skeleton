@@ -13,12 +13,14 @@ use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
+use DrdPlus\RulesSkeleton\Web\RulesMainBody;
 use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
 use DrdPlus\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\String\StringTools;
 use Granam\Tests\Tools\TestWithMockery;
 use Granam\WebContentBuilder\HtmlDocument;
+use Granam\WebContentBuilder\Web\HeadInterface;
 use Gt\Dom\Element;
 use Mockery\MockInterface;
 
@@ -619,5 +621,36 @@ abstract class AbstractContentTest extends TestWithMockery
         }
 
         return $projectRoot;
+    }
+
+    protected function createEmptyHead(): HeadInterface
+    {
+        return new class implements HeadInterface
+        {
+            public function __toString()
+            {
+                return $this->getValue();
+            }
+
+            public function getValue(): string
+            {
+                return '';
+            }
+
+        };
+    }
+
+    /**
+     * @param string $content
+     * @return RulesMainBody|MockInterface
+     */
+    protected function createMainBody(string $content): RulesMainBody
+    {
+        $rulesMainBody = $this->mockery(RulesMainBody::class);
+        $rulesMainBody->shouldReceive('getValue')
+            ->andReturn($content);
+        $rulesMainBody->makePartial();
+
+        return $rulesMainBody;
     }
 }
