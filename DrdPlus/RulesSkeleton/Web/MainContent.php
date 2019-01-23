@@ -38,11 +38,7 @@ abstract class MainContent extends Content
         $this->htmlHelper->addIdsToTables($htmlDocument);
         $this->htmlHelper->replaceDiacriticsFromIds($htmlDocument);
         $this->htmlHelper->addAnchorsToIds($htmlDocument);
-        $this->htmlHelper->replaceDiacriticsFromAnchorHashes(
-            $htmlDocument,
-            '~drdplus[.](?:loc|info)~',
-            '~blog[.]drdplus[.](?:loc|info)~'
-        );
+        $this->htmlHelper->replaceDiacriticsFromDrdPlusAnchorHashes($htmlDocument);
     }
 
     private function solveLinks(HtmlDocument $htmlDocument): void

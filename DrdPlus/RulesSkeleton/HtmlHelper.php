@@ -335,4 +335,15 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     {
         return $this->inForcedProductionMode || (\PHP_SAPI !== 'cli' && ($_SERVER['REMOTE_ADDR'] ?? null) !== '127.0.0.1');
     }
+
+    public function replaceDiacriticsFromDrdPlusAnchorHashes(HtmlDocument $htmlDocument): HtmlDocument
+    {
+        $this->replaceDiacriticsFromAnchorHashes(
+            $htmlDocument,
+            '~drdplus[.](?:loc|info)~',
+            '~blog[.]drdplus[.](?:loc|info)~'
+        );
+
+        return $htmlDocument;
+    }
 }
