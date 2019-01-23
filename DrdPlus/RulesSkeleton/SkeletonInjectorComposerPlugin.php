@@ -54,12 +54,12 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->publishSkeletonCss($documentRoot);
         $this->publishSkeletonJs($documentRoot);
         $this->copyProjectConfig($documentRoot);
-        $this->flushCache($documentRoot);
+        $this->copyFavicon($documentRoot);
         $this->addVersionsToAssets($documentRoot);
+        $this->flushCache($documentRoot);
         $this->copyGoogleVerification($documentRoot);
         $this->copyPhpUnitConfig($documentRoot);
         $this->copyGitignoreToCache($documentRoot);
-        $this->copyFavicon($documentRoot);
         $this->alreadyInjected = true;
         $this->io->write("Injection of {$this->skeletonPackageName} finished");
     }
