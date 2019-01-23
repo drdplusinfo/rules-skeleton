@@ -90,7 +90,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             [
                 'rm -fr ./images/generic/skeleton/',
                 'mkdir -p ./images/generic/skeleton/',
-                'cp -r ./vendor/drdplus/rules-skeleton/images/generic/skeleton/* ./images/generic/skeleton/',
+                "cp -r ./vendor/{$this->skeletonPackageName}/images/generic/skeleton/* ./images/generic/skeleton/",
             ],
             $documentRoot
         );
@@ -123,12 +123,12 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
 
     private function copyGoogleVerification(string $documentRoot): void
     {
-        $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/google8d8724e0c2818dfc.html .'], $documentRoot);
+        $this->passThrough(["cp ./vendor/{$this->skeletonPackageName}/google8d8724e0c2818dfc.html ."], $documentRoot);
     }
 
     private function copyPhpUnitConfig(string $documentRoot): void
     {
-        $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/phpunit.xml.dist .'], $documentRoot);
+        $this->passThrough(["cp ./vendor/$this->skeletonPackageName/phpunit.xml.dist ."], $documentRoot);
     }
 
     private function addVersionsToAssets(string $documentRoot)
@@ -151,7 +151,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             [
                 'rm -fr ./css/generic/skeleton/',
                 'mkdir -p ./css/generic/skeleton/',
-                'cp -r ./vendor/drdplus/rules-skeleton/css/generic/skeleton/* ./css/generic/skeleton/',
+                "cp -r ./vendor/{$this->skeletonPackageName}/css/generic/skeleton/* ./css/generic/skeleton/",
             ],
             $documentRoot
         );
@@ -163,7 +163,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             [
                 'rm -fr ./js/generic/skeleton/',
                 'mkdir -p ./js/generic/skeleton/',
-                'cp -r ./vendor/drdplus/rules-skeleton/js/generic/skeleton/* ./js/generic/skeleton/',
+                "cp -r ./vendor/{$this->skeletonPackageName}/js/generic/skeleton/* ./js/generic/skeleton/",
             ],
             $documentRoot
         );
@@ -172,15 +172,15 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
     private function copyProjectConfig(string $documentRoot): void
     {
         if (!\file_exists('config.distribution.yml')) {
-            $this->passThrough(['cp --no-clobber ./vendor/drdplus/rules-skeleton/config.distribution.yml .'], $documentRoot);
+            $this->passThrough(["cp --no-clobber ./vendor/{$this->skeletonPackageName}/config.distribution.yml ."], $documentRoot);
 
             return;
         }
-        $rulesSkeletonConfigContent = \file_get_contents('vendor/drdplus/rules-skeleton/config.distribution.yml');
+        $rulesSkeletonConfigContent = \file_get_contents("vendor/{$this->skeletonPackageName}/config.distribution.yml");
         if (\file_get_contents('config.distribution.yml') !== $rulesSkeletonConfigContent) {
             return;
         }
-        $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/config.distribution.yml .'], $documentRoot);
+        $this->passThrough(["cp ./vendor/$this->skeletonPackageName/config.distribution.yml ."], $documentRoot);
     }
 
     private function copyGitignoreToCache(string $documentRoot): void
@@ -190,7 +190,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
                 'mkdir -p cache',
                 'chmod 0775 cache',
                 'chgrp www-data cache',
-                'cp ./vendor/drdplus/rules-skeleton/cache/.gitignore ./cache/.gitignore',
+                "cp ./vendor/{$this->skeletonPackageName}/cache/.gitignore ./cache/.gitignore",
             ],
             $documentRoot
         );
@@ -198,6 +198,6 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
 
     private function copyFavicon(string $documentRoot): void
     {
-        $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/favicon.ico .'], $documentRoot);
+        $this->passThrough(["cp ./vendor/{$this->skeletonPackageName}/favicon.ico ."], $documentRoot);
     }
 }
