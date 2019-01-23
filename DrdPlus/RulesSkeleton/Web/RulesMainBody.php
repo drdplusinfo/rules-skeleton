@@ -8,24 +8,42 @@ use Granam\WebContentBuilder\Web\WebFiles;
 
 class RulesMainBody extends Body
 {
-    /** @var string */
-    private $debugContacts;
+    /** @var array */
+    private $contentValues;
 
-    public function __construct(WebFiles $webFiles, DebugContactsBody $debugContactsBody)
+    public function __construct(WebFiles $webFiles, array $contentValues)
     {
         parent::__construct($webFiles);
-        $this->debugContacts = $debugContactsBody->getValue();
+        $this->contentValues = $contentValues;
     }
 
     protected function fetchPhpFileContent(string $file): string
     {
-        \ob_start();
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $debugContacts = $this->debugContacts;
-        /** @noinspection PhpIncludeInspection */
-        include $file;
+        $content = new class($file, $this->contentValues)
+        {
+            /** @var string */
+            private $file;
+            /** @var array */
+            private $contentValues;
 
-        return \ob_get_clean();
+            public function __construct(string $file, array $contentValues)
+            {
+                $this->file = $file;
+                $this->contentValues = $contentValues;
+            }
+
+            public function fetchContent(): string
+            {
+                \extract($this->contentValues, \EXTR_SKIP);
+                \ob_start();
+                /** @noinspection PhpIncludeInspection */
+                include $this->file;
+
+                return \ob_get_clean();
+            }
+        };
+
+        return $content->fetchContent();
     }
 
 }
