@@ -237,10 +237,15 @@ class ServicesContainer extends StrictObject
     public function getRulesMainBody(): RulesMainBody
     {
         if ($this->rulesMainBody === null) {
-            $this->rulesMainBody = new RulesMainBody($this->getWebFiles(), $this->getDebugContactsBody());
+            $this->rulesMainBody = new RulesMainBody($this->getWebFiles(), $this->getRulesMainBodyParameters());
         }
 
         return $this->rulesMainBody;
+    }
+
+    public function getRulesMainBodyParameters(): array
+    {
+        return ['debugContacts' => $this->getDebugContactsBody()];
     }
 
     public function getHeadForTables(): Head
