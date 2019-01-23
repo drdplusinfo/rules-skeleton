@@ -33,5 +33,6 @@ class SkeletonInjectorComposerPluginTest extends AbstractContentTest
         }
         self::assertSame('composer-plugin', $this->getComposerConfig()['type']);
         self::assertSame(SkeletonInjectorComposerPlugin::class, $this->getComposerConfig()['extra']['class']);
+        self::assertArrayHasKey('composer-plugin-api', $this->getComposerConfig()['require']);
     }
 }
