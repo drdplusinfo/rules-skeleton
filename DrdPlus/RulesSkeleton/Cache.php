@@ -115,8 +115,10 @@ class Cache extends StrictObject
         }
         $gitStatus = $this->git->getGitStatus($this->projectRootDir);
         $diffAgainstOriginMaster = $this->git->getDiffAgainstOriginMaster($this->projectRootDir);
+        $gitStatusImploded = \implode($gitStatus);
+        $diffAgainstOriginMasterImploded = \implode($diffAgainstOriginMaster);
 
-        return \md5(\implode(\array_merge($gitStatus, $diffAgainstOriginMaster)));
+        return \md5($gitStatusImploded . $diffAgainstOriginMasterImploded);
     }
 
     /**
