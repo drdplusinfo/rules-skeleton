@@ -62,18 +62,4 @@ class ComposerConfigTest extends AbstractContentTest
         $expectedLicence = $this->getTestsConfiguration()->getExpectedLicence();
         self::assertSame($expectedLicence, $this->getComposerConfig()['license'], "Expected licence '$expectedLicence'");
     }
-
-    /**
-     * @test
-     */
-    public function Package_is_injected(): void
-    {
-        if (!$this->isSkeletonChecked()) {
-            self::assertFalse(false, 'Intended for skeleton only');
-
-            return;
-        }
-        self::assertSame('composer-plugin', $this->getComposerConfig()['type']);
-        self::assertSame(SkeletonInjectorComposerPlugin::class, $this->getComposerConfig()['extra']['class']);
-    }
 }

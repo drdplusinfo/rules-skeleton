@@ -20,4 +20,18 @@ class SkeletonInjectorComposerPluginTest extends AbstractContentTest
         }
         self::assertSame(SkeletonInjectorComposerPlugin::RULES_SKELETON_PACKAGE_NAME, $this->getComposerConfig()['name']);
     }
+
+    /**
+     * @test
+     */
+    public function Package_is_injected(): void
+    {
+        if (!$this->isRulesSkeletonChecked()) {
+            self::assertFalse(false, 'Intended for skeleton only');
+
+            return;
+        }
+        self::assertSame('composer-plugin', $this->getComposerConfig()['type']);
+        self::assertSame(SkeletonInjectorComposerPlugin::class, $this->getComposerConfig()['extra']['class']);
+    }
 }
