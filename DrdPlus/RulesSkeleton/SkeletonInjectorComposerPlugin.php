@@ -10,6 +10,7 @@ use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Granam\Strict\Object\StrictObject;
+use Granam\WebContentBuilder\AssetsVersion;
 
 class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInterface, EventSubscriberInterface
 {
