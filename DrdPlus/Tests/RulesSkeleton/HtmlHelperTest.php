@@ -242,12 +242,17 @@ HTML
 
     /**
      * @test
+     * @dataProvider provideLinksToRemoteTables
+     * @param array|string[] $links
+     * @param string $expectedIframe
+     * @param string $expectedIframeId
      */
-    public function I_can_inject_iframes_with_remote_tables(): void
+    public function I_can_inject_iframes_with_remote_tables(array $links, string $expectedIframe, string $expectedIframeId): void
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
         $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs());
+        $implodedLinks = \implode("\n", $links);
         $htmlDocument = new HtmlDocument(<<<HTML
         <!DOCTYPE html>
 <html lang="cs">
@@ -256,10 +261,7 @@ HTML
   <meta charset="utf-8">
 </head>
 <body>
-  <a href="https://pph.drdplus.info/#tabulka_vzdalenosti">Odkaz na tabulku vzdálenosti</a>
-  <a href="https://pph.drdplus.info/#tabulka_vzdalenosti">Druhý odkaz na tabulku vzdálenosti</a>
-  <a href="https://pph.drdplus.info/#tabulka_casu">Odkaz na tabulku času</a>
-  <a href="https://pph.drdplus.info/#tabulka_vzdalenosti">Třetí na tabulku vzdálenosti</a>
+  $implodedLinks
 </body>
 </htm>
 HTML
@@ -270,11 +272,32 @@ HTML
         self::assertCount(1, $iframes, 'Single iframe (with tables preview) expected');
         $iframe = $iframes->current();
         self::assertSame(
-            'https://pph.drdplus.info/?tables=tabulka_vzdalenosti,tabulka_casu',
+            $expectedIframe,
             $iframe->getAttribute('src'),
             "Something is bad with iframe\n" . $iframe->outerHTML
         );
-        self::assertSame('pph.drdplus.info', $iframe->id, 'Expected ID made from iframe target domain');
+        self::assertSame($expectedIframeId, $iframe->id, 'Expected ID made from iframe target domain');
+    }
+
+    public function provideLinksToRemoteTables(): array
+    {
+        return [
+            'pph.drdplus.info' => [
+                [
+                    '<a href="https://pph.drdplus.info/#tabulka_vzdalenosti">Odkaz na tabulku vzdálenosti</a>',
+                    '<a href="https://pph.drdplus.info/#tabulka_vzdalenosti">Druhý odkaz na tabulku vzdálenosti</a>',
+                    '<a href="https://pph.drdplus.info/#tabulka_casu">Odkaz na tabulku času</a>',
+                    '<a href="https://pph.drdplus.info/#tabulka_vzdalenosti">Třetí na tabulku vzdálenosti</a>',
+                ],
+                'https://pph.drdplus.info/?tables=tabulka_vzdalenosti,tabulka_casu',
+                'pph.drdplus.info',
+            ],
+            'theurg.drdplus.loc' => [
+                ['<a href="http://theurg.drdplus.loc/#tabulka_formuli">Odkaz na lokálního theurga a jeho tabulku formulí</a>'],
+                'http://theurg.drdplus.loc/?tables=tabulka_formuli',
+                'theurg.drdplus.loc',
+            ],
+        ];
     }
 
     /**
