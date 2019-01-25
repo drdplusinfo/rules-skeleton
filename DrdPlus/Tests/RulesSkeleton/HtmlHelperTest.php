@@ -62,13 +62,13 @@ class HtmlHelperTest extends AbstractContentTest
         $htmlHelperClass = static::getSutClass();
         $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs());
 
-        $allTables = $htmlHelper->findTablesWithIds($this->getHtmlDocument());
+        $tablesWithIds = $htmlHelper->findTablesWithIds($this->getHtmlDocument());
         if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasTables()) {
-            self::assertCount(0, $allTables);
+            self::assertCount(0, $tablesWithIds);
 
             return;
         }
-        self::assertGreaterThan(0, \count($allTables));
+        self::assertGreaterThan(0, \count($tablesWithIds));
         self::assertEmpty($htmlHelper->findTablesWithIds($this->getHtmlDocument(), ['nonExistingTableId']));
         $someExpectedTableIds = $this->getTestsConfiguration()->getSomeExpectedTableIds();
         if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasTables()) {
@@ -78,16 +78,16 @@ class HtmlHelperTest extends AbstractContentTest
         }
         self::assertGreaterThan(0, \count($someExpectedTableIds), 'Some tables expected');
         foreach ($someExpectedTableIds as $someExpectedTableId) {
-            $lowerExpectedTableId = StringTools::toSnakeCaseId($someExpectedTableId);
-            self::assertArrayHasKey($lowerExpectedTableId, $allTables);
-            $expectedTable = $allTables[$lowerExpectedTableId];
+            $lowerExpectedTableId = HtmlHelper::toId($someExpectedTableId);
+            self::assertArrayHasKey($lowerExpectedTableId, $tablesWithIds, 'A table ID is missing');
+            $expectedTable = $tablesWithIds[$lowerExpectedTableId];
             self::assertInstanceOf(Element::class, $expectedTable);
             self::assertNotEmpty($expectedTable->innerHTML, "Table of ID $someExpectedTableId is empty");
             // intentionally to snake case to test proper ID case conversion
-            $someCasedExpectedTableId = StringTools::toCamelCaseId($someExpectedTableId);
+            $someCasedExpectedTableId = HtmlHelper::toId($someExpectedTableId);
             $singleTable = $htmlHelper->findTablesWithIds($this->getHtmlDocument(), [$someCasedExpectedTableId]);
             self::assertCount(1, $singleTable, 'No table has been found by ID ' . $someCasedExpectedTableId);
-            self::assertArrayHasKey($lowerExpectedTableId, $allTables, 'ID is expected to be lower-cased');
+            self::assertArrayHasKey($lowerExpectedTableId, $tablesWithIds, 'ID is expected to be lower-cased');
         }
     }
 

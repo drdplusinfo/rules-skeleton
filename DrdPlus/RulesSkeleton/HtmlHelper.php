@@ -88,17 +88,9 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         $tablesWithIds = [];
         /** @var Element $table */
         foreach ($htmlDocument->getElementsByTagName('table') as $table) {
-            $tableId = $table->getAttribute('id');
-            if (!$tableId) {
-                foreach ($table->getElementsByTagName('th') as $th) {
-                    $tableId = $th->getAttribute('id');
-                    if ($tableId) {
-                        break;
-                    }
-                }
-                if (!$tableId) {
-                    continue;
-                }
+            $tableId = $this->getFirstIdFrom($table);
+            if ($tableId === null) {
+                continue;
             }
             $unifiedTableId = static::toId($tableId);
             $tablesWithIds[$unifiedTableId] = $table;
