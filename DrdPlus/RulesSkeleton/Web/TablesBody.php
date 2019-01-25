@@ -50,7 +50,9 @@ HTML;
     public function postProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
     {
         $tablesWithIds = $this->htmlHelper->findTablesWithIds($htmlDocument, $this->request->getRequestedTablesIds());
-        $htmlDocument->getElementById('tables_only')->remove();
+        foreach ($htmlDocument->body->children as $child) {
+            $child->remove();
+        }
         foreach ($tablesWithIds as $table) {
             $htmlDocument->body->appendChild($table);
         }
