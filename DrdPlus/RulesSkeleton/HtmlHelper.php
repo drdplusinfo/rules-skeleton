@@ -215,21 +215,17 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
             if ($headerCell->getAttribute('id')) {
                 continue;
             }
-            if (\strpos(\trim($headerCell->textContent), 'Tabulka') === false) {
+            $headerCellContent = \trim($headerCell->textContent);
+            if ($headerCellContent === '') {
                 continue;
             }
-            $id = false;
-            /** @var \DOMNode $childNode */
-            foreach ($headerCell->childNodes as $childNode) {
-                if ($childNode->nodeType === \XML_TEXT_NODE) {
-                    $id = \trim($childNode->nodeValue);
-                    break;
-                }
-            }
-            if (!$id) {
+            if (\strpos($headerCellContent, 'Tabulka') === false) {
                 continue;
             }
-            $headerCell->setAttribute('id', $id);
+            if ($this->getFirstIdFrom($headerCell) !== null) { // there is already some ID on this TH or on some of its children
+                continue;
+            }
+            $headerCell->setAttribute('id', $headerCellContent);
         }
 
         return $htmlDocument;
