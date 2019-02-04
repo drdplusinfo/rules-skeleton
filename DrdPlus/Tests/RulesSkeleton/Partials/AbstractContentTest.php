@@ -5,6 +5,7 @@ namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
 use DeviceDetector\Parser\Bot;
 use DrdPlus\RulesSkeleton\Configuration;
+use DrdPlus\RulesSkeleton\ContentIrrelevantParametersFilter;
 use DrdPlus\RulesSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Dirs;
@@ -337,16 +338,30 @@ abstract class AbstractContentTest extends TestWithMockery
         return $this->configuration;
     }
 
-    protected function createRequest(string $requestedVersion = null): Request
+    /**
+     * @param array $values
+     * @return Request|MockInterface
+     */
+    protected function createRequest(array $values = []): Request
     {
         $request = $this->mockery($this->getRequestClass());
-        $request->allows('getValue')
-            ->with(Request::VERSION)
-            ->andReturn($requestedVersion);
+        foreach ($values as $name => $value) {
+            $request->allows('getValue')
+                ->with($name)
+                ->andReturn($value);
+        }
         $request->makePartial();
 
-        /** @var Request $request */
         return $request;
+    }
+
+    protected function getContentIrrelevantParametersFilter(): ContentIrrelevantParametersFilter
+    {
+        static $contentIrrelevantParametersFilter;
+        if ($contentIrrelevantParametersFilter === null) {
+            $contentIrrelevantParametersFilter = $this->createServicesContainer()->getContentIrrelevantParametersFilter();
+        }
+        return $contentIrrelevantParametersFilter;
     }
 
     protected function createGit(): Git
@@ -380,12 +395,17 @@ abstract class AbstractContentTest extends TestWithMockery
         return new $rulesApplicationClass($this->createServicesContainer($configuration, $htmlHelper));
     }
 
-    protected function createServicesContainer(
-        Configuration $configuration = null,
-        HtmlHelper $htmlHelper = null
-    ): ServicesContainer
+    protected function getServicesContainer(): ServicesContainer
     {
+        static $servicesContainer;
+        if ($servicesContainer === null) {
+            $servicesContainer = $this->createServicesContainer();
+        }
+        return $servicesContainer;
+    }
 
+    protected function createServicesContainer(Configuration $configuration = null, HtmlHelper $htmlHelper = null): ServicesContainer
+    {
         return new ServicesContainer(
             $configuration ?? $this->getConfiguration(),
             $htmlHelper ?? $this->createHtmlHelper($this->getDirs())
@@ -630,6 +650,16 @@ abstract class AbstractContentTest extends TestWithMockery
             $git ?? $this->createGit(),
             $webVersions ?? $this->createWebVersions($git)
         );
+    }
+
+    protected function getCurrentWebVersion(): CurrentWebVersion
+    {
+        static $currentWebVersion;
+        if ($currentWebVersion === null) {
+            $currentWebVersion = $this->createCurrentWebVersion();
+        }
+
+        return $currentWebVersion;
     }
 
     protected function getProjectRoot(): string
