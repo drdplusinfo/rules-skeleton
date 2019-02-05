@@ -210,9 +210,19 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
 
     public function addIdsToTables(HtmlDocument $htmlDocument): HtmlDocument
     {
+        foreach ($htmlDocument->getElementsByTagName('caption') as $caption) {
+            if ($this->getFirstIdFrom($caption) !== null) { // there is already some ID on this CAPTION or on some of its children
+                continue;
+            }
+            $captionContent = \trim($caption->textContent);
+            if ($captionContent === '') {
+                continue;
+            }
+            $caption->setAttribute('id', $captionContent);
+        }
         /** @var Element $headerCell */
         foreach ($htmlDocument->getElementsByTagName('th') as $headerCell) {
-            if ($headerCell->getAttribute('id')) {
+            if ($this->getFirstIdFrom($headerCell) !== null) { // there is already some ID on this TH or on some of its children
                 continue;
             }
             $headerCellContent = \trim($headerCell->textContent);
@@ -220,9 +230,6 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
                 continue;
             }
             if (\strpos($headerCellContent, 'Tabulka') === false) {
-                continue;
-            }
-            if ($this->getFirstIdFrom($headerCell) !== null) { // there is already some ID on this TH or on some of its children
                 continue;
             }
             $headerCell->setAttribute('id', $headerCellContent);
