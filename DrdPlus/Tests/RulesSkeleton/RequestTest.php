@@ -227,4 +227,18 @@ class RequestTest extends TestWithMockery
         $request = new Request(new Bot());
         self::assertSame(\PHP_SAPI, $request->getPhpSapi());
     }
+
+    /**
+     * @test
+     * @backupGlobals enabled
+     */
+    public function I_can_find_out_if_trial_just_expired(): void
+    {
+        $request = new Request(new Bot());
+        self::assertFalse($request->trialJustExpired());
+        $_GET[Request::TRIAL_EXPIRED_AT] = time() + 10;
+        self::assertFalse($request->trialJustExpired());
+        $_GET[Request::TRIAL_EXPIRED_AT] = time() - 10;
+        self::assertTrue($request->trialJustExpired());
+    }
 }

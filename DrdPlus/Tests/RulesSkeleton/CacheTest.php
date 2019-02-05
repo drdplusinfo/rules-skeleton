@@ -144,8 +144,10 @@ class CacheTest extends AbstractContentTest
 
     /**
      * @test
+     * @dataProvider provideCacheIrrelevantParameters
+     * @param array $cacheIrrelevantParameters
      */
-    public function I_will_get_same_cached_content_for_trial_as_for_full(): void
+    public function I_will_get_same_cached_content_for_cache_irrelevant_parameters_as_for_full(array $cacheIrrelevantParameters): void
     {
         $cacheClass = $this->getCacheClass();
         /** @var Cache $cacheWithoutTrial */
@@ -166,13 +168,22 @@ class CacheTest extends AbstractContentTest
         $cacheWithTrialRequest = new $cacheClass(
             $this->getCurrentWebVersion(),
             $this->getDirs(),
-            $this->createRequest([Request::TRIAL => 1]),
+            $this->createRequest($cacheIrrelevantParameters),
             $this->getServicesContainer()->getContentIrrelevantParametersFilter(),
             $this->createGit(),
             Cache::NOT_IN_PRODUCTION,
             $prefix
         );
-        self::assertTrue($cacheWithTrialRequest->isCacheValid(), 'Expected content to be already cached by cache_without_trial');
+        self::assertTrue($cacheWithTrialRequest->isCacheValid(), 'Expected content to be already cached');
         self::assertSame($content, $cacheWithTrialRequest->getCachedContent());
+    }
+
+    public function provideCacheIrrelevantParameters(): array
+    {
+        return [
+            Request::TRIAL => [[Request::TRIAL => 1]],
+            Request::TRIAL_EXPIRED_AT => [[Request::TRIAL_EXPIRED_AT => \time()]],
+            Request::TRIAL . ' and ' . Request::TRIAL_EXPIRED_AT => [[Request::TRIAL => 1, Request::TRIAL_EXPIRED_AT => \time()]],
+        ];
     }
 }

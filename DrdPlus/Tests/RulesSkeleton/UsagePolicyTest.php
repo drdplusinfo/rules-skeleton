@@ -31,7 +31,7 @@ class UsagePolicyTest extends TestCase
         self::assertNotEmpty($_COOKIE);
         self::assertSame('confirmedOwnershipOfFoo', $_COOKIE[UsagePolicy::OWNERSHIP_COOKIE_NAME]);
         self::assertSame('trialOfFoo', $_COOKIE[UsagePolicy::TRIAL_COOKIE_NAME]);
-        self::assertSame(UsagePolicy::TRIAL_EXPIRED_AT, $_COOKIE[UsagePolicy::TRIAL_EXPIRED_AT_NAME]);
+        self::assertSame(Request::TRIAL_EXPIRED_AT, $_COOKIE[UsagePolicy::TRIAL_EXPIRED_AT_COOKIE_NAME]);
         self::assertArrayNotHasKey('confirmedOwnershipOfFoo', $_COOKIE);
         /** @noinspection PhpUnhandledExceptionInspection */
         $usagePolicy->confirmOwnershipOfVisitor($expiresAt = new \DateTime());
@@ -46,11 +46,11 @@ class UsagePolicyTest extends TestCase
     {
         $usagePolicy = new UsagePolicy('foo', new Request(new Bot()), new CookiesService());
         self::assertFalse($usagePolicy->trialJustExpired(), 'Did not expects trial expiration yet');
-        $_GET[UsagePolicy::TRIAL_EXPIRED_AT] = \time();
+        $_GET[Request::TRIAL_EXPIRED_AT] = \time();
         self::assertTrue($usagePolicy->trialJustExpired(), 'Expected trial expiration');
-        $_GET[UsagePolicy::TRIAL_EXPIRED_AT] = \time() + 2;
+        $_GET[Request::TRIAL_EXPIRED_AT] = \time() + 2;
         self::assertFalse($usagePolicy->trialJustExpired(), 'Did not expects trial expiration as its time is in future');
-        $_GET[UsagePolicy::TRIAL_EXPIRED_AT] = 0;
+        $_GET[Request::TRIAL_EXPIRED_AT] = 0;
         self::assertFalse($usagePolicy->trialJustExpired(), 'Did not expects trial expiration now');
     }
 
@@ -61,16 +61,16 @@ class UsagePolicyTest extends TestCase
     public function I_can_find_out_if_visitor_is_using_valid_trial(): void
     {
         $usagePolicy = new UsagePolicy('foo', new Request(new Bot()), new CookiesService());
-        unset($_GET[UsagePolicy::TRIAL_EXPIRED_AT], $_COOKIE[$usagePolicy->getTrialName()]);
+        unset($_GET[Request::TRIAL_EXPIRED_AT], $_COOKIE[$usagePolicy->getTrialName()]);
         self::assertFalse($usagePolicy->isVisitorUsingValidTrial(), 'Did not expects valid trial yet');
         self::assertFalse($usagePolicy->trialJustExpired(), 'Did not expects trial expiration yet');
         $_COOKIE[$usagePolicy->getTrialName()] = true;
         self::assertTrue($usagePolicy->isVisitorUsingValidTrial(), 'Expects valid trial');
         self::assertFalse($usagePolicy->trialJustExpired(), 'Did not expects trial expiration yet');
-        $_GET[UsagePolicy::TRIAL_EXPIRED_AT] = \PHP_INT_MAX;
+        $_GET[Request::TRIAL_EXPIRED_AT] = \PHP_INT_MAX;
         self::assertTrue($usagePolicy->isVisitorUsingValidTrial(), 'Expects valid trial');
         self::assertFalse($usagePolicy->trialJustExpired(), 'Did not expects trial expiration yet');
-        $_GET[UsagePolicy::TRIAL_EXPIRED_AT] = \time() - 1;
+        $_GET[Request::TRIAL_EXPIRED_AT] = \time() - 1;
         self::assertFalse($usagePolicy->isVisitorUsingValidTrial(), 'Expects trial to be valid no more');
         self::assertTrue($usagePolicy->trialJustExpired(), 'Expects trial to be expired');
     }
