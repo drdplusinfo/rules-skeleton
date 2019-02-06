@@ -481,7 +481,7 @@ class AnchorsTest extends AbstractContentTest
                     $externalAnchors[] = $link;
                 }
             }
-            $externalAnchors[] = $this->getTestsConfiguration()->getPublicUrl();
+            $externalAnchors[] = $this->getTestsConfiguration()->getExpectedPublicUrl();
         }
 
         return $externalAnchors;
