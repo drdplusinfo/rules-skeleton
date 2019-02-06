@@ -734,4 +734,16 @@ abstract class AbstractContentTest extends TestWithMockery
 
         return $tableIds;
     }
+
+    protected function parseAllIds(HtmlDocument $htmlDocument): array
+    {
+        if (!\preg_match_all('~\sid\s*=\s*"(?<id>[^"]+)~', $htmlDocument->saveHTML(), $idMatches)) {
+            return [];
+        }
+        $ids = [];
+        foreach ($idMatches['id'] as $id) {
+            $ids[] = \html_entity_decode($id);
+        }
+        return $ids;
+    }
 }
