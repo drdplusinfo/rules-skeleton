@@ -248,6 +248,9 @@ abstract class AbstractContentTest extends TestWithMockery
         return $content;
     }
 
+    protected const WITH_BODY = true;
+    protected const WITHOUT_BODY = true;
+
     protected function fetchContentFromLink(string $link, bool $withBody, array $post = [], array $cookies = [], array $headers = []): array
     {
         static $cachedContent = [];
