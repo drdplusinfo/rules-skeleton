@@ -103,16 +103,18 @@ abstract class AbstractContentTest extends TestWithMockery
      * @param array $get = []
      * @param array $post = []
      * @param array $cookies = []
+     * @param string $url = '/'
      * @return string
      */
-    protected function getContent(array $get = [], array $post = [], array $cookies = []): string
+    protected function getContent(array $get = [], array $post = [], array $cookies = [], string $url = '/'): string
     {
         static $contents = [];
-        $key = $this->createKey($get, $post, $cookies);
+        $key = $this->createKey($get, $post, $cookies, $url);
         if (($contents[$key] ?? null) === null) {
             $originalGet = $_GET;
             $originalPost = $_POST;
             $originalCookies = $_COOKIE;
+            $originalRequestUri = $_SERVER['REQUEST_URI'] ?? null;
             if ($get) {
                 $_GET = \array_merge($_GET, $get);
             }
@@ -121,6 +123,9 @@ abstract class AbstractContentTest extends TestWithMockery
             }
             if ($cookies) {
                 $_COOKIE = \array_merge($_COOKIE, $cookies);
+            }
+            if ($url !== '/') {
+                $_SERVER['REQUEST_URI'] = $url;
             }
             if ($this->needPassIn()) {
                 $this->passIn();
@@ -134,6 +139,7 @@ abstract class AbstractContentTest extends TestWithMockery
             $_POST = $originalPost;
             $_GET = $originalGet;
             $_COOKIE = $originalCookies;
+            $_SERVER['REQUEST_URI'] = $originalRequestUri;
             self::assertNotEmpty(
                 $contents[$key],
                 'Nothing has been fetched with GET ' . \var_export($get, true) . ', POST ' . \var_export($post, true)
@@ -145,9 +151,9 @@ abstract class AbstractContentTest extends TestWithMockery
         return $contents[$key];
     }
 
-    protected function createKey(array $get, array $post, array $cookies): string
+    protected function createKey(array $get, array $post, array $cookies, string $url): string
     {
-        return \json_encode($get) . '-' . \json_encode($post) . '-' . \json_encode($cookies) . '-' . (int)$this->needPassIn() . (int)$this->needPassOut();
+        return \json_encode($get) . '-' . \json_encode($post) . '-' . \json_encode($cookies) . '-' . $url . (int)$this->needPassIn() . (int)$this->needPassOut();
     }
 
     protected function needPassIn(): bool
@@ -164,14 +170,15 @@ abstract class AbstractContentTest extends TestWithMockery
      * @param array $get
      * @param array $post
      * @param array $cookies
+     * @param string $url = '/'
      * @return HtmlDocument
      */
-    protected function getHtmlDocument(array $get = [], array $post = [], array $cookies = []): HtmlDocument
+    protected function getHtmlDocument(array $get = [], array $post = [], array $cookies = [], string $url = '/'): HtmlDocument
     {
         static $htmlDocuments = [];
-        $key = $this->createKey($get, $post, $cookies);
+        $key = $this->createKey($get, $post, $cookies, $url);
         if (($htmlDocuments[$key] ?? null) === null) {
-            $htmlDocuments[$key] = new HtmlDocument($this->getContent($get, $post, $cookies));
+            $htmlDocuments[$key] = new HtmlDocument($this->getContent($get, $post, $cookies, $url));
         }
 
         return $htmlDocuments[$key];
@@ -179,7 +186,7 @@ abstract class AbstractContentTest extends TestWithMockery
 
     protected function fetchHtmlDocumentFromLocalUrl(): HtmlDocument
     {
-        $content = $this->fetchContentFromLink($this->getTestsConfiguration()->getLocalUrl(), true)['content'];
+        $content = $this->fetchContentFromUrl($this->getTestsConfiguration()->getLocalUrl(), true)['content'];
         self::assertNotEmpty($content);
 
         return new HtmlDocument($content);
@@ -251,12 +258,12 @@ abstract class AbstractContentTest extends TestWithMockery
     protected const WITH_BODY = true;
     protected const WITHOUT_BODY = true;
 
-    protected function fetchContentFromLink(string $link, bool $withBody, array $post = [], array $cookies = [], array $headers = []): array
+    protected function fetchContentFromUrl(string $url, bool $withBody, array $post = [], array $cookies = [], array $headers = []): array
     {
         static $cachedContent = [];
-        $key = $link . ($withBody ? '1' : '0') . $this->createKey($headers, $post, $cookies);
+        $key = ($withBody ? '1' : '0') . $this->createKey($headers, $post, $cookies, $url);
         if (($cachedContent[$key] ?? null) === null) {
-            $curl = \curl_init($link);
+            $curl = \curl_init($url);
             \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, 1);
             \curl_setopt($curl, \CURLOPT_CONNECTTIMEOUT, 7);
             if (!$withBody) {
@@ -355,9 +362,10 @@ abstract class AbstractContentTest extends TestWithMockery
 
     /**
      * @param array $values
+     * @param string $path
      * @return Request|MockInterface
      */
-    protected function createRequest(array $values = []): Request
+    protected function createRequest(array $values = [], string $path = '/'): Request
     {
         $request = $this->mockery($this->getRequestClass());
         foreach ($values as $name => $value) {
@@ -365,6 +373,8 @@ abstract class AbstractContentTest extends TestWithMockery
                 ->with($name)
                 ->andReturn($value);
         }
+        $request->allows('getPath')
+            ->andReturn($path);
         $request->makePartial();
 
         return $request;

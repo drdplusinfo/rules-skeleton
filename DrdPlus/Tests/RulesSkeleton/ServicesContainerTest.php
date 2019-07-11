@@ -45,6 +45,17 @@ class ServicesContainerTest extends AbstractContentTest
     /**
      * @test
      */
+    public function I_can_get_rules_url_matcher(): void
+    {
+        $servicesContainerClass = static::getSutClass();
+        /** @var ServicesContainer $servicesContainer */
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
+        self::assertNotEmpty($servicesContainer->getRulesUrlMatcher());
+    }
+
+    /**
+     * @test
+     */
     public function I_can_get_page_cache_with_properly_set_production_mode(): void
     {
         $servicesContainerClass = static::getSutClass();
