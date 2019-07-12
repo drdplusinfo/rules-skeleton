@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
@@ -396,17 +395,18 @@ abstract class AbstractContentTest extends TestWithMockery
 
     /**
      * @param array $customSettings
+     * @param Dirs $dirs = null
      * @return Configuration|MockInterface
      */
-    protected function createCustomConfiguration(array $customSettings): Configuration
+    protected function createCustomConfiguration(array $customSettings, Dirs $dirs = null): Configuration
     {
         $originalConfiguration = $this->getConfiguration();
         $configurationClass = \get_class($originalConfiguration);
         $customConfiguration = new $configurationClass(
-            $originalConfiguration->getDirs(),
+            $dirs ?? $originalConfiguration->getDirs(),
             \array_replace_recursive($originalConfiguration->getSettings(), $customSettings)
         );
-        /** Configuration */
+        /** Configuration|MockInterface */
         return $customConfiguration;
     }
 

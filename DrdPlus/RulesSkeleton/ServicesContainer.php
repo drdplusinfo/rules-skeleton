@@ -21,6 +21,7 @@ use Granam\WebContentBuilder\Web\HtmlContentInterface;
 use Granam\WebContentBuilder\Web\JsFiles;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 
 class ServicesContainer extends StrictObject
@@ -286,16 +287,24 @@ class ServicesContainer extends StrictObject
     public function getRulesUrlMatcher(): RulesUrlMatcher
     {
         if ($this->rulesUrlMatcher === null) {
-            $router = new \Symfony\Component\Routing\Router(
-                new YamlFileLoader(new FileLocator([$this->getDirs()->getProjectRoot()])),
-                'routes.yml',
-                ['cache_dir' => $this->getPassWebCache()->getCacheDir() . '/router'],
-                (new RequestContext())->fromRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals())
-            );
-            $this->rulesUrlMatcher = new RulesUrlMatcher($router->getMatcher());
+            $this->rulesUrlMatcher = new RulesUrlMatcher($this->createUrlMatcher());
         }
-
         return $this->rulesUrlMatcher;
+    }
+
+    private function createUrlMatcher(): UrlMatcherInterface
+    {
+        $yamlFileWithRoutes = $this->getConfiguration()->getYamlFileWithRoutes();
+        if (!$yamlFileWithRoutes) {
+            return new DummyUrlMatcher();
+        }
+        $router = new \Symfony\Component\Routing\Router(
+            new YamlFileLoader(new FileLocator([$this->getDirs()->getProjectRoot()])),
+            $yamlFileWithRoutes,
+            ['cache_dir' => $this->getPassWebCache()->getCacheDir() . '/router'],
+            (new RequestContext())->fromRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals())
+        );
+        return $router->getMatcher();
     }
 
     public function getCookiesService(): CookiesService
