@@ -167,5 +167,8 @@ class RulesMainContentTest extends MainContentTest
         }
         $routedContent = $this->getHtmlDocument([], [], [], '/routed')->getElementById('just_some_element_from_routed_content');
         self::assertNotEmpty($routedContent);
+
+        $hyphenRoutedContent = $this->getHtmlDocument([], [], [], '/draci-a-dracata')->getElementById('just_some_element_from_draci_a_dracata');
+        self::assertNotEmpty($hyphenRoutedContent);
     }
 }
