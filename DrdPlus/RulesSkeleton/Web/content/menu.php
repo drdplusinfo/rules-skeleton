@@ -15,7 +15,7 @@ HTML;
 }
 ?>
 
-<div class="contacts visible top permanent $fixed" id="menu">
+<div class="contacts visible top permanent <?= $fixed ?>" id="menu">
   <div class="container">
       <?= $homeButton ?>
     <span class="contact">
