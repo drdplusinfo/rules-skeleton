@@ -39,6 +39,7 @@ class Configuration extends StrictObject
     // application
     public const APPLICATION = 'application';
     public const YAML_FILE_WITH_ROUTES = 'yaml_file_with_routes';
+    public const DEFAULT_YAML_FILE_WITH_ROUTES = 'default_yaml_file_with_routes';
 
     /** @var Dirs */
     private $dirs;
@@ -242,5 +243,10 @@ class Configuration extends StrictObject
     public function getYamlFileWithRoutes(): string
     {
         return $this->getSettings()[static::APPLICATION][static::YAML_FILE_WITH_ROUTES] ?? '';
+    }
+
+    public function getDefaultYamlFileWithRoutes(): string
+    {
+        return $this->getSettings()[static::APPLICATION][static::DEFAULT_YAML_FILE_WITH_ROUTES] ?? 'routes.yml';
     }
 }

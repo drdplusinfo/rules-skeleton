@@ -294,8 +294,8 @@ class ServicesContainer extends StrictObject
 
     private function createUrlMatcher(): UrlMatcherInterface
     {
-        $yamlFileWithRoutes = $this->getConfiguration()->getYamlFileWithRoutes();
-        if (!$yamlFileWithRoutes) {
+        $yamlFileWithRoutes = $this->getYamlFileWithRoutes();
+        if ($yamlFileWithRoutes === '') {
             return new DummyUrlMatcher();
         }
         $router = new \Symfony\Component\Routing\Router(
@@ -305,6 +305,19 @@ class ServicesContainer extends StrictObject
             (new RequestContext())->fromRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals())
         );
         return $router->getMatcher();
+    }
+
+    protected function getYamlFileWithRoutes(): string
+    {
+        $yamlFileWithRoutes = $this->getConfiguration()->getYamlFileWithRoutes();
+        if ($yamlFileWithRoutes !== '') {
+            return $yamlFileWithRoutes;
+        }
+        $defaultYamlFileWithRoutes = $this->getDirs()->getProjectRoot() . '/' . $this->getConfiguration()->getDefaultYamlFileWithRoutes();
+        if (!file_exists($defaultYamlFileWithRoutes)) {
+            return '';
+        }
+        return $defaultYamlFileWithRoutes;
     }
 
     public function getCookiesService(): CookiesService
