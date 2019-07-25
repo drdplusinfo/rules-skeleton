@@ -27,6 +27,7 @@
 </div>
 <div class="row">
   <div class="col">
-      <?= $debugContactsBody->getValue() ?> Děkujeme!
+      <?= $debugContactsBody->getValue() ?>
+    My už tomu odkazu ukážeme cestu.
   </div>
 </div>

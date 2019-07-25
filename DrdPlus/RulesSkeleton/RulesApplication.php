@@ -6,6 +6,8 @@ namespace DrdPlus\RulesSkeleton;
 use DrdPlus\RulesSkeleton\Web\RulesContent;
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\Web\Exceptions\UnknownWebFilesDir;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class RulesApplication extends StrictObject
 {
@@ -30,18 +32,17 @@ class RulesApplication extends StrictObject
 
     public function run(): void
     {
-        $this->sendCustomHeaders();
-
-        if ($this->isRequestedWebVersionUpdate()) {
-            echo $this->updateCode();
-        } else {
-            $this->persistCurrentVersion();
-            try {
+        try {
+            $this->sendCustomHeaders();
+            if ($this->isRequestedWebVersionUpdate()) {
+                echo $this->updateCode();
+            } else {
+                $this->persistCurrentVersion();
                 echo $this->getContent()->getValue();
-            } catch (UnknownWebFilesDir $unknownWebFilesDir) {
-                $this->sendNotFoundHeaders();
-                echo $this->getNotFoundContent()->getValue();
             }
+        } catch (UnknownWebFilesDir | RouteNotFoundException | ResourceNotFoundException $invalidRoute) {
+            $this->sendNotFoundHeaders();
+            echo $this->getNotFoundContent()->getValue();
         }
     }
 

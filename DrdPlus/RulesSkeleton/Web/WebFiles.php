@@ -2,12 +2,10 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\Dirs;
-
 class WebFiles extends \Granam\WebContentBuilder\Web\WebFiles
 {
-    public function __construct(Dirs $dirs)
+    public function __construct(WebRootProvider $webRootProvider)
     {
-        parent::__construct($dirs->getWebRoot());
+        parent::__construct($webRootProvider);
     }
 }

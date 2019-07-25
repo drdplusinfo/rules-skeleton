@@ -13,6 +13,7 @@ use DrdPlus\RulesSkeleton\Web\RulesMainContent;
 use DrdPlus\RulesSkeleton\Web\TablesContent;
 use DrdPlus\RulesSkeleton\Web\WebFiles;
 use DrdPlus\RulesSkeleton\Web\WebPartsContainer;
+use DrdPlus\RulesSkeleton\Web\WebRootProvider;
 use DrdPlus\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
@@ -50,6 +51,10 @@ class ServicesContainer extends StrictObject
     private $jsFiles;
     /** @var WebFiles */
     private $webFiles;
+    /** @var WebRootProvider */
+    private $webRootProvider;
+    /** @var PathProvider */
+    private $pathProvider;
     /** @var Request */
     private $request;
     /** @var ContentIrrelevantParametersFilter */
@@ -290,15 +295,30 @@ class ServicesContainer extends StrictObject
     public function getWebFiles(): WebFiles
     {
         if ($this->webFiles === null) {
-            $this->webFiles = new WebFiles($this->createRoutedDirs($this->getDirs()));
+            $this->webFiles = new WebFiles($this->getWebRootProvider());
         }
         return $this->webFiles;
     }
 
+    protected function getWebRootProvider(): WebRootProvider
+    {
+        if ($this->webRootProvider === null) {
+            $this->webRootProvider = new WebRootProvider($this->createRoutedDirs($this->getDirs()));
+        }
+        return $this->webRootProvider;
+    }
+
     protected function createRoutedDirs(Dirs $dirs): Dirs
     {
-        $match = $this->getRulesUrlMatcher()->match($this->getRequest()->getCurrentUrl());
-        return new Dirs($dirs->getProjectRoot(), $match->getPath());
+        return new Dirs($dirs->getProjectRoot(), $this->getPathProvider());
+    }
+
+    protected function getPathProvider(): PathProvider
+    {
+        if ($this->pathProvider === null) {
+            $this->pathProvider = new PathProvider($this->getRulesUrlMatcher(), $this->getRequest()->getCurrentUrl());
+        }
+        return $this->pathProvider;
     }
 
     public function getRulesUrlMatcher(): RulesUrlMatcher
