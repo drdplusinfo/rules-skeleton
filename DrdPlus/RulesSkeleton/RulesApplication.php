@@ -5,6 +5,7 @@ namespace DrdPlus\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\Web\RulesContent;
 use Granam\Strict\Object\StrictObject;
+use Granam\WebContentBuilder\Web\Exceptions\UnknownWebFilesDir;
 
 class RulesApplication extends StrictObject
 {
@@ -18,6 +19,8 @@ class RulesApplication extends StrictObject
     private $redirect;
     /** @var bool */
     private $canPassIn;
+    /** @var RulesContent */
+    private $notFoundContent;
 
     public function __construct(ServicesContainer $servicesContainer)
     {
@@ -33,7 +36,12 @@ class RulesApplication extends StrictObject
             echo $this->updateCode();
         } else {
             $this->persistCurrentVersion();
-            echo $this->getContent()->getValue();
+            try {
+                echo $this->getContent()->getValue();
+            } catch (UnknownWebFilesDir $unknownWebFilesDir) {
+                $this->sendNotFoundHeaders();
+                echo $this->getNotFoundContent()->getValue();
+            }
         }
     }
 
@@ -182,5 +190,31 @@ class RulesApplication extends StrictObject
             \header('Content-Length: ' . \filesize($pdfFile));
             \header("Content-Disposition: attachment; filename=\"$pdfFileBasename\"");
         }
+    }
+
+    private function sendNotFoundHeaders(): void
+    {
+        if (\PHP_SAPI === 'cli') {
+            return;
+        }
+        http_response_code(404);
+    }
+
+    private function getNotFoundContent(): RulesContent
+    {
+        if ($this->notFoundContent) {
+            return $this->notFoundContent;
+        }
+        $servicesContainer = $this->servicesContainer;
+        $this->notFoundContent = new RulesContent(
+            $servicesContainer->getNotFoundContent(),
+            $servicesContainer->getMenu(),
+            $servicesContainer->getCurrentWebVersion(),
+            $servicesContainer->getNotFoundCache(),
+            RulesContent::NOT_FOUND,
+            $this->getRedirect()
+        );
+
+        return $this->notFoundContent;
     }
 }

@@ -12,6 +12,7 @@ class Cache extends StrictObject
     public const PAGES = 'pages';
     public const PASS = 'pass';
     public const PASSED = 'passed';
+    public const NOT_FOUND = 'not_found';
     // named parameters
     public const IN_PRODUCTION = true;
     public const NOT_IN_PRODUCTION = false;

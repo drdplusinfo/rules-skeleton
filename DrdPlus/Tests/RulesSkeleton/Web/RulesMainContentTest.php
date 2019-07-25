@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton\Web;
 
@@ -183,6 +182,6 @@ class RulesMainContentTest extends MainContentTest
         $response = $this->fetchContentFromUrl($nonExistingRoute . '?' . Request::TRIAL . '=1', true);
         $this->passOut();
         self::assertSame(404, $response['responseHttpCode']);
-        self::assertStringContainsStringIgnoringCase('stráhnka nenalezena', $response['body']);
+        self::assertStringContainsStringIgnoringCase('kde nic tu nic', $response['content']);
     }
 }

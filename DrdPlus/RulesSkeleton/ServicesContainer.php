@@ -6,6 +6,7 @@ use DeviceDetector\Parser\Bot;
 use DrdPlus\RulesSkeleton\Web\EmptyMenu;
 use DrdPlus\RulesSkeleton\Web\Head;
 use DrdPlus\RulesSkeleton\Web\Menu;
+use DrdPlus\RulesSkeleton\Web\NotFoundContent;
 use DrdPlus\RulesSkeleton\Web\Pass;
 use DrdPlus\RulesSkeleton\Web\PassContent;
 use DrdPlus\RulesSkeleton\Web\RulesMainContent;
@@ -65,6 +66,8 @@ class ServicesContainer extends StrictObject
     private $rulesPdfWebContent;
     /** @var RulesMainContent */
     private $passContent;
+    /** @var NotFoundContent */
+    private $notFoundContent;
     /** @var CookiesService */
     private $cookiesService;
     /** @var \DateTimeImmutable */
@@ -73,6 +76,8 @@ class ServicesContainer extends StrictObject
     private $passWebCache;
     /** @var Cache */
     private $passedWebCache;
+    /** @var Cache */
+    private $notFoundCache;
     /** @var UsagePolicy */
     private $usagePolicy;
     /** @var Pass */
@@ -191,6 +196,18 @@ class ServicesContainer extends StrictObject
             );
         }
         return $this->passContent;
+    }
+
+    public function getNotFoundContent(): NotFoundContent
+    {
+        if ($this->notFoundContent === null) {
+            $this->notFoundContent = new NotFoundContent(
+                $this->getHtmlHelper(),
+                $this->getHead(),
+                $this->getWebPartsContainer()->getNotFoundBody()
+            );
+        }
+        return $this->notFoundContent;
     }
 
     public function getHtmlHelper(): HtmlHelper
@@ -367,6 +384,22 @@ class ServicesContainer extends StrictObject
             );
         }
         return $this->passedWebCache;
+    }
+
+    public function getNotFoundCache(): Cache
+    {
+        if ($this->notFoundCache === null) {
+            $this->notFoundCache = new Cache(
+                $this->getCurrentWebVersion(),
+                $this->getDirs(),
+                $this->getRequest(),
+                $this->getContentIrrelevantParametersFilter(),
+                $this->getGit(),
+                $this->getHtmlHelper()->isInProduction(),
+                Cache::NOT_FOUND
+            );
+        }
+        return $this->notFoundCache;
     }
 
     public function getPass(): Pass
