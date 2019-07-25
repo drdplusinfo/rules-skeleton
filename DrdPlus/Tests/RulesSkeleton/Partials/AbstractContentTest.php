@@ -515,10 +515,6 @@ abstract class AbstractContentTest extends TestWithMockery
         return $passDocument;
     }
 
-    /**
-     * @param bool $notCached
-     * @return string
-     */
     protected function getPassContent(bool $notCached = false): string
     {
         if ($notCached) {

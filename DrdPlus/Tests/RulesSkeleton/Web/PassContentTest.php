@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\RulesSkeleton\Web;
 
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
+use Granam\WebContentBuilder\HtmlDocument;
 
 class PassContentTest extends AbstractContentTest
 {
@@ -29,5 +30,33 @@ class PassContentTest extends AbstractContentTest
             }
         }
         self::assertTrue($someHeadingsChecked, 'Some headings expected on pass');
+    }
+
+    /**
+     * @test
+     */
+    public function Pass_does_not_reset_requested_path_and_query(): void
+    {
+        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasProtectedAccess()) {
+            self::assertFalse(false, 'Nothing to test here');
+
+            return;
+        }
+        $someActionsChecked = false;
+        $localUrl = '/foo?qux=baz';
+        $url = $this->getTestsConfiguration()->getLocalUrl() . $localUrl;
+        $content = $this->fetchContentFromUrl($url, true)['content'];
+        self::assertNotEmpty($content, 'No content fetched from ' . $url);
+
+        $pass = new HtmlDocument($content);
+        foreach ($pass->getElementsByTagName('form') as $form) {
+            $action = $form->getAttribute('action');
+            if (!preg_match('~^/[^/]*$~', $action)) {
+                continue; // not a local link
+            }
+            self::assertSame($localUrl, $action);
+            $someActionsChecked = true;
+        }
+        self::assertTrue($someActionsChecked, 'No forms with a local link found on URL ' . $url);
     }
 }

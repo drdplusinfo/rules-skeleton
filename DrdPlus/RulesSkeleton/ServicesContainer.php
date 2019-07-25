@@ -372,7 +372,7 @@ class ServicesContainer extends StrictObject
     public function getPass(): Pass
     {
         if ($this->pass === null) {
-            $this->pass = new Pass($this->getConfiguration(), $this->getUsagePolicy());
+            $this->pass = new Pass($this->getConfiguration(), $this->getUsagePolicy(), $this->getRequest());
         }
         return $this->pass;
     }
