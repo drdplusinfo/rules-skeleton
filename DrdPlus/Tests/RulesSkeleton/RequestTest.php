@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
@@ -242,4 +241,15 @@ class RequestTest extends AbstractContentTest
         $_GET[Request::TRIAL_EXPIRED_AT] = time() - 10;
         self::assertTrue($request->trialJustExpired());
     }
+
+    /**
+     * @test
+     */
+    public function I_will_get_homepage_on_multiple_slashes(): void
+    {
+        $router = new Request($this->getBot());
+        $_SERVER['REQUEST_URI'] = '//';
+        self::assertSame('/', $router->getPath());
+    }
+
 }

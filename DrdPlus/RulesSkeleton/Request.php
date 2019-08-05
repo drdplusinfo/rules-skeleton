@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
@@ -74,7 +73,8 @@ class Request extends StrictObject
 
     public function getPath(): string
     {
-        return parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+        $requestUri = preg_replace('~/{2,}~', '/', $_SERVER['REQUEST_URI'] ?? '/');
+        return parse_url($requestUri, PHP_URL_PATH);
     }
 
     /**
