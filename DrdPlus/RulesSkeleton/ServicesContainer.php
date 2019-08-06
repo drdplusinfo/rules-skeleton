@@ -308,9 +308,9 @@ class ServicesContainer extends StrictObject
         return $this->webRootProvider;
     }
 
-    protected function createRoutedDirs(Dirs $dirs): Dirs
+    protected function createRoutedDirs(Dirs $dirs): RoutedDirs
     {
-        return new Dirs($dirs->getProjectRoot(), $this->getPathProvider());
+        return new RoutedDirs($dirs->getProjectRoot(), $this->getPathProvider());
     }
 
     protected function getPathProvider(): PathProvider

@@ -8,39 +8,12 @@ class Dirs extends \Granam\WebContentBuilder\Dirs
     private $cacheRoot;
     /** @var string */
     private $pdfRoot;
-    private $pathProvider;
-    /** @var string */
-    private $relativeWebRoot;
 
-    public function __construct(string $projectRoot, PathProvider $pathProvider = null)
+    public function __construct(string $projectRoot)
     {
         parent::__construct($projectRoot);
         $this->cacheRoot = $projectRoot . '/cache/' . \PHP_SAPI;
         $this->pdfRoot = $projectRoot . '/pdf';
-        $this->pathProvider = $pathProvider;
-    }
-
-    public function getWebRoot(): string
-    {
-        $webRoot = parent::getWebRoot();
-        if ($this->getRelativeWebRoot() !== '') {
-            $webRoot .= '/' . $this->getRelativeWebRoot();
-        }
-        return $webRoot;
-    }
-
-    protected function getRelativeWebRoot(): string
-    {
-        if ($this->relativeWebRoot === null) {
-            $this->relativeWebRoot = $this->unifyRelativePath($this->pathProvider->getPath());
-        }
-        return $this->relativeWebRoot;
-    }
-
-    protected function unifyRelativePath(string $path): string
-    {
-        $path = str_replace('\\', '/', $path);
-        return trim($path, '/');
     }
 
     public function getCacheRoot(): string
