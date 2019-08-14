@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
@@ -28,6 +27,8 @@ class Configuration extends StrictObject
     public const WEB = 'web';
     public const MENU_POSITION_FIXED = 'menu_position_fixed';
     public const SHOW_HOME_BUTTON = 'show_home_button';
+    public const SHOW_HOME_BUTTON_ON_HOMEPAGE = 'show_home_button_on_homepage';
+    public const SHOW_HOME_BUTTON_ON_ROUTES = 'show_home_button_on_routes';
     public const NAME = 'name';
     public const TITLE_SMILEY = 'title_smiley';
     public const PROTECTED_ACCESS = 'protected_access';
@@ -60,6 +61,8 @@ class Configuration extends StrictObject
         $this->guardValidEshopUrl($settings);
         $this->guardSetProtectedAccess($settings);
         $this->guardSetShowHomeButton($settings);
+        $this->guardSetShowHomeButtonOnHomepage($settings);
+        $this->guardSetShowHomeButtonOnRoutes($settings);
         $this->guardValidFaviconUrl($settings);
         $this->settings = $settings;
     }
@@ -166,12 +169,46 @@ class Configuration extends StrictObject
 
     protected function guardSetShowHomeButton(array $settings): void
     {
-        if (($settings[static::WEB][static::SHOW_HOME_BUTTON] ?? null) === null) {
+        if (($settings[static::WEB][static::SHOW_HOME_BUTTON] ?? null) === null
+            && (($settings[static::WEB][static::SHOW_HOME_BUTTON_ON_HOMEPAGE] ?? null) === null
+                || ($settings[static::WEB][static::SHOW_HOME_BUTTON_ON_ROUTES] ?? null) === null
+            )
+        ) {
             throw new Exceptions\MissingShownHomeButtonConfiguration(
                 sprintf(
                     'Configuration if home button should be shown is missing in configuration %s.%s',
                     static::WEB,
                     static::SHOW_HOME_BUTTON
+                )
+            );
+        }
+    }
+
+    protected function guardSetShowHomeButtonOnHomepage(array $settings): void
+    {
+        if (($settings[static::WEB][static::SHOW_HOME_BUTTON] ?? null) === null
+            && ($settings[static::WEB][static::SHOW_HOME_BUTTON_ON_HOMEPAGE] ?? null) === null
+        ) {
+            throw new Exceptions\MissingShownHomeButtonOnHomepageConfiguration(
+                sprintf(
+                    'Configuration if home button should be shown on homepage is missing in configuration %s.%s',
+                    static::WEB,
+                    static::SHOW_HOME_BUTTON_ON_HOMEPAGE
+                )
+            );
+        }
+    }
+
+    protected function guardSetShowHomeButtonOnRoutes(array $settings): void
+    {
+        if (($settings[static::WEB][static::SHOW_HOME_BUTTON] ?? null) === null
+            && ($settings[static::WEB][static::SHOW_HOME_BUTTON_ON_ROUTES] ?? null) === null
+        ) {
+            throw new Exceptions\MissingShownHomeButtonOnRoutesConfiguration(
+                sprintf(
+                    'Configuration if home button should be shown on routes is missing in configuration %s.%s',
+                    static::WEB,
+                    static::SHOW_HOME_BUTTON_ON_ROUTES
                 )
             );
         }
@@ -210,9 +247,26 @@ class Configuration extends StrictObject
         return (bool)$this->getSettings()[static::WEB][static::MENU_POSITION_FIXED];
     }
 
+    /**
+     * @return bool
+     * @deprecated
+     */
     public function isShowHomeButton(): bool
     {
-        return (bool)$this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON];
+        return ($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON] ?? false)
+            || (($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON_ON_HOMEPAGE] ?? false)
+                && ($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON_ON_ROUTES] ?? false)
+            );
+    }
+
+    public function isShowHomeButtonOnHomepage(): bool
+    {
+        return ($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON_ON_HOMEPAGE] ?? false) || $this->isShowHomeButton();
+    }
+
+    public function isShowHomeButtonOnRoutes(): bool
+    {
+        return ($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON_ON_ROUTES] ?? false) || $this->isShowHomeButton();
     }
 
     public function getWebName(): string

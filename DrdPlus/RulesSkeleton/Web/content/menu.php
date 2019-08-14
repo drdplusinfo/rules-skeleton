@@ -1,10 +1,14 @@
 <?php
 /** @var $configuration \DrdPlus\RulesSkeleton\Configuration */
+/** @var $homepageDetector \DrdPlus\RulesSkeleton\HomepageDetector */
 $fixed = $configuration->isMenuPositionFixed()
     ? 'fixed'
     : '';
 $homeButton = '';
-if ($configuration->isShowHomeButton()) {
+if ($configuration->isShowHomeButton()
+    || ($homepageDetector->isHomepageRequested() && $configuration->isShowHomeButtonOnHomepage())
+    || (!$homepageDetector->isHomepageRequested() && $configuration->isShowHomeButtonOnRoutes())
+) {
     $homeButton = <<<HTML
 <span class="menu">
     <a id="homeButton" class="internal-url" href="https://www.drdplus.info">

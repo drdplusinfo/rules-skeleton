@@ -37,6 +37,8 @@ class ServicesContainer extends StrictObject
     private $git;
     /** @var Configuration */
     private $configuration;
+    /** @var HomepageDetector */
+    private $homepageDetector;
     /** @var HtmlHelper */
     private $htmlHelper;
     /** @var Head */
@@ -99,6 +101,14 @@ class ServicesContainer extends StrictObject
     public function getConfiguration(): Configuration
     {
         return $this->configuration;
+    }
+
+    public function getHomepageDetector(): HomepageDetector
+    {
+        if ($this->homepageDetector === null) {
+            $this->homepageDetector = new HomepageDetector($this->getPathProvider());
+        }
+        return $this->homepageDetector;
     }
 
     public function getCurrentWebVersion(): CurrentWebVersion
@@ -223,7 +233,7 @@ class ServicesContainer extends StrictObject
     public function getMenu(): Menu
     {
         if ($this->menu === null) {
-            $this->menu = new Menu($this->getConfiguration(), $this->getWebVersions(), $this->getCurrentWebVersion(), $this->getRequest());
+            $this->menu = new Menu($this->getConfiguration(), $this->getHomepageDetector());
         }
         return $this->menu;
     }
@@ -446,9 +456,7 @@ class ServicesContainer extends StrictObject
     {
         return new EmptyMenu(
             $this->getConfiguration(),
-            $this->getWebVersions(),
-            $this->getCurrentWebVersion(),
-            $this->getRequest()
+            $this->getHomepageDetector()
         );
     }
 

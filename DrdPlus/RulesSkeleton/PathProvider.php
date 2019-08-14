@@ -2,7 +2,9 @@
 
 namespace DrdPlus\RulesSkeleton;
 
-class PathProvider
+use Granam\Strict\Object\StrictObject;
+
+class PathProvider extends StrictObject
 {
     /**
      * @var RulesUrlMatcher
