@@ -210,4 +210,25 @@ class ConfigurationTest extends AbstractContentTest
         $configuration = new Configuration($this->getDirs(), $completeSettings);
         self::assertSame('foo', $configuration->getYamlFileWithRoutes());
     }
+
+    /**
+     * @test
+     */
+    public function I_will_get_default_home_button_target_if_none_custom_is_set()
+    {
+        $completeSettings = $this->getSomeCompleteSettings();
+        $configuration = new Configuration($this->getDirs(), $completeSettings);
+        self::assertSame('https://www.drdplus.info', $configuration->getHomeButtonTarget());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_overwrite_default_home_button_target()
+    {
+        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings[Configuration::WEB][Configuration::HOME_BUTTON_TARGET] = '..';
+        $configuration = new Configuration($this->getDirs(), $completeSettings);
+        self::assertSame('..', $configuration->getHomeButtonTarget());
+    }
 }

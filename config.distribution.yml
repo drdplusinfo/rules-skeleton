@@ -4,6 +4,7 @@ web:
   menu_position_fixed: false
   show_home_button_on_homepage: true
   show_home_button_on_routes: true
+  home_button_target: 'https://www.drdplus.info'
   name: 'HTML kostra pro DrDPlus, jakoby pravidla čaroděje'
   title_smiley: '☠️'
 google:

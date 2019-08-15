@@ -245,4 +245,38 @@ HTML
             'show home button only on homepage' => [false, true, false],
         ];
     }
+
+    /**
+     * @test
+     * @dataProvider provideConfigurationToHideHomeButtonOnRoutes
+     */
+    public function Home_button_target_leads_to_expected_link(): void
+    {
+        foreach ([true, false] as $showHomeButtonOnHomepage) {
+            $configuration = $this->createCustomConfiguration(
+                [Configuration::WEB => [
+                    Configuration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
+                    Configuration::SHOW_HOME_BUTTON_ON_ROUTES => !$showHomeButtonOnHomepage,
+                    Configuration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
+                ]]
+            );
+            self::assertSame($configuration->getHomeButtonTarget(), $expectedTarget);
+            $menu = $this->createMenu($configuration, $showHomeButtonOnHomepage);
+            if ($this->isSkeletonChecked()) {
+                $htmlDocument = new HtmlDocument(<<<HTML
+<html lang="cs">
+<body>
+{$menu->getValue()}
+</body>
+</html>
+HTML
+                );
+                /** @var Element $homeButton */
+                $homeButton = $htmlDocument->getElementById('homeButton');
+                self::assertNotEmpty($homeButton, 'Home button expected');
+                self::assertSame($expectedTarget, $homeButton->getAttribute('href'));
+            }
+        }
+    }
+
 }

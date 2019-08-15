@@ -29,6 +29,7 @@ class Configuration extends StrictObject
     public const SHOW_HOME_BUTTON = 'show_home_button';
     public const SHOW_HOME_BUTTON_ON_HOMEPAGE = 'show_home_button_on_homepage';
     public const SHOW_HOME_BUTTON_ON_ROUTES = 'show_home_button_on_routes';
+    public const HOME_BUTTON_TARGET = 'home_button_target';
     public const NAME = 'name';
     public const TITLE_SMILEY = 'title_smiley';
     public const PROTECTED_ACCESS = 'protected_access';
@@ -267,6 +268,11 @@ class Configuration extends StrictObject
     public function isShowHomeButtonOnRoutes(): bool
     {
         return ($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON_ON_ROUTES] ?? false) || $this->isShowHomeButton();
+    }
+
+    public function getHomeButtonTarget(): string
+    {
+        return $this->getSettings()[static::WEB][static::HOME_BUTTON_TARGET] ?? 'https://www.drdplus.info';
     }
 
     public function getWebName(): string
