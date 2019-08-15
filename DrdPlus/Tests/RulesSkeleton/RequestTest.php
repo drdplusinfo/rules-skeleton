@@ -101,6 +101,32 @@ class RequestTest extends AbstractContentTest
     /**
      * @test
      */
+    public function I_can_get_current_url_with_updated_query_parameters_and_removed_unwanted(): void
+    {
+        $request = new Request($this->getBot());
+        $_GET = ['foo' => 123, 'bar' => 456, 'baz' => 789];
+        self::assertSame(
+            '/?foo=0&baz=789',
+            $request->getCurrentUrl(['foo' => false], ['bar'])
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_current_url_without_automatic_parameters(): void
+    {
+        $request = new Request($this->getBot());
+        $_GET = ['foo' => 'ok', 'bar' => 'not ok', Request::TRIAL_EXPIRED_AT => time(), Request::TRIAL => '1', Request::CACHE => '1'];
+        self::assertSame(
+            sprintf('/?foo=nice&%s=1&%s=1', Request::TRIAL, Request::CACHE),
+            $request->getCurrentUrlWithoutAutomaticValues(['foo' => 'nice'], ['bar'])
+        );
+    }
+
+    /**
+     * @test
+     */
     public function I_can_get_value_from_get(): void
     {
         $request = new Request($this->getBot());
@@ -227,6 +253,15 @@ class RequestTest extends AbstractContentTest
     {
         $request = new Request($this->getBot());
         self::assertSame(\PHP_SAPI, $request->getPhpSapi());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_find_out_if_request_comes_from_cli(): void
+    {
+        $request = new Request($this->getBot());
+        self::assertSame(\PHP_SAPI === 'cli', $request->isCliRequest());
     }
 
     /**

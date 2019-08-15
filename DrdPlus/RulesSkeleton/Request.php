@@ -59,16 +59,26 @@ class Request extends StrictObject
         return (bool)$this->botParser->parse();
     }
 
-    public function getCurrentUrl(array $parameters = []): string
+    public function getCurrentUrl(array $overwriteParameters = [], array $excludeParameters = []): string
     {
         $url = $_SERVER['REQUEST_URI'] ?? '/';
-        if ($parameters === []) {
+        if ($overwriteParameters === [] && $excludeParameters === []) {
             return $url;
         }
         $path = parse_url($url, PHP_URL_PATH);
-        $queryParameters = \array_merge($_GET ?? [], $parameters);
+        $queryParameters = $_GET ?? [];
+        foreach ($excludeParameters as $excludeParameter) {
+            unset($queryParameters[$excludeParameter]);
+        }
+        $queryParameters = \array_merge($queryParameters ?? [], $overwriteParameters);
 
         return $path . '?' . \http_build_query($queryParameters);
+    }
+
+    public function getCurrentUrlWithoutAutomaticValues(array $overwriteParameters = [], array $excludeParameters = []): string
+    {
+        $excludeParameters[] = self::TRIAL_EXPIRED_AT;
+        return $this->getCurrentUrl($overwriteParameters, $excludeParameters);
     }
 
     public function getPath(): string
