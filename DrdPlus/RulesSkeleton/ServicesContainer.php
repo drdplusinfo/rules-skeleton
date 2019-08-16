@@ -59,6 +59,8 @@ class ServicesContainer extends StrictObject
     private $pathProvider;
     /** @var Request */
     private $request;
+    /** @var Environment */
+    private $environment;
     /** @var ContentIrrelevantParametersFilter */
     private $contentIrrelevantParametersFilter;
     /** @var Bot */
@@ -134,9 +136,17 @@ class ServicesContainer extends StrictObject
     public function getRequest(): Request
     {
         if ($this->request === null) {
-            $this->request = new Request($this->getBotParser());
+            $this->request = new Request($this->getBotParser(), $this->getEnvironment());
         }
         return $this->request;
+    }
+
+    public function getEnvironment(): Environment
+    {
+        if ($this->environment === null) {
+            $this->environment = Environment::createFromGlobals();
+        }
+        return $this->environment;
     }
 
     public function getGit(): Git

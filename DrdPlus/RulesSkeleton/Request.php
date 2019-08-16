@@ -21,10 +21,13 @@ class Request extends StrictObject
 
     /** @var Bot */
     private $botParser;
+    /** @var Environment */
+    private $environment;
 
-    public function __construct(Bot $botParser)
+    public function __construct(Bot $botParser, Environment $environment)
     {
         $this->botParser = $botParser;
+        $this->environment = $environment;
     }
 
     public function getServerUrl(): string
@@ -98,7 +101,7 @@ class Request extends StrictObject
 
     public function isCliRequest(): bool
     {
-        return \PHP_SAPI === 'cli';
+        return $this->environment->isCliRequest();
     }
 
     public function getValuesFromGet(): array
@@ -159,11 +162,6 @@ class Request extends StrictObject
     public function isRequestedPdf(): bool
     {
         return $this->getQueryString() === self::PDF || $this->getValueFromGet(self::PDF) !== null;
-    }
-
-    public function getPhpSapi(): string
-    {
-        return \PHP_SAPI;
     }
 
     public function trialJustExpired(): bool
