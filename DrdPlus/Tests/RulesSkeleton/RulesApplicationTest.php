@@ -206,7 +206,11 @@ class RulesApplicationTest extends AbstractContentTest
         $_GET[Request::PDF] = '1';
         $content = $this->fetchNonCachedContent();
         if (!$this->getTestsConfiguration()->hasPdf()) {
-            self::assertSame(0, strlen($content), 'No PDF expected due to tests configuration');
+            self::assertSame(
+                strlen($this->getContent([Request::PDF => 0])),
+                strlen($content),
+                'No PDF expected due to tests configuration'
+            );
         } else {
             $pdfFile = glob($this->getDirs()->getPdfRoot() . '/*.pdf')[0] ?? null;
             self::assertNotNull($pdfFile, 'No PDF file found in ' . $this->getDirs()->getPdfRoot() . '/*.pdf');
