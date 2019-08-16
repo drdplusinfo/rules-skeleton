@@ -471,7 +471,7 @@ abstract class AbstractContentTest extends TestWithMockery
     protected function getEnvironment(): Environment
     {
         if ($this->environment === null) {
-            $this->environment = new Environment();
+            $this->environment = Environment::createFromGlobals();
         }
         return $this->environment;
     }

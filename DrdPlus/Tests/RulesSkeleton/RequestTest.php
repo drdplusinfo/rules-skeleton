@@ -2,8 +2,10 @@
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\Environment;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
+use Mockery\MockInterface;
 
 /**
  * @backupGlobals enabled
@@ -249,19 +251,25 @@ class RequestTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_get_php_sapi(): void
+    public function I_can_find_out_if_request_comes_from_cli(): void
     {
-        $request = new Request($this->getBot(), $this->getEnvironment());
-        self::assertSame(\PHP_SAPI, $request->getPhpSapi());
+        $request = new Request($this->getBot(), $this->createEnvironment('paper'));
+        self::assertFalse($request->isCliRequest());
+        $request = new Request($this->getBot(), $this->createEnvironment('cli'));
+        self::assertTrue($request->isCliRequest());
     }
 
     /**
-     * @test
+     * @param string $phpSapi
+     * @return Environment|MockInterface
      */
-    public function I_can_find_out_if_request_comes_from_cli(): void
+    private function createEnvironment(string $phpSapi): Environment
     {
-        $request = new Request($this->getBot(), $this->getEnvironment());
-        self::assertSame(\PHP_SAPI === 'cli', $request->isCliRequest());
+        $environment = $this->mockery(Environment::class);
+        $environment->shouldReceive('getPhpSapi')
+            ->andReturn($phpSapi);
+        $environment->makePartial();
+        return $environment;
     }
 
     /**

@@ -164,11 +164,6 @@ class Request extends StrictObject
         return $this->getQueryString() === self::PDF || $this->getValueFromGet(self::PDF) !== null;
     }
 
-    public function getPhpSapi(): string
-    {
-        return \PHP_SAPI;
-    }
-
     public function trialJustExpired(): bool
     {
         return !empty($_GET[static::TRIAL_EXPIRED_AT]) && ((int)$_GET[static::TRIAL_EXPIRED_AT]) <= \time();

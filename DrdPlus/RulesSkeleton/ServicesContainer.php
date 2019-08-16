@@ -144,7 +144,7 @@ class ServicesContainer extends StrictObject
     public function getEnvironment(): Environment
     {
         if ($this->environment === null) {
-            $this->environment = new Environment();
+            $this->environment = Environment::createFromGlobals();
         }
         return $this->environment;
     }
