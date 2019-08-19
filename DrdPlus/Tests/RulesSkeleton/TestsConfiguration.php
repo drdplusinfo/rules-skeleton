@@ -163,6 +163,12 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setTooShortFailureNames($values);
         $this->setTooShortSuccessNames($values);
         $this->setTooShortResultNames($values);
+        $this->setHasCalculations($values);
+        $this->setHasShownHomeButton($values);
+        $this->setHasShownHomeButtonOnHomepage($values);
+        $this->setHasShownHomeButtonOnRoutes($values);
+        $this->setHasButtons($values);
+        $this->setHasMarkedContent($values);
     }
 
     /**
@@ -337,6 +343,11 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private function setHasShownHomeButtonOnRoutes(array $values)
     {
         $this->hasShownHomeButtonOnRoutes = (bool)($values[self::HAS_SHOWN_HOME_BUTTON_ON_ROUTES] ?? $this->hasShownHomeButtonOnRoutes);
+    }
+
+    private function setHasButtons(array $values)
+    {
+        $this->hasButtons = (bool)($values[self::HAS_BUTTONS] ?? $this->hasButtons);
     }
 
     private function setHasMarkedContent(array $values)
