@@ -14,19 +14,8 @@ class TestsConfigurationTest extends AbstractContentTest
      */
     public function I_can_use_it(): void
     {
-        $testsConfigurationReflection = new \ReflectionClass(static::getSutClass());
-        $methods = $testsConfigurationReflection->getMethods(
-            \ReflectionMethod::IS_PUBLIC ^ \ReflectionMethod::IS_STATIC ^ \ReflectionMethod::IS_ABSTRACT
-        );
-        $hasGetters = [];
-        foreach ($methods as $method) {
-            $methodName = $method->getName();
-            if (\strpos($methodName, 'has') === 0 || \strpos($methodName, 'can') === 0) {
-                $hasGetters[] = $methodName;
-            }
-        }
         $testsConfiguration = $this->createTestsConfiguration();
-        foreach ($hasGetters as $hasGetter) {
+        foreach ($this->getBooleanGetters() as $hasGetter) {
             if ($hasGetter === 'hasShownHomeButton') {
                 self::assertFalse(
                     $testsConfiguration->$hasGetter(),
@@ -39,6 +28,59 @@ class TestsConfigurationTest extends AbstractContentTest
                 );
             }
         }
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    protected function getBooleanGetters(): array
+    {
+        $testsConfigurationReflection = new \ReflectionClass(static::getSutClass());
+        $methods = $testsConfigurationReflection->getMethods(
+            \ReflectionMethod::IS_PUBLIC ^ \ReflectionMethod::IS_STATIC ^ \ReflectionMethod::IS_ABSTRACT
+        );
+        $booleanGetters = [];
+        foreach ($methods as $method) {
+            $methodName = $method->getName();
+            if (\strpos($methodName, 'has') === 0 || \strpos($methodName, 'can') === 0 || \strpos($methodName, 'is') === 0) {
+                $booleanGetters[] = $methodName;
+            }
+        }
+        return $booleanGetters;
+    }
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function I_can_disable_every_boolean_option()
+    {
+        $testsConfiguration = $this->createTestsConfiguration(array_fill_keys($this->getBooleanOptionNames(), false));
+        foreach ($this->getBooleanGetters() as $hasGetter) {
+            self::assertFalse(
+                $testsConfiguration->$hasGetter(),
+                "$hasGetter() should return false in this test, is that value properly initialized in constructor?"
+            );
+        }
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    protected function getBooleanOptionNames(): array
+    {
+        $sutClass = static::getSutClass();
+        $testsConfigurationReflection = new \ReflectionClass($sutClass);
+        $properties = $testsConfigurationReflection->getProperties(~\ReflectionProperty::IS_STATIC);
+        $booleanProperties = [];
+        $testsConfiguration = $this->getTestsConfiguration();
+        foreach ($properties as $property) {
+            $property->setAccessible(true);
+            if (is_bool($property->getValue($testsConfiguration))) {
+                $booleanProperties[] = StringTools::camelCaseToSnakeCase($property->getName());
+            }
+        }
+        return $booleanProperties;
     }
 
     /**
