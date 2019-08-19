@@ -51,11 +51,13 @@ abstract class AbstractContentTest extends TestWithMockery
         }
     }
 
-    protected function getTestsConfiguration(): TestsConfiguration
+    protected function getTestsConfiguration(string $class = null): TestsConfiguration
     {
         static $testsConfiguration;
         if ($testsConfiguration === null) {
-            $testsConfiguration = TestsConfiguration::createFromYaml(\DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml');
+            /** @var TestsConfiguration $class */
+            $class = $class ?? TestsConfiguration::class;
+            $testsConfiguration = $class::createFromYaml(\DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml');
         }
 
         return $testsConfiguration;
