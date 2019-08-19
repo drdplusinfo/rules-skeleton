@@ -83,11 +83,11 @@ class RulesMainContentTest extends MainContentTest
     public function I_can_navigate_to_every_heading_by_expected_anchor(): void
     {
         $htmlDocument = $this->getHtmlDocument();
-        $totalHeadingsCount = 0;
+        $allHeadings = [];
         for ($tagLevel = 1; $tagLevel <= 6; $tagLevel++) {
             $headings = $htmlDocument->getElementsByTagName('h' . $tagLevel);
-            $totalHeadingsCount += \count($headings);
             foreach ($headings as $heading) {
+                $allHeadings[] = $heading;
                 $id = $heading->id;
                 self::assertNotEmpty($id, 'Expected some ID for ' . $heading->outerHTML);
                 $anchors = $heading->getElementsByTagName('a');
@@ -110,9 +110,9 @@ class RulesMainContentTest extends MainContentTest
             }
         }
         if (!$this->getTestsConfiguration()->hasHeadings()) {
-            self::assertSame(0, $totalHeadingsCount, 'No headings expected due to tests configuration');
+            self::assertCount(0, $allHeadings, 'No headings expected according to tests configuration');
         } else {
-            self::assertGreaterThan(0, $totalHeadingsCount, 'Expected some headings');
+            self::assertNotEmpty($allHeadings, 'Expected some headings');
         }
     }
 
@@ -143,7 +143,7 @@ class RulesMainContentTest extends MainContentTest
         $body = $this->getHtmlDocument()->body;
         $rulesAuthors = $body->getElementsByClassName(HtmlHelper::CLASS_RULES_AUTHORS);
         if (!$this->getTestsConfiguration()->hasAuthors()) {
-            self::assertCount(0, $rulesAuthors, 'No rules authors expected due to tests configuration');
+            self::assertCount(0, $rulesAuthors, 'No rules authors expected according to tests configuration');
 
             return;
         }
