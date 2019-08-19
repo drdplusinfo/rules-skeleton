@@ -69,15 +69,17 @@ class TestsConfigurationTest extends AbstractContentTest
      */
     protected function getBooleanOptionNames(): array
     {
-        $sutClass = static::getSutClass();
-        $testsConfigurationReflection = new \ReflectionClass($sutClass);
-        $properties = $testsConfigurationReflection->getProperties(~\ReflectionProperty::IS_STATIC);
+        $sutClasses = array_unique([TestsConfiguration::class, static::getSutClass()]);
         $booleanProperties = [];
-        $testsConfiguration = $this->getTestsConfiguration();
-        foreach ($properties as $property) {
-            $property->setAccessible(true);
-            if (is_bool($property->getValue($testsConfiguration))) {
-                $booleanProperties[] = StringTools::camelCaseToSnakeCase($property->getName());
+        foreach ($sutClasses as $sutClass) {
+            $testsConfigurationReflection = new \ReflectionClass($sutClass);
+            $properties = $testsConfigurationReflection->getProperties(~\ReflectionProperty::IS_STATIC);
+            $testsConfiguration = $this->getTestsConfiguration($sutClass);
+            foreach ($properties as $property) {
+                $property->setAccessible(true);
+                if (is_bool($property->getValue($testsConfiguration))) {
+                    $booleanProperties[] = StringTools::camelCaseToSnakeCase($property->getName());
+                }
             }
         }
         return $booleanProperties;
