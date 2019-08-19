@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /** @var \DrdPlus\RulesSkeleton\Web\DebugContactsBody $debugContactsBody */
 /** @var $request \DrdPlus\RulesSkeleton\Request */
 ?>

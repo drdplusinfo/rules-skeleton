@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /** @var $configuration \DrdPlus\RulesSkeleton\Configuration */
 /** @var $homepageDetector \DrdPlus\RulesSkeleton\HomepageDetector */
 $fixed = $configuration->isMenuPositionFixed()
