@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\Configuration;
@@ -142,7 +143,7 @@ class RulesApplicationTest extends AbstractContentTest
         $now = \time();
         $trialExpiredAt = $now + 240 + 1;
         $trialExpiredAtSecondAfter = $trialExpiredAt++;
-        if ($this->isSkeletonChecked() || $this->getTestsConfiguration()->hasProtectedAccess()) {
+        if ($this->getTestsConfiguration()->hasProtectedAccess()) {
             self::assertNull(
                 $_GET[Request::TRIAL] ?? $_POST[Request::TRIAL] ?? $_COOKIE[Request::TRIAL] ?? null,
                 'Globals have not been reset'

@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton\Web;
 
@@ -14,7 +13,7 @@ class PassContentTest extends AbstractContentTest
      */
     public function Headings_do_not_have_anchors_to_self(): void
     {
-        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasProtectedAccess()) {
+        if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
             self::assertFalse(false, 'Nothing to test here');
 
             return;
@@ -38,7 +37,7 @@ class PassContentTest extends AbstractContentTest
      */
     public function Pass_does_not_reset_requested_path_and_query(): void
     {
-        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasProtectedAccess()) {
+        if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
             self::assertFalse(false, 'Nothing to test here');
 
             return;

@@ -1,9 +1,9 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
+use Granam\String\StringTools;
 
 class TestsConfigurationTest extends AbstractContentTest
 {
@@ -27,7 +27,17 @@ class TestsConfigurationTest extends AbstractContentTest
         }
         $testsConfiguration = $this->createTestsConfiguration();
         foreach ($hasGetters as $hasGetter) {
-            self::assertTrue($testsConfiguration->$hasGetter(), "$hasGetter should return true by default to ensure strict mode");
+            if ($hasGetter === 'hasShownHomeButton') {
+                self::assertFalse(
+                    $testsConfiguration->$hasGetter(),
+                    "$hasGetter should return false as it is deprecated and replaced by another configurations"
+                );
+            } else {
+                self::assertTrue(
+                    $testsConfiguration->$hasGetter(),
+                    "$hasGetter should return true by default to ensure strict mode"
+                );
+            }
         }
     }
 
@@ -276,5 +286,62 @@ class TestsConfigurationTest extends AbstractContentTest
     public function I_am_stopped_if_public_url_is_missing(): void
     {
         $this->createTestsConfiguration([TestsConfiguration::EXPECTED_PUBLIC_URL => null]);
+    }
+
+    /**
+     * @test
+     * @dataProvider provideStrictBooleanConfiguration
+     * @param string $directive
+     * @param $value
+     */
+    public function Skeleton_boolean_tests_configuration_is_strict(string $directive, $value)
+    {
+        $getter = StringTools::assembleGetterForName($directive, '');
+        self::assertSame($value, $this->getTestsConfiguration()->$getter());
+    }
+
+    public function provideStrictBooleanConfiguration(): array
+    {
+        return [
+            [TestsConfiguration::HAS_LOCAL_LINKS, true],
+            [TestsConfiguration::HAS_EXTERNAL_ANCHORS_WITH_HASHES, true],
+            [TestsConfiguration::HAS_IDS, true],
+            [TestsConfiguration::HAS_CALCULATIONS, true],
+            [TestsConfiguration::HAS_LINKS_TO_ALTAR, true],
+            [TestsConfiguration::CAN_BE_BOUGHT_ON_ESHOP, true],
+            [TestsConfiguration::HAS_LINK_TO_SINGLE_JOURNAL, true],
+            [TestsConfiguration::HAS_LINKS_TO_JOURNALS, true],
+            [TestsConfiguration::HAS_BUTTONS, true],
+            [TestsConfiguration::HAS_MARKED_CONTENT, true],
+            [TestsConfiguration::HAS_TABLES, true],
+            [TestsConfiguration::HAS_PROTECTED_ACCESS, true],
+            [TestsConfiguration::HAS_NOTES, true],
+            [TestsConfiguration::HAS_HEADINGS, true],
+            [TestsConfiguration::HAS_AUTHORS, true],
+            [TestsConfiguration::HAS_SHOWN_HOME_BUTTON, false],
+            [TestsConfiguration::HAS_SHOWN_HOME_BUTTON_ON_HOMEPAGE, true],
+            [TestsConfiguration::HAS_SHOWN_HOME_BUTTON_ON_ROUTES, true],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider provideStrictArrayConfiguration
+     * @param string $directive
+     */
+    public function Skeleton_array_tests_configuration_is_strict(string $directive)
+    {
+        $getter = StringTools::assembleGetterForName($directive, 'get');
+        self::assertNotEmpty($this->getTestsConfiguration()->$getter());
+    }
+
+    public function provideStrictArrayConfiguration(): array
+    {
+        return [
+            [TestsConfiguration::TOO_SHORT_RESULT_NAMES],
+            [TestsConfiguration::TOO_SHORT_FAILURE_NAMES],
+            [TestsConfiguration::TOO_SHORT_SUCCESS_NAMES],
+            [TestsConfiguration::SOME_EXPECTED_TABLE_IDS],
+        ];
     }
 }
