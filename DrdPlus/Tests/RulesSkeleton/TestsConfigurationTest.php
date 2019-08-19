@@ -328,20 +328,25 @@ class TestsConfigurationTest extends AbstractContentTest
      * @test
      * @dataProvider provideStrictArrayConfiguration
      * @param string $directive
+     * @param bool $hasContent
      */
-    public function Skeleton_array_tests_configuration_is_strict(string $directive)
+    public function Skeleton_array_tests_configuration_is_strict(string $directive, bool $hasContent)
     {
         $getter = StringTools::assembleGetterForName($directive, 'get');
-        self::assertNotEmpty($this->getTestsConfiguration()->$getter());
+        if ($hasContent) {
+            self::assertNotEmpty($this->getTestsConfiguration()->$getter());
+        } else {
+            self::assertEmpty($this->getTestsConfiguration()->$getter());
+        }
     }
 
     public function provideStrictArrayConfiguration(): array
     {
         return [
-            TestsConfiguration::TOO_SHORT_RESULT_NAMES => [TestsConfiguration::TOO_SHORT_RESULT_NAMES],
-            TestsConfiguration::TOO_SHORT_FAILURE_NAMES => [TestsConfiguration::TOO_SHORT_FAILURE_NAMES],
-            TestsConfiguration::TOO_SHORT_SUCCESS_NAMES => [TestsConfiguration::TOO_SHORT_SUCCESS_NAMES],
-            TestsConfiguration::SOME_EXPECTED_TABLE_IDS => [TestsConfiguration::SOME_EXPECTED_TABLE_IDS],
+            TestsConfiguration::TOO_SHORT_RESULT_NAMES => [TestsConfiguration::TOO_SHORT_RESULT_NAMES, true],
+            TestsConfiguration::TOO_SHORT_FAILURE_NAMES => [TestsConfiguration::TOO_SHORT_FAILURE_NAMES, true],
+            TestsConfiguration::TOO_SHORT_SUCCESS_NAMES => [TestsConfiguration::TOO_SHORT_SUCCESS_NAMES, true],
+            TestsConfiguration::SOME_EXPECTED_TABLE_IDS => [TestsConfiguration::SOME_EXPECTED_TABLE_IDS, true],
         ];
     }
 }
