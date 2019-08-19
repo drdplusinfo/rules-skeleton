@@ -181,7 +181,7 @@ class AnchorsTest extends AbstractContentTest
             self::assertCount(
                 0,
                 $externalAnchorsWithHash,
-                'No external anchors expected according to tests config'
+                'No external anchors expected according to tests config, got ' . implode(',', $externalAnchorsWithHash)
             );
 
             return;
