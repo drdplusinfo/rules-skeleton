@@ -207,9 +207,9 @@ class RulesApplicationTest extends AbstractContentTest
         $_GET[Request::PDF] = '1';
         $content = $this->fetchNonCachedContent();
         if (!$this->getTestsConfiguration()->hasPdf()) {
-            self::assertSame(
-                strlen($this->trimHtmlContent($this->getContent([Request::PDF => 0]))),
-                strlen($this->trimHtmlContent($content)),
+            self::assertStringStartsWith(
+                '<!DOCTYPE html>',
+                $content,
                 'No PDF expected due to tests configuration'
             );
         } else {
@@ -217,11 +217,6 @@ class RulesApplicationTest extends AbstractContentTest
             self::assertNotNull($pdfFile, 'No PDF file found in ' . $this->getDirs()->getPdfRoot() . '/*.pdf');
             self::assertSame(md5_file($pdfFile), md5($content));
         }
-    }
-
-    private function trimHtmlContent(string $html): string
-    {
-        return preg_replace('~</html>.+~', '</html>', $html); // removes non-standard content like Tracy bar
     }
 
 }
