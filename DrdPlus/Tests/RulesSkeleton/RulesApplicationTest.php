@@ -221,7 +221,7 @@ class RulesApplicationTest extends AbstractContentTest
 
     private function trimHtmlContent(string $html): string
     {
-        return preg_replace('~</html>.+~', '</html>', $content); // removes non-standard content like Tracy bar
+        return preg_replace('~</html>.+~', '</html>', $html); // removes non-standard content like Tracy bar
     }
 
 }
