@@ -8,6 +8,7 @@ use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\Environment;
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesApplication;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
@@ -84,5 +85,13 @@ trait ClassesTrait
     protected function getEnvironmentClass(): string
     {
         return Environment::class;
+    }
+
+    /**
+     * @return string|HtmlHelper
+     */
+    protected function getHtmlHelperClass(): string
+    {
+        return HtmlHelper::class;
     }
 }

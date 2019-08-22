@@ -261,13 +261,13 @@ abstract class AbstractContentTest extends TestWithMockery
             $_POST = $originalPost;
             $_COOKIE = $originalCookies;
         } else {
-            $this->guardCallingTestToHasGlobalsBackup();
+            $this->guardGlobalsHaveBackup();
         }
 
         return $content;
     }
 
-    private function guardCallingTestToHasGlobalsBackup()
+    private function guardGlobalsHaveBackup()
     {
         if (!$this->backupGlobals) {
             throw new GlobalsAreNotBackedUp(<<<TEXT

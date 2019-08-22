@@ -105,10 +105,18 @@ class RequestTest extends AbstractContentTest
      */
     public function I_can_create_it_from_globals_even_if_no_globals_are_set()
     {
-        /*unset($_GET, $_POST, $_COOKIE, $_SERVER);
+        $get = $_GET;
+        $post = $_POST;
+        $cookies = $_COOKIE;
+        $server = $_SERVER;
+        unset($_GET, $_POST, $_COOKIE, $_SERVER);
         $request = Request::createFromGlobals($this->getBot(), $this->getEnvironment());
         global $_GET, $_POST, $_COOKIE, $_SERVER; // because backup globals do not works for unset global
-        self::assertSame('/', $request->getCurrentUrl())*/;
+        $_GET = $get;
+        $_POST = $post;
+        $_COOKIE = $cookies;
+        $_SERVER = $server;
+        self::assertSame('/', $request->getCurrentUrl());
     }
 
     /**

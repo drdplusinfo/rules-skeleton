@@ -37,7 +37,7 @@ class RulesApplicationTest extends AbstractContentTest
             [Configuration::WEB => [Configuration::MENU_POSITION_FIXED => true]]
         );
         self::assertTrue($configurationWithFixedMenu->isMenuPositionFixed(), 'Expected configuration with menu position fixed');
-        $rulesApplication = $this->createRulesApplication($this->createServicesContainer($configurationWithFixedMenu, null));
+        $rulesApplication = $this->createRulesApplication($this->createServicesContainer($configurationWithFixedMenu));
         if ($this->isSkeletonChecked()) {
             $content = $this->fetchNonCachedContent($rulesApplication);
             $htmlDocument = new HtmlDocument($content);
