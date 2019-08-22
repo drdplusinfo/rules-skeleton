@@ -11,10 +11,10 @@ class UsagePolicyTest extends AbstractContentTest
 {
     /**
      * @test
-     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy
      */
     public function I_can_not_create_it_without_article_name(): void
     {
+        $this->expectException(\DrdPlus\RulesSkeleton\Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy::class);
         new UsagePolicy('', Request::createFromGlobals($this->getBot(), $this->getEnvironment()), $this->getCookiesService());
     }
 
