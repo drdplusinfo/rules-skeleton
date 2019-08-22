@@ -15,6 +15,7 @@ use DrdPlus\RulesSkeleton\RulesApplication;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\RulesSkeleton\Web\RulesMainBody;
+use DrdPlus\Tests\RulesSkeleton\Exceptions\GlobalsAreNotBackedUp;
 use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
 use DrdPlus\WebVersions\WebVersions;
 use Granam\Git\Git;
@@ -268,7 +269,16 @@ abstract class AbstractContentTest extends TestWithMockery
 
     private function guardCallingTestToHasGlobalsBackup()
     {
-        // TODO via reflections and call stack
+        if (!$this->backupGlobals) {
+            throw new GlobalsAreNotBackedUp(<<<TEXT
+Global properties should be backed up via annotation
+/**
+ * @backupGlobals enabled
+ */
+or via backupGlobals="true" directive in phpunit.xml.dist file
+TEXT
+            );
+        }
     }
 
     protected const WITH_BODY = true;
