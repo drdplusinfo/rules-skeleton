@@ -340,6 +340,10 @@ class TestsConfigurationTest extends AbstractContentTest
      */
     public function Skeleton_boolean_tests_configuration_is_strict(string $directive, $value)
     {
+        if (!$this->isSkeletonChecked()) {
+            self::assertTrue(true, 'SKeleton already checked this for you');
+            return;
+        }
         $getter = StringTools::assembleGetterForName($directive, '');
         self::assertSame($value, $this->getTestsConfiguration()->$getter());
     }
@@ -376,6 +380,10 @@ class TestsConfigurationTest extends AbstractContentTest
      */
     public function Skeleton_array_tests_configuration_is_strict(string $directive, bool $hasContent)
     {
+        if (!$this->isSkeletonChecked()) {
+            self::assertTrue(true, 'SKeleton already checked this for you');
+            return;
+        }
         $getter = StringTools::assembleGetterForName($directive, 'get');
         if ($hasContent) {
             self::assertNotEmpty($this->getTestsConfiguration()->$getter());
