@@ -210,7 +210,7 @@ class RulesApplicationTest extends AbstractContentTest
             self::assertStringStartsWith(
                 '<!DOCTYPE html>',
                 $content,
-                sprintf("No PDF expected due to tests configuration '%s'", TestsConfiguration::HAS_PDF);
+                sprintf("No PDF expected due to tests configuration '%s'", TestsConfiguration::HAS_PDF)
         );
         } else {
             $pdfFile = glob($this->getDirs()->getPdfRoot() . '/*.pdf')[0] ?? null;
