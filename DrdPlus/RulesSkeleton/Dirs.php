@@ -9,10 +9,20 @@ class Dirs extends \Granam\WebContentBuilder\Dirs
     /** @var string */
     private $pdfRoot;
 
-    public function __construct(string $projectRoot)
+    protected function populateSubRoots(string $projectRoot)
     {
-        parent::__construct($projectRoot);
+        parent::populateSubRoots($projectRoot);
+        $this->populateCacheRoot($projectRoot);
+        $this->populatePdfRoot($projectRoot);
+    }
+
+    protected function populateCacheRoot(string $projectRoot)
+    {
         $this->cacheRoot = $projectRoot . '/cache/' . \PHP_SAPI;
+    }
+
+    protected function populatePdfRoot(string $projectRoot)
+    {
         $this->pdfRoot = $projectRoot . '/pdf';
     }
 
