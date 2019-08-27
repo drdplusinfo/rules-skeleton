@@ -255,7 +255,7 @@ abstract class AbstractContentTest extends TestWithMockery
         $_GET[Request::CACHE] = Request::DISABLE;
         \ob_start();
         /** @noinspection PhpIncludeInspection */
-        include $this->getProjectRoot() . '/index.php';
+        include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
         $content = \ob_get_clean();
         if ($backupGlobals) {
             $_GET = $originalGet;
