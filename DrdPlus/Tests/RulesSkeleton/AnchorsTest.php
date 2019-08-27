@@ -27,15 +27,26 @@ class AnchorsTest extends AbstractContentTest
             self::assertCount(
                 0,
                 $localAnchors,
-                'No local anchors expected as tests config says there are no IDs to make anchors from: '
-                . "\n" . \implode("\n", \array_map(function (Element $anchor) {
-                    return $anchor->getAttribute('href');
-                }, $localAnchors))
+                sprintf(
+                    "No local anchors expected as tests config says by '%s'. But there are IDs to make anchors from: %s",
+                    TestsConfiguration::HAS_LOCAL_LINKS,
+                    "\n" . \implode(
+                        "\n", \array_map(
+                            function (Element $anchor) {
+                                return $anchor->getAttribute('href');
+                            },
+                            $localAnchors
+                        )
+                    )
+                )
             );
 
             return;
         }
-        self::assertNotEmpty($localAnchors, 'Some local anchors expected');
+        self::assertNotEmpty(
+            $localAnchors,
+            sprintf("Some local anchors expected as tests config says by '%s'", TestsConfiguration::HAS_LOCAL_LINKS)
+        );
         foreach ($this->getLocalAnchors() as $localAnchor) {
             $expectedId = \substr($localAnchor->getAttribute('href'), 1); // just remove leading #
             /** @var Element $target */
