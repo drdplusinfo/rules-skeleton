@@ -61,6 +61,13 @@ class ComposerConfigTest extends AbstractContentTest
     public function Has_licence_matching_to_access(): void
     {
         $expectedLicence = $this->getTestsConfiguration()->getExpectedLicence();
-        self::assertSame($expectedLicence, $this->getComposerConfig()['license'], "Expected licence '$expectedLicence'");
+        self::assertSame(
+            $expectedLicence,
+            $this->getComposerConfig()['license'] ?? '',
+            sprintf(
+                "Expected licence '$expectedLicence' as test configuration says by '%s'",
+                TestsConfiguration::EXPECTED_LICENCE
+            )
+        );
     }
 }

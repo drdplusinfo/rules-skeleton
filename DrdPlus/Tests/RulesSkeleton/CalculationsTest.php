@@ -53,9 +53,22 @@ class CalculationsTest extends AbstractContentTest
             $document = $this->getHtmlDocument();
             $calculations = $document->getElementsByClassName(HtmlHelper::CLASS_CALCULATION);
             if (!$this->getTestsConfiguration()->hasCalculations()) {
-                self::assertCount(0, $calculations, 'No calculations in current document');
+                self::assertCount(
+                    0,
+                    $calculations,
+                    sprintf(
+                        "No calculations expected in current document as test configuration says by '%s'",
+                        TestsConfiguration::HAS_CALCULATIONS
+                    )
+                );
             } else {
-                self::assertNotEmpty($calculations, 'Some calculations expected for skeleton testing');
+                self::assertNotEmpty(
+                    $calculations,
+                    sprintf(
+                        "Some calculations expected for skeleton testing as test configuration says by '%s'",
+                        TestsConfiguration::HAS_CALCULATIONS
+                    )
+                );
             }
         }
 
@@ -89,7 +102,14 @@ class CalculationsTest extends AbstractContentTest
             }
         }
         if (!$this->getTestsConfiguration()->hasMarkedResult()) {
-            self::assertCount(0, $results, 'No result classes in calculations expected');
+            self::assertCount(
+                0,
+                $results,
+                sprintf(
+                    "No result classes in calculations expected as test configuration says by '%s'",
+                    TestsConfiguration::HAS_MARKED_RESULT
+                )
+            );
 
             return;
         }
