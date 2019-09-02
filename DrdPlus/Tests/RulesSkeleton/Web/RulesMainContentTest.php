@@ -111,7 +111,11 @@ class RulesMainContentTest extends MainContentTest
             }
         }
         if (!$this->getTestsConfiguration()->hasHeadings()) {
-            self::assertCount(0, $allHeadings, 'No headings expected according to tests configuration');
+            self::assertCount(
+                0,
+                $allHeadings,
+                sprintf("No headings expected as test configuration says by '%s'", TestsConfiguration::HAS_HEADINGS)
+            );
         } else {
             self::assertNotEmpty($allHeadings, 'Expected some headings');
         }
@@ -144,7 +148,11 @@ class RulesMainContentTest extends MainContentTest
         $body = $this->getHtmlDocument()->body;
         $rulesAuthors = $body->getElementsByClassName(HtmlHelper::CLASS_RULES_AUTHORS);
         if (!$this->getTestsConfiguration()->hasAuthors()) {
-            self::assertCount(0, $rulesAuthors, 'No rules authors expected according to tests configuration');
+            self::assertCount(
+                0,
+                $rulesAuthors,
+                sprintf("No rules authors expected as test configuration says by '%s'", TestsConfiguration::HAS_AUTHORS)
+            );
 
             return;
         }
