@@ -90,6 +90,17 @@ class RulesMainContentTest extends MainContentTest
             foreach ($headings as $heading) {
                 $allHeadings[] = $heading;
                 $id = $heading->id;
+                if ($heading->prop_get_classList()->contains(HtmlHelper::CLASS_HEADING_WITHOUT_ID)) {
+                    self::assertEmpty(
+                        $id,
+                        sprintf(
+                            "No ID expected for '%s' as is marked by class '%s'",
+                            $heading->outerHTML,
+                            HtmlHelper::CLASS_HEADING_WITHOUT_ID
+                        )
+                    );
+                    continue;
+                }
                 self::assertNotEmpty($id, 'Expected some ID for ' . $heading->outerHTML);
                 $anchors = $heading->getElementsByTagName('a');
                 self::assertCount(1, $anchors, 'Expected single anchor in ' . $heading->outerHTML);

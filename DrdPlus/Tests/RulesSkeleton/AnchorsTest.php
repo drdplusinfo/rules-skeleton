@@ -201,7 +201,13 @@ class AnchorsTest extends AbstractContentTest
 
             return;
         }
-        self::assertNotEmpty($externalAnchorsWithHash, 'Some external anchors expected');
+        self::assertNotEmpty(
+            $externalAnchorsWithHash,
+            sprintf(
+                "Some external anchors expected as test configuration says by '%s'",
+                TestsConfiguration::HAS_EXTERNAL_ANCHORS_WITH_HASHES
+            )
+        );
         $skippedExternalUrls = [];
         foreach ($externalAnchorsWithHash as $originalLink) {
             $link = HtmlHelper::turnToLocalLink($originalLink);
