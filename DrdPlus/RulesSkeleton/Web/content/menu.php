@@ -6,8 +6,8 @@ $fixed = $configuration->isMenuPositionFixed()
     : '';
 $homeButton = '';
 if ($configuration->isShowHomeButton()
-    || ($homepageDetector->isHomepageRequested() && $configuration->isShowHomeButtonOnHomepage())
-    || (!$homepageDetector->isHomepageRequested() && $configuration->isShowHomeButtonOnRoutes())
+    || ($configuration->isShowHomeButtonOnHomepage() && $homepageDetector->isHomepageRequested())
+    || ($configuration->isShowHomeButtonOnRoutes() && !$homepageDetector->isHomepageRequested())
 ) {
     $homeButton = <<<HTML
 <span class="menu">
