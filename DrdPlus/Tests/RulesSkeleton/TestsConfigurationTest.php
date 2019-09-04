@@ -360,7 +360,7 @@ class TestsConfigurationTest extends AbstractContentTest
      */
     public function Skeleton_boolean_tests_configuration_is_strict(string $directive, $value)
     {
-        if (!$this->isSkeletonChecked()) {
+        if (!$this->isRulesSkeletonChecked()) {
             self::assertTrue(true, 'SKeleton already checked this for you');
             return;
         }
