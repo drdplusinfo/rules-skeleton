@@ -371,7 +371,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
 
     private function setHasLocalRepositories(array $values)
     {
-        $this->hasLocalRepositories = (bool)($values[self::HAS_LOCAL_LINKS] ?? $this->hasLocalRepositories);
+        $this->hasLocalRepositories = (bool)($values[self::HAS_LOCAL_REPOSITORIES] ?? $this->hasLocalRepositories);
     }
 
     private function setHasLocalLinks(array $values)
