@@ -110,7 +110,11 @@
 }
 
 .contact a.facebook-contact, a.facebook-contact:visited {
-    color: rgba(66, 103, 178, 0.91);
+    color: rgba(70, 109, 188, 0.9);
+}
+
+.contact a.twitter-contact, a.twitter-contact:visited {
+    color: rgba(26, 170, 255, 0.9);
 }
 
 .contact a.discord-contact, .contact a.discord-contact:visited {
