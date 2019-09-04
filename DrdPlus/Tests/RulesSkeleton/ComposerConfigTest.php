@@ -70,4 +70,30 @@ class ComposerConfigTest extends AbstractContentTest
             )
         );
     }
+
+    /**
+     * @test
+     */
+    public function Local_repositories_are_not_forgotten()
+    {
+        $localRepositories = $this->getComposerConfig()['repositories'] ?? [];
+        if (!$this->isRulesSkeletonChecked() && $this->getTestsConfiguration()->hasLocalRepositories()) {
+            self::assertNotEmpty(
+                $localRepositories,
+                sprintf(
+                    "Expected some local repositories as test configuration says by '%s'",
+                    TestsConfiguration::HAS_LOCAL_REPOSITORIES
+                )
+            );
+        } else {
+            self::assertCount(
+                0,
+                $localRepositories,
+                sprintf(
+                    "No local repositories expected as test configuration says by '%s'",
+                    TestsConfiguration::HAS_LOCAL_REPOSITORIES
+                )
+            );
+        }
+    }
 }

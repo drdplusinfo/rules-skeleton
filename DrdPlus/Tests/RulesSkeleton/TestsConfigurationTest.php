@@ -15,8 +15,9 @@ class TestsConfigurationTest extends AbstractContentTest
     public function I_can_use_it(): void
     {
         $testsConfiguration = $this->createTestsConfiguration();
+        $booleanGettersWithDefaultFalse = ['hasShownHomeButton', 'hasLocalRepositories'];
         foreach ($this->getBooleanGetters() as $hasGetter) {
-            if ($hasGetter === 'hasShownHomeButton') {
+            if (in_array($hasGetter, $booleanGettersWithDefaultFalse, true)) {
                 self::assertFalse(
                     $testsConfiguration->$hasGetter(),
                     "$hasGetter should return false as it is deprecated and replaced by another configurations"
