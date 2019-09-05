@@ -94,13 +94,15 @@ class CalculationsTest extends AbstractContentTest
                 $results[] = $resultsFromCalculation;
             }
         }
-        if (!$this->getTestsConfiguration()->hasMarkedResult()) {
+        if (!$this->getTestsConfiguration()->hasCalculations() || !$this->getTestsConfiguration()->hasMarkedResult()) {
             self::assertCount(
                 0,
                 $results,
                 sprintf(
                     "No result classes in calculations expected as test configuration says by '%s'",
-                    TestsConfiguration::HAS_MARKED_RESULT
+                    !$this->getTestsConfiguration()->hasCalculations()
+                        ? TestsConfiguration::HAS_CALCULATIONS
+                        : TestsConfiguration::HAS_MARKED_RESULT,
                 )
             );
 
