@@ -5,16 +5,22 @@
     z-index: 1030;
 }
 
-.contacts .desktop {
+.contacts .wide-screen {
     display: inherit;
 }
 
-.contacts .tablet {
+.contacts .small-screen {
     display: none;
 }
 
-.contacts .mobile {
-    display: none;
+@media (max-width: 1023px) {
+    .contacts .wide-screen {
+        display: none;
+    }
+
+    .contacts .small-screen {
+        display: inherit;
+    }
 }
 
 @media (max-width: 768px) {
