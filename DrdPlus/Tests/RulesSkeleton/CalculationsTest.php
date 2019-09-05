@@ -163,6 +163,14 @@ class CalculationsTest extends AbstractContentTest
      */
     public function I_can_navigate_to_every_calculation_as_it_has_its_id_with_anchor(): void
     {
+        if (!$this->isRulesSkeletonChecked() && !$this->getTestsConfiguration()->hasCalculations()) {
+            self::assertCount(
+                0,
+                $this->getCalculations(),
+                sprintf("No calculations expected as test configuration says by '%s'", TestsConfiguration::HAS_CALCULATIONS)
+            );
+            return;
+        }
         $allowedCalculationIdPrefixes = $this->getTestsConfiguration()->getAllowedCalculationIdPrefixes();
         $allowedCalculationIdPrefixesRegexp = $this->toRegexpOr($allowedCalculationIdPrefixes);
         $allowedCalculationIdConstantLikePrefixes = \array_map(
