@@ -102,13 +102,16 @@ class CalculationsTest extends AbstractContentTest
                     "No result classes in calculations expected as test configuration says by '%s'",
                     !$this->getTestsConfiguration()->hasCalculations()
                         ? TestsConfiguration::HAS_CALCULATIONS
-                        : TestsConfiguration::HAS_MARKED_RESULT,
+                        : TestsConfiguration::HAS_MARKED_RESULT
                 )
             );
 
             return;
         }
-        self::assertNotEmpty($results, 'Some result class inside calculation class expected');
+        self::assertNotEmpty(
+            $results,
+            sprintf("Some result class inside calculation class expected as test cofiguration says by '%s'", TestsConfiguration::HAS_MARKED_RESULT)
+        );
         /** @var Element $result */
         foreach ($results as $result) {
             $result = $this->removeClasses($result, [HtmlHelper::CLASS_INVISIBLE_ID, HtmlHelper::CLASS_INVISIBLE, HtmlHelper::CLASS_FORMULA]);
