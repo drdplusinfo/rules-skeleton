@@ -21,10 +21,14 @@ function cutBrowsingOnTrialExpiration() {
     if (typeof trialExpiredAtName === 'undefined' || !trialExpiredAtName) {
         trialExpiredAtName = 'trial_expired_at'
     }
-    setTimeout(function () {
-        // have to use replace because reload is not sufficient as it ask for sending FORM again
-        window.location.replace('/?' + encodeURIComponent(trialExpiredAtName) + '=' + trialExpiresAt)
-    }, trialExpiresAtMs - Date.now())
+    setTimeout(
+        function () {
+            const reloadTarget = '/?' + encodeURIComponent(trialExpiredAtName) + '=' + trialExpiresAt + String(window.location.hash)
+            // have to use replace because reload is not sufficient as it ask for sending FORM again
+            window.location.replace(reloadTarget)
+        },
+        trialExpiresAtMs - Date.now()
+    )
     showSandGlass()
 }
 
