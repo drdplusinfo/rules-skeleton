@@ -135,8 +135,9 @@ abstract class AbstractContentTest extends TestWithMockery
             if ($cookies) {
                 $_COOKIE = \array_merge($_COOKIE, $cookies);
             }
-            if ($url !== '/') {
-                $_SERVER['REQUEST_URI'] = $url;
+            $_SERVER['REQUEST_URI'] = $url;
+            if ($_GET) {
+                $_SERVER['REQUEST_URI'] .= '?' . http_build_query($_GET);
             }
             if ($this->needPassIn()) {
                 $this->passIn();
