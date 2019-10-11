@@ -4,8 +4,12 @@ tables:
   path: /{path}
   requirements:
     path: '(tabulky|tables)/*'
+  defaults:
+    query: ''
 with_query:
   path: /?{query}
+  defaults:
+    path: ''
 root:
   path: /{path}
   defaults:
