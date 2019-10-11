@@ -32,6 +32,8 @@ class Cache extends StrictObject
     protected $cachePrefix;
     /** @var bool */
     protected $isInProduction;
+    /** @var ContentIrrelevantRequestAliases */
+    private $contentIrrelevantRequestAliases;
     /** @var ContentIrrelevantParametersFilter */
     private $contentIrrelevantParametersFilter;
 
@@ -39,6 +41,7 @@ class Cache extends StrictObject
      * @param CurrentWebVersion $currentWebVersion
      * @param Dirs $dirs
      * @param Request $request
+     * @param ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases
      * @param ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter
      * @param Git $git
      * @param bool $isInProduction
@@ -49,6 +52,7 @@ class Cache extends StrictObject
         CurrentWebVersion $currentWebVersion,
         Dirs $dirs,
         Request $request,
+        ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases,
         ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter,
         Git $git,
         bool $isInProduction,
@@ -59,6 +63,7 @@ class Cache extends StrictObject
         $this->projectRootDir = $dirs->getProjectRoot();
         $this->cacheRootDir = $dirs->getCacheRoot();
         $this->request = $request;
+        $this->contentIrrelevantRequestAliases = $contentIrrelevantRequestAliases;
         $this->contentIrrelevantParametersFilter = $contentIrrelevantParametersFilter;
         $this->git = $git;
         $this->isInProduction = $isInProduction;
@@ -94,7 +99,15 @@ class Cache extends StrictObject
     {
         $filteredGetParameters = $this->contentIrrelevantParametersFilter
             ->removeContentIrrelevantParameters($this->request->getValuesFromGet());
-        return \md5($this->request->getPath() . \serialize($filteredGetParameters));
+        $contentRelevantPath = $this->contentIrrelevantRequestAliases->getTruePath(
+            $this->request->getPath(),
+            $filteredGetParameters
+        );
+        $contentRelevantGetParameters = $this->contentIrrelevantRequestAliases->getTrueParameters(
+            $this->request->getPath(),
+            $filteredGetParameters
+        );
+        return \md5($contentRelevantPath . \serialize($contentRelevantGetParameters));
     }
 
     /**

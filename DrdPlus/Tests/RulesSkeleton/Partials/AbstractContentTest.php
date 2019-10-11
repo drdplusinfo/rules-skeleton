@@ -5,6 +5,7 @@ namespace DrdPlus\Tests\RulesSkeleton\Partials;
 use DeviceDetector\Parser\Bot;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\ContentIrrelevantParametersFilter;
+use DrdPlus\RulesSkeleton\ContentIrrelevantRequestAliases;
 use DrdPlus\RulesSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Dirs;
@@ -386,6 +387,15 @@ TEXT
         }
 
         return $this->configuration;
+    }
+
+    protected function getContentIrrelevantRequestAliases(): ContentIrrelevantRequestAliases
+    {
+        static $contentIrrelevantRequestAliases;
+        if ($contentIrrelevantRequestAliases === null) {
+            $contentIrrelevantRequestAliases = $this->createServicesContainer()->getContentIrrelevantRequestAliases();
+        }
+        return $contentIrrelevantRequestAliases;
     }
 
     protected function getContentIrrelevantParametersFilter(): ContentIrrelevantParametersFilter

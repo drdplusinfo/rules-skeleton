@@ -61,6 +61,8 @@ class ServicesContainer extends StrictObject
     private $request;
     /** @var Environment */
     private $environment;
+    /** @var ContentIrrelevantRequestAliases */
+    private $contentIrrelevantRequestAliases;
     /** @var ContentIrrelevantParametersFilter */
     private $contentIrrelevantParametersFilter;
     /** @var Bot */
@@ -292,6 +294,7 @@ class ServicesContainer extends StrictObject
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 $this->getRequest(),
+                $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
                 $this->getHtmlHelper()->isInProduction(),
@@ -299,6 +302,18 @@ class ServicesContainer extends StrictObject
             );
         }
         return $this->tablesWebCache;
+    }
+
+    public function getContentIrrelevantRequestAliases(): ContentIrrelevantRequestAliases
+    {
+        if ($this->contentIrrelevantRequestAliases === null) {
+            $this->contentIrrelevantRequestAliases = new ContentIrrelevantRequestAliases([
+                new ContentIrrelevantRequestAlias(sprintf('/%s', Request::TABLES), [], sprintf('/%s', Request::TABULKY), []),
+                new ContentIrrelevantRequestAlias(sprintf('/%s', Request::TABLES), [], '/', [Request::TABULKY => '']),
+                new ContentIrrelevantRequestAlias(sprintf('/%s', Request::TABLES), [], '/', [Request::TABLES => '']),
+            ]);
+        }
+        return $this->contentIrrelevantRequestAliases;
     }
 
     public function getContentIrrelevantParametersFilter(): ContentIrrelevantParametersFilter
@@ -443,6 +458,7 @@ class ServicesContainer extends StrictObject
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 $this->getRequest(),
+                $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
                 $this->getHtmlHelper()->isInProduction(),
@@ -459,6 +475,7 @@ class ServicesContainer extends StrictObject
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 $this->getRequest(),
+                $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
                 $this->getHtmlHelper()->isInProduction(),
@@ -475,6 +492,7 @@ class ServicesContainer extends StrictObject
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 $this->getRequest(),
+                $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
                 $this->getHtmlHelper()->isInProduction(),
@@ -518,6 +536,7 @@ class ServicesContainer extends StrictObject
             $this->getCurrentWebVersion(),
             $this->getDirs(),
             $this->getRequest(),
+            $this->getContentIrrelevantRequestAliases(),
             $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
             $this->getHtmlHelper()->isInProduction(),
