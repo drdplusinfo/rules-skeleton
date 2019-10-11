@@ -85,6 +85,8 @@ class ServicesContainer extends StrictObject
     private $passWebCache;
     /** @var Cache */
     private $passedWebCache;
+    /** @var RouterCache */
+    private $routerCache;
     /** @var Cache */
     private $notFoundCache;
     /** @var UsagePolicy */
@@ -93,6 +95,8 @@ class ServicesContainer extends StrictObject
     private $pass;
     /** @var RulesUrlMatcher */
     private $rulesUrlMatcher;
+    /** @var TablesRequestDetector */
+    private $tablesRequestDetector;
 
     public function __construct(Configuration $configuration, HtmlHelper $htmlHelper)
     {
@@ -171,18 +175,18 @@ class ServicesContainer extends StrictObject
             $this->rulesMainContent = new RulesMainContent(
                 $this->getHtmlHelper(),
                 $this->getHead(),
-                $this->getWebPartsContainer()->getRulesMainBody()
+                $this->getRoutedWebPartsContainer()->getRulesMainBody()
             );
         }
         return $this->rulesMainContent;
     }
 
-    public function getWebPartsContainer(): WebPartsContainer
+    public function getRoutedWebPartsContainer(): WebPartsContainer
     {
         if ($this->webPartsContainer === null) {
             $this->webPartsContainer = new WebPartsContainer(
                 $this->getPass(),
-                $this->getWebFiles(),
+                $this->getRoutedWebFiles(),
                 $this->getDirs(),
                 $this->getHtmlHelper(),
                 $this->getRequest()
@@ -197,16 +201,30 @@ class ServicesContainer extends StrictObject
             $this->tablesMainContent = new TablesContent(
                 $this->getHtmlHelper(),
                 $this->getHeadForTables(),
-                $this->getWebPartsContainer()->getTablesBody()
+                $this->getRootWebPartsContainer()->getTablesBody()
             );
         }
         return $this->tablesMainContent;
     }
 
+    public function getRootWebPartsContainer(): WebPartsContainer
+    {
+        if ($this->webPartsContainer === null) {
+            $this->webPartsContainer = new WebPartsContainer(
+                $this->getPass(),
+                $this->getRootWebFiles(),
+                $this->getDirs(),
+                $this->getHtmlHelper(),
+                $this->getRequest()
+            );
+        }
+        return $this->webPartsContainer;
+    }
+
     public function getPdfContent(): PdfContent
     {
         if ($this->rulesPdfWebContent === null) {
-            $this->rulesPdfWebContent = new PdfContent($this->getWebPartsContainer()->getPdfBody());
+            $this->rulesPdfWebContent = new PdfContent($this->getRoutedWebPartsContainer()->getPdfBody());
         }
         return $this->rulesPdfWebContent;
     }
@@ -217,7 +235,7 @@ class ServicesContainer extends StrictObject
             $this->passContent = new PassContent(
                 $this->getHtmlHelper(),
                 $this->getHead(),
-                $this->getWebPartsContainer()->getPassBody()
+                $this->getRoutedWebPartsContainer()->getPassBody()
             );
         }
         return $this->passContent;
@@ -229,7 +247,7 @@ class ServicesContainer extends StrictObject
             $this->notFoundContent = new NotFoundContent(
                 $this->getHtmlHelper(),
                 $this->getHead(),
-                $this->getWebPartsContainer()->getNotFoundBody()
+                $this->getRoutedWebPartsContainer()->getNotFoundBody()
             );
         }
         return $this->notFoundContent;
@@ -312,18 +330,34 @@ class ServicesContainer extends StrictObject
         return $this->getConfiguration()->getDirs();
     }
 
-    public function getWebFiles(): WebFiles
+    public function getRoutedWebFiles(): WebFiles
     {
         if ($this->webFiles === null) {
-            $this->webFiles = new WebFiles($this->getWebRootProvider());
+            $this->webFiles = new WebFiles($this->getRoutedWebRootProvider());
         }
         return $this->webFiles;
     }
 
-    protected function getWebRootProvider(): WebRootProvider
+    protected function getRoutedWebRootProvider(): WebRootProvider
     {
         if ($this->webRootProvider === null) {
             $this->webRootProvider = new WebRootProvider($this->createRoutedDirs($this->getDirs()));
+        }
+        return $this->webRootProvider;
+    }
+
+    public function getRootWebFiles(): WebFiles
+    {
+        if ($this->webFiles === null) {
+            $this->webFiles = new WebFiles($this->getRootWebRootProvider());
+        }
+        return $this->webFiles;
+    }
+
+    protected function getRootWebRootProvider(): WebRootProvider
+    {
+        if ($this->webRootProvider === null) {
+            $this->webRootProvider = new WebRootProvider($this->getDirs());
         }
         return $this->webRootProvider;
     }
@@ -358,10 +392,18 @@ class ServicesContainer extends StrictObject
         $router = new \Symfony\Component\Routing\Router(
             new YamlFileLoader(new FileLocator([$this->getDirs()->getProjectRoot()])),
             $yamlFileWithRoutes,
-            ['cache_dir' => $this->getPassWebCache()->getCacheDir() . '/router'],
+            ['cache_dir' => $this->getRouterCache()->getRouterCacheDir()],
             (new RequestContext())->fromRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals())
         );
         return $router->getMatcher();
+    }
+
+    private function getRouterCache(): RouterCache
+    {
+        if ($this->routerCache === null) {
+            $this->routerCache = new RouterCache($this->getPassWebCache());
+        }
+        return $this->routerCache;
     }
 
     protected function getYamlFileWithRoutes(): string
@@ -482,4 +524,16 @@ class ServicesContainer extends StrictObject
             'empty'
         );
     }
+
+    public function getTablesRequestDetector(): TablesRequestDetector
+    {
+        if ($this->tablesRequestDetector === null) {
+            $this->tablesRequestDetector = new TablesRequestDetector(
+                $this->getRulesUrlMatcher(),
+                $this->request
+            );
+        }
+        return $this->tablesRequestDetector;
+    }
+
 }

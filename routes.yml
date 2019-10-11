@@ -1,13 +1,11 @@
 with_path_and_query:
   path: /{path}?{query}
-  defaults:
-    path: ''
-    query: ''
+tables:
+  path: /{path}
+  requirements:
+    path: '(tabulky|tables)/*'
 with_query:
   path: /?{query}
-  defaults:
-    path: ''
-    query: ''
 root:
   path: /{path}
   defaults:
