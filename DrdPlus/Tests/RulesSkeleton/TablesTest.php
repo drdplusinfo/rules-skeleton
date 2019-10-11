@@ -13,10 +13,13 @@ class TablesTest extends AbstractContentTest
 {
     /**
      * @test
+     * @dataProvider provideParametersToGetTablesOnly
+     * @param array $get
+     * @param string $url
      */
-    public function I_can_get_tables_only(): void
+    public function I_can_get_tables_only(array $get, string $url): void
     {
-        $htmlDocumentWithTablesOnly = $this->getHtmlDocument([Request::TABLES => '' /* all of them */]);
+        $htmlDocumentWithTablesOnly = $this->getHtmlDocument($get, [], [], $url);
         /** @var NodeList|Element[] $tables */
         $tables = $htmlDocumentWithTablesOnly->getElementsByTagName('table');
         if (!$this->getTestsConfiguration()->hasTables()) {
@@ -31,6 +34,15 @@ class TablesTest extends AbstractContentTest
         self::assertEmpty($missingIds, 'Some tables with IDs are missing: ' . \implode(',', $missingIds));
         $this->There_is_no_other_content_than_tables($htmlDocumentWithTablesOnly);
         $this->Expected_table_ids_are_present($fetchedTableIds);
+    }
+
+    public function provideParametersToGetTablesOnly(): array
+    {
+        return [
+            'via query parameter' => [[Request::TABLES => '' /* all of them */], '/'],
+            'via english path' => [[], '/' . Request::TABLES],
+            'via czech path' => [[], '/' . Request::TABULKY],
+        ];
     }
 
     protected function getTableIds(): array
