@@ -22,6 +22,11 @@ class CacheCleaner extends StrictObject
         string $cacheDirHasToContain = DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR
     )
     {
+        if ($cacheDirHasToContain === '') {
+            throw new Exceptions\InvalidCacheRootDirSafetyCheck(
+                'Some part of cache dir name to check has been expected, got empty string'
+            );
+        }
         if (strpos($cacheRootDir, $cacheDirHasToContain) === false) {
             throw new Exceptions\CacheRootDirIsNotSafe(
                 sprintf(

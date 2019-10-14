@@ -4,6 +4,7 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\CacheCleaner;
 use DrdPlus\RulesSkeleton\Exceptions\CacheRootDirIsNotSafe;
+use DrdPlus\RulesSkeleton\Exceptions\InvalidCacheRootDirSafetyCheck;
 use Granam\Tests\Tools\TestWithMockery;
 
 class CacheCleanerTest extends TestWithMockery
@@ -50,5 +51,15 @@ class CacheCleanerTest extends TestWithMockery
         $this->expectException(CacheRootDirIsNotSafe::class);
         $this->expectExceptionMessageRegExp('~what~');
         new CacheCleaner('foo', 'what');
+    }
+
+    /**
+     * @test
+     */
+    public function I_have_to_use_some_cache_dir_name_safety_check()
+    {
+        $this->expectException(InvalidCacheRootDirSafetyCheck::class);
+        $this->expectExceptionMessageRegExp('~empty string~');
+        new CacheCleaner('foo', '');
     }
 }
