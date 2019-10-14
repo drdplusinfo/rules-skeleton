@@ -83,12 +83,18 @@ class ServicesContainer extends StrictObject
     private $cookiesService;
     /** @var \DateTimeImmutable */
     private $now;
+    /** @var CacheCleaner */
+    private $cacheCleaner;
     /** @var Cache */
     private $passWebCache;
     /** @var Cache */
     private $passedWebCache;
-    /** @var RouterCache */
+    /** @var RouterCacheDirProvider */
+    private $routerCacheDirProvider;
+    /** @var WebCache */
     private $routerCache;
+    /** @var YamlFileLoader */
+    private $projectRootFileLocator;
     /** @var Cache */
     private $notFoundCache;
     /** @var UsagePolicy */
@@ -287,23 +293,6 @@ class ServicesContainer extends StrictObject
         );
     }
 
-    public function getTablesWebCache(): Cache
-    {
-        if ($this->tablesWebCache === null) {
-            $this->tablesWebCache = new Cache(
-                $this->getCurrentWebVersion(),
-                $this->getDirs(),
-                $this->getRequest(),
-                $this->getContentIrrelevantRequestAliases(),
-                $this->getContentIrrelevantParametersFilter(),
-                $this->getGit(),
-                $this->getHtmlHelper()->isInProduction(),
-                Cache::TABLES
-            );
-        }
-        return $this->tablesWebCache;
-    }
-
     public function getContentIrrelevantRequestAliases(): ContentIrrelevantRequestAliases
     {
         if ($this->contentIrrelevantRequestAliases === null) {
@@ -407,16 +396,45 @@ class ServicesContainer extends StrictObject
         $router = new \Symfony\Component\Routing\Router(
             new YamlFileLoader(new FileLocator([$this->getDirs()->getProjectRoot()])),
             $yamlFileWithRoutes,
-            ['cache_dir' => $this->getRouterCache()->getRouterCacheDir()],
+            ['cache_dir' => $this->getRouterCacheDirProvider()->getRouterCacheDir()],
             (new RequestContext())->fromRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals())
         );
         return $router->getMatcher();
     }
 
-    private function getRouterCache(): RouterCache
+    private function getProjectRootFileLocator(): FileLocator
+    {
+        if ($this->projectRootFileLocator === null) {
+            $this->projectRootFileLocator = new FileLocator([$this->getDirs()->getProjectRoot()]);
+        }
+        return $this->projectRootFileLocator;
+    }
+
+    public function getRouterCacheDirProvider(): RouterCacheDirProvider
+    {
+        if ($this->routerCacheDirProvider === null) {
+            $this->routerCacheDirProvider = new RouterCacheDirProvider(
+                $this->getProjectRootFileLocator(),
+                $this->getYamlFileWithRoutes(),
+                $this->getRouterCache()
+            );
+        }
+        return $this->routerCacheDirProvider;
+    }
+
+    protected function getRouterCache(): WebCache
     {
         if ($this->routerCache === null) {
-            $this->routerCache = new RouterCache($this->getPassWebCache());
+            $this->routerCache = new WebCache(
+                $this->getCurrentWebVersion(),
+                $this->getDirs(),
+                WebCache::ROUTER,
+                $this->getRequest(),
+                $this->getContentIrrelevantRequestAliases(),
+                $this->getContentIrrelevantParametersFilter(),
+                $this->getGit(),
+                $this->getHtmlHelper()->isInProduction()
+            );
         }
         return $this->routerCache;
     }
@@ -451,18 +469,43 @@ class ServicesContainer extends StrictObject
         return $this->now;
     }
 
-    public function getPassWebCache(): Cache
+    public function getCacheCleaner(): CacheCleaner
     {
-        if ($this->passWebCache === null) {
-            $this->passWebCache = new Cache(
+        if ($this->cacheCleaner === null) {
+            $this->cacheCleaner = new CacheCleaner($this->getDirs()->getCacheRoot());
+        }
+        return $this->cacheCleaner;
+    }
+
+    public function getTablesWebCache(): Cache
+    {
+        if ($this->tablesWebCache === null) {
+            $this->tablesWebCache = new WebCache(
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
+                WebCache::TABLES,
                 $this->getRequest(),
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
-                $this->getHtmlHelper()->isInProduction(),
-                Cache::PASS
+                $this->getHtmlHelper()->isInProduction()
+            );
+        }
+        return $this->tablesWebCache;
+    }
+
+    public function getPassWebCache(): Cache
+    {
+        if ($this->passWebCache === null) {
+            $this->passWebCache = new WebCache(
+                $this->getCurrentWebVersion(),
+                $this->getDirs(),
+                WebCache::PASS,
+                $this->getRequest(),
+                $this->getContentIrrelevantRequestAliases(),
+                $this->getContentIrrelevantParametersFilter(),
+                $this->getGit(),
+                $this->getHtmlHelper()->isInProduction()
             );
         }
         return $this->passWebCache;
@@ -471,15 +514,15 @@ class ServicesContainer extends StrictObject
     public function getPassedWebCache(): Cache
     {
         if ($this->passedWebCache === null) {
-            $this->passedWebCache = new Cache(
+            $this->passedWebCache = new WebCache(
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
+                WebCache::PASSED,
                 $this->getRequest(),
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
-                $this->getHtmlHelper()->isInProduction(),
-                Cache::PASSED
+                $this->getHtmlHelper()->isInProduction()
             );
         }
         return $this->passedWebCache;
@@ -488,15 +531,15 @@ class ServicesContainer extends StrictObject
     public function getNotFoundCache(): Cache
     {
         if ($this->notFoundCache === null) {
-            $this->notFoundCache = new Cache(
+            $this->notFoundCache = new WebCache(
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
+                WebCache::NOT_FOUND,
                 $this->getRequest(),
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
-                $this->getHtmlHelper()->isInProduction(),
-                Cache::NOT_FOUND
+                $this->getHtmlHelper()->isInProduction()
             );
         }
         return $this->notFoundCache;
@@ -535,12 +578,12 @@ class ServicesContainer extends StrictObject
         return new DummyWebCache(
             $this->getCurrentWebVersion(),
             $this->getDirs(),
+            WebCache::DUMMY,
             $this->getRequest(),
             $this->getContentIrrelevantRequestAliases(),
             $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
-            $this->getHtmlHelper()->isInProduction(),
-            'empty'
+            $this->getHtmlHelper()->isInProduction()
         );
     }
 

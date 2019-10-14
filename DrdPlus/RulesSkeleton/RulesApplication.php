@@ -35,6 +35,7 @@ class RulesApplication extends StrictObject
             $this->sendCustomHeaders();
             if ($this->isRequestedWebVersionUpdate()) {
                 echo $this->updateCode();
+                $this->clearCache();
             } else {
                 $this->persistCurrentVersion();
                 echo $this->getContent()->getValue();
@@ -56,6 +57,11 @@ class RulesApplication extends StrictObject
             "\n",
             $this->servicesContainer->getGit()->update($this->servicesContainer->getDirs()->getProjectRoot())
         );
+    }
+
+    protected function clearCache()
+    {
+        $this->servicesContainer->getCacheCleaner()->clearCache();
     }
 
     private function persistCurrentVersion(): bool
