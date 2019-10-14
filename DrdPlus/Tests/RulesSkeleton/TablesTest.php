@@ -19,6 +19,7 @@ class TablesTest extends AbstractContentTest
      */
     public function I_can_get_tables_only(array $get, string $url): void
     {
+        $this->passOut(); // tables should be accessible for free
         $htmlDocumentWithTablesOnly = $this->getHtmlDocument($get, [], [], $url);
         /** @var NodeList|Element[] $tables */
         $tables = $htmlDocumentWithTablesOnly->getElementsByTagName('table');
@@ -28,6 +29,8 @@ class TablesTest extends AbstractContentTest
 
             return;
         }
+        self::assertGreaterThan(0, count($tables), 'Some tables expected due to tests configuration');
+
         $expectedTableIds = $this->getTableIds();
         $fetchedTableIds = $this->getElementsIds($tables);
         $missingIds = \array_diff($expectedTableIds, $fetchedTableIds);
@@ -49,6 +52,7 @@ class TablesTest extends AbstractContentTest
     {
         static $tableIds;
         if ($tableIds === null) {
+            $this->passIn(); // parse table IDs from passed content
             $tableIds = $this->parseTableIds($this->getHtmlDocument());
             \sort($tableIds);
             $this->Expected_table_ids_are_present($tableIds);
