@@ -142,7 +142,7 @@ class TablesTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_get_wanted_tables_related_content(): void
+    public function I_can_get_tables_related_content(): void
     {
         if (!$this->getTestsConfiguration()->hasTables()) {
             self::assertFalse(false, 'Disabled by tests configuration');
@@ -172,5 +172,27 @@ class TablesTest extends AbstractContentTest
                 TestsConfiguration::HAS_TABLES_RELATED_CONTENT
             )
         );
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_tables_only_even_with_query_in_url(): void
+    {
+        $tablesWithQuery = $this->getHtmlDocument(['foo' => 'bar'], [], [], '/tables');
+        if ($this->getTestsConfiguration()->hasTables()) {
+            self::assertGreaterThan(
+                0,
+                count($tablesWithQuery->getElementsByTagName('table')),
+                'Seems tables with query has broken routing, try URL /tables?foo=bar'
+            );
+        } else {
+            $notFound = $this->getHtmlDocument([], [], [], '/' . uniqid('some_nonsense', true));
+            self::assertNotSame(
+                $notFound->body->prop_get_innerHTML(),
+                $tablesWithQuery->body->prop_get_innerHTML(),
+                'Seems tables with query has broken routing, try URL /tables?foo=bar'
+            );
+        }
     }
 }
