@@ -179,19 +179,26 @@ class TablesTest extends AbstractContentTest
      */
     public function I_can_get_tables_only_even_with_query_in_url(): void
     {
-        $tablesWithQuery = $this->getHtmlDocument(['foo' => 'bar'], [], [], '/tables');
         if ($this->getTestsConfiguration()->hasTables()) {
+            $tablesWithQuery = $this->getHtmlDocument(['foo' => 'bar'], [], [], '/tables');
             self::assertGreaterThan(
                 0,
                 count($tablesWithQuery->getElementsByTagName('table')),
                 'Seems tables with query has broken routing, try URL /tables?foo=bar'
             );
         } else {
-            $notFound = $this->getHtmlDocument([], [], [], '/' . uniqid('some_nonsense', true));
-            self::assertNotSame(
-                $notFound->body->prop_get_innerHTML(),
-                $tablesWithQuery->body->prop_get_innerHTML(),
-                'Seems tables with query has broken routing, try URL /tables?foo=bar'
+            $tablesRoute = $this->getTestsConfiguration()->getLocalUrl() . '/tables?foo=bar' . Request::TRIAL . '=1';
+            $this->passIn();
+            $response = $this->fetchContentFromUrl($tablesRoute, false);
+            $this->passOut();
+            $response['content'] = substr($response['content'], 0, 24);
+            self::assertContains(
+                $response['responseHttpCode'],
+                [200, 201, 202, 203],
+                sprintf(
+                    'Seems tables with query has broken routing, try URL /tables?foo=bar (%s)',
+                    json_encode($response, JSON_PRETTY_PRINT)
+                )
             );
         }
     }
