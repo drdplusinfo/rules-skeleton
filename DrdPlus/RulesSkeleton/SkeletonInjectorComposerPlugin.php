@@ -52,7 +52,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             return;
         }
         $documentRoot = $GLOBALS['documentRoot'] ?? getcwd();
-        $this->io->write("Injecting {$this->skeletonPackageName} using document root $documentRoot");
+        $this->io->write("Injecting {$this->skeletonPackageName} using document root '$documentRoot'");
         $this->copyProjectConfig($documentRoot);
         $this->publishSkeletonCss($documentRoot);
         $this->publishSkeletonJs($documentRoot);
@@ -162,14 +162,6 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         );
         $dirs = $this->getDirs($documentRoot);
         $configuration = $this->getConfiguration($dirs);
-        if ($configuration && !$configuration->hasProtectedAccess()) {
-            $this->passThrough(
-                [
-                    'rm ./css/generic/skeleton/rules-pass.css',
-                ],
-                $documentRoot
-            );
-        }
         $this->removeIfHasFreeAccess(['./css/generic/skeleton/rules-pass.css'], $documentRoot);
     }
 
