@@ -10,6 +10,12 @@ class Configuration extends StrictObject
     public const CONFIG_LOCAL_YML = 'config.local.yml';
     public const CONFIG_DISTRIBUTION_YML = 'config.distribution.yml';
 
+    public static function canCreateFromYml(Dirs $dirs): bool
+    {
+        return is_file($dirs->getProjectRoot() . '/' . static::CONFIG_DISTRIBUTION_YML)
+            && is_readable($dirs->getProjectRoot() . '/' . static::CONFIG_DISTRIBUTION_YML);
+    }
+
     public static function createFromYml(Dirs $dirs): Configuration
     {
         $globalConfig = new YamlFileReader($dirs->getProjectRoot() . '/' . static::CONFIG_DISTRIBUTION_YML);

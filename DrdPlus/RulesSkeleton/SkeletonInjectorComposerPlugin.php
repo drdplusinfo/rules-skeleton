@@ -96,6 +96,12 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             ],
             $documentRoot
         );
+        $this->removeIfHasFreeAccess(
+            [
+                './images/generic/skeleton/licence-background.png',
+            ],
+            $documentRoot
+        );
     }
 
     private function passThrough(array $commands, string $workingDir = null): void
@@ -157,6 +163,48 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             ],
             $documentRoot
         );
+        $dirs = $this->getDirs($documentRoot);
+        $configuration = $this->getConfiguration($dirs);
+        if ($configuration && !$configuration->hasProtectedAccess()) {
+            $this->passThrough(
+                [
+                    'rm ./css/generic/skeleton/rules-pass.css',
+                ],
+                $documentRoot
+            );
+        }
+        $this->removeIfHasFreeAccess(['./css/generic/skeleton/rules-pass.css'], $documentRoot);
+    }
+
+    private function removeIfHasFreeAccess(array $filesToRemove, string $documentRoot)
+    {
+        $dirs = $this->getDirs($documentRoot);
+        $configuration = $this->getConfiguration($dirs);
+        if ($configuration && $configuration->hasProtectedAccess()) {
+            return;
+        }
+        $this->passThrough(
+            array_map(
+                static function (string $fileToRemove) {
+                    return 'rm ' . escapeshellarg($fileToRemove);
+                },
+                $filesToRemove
+            ),
+            $documentRoot
+        );
+    }
+
+    protected function getConfiguration(Dirs $dirs): ?Configuration
+    {
+        if (!Configuration::canCreateFromYml($dirs)) {
+            return null;
+        }
+        return Configuration::createFromYml($dirs);
+    }
+
+    protected function getDirs(string $documentRoot)
+    {
+        return new Dirs($documentRoot);
     }
 
     private function publishSkeletonJs(string $documentRoot): void
@@ -166,6 +214,13 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
                 'rm -fr ./js/generic/skeleton/',
                 'mkdir -p ./js/generic/skeleton/',
                 "cp -r ./vendor/{$this->skeletonPackageName}/js/generic/skeleton/* ./js/generic/skeleton/",
+            ],
+            $documentRoot
+        );
+        $this->removeIfHasFreeAccess(
+            [
+                './js/generic/skeleton/rules-pass-expiration.js',
+                './js/generic/skeleton/rules-pass-hash.js',
             ],
             $documentRoot
         );
