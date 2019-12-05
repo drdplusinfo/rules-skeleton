@@ -147,7 +147,14 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
 
     private function flushCache(string $documentRoot): void
     {
-        $this->passThrough(['find ./cache -mindepth 2 -type f -exec rm {} +'], $documentRoot);
+        $this->passThrough(
+            [
+                'mkdir -p ./cache',
+                'chmod 0775 ./cache',
+                'find ./cache -mindepth 2 -type f -exec rm {} +',
+            ],
+            $documentRoot
+        );
     }
 
     private function publishSkeletonCss(string $documentRoot): void
@@ -160,8 +167,6 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             ],
             $documentRoot
         );
-        $dirs = $this->getDirs($documentRoot);
-        $configuration = $this->getConfiguration($dirs);
         $this->removeIfHasFreeAccess(['./css/generic/skeleton/rules-pass.css'], $documentRoot);
     }
 
@@ -233,8 +238,8 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
     {
         $this->passThrough(
             [
-                'mkdir -p cache',
-                'chmod 0775 cache',
+                'mkdir -p ./cache',
+                'chmod 0775 ./cache',
                 "cp ./vendor/{$this->skeletonPackageName}/cache/.gitignore ./cache/.gitignore",
             ],
             $documentRoot
