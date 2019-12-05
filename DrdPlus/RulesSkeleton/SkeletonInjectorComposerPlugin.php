@@ -95,12 +95,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
                 'rm -fr ./images/generic/skeleton/',
                 'mkdir -p ./images/generic/skeleton/',
                 "cp -r ./vendor/{$this->skeletonPackageName}/images/generic/skeleton/* ./images/generic/skeleton/",
-            ],
-            $documentRoot
-        );
-        $this->removeIfHasFreeAccess(
-            [
-                './images/generic/skeleton/licence-background.png',
+                "cp --no-clobber ./vendor/{$this->skeletonPackageName}/images/main-background.png ./images/",
             ],
             $documentRoot
         );
