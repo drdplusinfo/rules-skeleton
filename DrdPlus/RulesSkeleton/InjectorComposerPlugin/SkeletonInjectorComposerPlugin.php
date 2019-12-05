@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton;
+namespace DrdPlus\RulesSkeleton\InjectorComposerPlugin;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
@@ -10,6 +10,8 @@ use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
+use DrdPlus\RulesSkeleton\Configuration;
+use DrdPlus\RulesSkeleton\Dirs;
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\AssetsVersion;
 
@@ -63,7 +65,8 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->copyGoogleVerification($documentRoot);
         $this->copyPhpUnitConfig($documentRoot);
         $this->copyGitignoreToCache($documentRoot);
-        $this->copyRoutes($documentRoot);
+        $this->populateRoutes($documentRoot);
+        $this->populateIndex($documentRoot);
         $this->alreadyInjected = true;
         $this->io->write("Injection of {$this->skeletonPackageName} finished");
     }
@@ -251,8 +254,16 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->passThrough(["cp ./vendor/{$this->skeletonPackageName}/favicon.ico ."], $documentRoot);
     }
 
-    private function copyRoutes(string $documentRoot): void
+    private function populateRoutes(string $documentRoot): void
     {
         $this->passThrough(["cp --no-clobber ./vendor/{$this->skeletonPackageName}/routes.yml ."], $documentRoot);
+    }
+
+    private function populateIndex(string $documentRoot): void
+    {
+        $this->passThrough(
+            [sprintf('cp --no-clobber %s . index.php', escapeshellarg(__DIR__ . '/pattern_index.php'))],
+            $documentRoot
+        );
     }
 }

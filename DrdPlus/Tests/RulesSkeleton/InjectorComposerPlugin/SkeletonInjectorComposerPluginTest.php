@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton\InjectorComposerPlugin;
 
 use Composer\Plugin\PluginInterface;
-use DrdPlus\RulesSkeleton\SkeletonInjectorComposerPlugin;
+use DrdPlus\RulesSkeleton\InjectorComposerPlugin\SkeletonInjectorComposerPlugin;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 
 class SkeletonInjectorComposerPluginTest extends AbstractContentTest
