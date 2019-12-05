@@ -262,7 +262,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
     private function populateIndex(string $documentRoot): void
     {
         $this->passThrough(
-            [sprintf('cp --no-clobber %s . index.php', escapeshellarg(__DIR__ . '/pattern_index.php'))],
+            [sprintf('cp --no-clobber %s ./index.php', escapeshellarg(__DIR__ . '/pattern_index.php'))],
             $documentRoot
         );
     }
