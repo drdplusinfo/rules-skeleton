@@ -149,7 +149,9 @@ class Configuration extends StrictObject
      */
     protected function guardValidEshopUrl(array $settings): void
     {
-        if (!\filter_var($settings[static::WEB][static::ESHOP_URL] ?? '', FILTER_VALIDATE_URL)) {
+        if (!empty($settings[static::WEB][static::PROTECTED_ACCESS])
+            && !\filter_var($settings[static::WEB][static::ESHOP_URL] ?? '', FILTER_VALIDATE_URL)
+        ) {
             throw new Exceptions\InvalidEshopUrl(
                 sprintf(
                     'Given e-shop URL is not valid, expected some URL in configuration %s.%s, got %s',
@@ -298,7 +300,7 @@ class Configuration extends StrictObject
 
     public function getEshopUrl(): string
     {
-        return $this->getSettings()[self::WEB][self::ESHOP_URL];
+        return $this->getSettings()[self::WEB][self::ESHOP_URL] ?? '';
     }
 
     public function getFavicon(): string

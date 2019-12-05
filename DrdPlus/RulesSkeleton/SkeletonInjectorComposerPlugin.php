@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace DrdPlus\RulesSkeleton;
 
 use Composer\Composer;
@@ -44,6 +45,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->io = $io;
     }
 
+    /** @noinspection PhpUnused */
     public function plugInSkeleton(PackageEvent $event)
     {
         if ($this->alreadyInjected || !$this->isThisPackageChanged($event)) {
@@ -51,10 +53,10 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         }
         $documentRoot = $GLOBALS['documentRoot'] ?? getcwd();
         $this->io->write("Injecting {$this->skeletonPackageName} using document root $documentRoot");
-        $this->publishSkeletonImages($documentRoot);
+        $this->copyProjectConfig($documentRoot);
         $this->publishSkeletonCss($documentRoot);
         $this->publishSkeletonJs($documentRoot);
-        $this->copyProjectConfig($documentRoot);
+        $this->publishSkeletonImages($documentRoot);
         $this->copyFavicon($documentRoot);
         $this->addVersionsToAssets($documentRoot);
         $this->flushCache($documentRoot);
