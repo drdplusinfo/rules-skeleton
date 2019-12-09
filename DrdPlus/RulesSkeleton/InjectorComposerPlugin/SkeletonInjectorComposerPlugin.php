@@ -67,6 +67,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->copyGitignoreToCache($documentRoot);
         $this->populateRoutes($documentRoot);
         $this->populateIndex($documentRoot);
+        $this->populateWebDir($documentRoot);
         $this->alreadyInjected = true;
         $this->io->write("Injection of {$this->skeletonPackageName} finished");
     }
@@ -96,7 +97,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->passThrough(
             [
                 'rm -fr ./images/generic/skeleton/',
-                'mkdir -p ./images/generic/skeleton/',
+                'mkdir --parents ./images/generic/skeleton/',
                 "cp -r ./vendor/{$this->skeletonPackageName}/images/generic/skeleton/* ./images/generic/skeleton/",
                 "cp --no-clobber ./vendor/{$this->skeletonPackageName}/images/main-background.png ./images/",
             ],
@@ -152,7 +153,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
     {
         $this->passThrough(
             [
-                'mkdir -p ./cache',
+                'mkdir --parents ./cache',
                 'chmod 0775 ./cache',
                 'find ./cache -mindepth 2 -type f -exec rm {} +',
             ],
@@ -165,7 +166,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->passThrough(
             [
                 'rm -fr ./css/generic/skeleton/',
-                'mkdir -p ./css/generic/skeleton/',
+                'mkdir --parents ./css/generic/skeleton/',
                 "cp -r ./vendor/{$this->skeletonPackageName}/css/generic/skeleton/* ./css/generic/skeleton/",
             ],
             $documentRoot
@@ -209,7 +210,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->passThrough(
             [
                 'rm -fr ./js/generic/skeleton/',
-                'mkdir -p ./js/generic/skeleton/',
+                'mkdir --parents ./js/generic/skeleton/',
                 "cp -r ./vendor/{$this->skeletonPackageName}/js/generic/skeleton/* ./js/generic/skeleton/",
             ],
             $documentRoot
@@ -241,7 +242,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
     {
         $this->passThrough(
             [
-                'mkdir -p ./cache',
+                'mkdir --parents ./cache',
                 'chmod 0775 ./cache',
                 "cp ./vendor/{$this->skeletonPackageName}/cache/.gitignore ./cache/.gitignore",
             ],
@@ -251,18 +252,40 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
 
     private function copyFavicon(string $documentRoot): void
     {
-        $this->passThrough(["cp ./vendor/{$this->skeletonPackageName}/favicon.ico ."], $documentRoot);
+        $this->passThrough(
+            [
+                "cp ./vendor/{$this->skeletonPackageName}/favicon.ico .",
+            ],
+            $documentRoot
+        );
     }
 
     private function populateRoutes(string $documentRoot): void
     {
-        $this->passThrough(["cp --no-clobber ./vendor/{$this->skeletonPackageName}/routes.yml ."], $documentRoot);
+        $this->passThrough(
+            [
+                "cp --no-clobber ./vendor/{$this->skeletonPackageName}/routes.yml .",
+            ],
+            $documentRoot
+        );
     }
 
     private function populateIndex(string $documentRoot): void
     {
         $this->passThrough(
-            [sprintf('cp --no-clobber %s ./index.php', escapeshellarg(__DIR__ . '/files/pattern_index.php'))],
+            [
+                sprintf('cp --no-clobber %s ./index.php', escapeshellarg(__DIR__ . '/files/pattern_index.php')),
+            ],
+            $documentRoot
+        );
+    }
+
+    private function populateWebDir(string $documentRoot): void
+    {
+        $this->passThrough(
+            [
+                'mkdir --parents ./web',
+            ],
             $documentRoot
         );
     }
