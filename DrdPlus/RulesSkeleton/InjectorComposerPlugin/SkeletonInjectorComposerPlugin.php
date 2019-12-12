@@ -100,6 +100,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
                 'mkdir --parents ./images/generic/skeleton/',
                 "cp -r ./vendor/{$this->skeletonPackageName}/images/generic/skeleton/* ./images/generic/skeleton/",
                 "cp --no-clobber ./vendor/{$this->skeletonPackageName}/images/main-background.png ./images/",
+                "cp --no-clobber ./vendor/{$this->skeletonPackageName}/images/licence-background.png ./images/",
             ],
             $documentRoot
         );
