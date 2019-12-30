@@ -47,9 +47,11 @@ class CacheCleaner extends StrictObject
         /** @var \SplFileInfo $file */
         foreach ($files as $file) {
             if ($file->isDir()) {
-                rmdir($file->getPathname());
-            } else {
-                unlink($file->getPathname());
+                if (!@rmdir($file->getPathname()) && file_exists($file->getPathname())) {
+                    throw new Exceptions\CanNotDeleteCacheDir("Can not delete cache directory '{$file->getPathname()}'");
+                }
+            } elseif (!@unlink($file->getPathname()) && file_exists($file->getPathname())) {
+                throw new Exceptions\CanNotDeleteCacheFile("Can not delete cache file '{$file->getPathname()}'");
             }
         }
         return rmdir($this->cacheRootDir);
