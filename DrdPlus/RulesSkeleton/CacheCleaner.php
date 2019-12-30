@@ -42,7 +42,14 @@ class CacheCleaner extends StrictObject
 
     public function clearCache(): bool
     {
-        $recursiveDirectoryIterator = new \RecursiveDirectoryIterator($this->cacheRootDir, \RecursiveDirectoryIterator::SKIP_DOTS);
+        try {
+            $recursiveDirectoryIterator = new \RecursiveDirectoryIterator($this->cacheRootDir, \RecursiveDirectoryIterator::SKIP_DOTS);
+        } catch (\UnexpectedValueException $unexpectedValueException) {
+            if (!file_exists($this->cacheRootDir)) {
+                return true;
+            }
+            throw $unexpectedValueException;
+        }
         $files = new \RecursiveIteratorIterator($recursiveDirectoryIterator, \RecursiveIteratorIterator::CHILD_FIRST);
         /** @var \SplFileInfo $file */
         foreach ($files as $file) {
@@ -54,6 +61,9 @@ class CacheCleaner extends StrictObject
                 throw new Exceptions\CanNotDeleteCacheFile("Can not delete cache file '{$file->getPathname()}'");
             }
         }
-        return rmdir($this->cacheRootDir);
+        if (!@rmdir($this->cacheRootDir) && file_exists($this->cacheRootDir)) {
+            throw new Exceptions\CanNotDeleteCacheDir("Can not delete cache root directory '{$this->cacheRootDir}'");
+        }
+        return true;
     }
 }
