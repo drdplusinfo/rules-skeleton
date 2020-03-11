@@ -106,7 +106,7 @@ class Request extends StrictObject
 
     public function getPath(): string
     {
-        $requestUri = $this->server['REQUEST_URI'];
+        $requestUri = $this->server['REQUEST_URI'] ?? '/';
         if ($requestUri === ':') {
             $requestUri = '/';
         }
