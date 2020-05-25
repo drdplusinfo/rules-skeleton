@@ -44,7 +44,7 @@ class TablesBody extends StrictObject implements RulesBodyInterface
         }
 
         return <<<HTML
-<div id="tables_only">
+<div id="tablesOnly" class="tables-only">
   $tablesContent
 </div>
 HTML;
