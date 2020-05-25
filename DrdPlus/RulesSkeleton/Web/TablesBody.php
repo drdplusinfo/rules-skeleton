@@ -54,8 +54,11 @@ HTML;
     {
         $tablesWithIds = $this->htmlHelper->findTablesWithIds($htmlDocument, $this->request->getRequestedTablesIds());
         $tablesRelatedElements = $this->htmlHelper->findTablesRelatedElements($htmlDocument);
+        $tablesOnlyId = HtmlHelper::toId('tablesOnly');
         foreach ($htmlDocument->body->children as $child) {
-            $child->remove();
+            if ($child->id !== $tablesOnlyId) {
+                $child->remove();
+            }
         }
         foreach ($tablesWithIds as $table) {
             $htmlDocument->body->appendChild($table);
