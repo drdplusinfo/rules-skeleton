@@ -1,5 +1,5 @@
-.tables-only table {
-    float: left;
-    overflow: visible;
-    display: table;
+body > table {
+    float: left !important;
+    overflow: visible !important;
+    display: table !important;
 }

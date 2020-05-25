@@ -43,22 +43,15 @@ class TablesBody extends StrictObject implements RulesBodyInterface
             $tablesContent .= $tablesRelatedElement->outerHTML . "\n";
         }
 
-        return <<<HTML
-<div id="tablesOnly" class="tables-only">
-  $tablesContent
-</div>
-HTML;
+        return $tablesContent;
     }
 
     public function postProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
     {
         $tablesWithIds = $this->htmlHelper->findTablesWithIds($htmlDocument, $this->request->getRequestedTablesIds());
         $tablesRelatedElements = $this->htmlHelper->findTablesRelatedElements($htmlDocument);
-        $tablesOnlyId = HtmlHelper::toId('tablesOnly');
         foreach ($htmlDocument->body->children as $child) {
-            if ($child->id !== $tablesOnlyId) {
-                $child->remove();
-            }
+            $child->remove();
         }
         foreach ($tablesWithIds as $table) {
             $htmlDocument->body->appendChild($table);
