@@ -399,6 +399,7 @@ class ServicesContainer extends StrictObject
         if ($yamlFileWithRoutes === '') {
             return new DummyUrlMatcher();
         }
+        $_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ?? ''; // as http-foundation request requires string
         $router = new \Symfony\Component\Routing\Router(
             new YamlFileLoader(new FileLocator([$this->getDirs()->getProjectRoot()])),
             $yamlFileWithRoutes,

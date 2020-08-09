@@ -252,6 +252,7 @@ abstract class AbstractContentTest extends TestWithMockery
         $originalGet = $_GET;
         $originalPost = $_POST;
         $originalCookies = $_COOKIE;
+        $originalRequest = $_REQUEST;
         /** @noinspection PhpUnusedLocalVariableInspection */
         $rulesApplication = $rulesApplication ?? null;
         $_GET[Request::CACHE] = Request::DISABLE;
@@ -263,6 +264,7 @@ abstract class AbstractContentTest extends TestWithMockery
             $_GET = $originalGet;
             $_POST = $originalPost;
             $_COOKIE = $originalCookies;
+            $_REQUEST = $originalRequest;
         } else {
             $this->guardGlobalsHaveBackup();
         }
