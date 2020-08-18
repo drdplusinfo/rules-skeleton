@@ -314,7 +314,7 @@ class ServicesContainer extends StrictObject
     public function getContentIrrelevantParametersFilter(): ContentIrrelevantParametersFilter
     {
         if ($this->contentIrrelevantParametersFilter === null) {
-            $this->contentIrrelevantParametersFilter = new ContentIrrelevantParametersFilter([Request::TRIAL]);
+            $this->contentIrrelevantParametersFilter = new ContentIrrelevantParametersFilter([Request::TRIAL, 'fbclid']);
         }
         return $this->contentIrrelevantParametersFilter;
     }

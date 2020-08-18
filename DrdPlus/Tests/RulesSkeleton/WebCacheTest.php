@@ -209,6 +209,7 @@ class WebCacheTest extends AbstractContentTest
     {
         return [
             Request::TRIAL => [[Request::TRIAL => 1]],
+            'fbclid' => [['fbclid' => 'IwAR0WtjBi1tamu7ww-tD094difpqH37IMF3U-AqAcC5t-WQqS7wvcGL-5LaQ']],
         ];
     }
 }
