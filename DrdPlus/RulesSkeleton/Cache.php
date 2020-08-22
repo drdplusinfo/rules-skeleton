@@ -144,7 +144,7 @@ abstract class Cache extends StrictObject
         try {
             $diffAgainstOriginMaster = $this->git->getDiffAgainstOrigin($this->projectRootDir);
         } catch (CanNotDiffDetachedBranch $exception) {
-            $diffAgainstOriginMaster = $exception->getMessage();
+            $diffAgainstOriginMaster = [$exception->getMessage()];
         }
         $gitStatusImploded = \implode($gitStatus);
         $diffAgainstOriginMasterImploded = \implode($diffAgainstOriginMaster);
