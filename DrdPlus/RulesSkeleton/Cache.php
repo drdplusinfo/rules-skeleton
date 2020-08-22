@@ -2,6 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton;
 
+use Granam\Git\Exceptions\CanNotDiffDetachedBranch;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
 
@@ -140,7 +141,11 @@ abstract class Cache extends StrictObject
             return 'production';
         }
         $gitStatus = $this->git->getGitStatus($this->projectRootDir);
-        $diffAgainstOriginMaster = $this->git->getDiffAgainstOrigin($this->projectRootDir);
+        try {
+            $diffAgainstOriginMaster = $this->git->getDiffAgainstOrigin($this->projectRootDir);
+        } catch (CanNotDiffDetachedBranch $exception) {
+            $diffAgainstOriginMaster = $exception->getMessage();
+        }
         $gitStatusImploded = \implode($gitStatus);
         $diffAgainstOriginMasterImploded = \implode($diffAgainstOriginMaster);
 
