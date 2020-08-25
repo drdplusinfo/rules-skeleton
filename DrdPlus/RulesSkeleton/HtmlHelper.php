@@ -154,7 +154,7 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         }
 
         return !$anchor->classList->contains(self::CLASS_INTERNAL_URL)
-            && ($anchor->classList->contains(self::CLASS_EXTERNAL_URL) || $this->isLinkExternal($anchor->getAttribute('href')));
+            && ($anchor->classList->contains(self::CLASS_EXTERNAL_URL) || $this->isLinkExternal($anchor->getAttribute('href') ?? ''));
     }
 
     /**
@@ -165,18 +165,11 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public function injectIframesWithRemoteTables(HtmlDocument $htmlDocument): HtmlDocument
     {
         $remoteDrdPlusLinks = [];
-        /** @var Element $anchor */
-        foreach ($htmlDocument->getElementsByTagName('a') as $anchor) {
-            if ($anchor->classList->contains(self::CLASS_INTERNAL_URL)
-                || !$anchor->classList->contains(self::CLASS_EXTERNAL_URL)
-                || !$this->isLinkExternal($anchor->getAttribute('href'))
-            ) {
-                continue;
-            }
+        foreach ($this->getExternalAnchors($htmlDocument) as $anchor) {
             if (!\preg_match(
                 '~(?<protocol>(?:https?:)?//)(?<host>[[:alpha:]]+[.]drdplus[.](?:info|loc))/[^#]*#(?<tableId>tabulka_\w+)~',
-                $anchor->getAttribute('href'), $matches)
-            ) {
+                $anchor->getAttribute('href') ?? '', $matches
+            )) {
                 continue;
             }
             $remoteDrdPlusLinks[$matches['host']][$matches['protocol']][] = $matches['tableId'];
@@ -298,10 +291,10 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public function makeExternalDrdPlusLinksLocal(HtmlDocument $htmlDocument): HtmlDocument
     {
         foreach ($this->getExternalAnchors($htmlDocument) as $externalAnchor) {
-            $externalAnchor->setAttribute('href', self::turnToLocalLink($externalAnchor->getAttribute('href')));
+            $externalAnchor->setAttribute('href', self::turnToLocalLink($externalAnchor->getAttribute('href') ?? ''));
         }
         foreach ($this->getInternalAnchors($htmlDocument) as $internalAnchor) {
-            $internalAnchor->setAttribute('href', self::turnToLocalLink($internalAnchor->getAttribute('href')));
+            $internalAnchor->setAttribute('href', self::turnToLocalLink($internalAnchor->getAttribute('href') ?? ''));
         }
         /** @var Element $iFrame */
         foreach ($htmlDocument->getElementsByTagName('iframe') as $iFrame) {

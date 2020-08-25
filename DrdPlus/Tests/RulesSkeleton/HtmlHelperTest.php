@@ -284,6 +284,7 @@ HTML
 <body>
   <a href="https://foo-bar.baz.drdplus.info" id="single_link">Sub-doména na DrD+ info</a>
   <a href="https://qux.drdplus.info" id="marked_as_local">Sub-doména na DrD+ info označená jako local</a>
+  <a>Tohle je takový divný odkaz bez href, stává se.</a>
 </body>
 </htm>
 HTML
@@ -322,6 +323,7 @@ HTML
 </head>
 <body>
   $implodedLinks
+    <a>Tohle je takový divný odkaz bez href, stává se.</a>
 </body>
 </htm>
 HTML
