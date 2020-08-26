@@ -44,7 +44,7 @@ class PassingTest extends AbstractContentTest
     private function I_can_buy_licence(Element $buyForm): void
     {
         self::assertStringStartsWith('https://obchod.altar.cz', $buyForm->getAttribute('action'));
-        self::assertRegExp(
+        self::assertMatchesRegularExpression(
             '~^' . preg_quote('https://obchod.altar.cz/', '~') . '\w+~',
             $buyForm->getAttribute('action'),
             'Missing direct link to current article in e-shop, (put it into eshop_url.txt file)'

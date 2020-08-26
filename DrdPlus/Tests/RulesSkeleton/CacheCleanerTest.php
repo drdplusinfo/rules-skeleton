@@ -28,7 +28,7 @@ class CacheCleanerTest extends TestWithMockery
         $cacheCleaner = new CacheCleaner($cacheRootDir, sys_get_temp_dir());
         self::assertTrue($cacheCleaner->clearCache(), 'Clearing a cache should return true if no problem occurs');
 
-        self::assertFileNotExists($cacheRootDir, "{$cacheRootDir} should be removed during cache clean");
+        self::assertFileDoesNotExist($cacheRootDir, "{$cacheRootDir} should be removed during cache clean");
     }
 
     private function getFilesFromDir(string $dir): array
@@ -69,7 +69,7 @@ class CacheCleanerTest extends TestWithMockery
     public function I_can_clean_cache_even_if_cache_dir_exists_no_more()
     {
         $cacheRootDir = sys_get_temp_dir() . '/' . uniqid(__FUNCTION__, true);
-        self::assertFileNotExists($cacheRootDir, 'Cache root dirt should not exist for this test');
+        self::assertFileDoesNotExist($cacheRootDir, 'Cache root dirt should not exist for this test');
         $cacheCleaner = new CacheCleaner($cacheRootDir, sys_get_temp_dir());
         self::assertTrue($cacheCleaner->clearCache(), 'Cache cleaner should return true if target cache dir does not exist');
     }

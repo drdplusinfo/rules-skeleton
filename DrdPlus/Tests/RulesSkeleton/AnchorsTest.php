@@ -79,7 +79,7 @@ class AnchorsTest extends AbstractContentTest
                 }
             }
             self::assertStringNotContainsString('hidden', (string)$target->className, "Inner link of ID $expectedId should not be hidden");
-            self::assertNotRegExp('~(display:\s*none|visibility:\s*hidden)~', (string)$target->getAttribute('style'));
+            self::assertDoesNotMatchRegularExpression('~(display:\s*none|visibility:\s*hidden)~', (string)$target->getAttribute('style'));
         }
     }
 
@@ -245,7 +245,7 @@ class AnchorsTest extends AbstractContentTest
                 'No element found by ID ' . $expectedId . ' in a document with URL ' . $link
                 . ($link !== $originalLink ? ' (originally ' . $originalLink . ')' : '')
             );
-            self::assertNotRegExp('~(display:\s*none|visibility:\s*hidden)~', (string)$target->getAttribute('style'));
+            self::assertDoesNotMatchRegularExpression('~(display:\s*none|visibility:\s*hidden)~', (string)$target->getAttribute('style'));
         }
         if ($skippedExternalUrls) {
             self::markTestSkipped(
@@ -555,7 +555,7 @@ class AnchorsTest extends AbstractContentTest
             return;
         }
         $eshopUrl = $this->getConfiguration()->getEshopUrl();
-        self::assertRegExp('~^https://obchod\.altar\.cz/[^/]+\.html$~', $eshopUrl);
+        self::assertMatchesRegularExpression('~^https://obchod\.altar\.cz/[^/]+\.html$~', $eshopUrl);
         self::assertSame($eshopUrl, $this->getLinkToEshop()->getAttribute('href'), 'Expected different link to e-shop');
     }
 
@@ -667,7 +667,7 @@ class AnchorsTest extends AbstractContentTest
         self::assertGreaterThan(0, \count($linksToJournal), 'PDF journals are missing');
         if (!$this->getTestsConfiguration()->hasLinkToSingleJournal()) {
             foreach ($linksToJournal as $linkToJournal) {
-                self::assertRegExp(
+                self::assertMatchesRegularExpression(
                     '~^' . \preg_quote(HtmlHelper::turnToLocalLink('https://www.drdplus.info'), '~') . '/pdf/deniky/denik_\w+[.]pdf$~',
                     $linkToJournal,
                     'Every link to PDF journal should lead to https://www.drdplus.info/pdf/deniky/denik_foo.pdf'

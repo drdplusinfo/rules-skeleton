@@ -68,7 +68,7 @@ class MainContentTest extends AbstractContentTest
      */
     public function Link_outside_of_drdplus_has_untouched_diacritics_in_hash(string $linkOutOfDrdPlus): void
     {
-        self::assertNotRegExp('~drdplus[.](loc|info)~', $linkOutOfDrdPlus);
+        self::assertDoesNotMatchRegularExpression('~drdplus[.](loc|info)~', $linkOutOfDrdPlus);
         $rulesMainContent = new RulesMainContent(
             $this->createHtmlHelper(),
             $this->createEmptyHead(),

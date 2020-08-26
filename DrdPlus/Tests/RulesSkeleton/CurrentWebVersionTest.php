@@ -58,7 +58,7 @@ class CurrentWebVersionTest extends AbstractContentTest
                 $currentWebVersion->getCurrentPatchVersion()
             );
         } else {
-            self::assertRegExp(
+            self::assertMatchesRegularExpression(
                 '~^' . \preg_quote($currentWebVersion->getCurrentMinorVersion(), '~') . '[.]\d+$~',
                 $currentWebVersion->getCurrentPatchVersion()
             );

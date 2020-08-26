@@ -167,7 +167,7 @@ class RulesApplicationTest extends AbstractContentTest
         $metaRefreshes = $this->getMetaRefreshes($document);
         self::assertCount(1, $metaRefreshes, 'One meta tag with refresh meaning expected');
         $metaRefresh = \current($metaRefreshes);
-        self::assertRegExp(
+        self::assertMatchesRegularExpression(
             '~241; url=/[?]' . Request::TRIAL_EXPIRED_AT . "=($trialExpiredAt|$trialExpiredAtSecondAfter)~",
             $metaRefresh->getAttribute('content')
         );

@@ -26,7 +26,7 @@ class CalculationsTest extends AbstractContentTest
         foreach ($this->getCalculations() as $calculation) {
             $parts = \explode('=', $calculation->textContent ?? '');
             $resultName = \trim($parts[0] ?? '');
-            self::assertNotRegExp("~^($tooShortResultNamesRegexp)$~i", $resultName, "Expected more specific name of result in calculation\n$calculation->outerHTML");
+            self::assertDoesNotMatchRegularExpression("~^($tooShortResultNamesRegexp)$~i", $resultName, "Expected more specific name of result in calculation\n$calculation->outerHTML");
         }
     }
 
@@ -127,9 +127,9 @@ class CalculationsTest extends AbstractContentTest
                     }
                 }
                 $failName = \strtolower(\trim($parts[0] ?? ''));
-                self::assertNotRegExp("~^($tooShortFailureNamesRegexp)$~iu", $failName, "Expected more specific name of failure for result\n$result->outerHTML");
+                self::assertDoesNotMatchRegularExpression("~^($tooShortFailureNamesRegexp)$~iu", $failName, "Expected more specific name of failure for result\n$result->outerHTML");
                 $tooShortSuccessNames = \strtolower(\trim($parts[2] ?? ''));
-                self::assertNotRegExp("~^($tooShortSuccessNamesRegexp)$~iu", $tooShortSuccessNames, "Expected more specific name of success for result\n$result->outerHTML");
+                self::assertDoesNotMatchRegularExpression("~^($tooShortSuccessNamesRegexp)$~iu", $tooShortSuccessNames, "Expected more specific name of success for result\n$result->outerHTML");
             }
         }
     }
@@ -192,8 +192,8 @@ class CalculationsTest extends AbstractContentTest
                     $calculation->id
                 )
             );
-            self::assertRegExp("~^($allowedCalculationIdPrefixesRegexp) ~u", $originalId);
-            self::assertRegExp("~^($allowedCalculationIdConstantLikePrefixesRegexp)_~u", $calculation->id);
+            self::assertMatchesRegularExpression("~^($allowedCalculationIdPrefixesRegexp) ~u", $originalId);
+            self::assertMatchesRegularExpression("~^($allowedCalculationIdConstantLikePrefixesRegexp)_~u", $calculation->id);
             $anchorToCalculation = null;
             foreach ($calculation->getElementsByTagName('a') as $anchor) {
                 if ($anchor->getAttribute('href') === "#{$calculation->id}") {

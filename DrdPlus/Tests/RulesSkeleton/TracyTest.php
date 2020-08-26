@@ -19,6 +19,6 @@ class TracyTest extends AbstractContentTest
         );
         $content = $response['content'];
         self::assertNotEmpty($content, 'Nothing has been fetched from ' . $this->getTestsConfiguration()->getLocalUrl());
-        self::assertRegExp('~<script>\nTracy[.]Debug[.]init\([^\n]+\n</script>~', $content, 'Tracy debugger is not enabled');
+        self::assertMatchesRegularExpression('~<script>\nTracy[.]Debug[.]init\([^\n]+\n</script>~', $content, 'Tracy debugger is not enabled');
     }
 }
