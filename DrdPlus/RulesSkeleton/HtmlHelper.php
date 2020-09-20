@@ -138,7 +138,7 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         /** @var Element $anchor */
         foreach ($htmlDocument->getElementsByTagName('a') as $anchor) {
             if (!$anchor->classList->contains(self::CLASS_INTERNAL_URL)
-                && \preg_match('~^(https?:)?//[^#]~', $anchor->getAttribute('href') ?? '')
+                && \preg_match('~^(https?:)?//[^#]~', (string)$anchor->getAttribute('href'))
             ) {
                 $anchor->classList->add(self::CLASS_EXTERNAL_URL);
             }
@@ -173,7 +173,7 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         }
 
         return !$anchor->classList->contains(self::CLASS_INTERNAL_URL)
-            && ($anchor->classList->contains(self::CLASS_EXTERNAL_URL) || $this->isLinkExternal($anchor->getAttribute('href') ?? ''));
+            && ($anchor->classList->contains(self::CLASS_EXTERNAL_URL) || $this->isLinkExternal((string)$anchor->getAttribute('href')));
     }
 
     /**
@@ -187,7 +187,7 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         foreach ($this->getExternalAnchors($htmlDocument) as $anchor) {
             if (!\preg_match(
                 '~(?<protocol>(?:https?:)?//)(?<host>[[:alpha:]]+[.]drdplus[.](?:info|loc))/[^#]*#(?<tableId>tabulka_\w+)~',
-                $anchor->getAttribute('href') ?? '', $matches
+                (string)$anchor->getAttribute('href'), $matches
             )) {
                 continue;
             }

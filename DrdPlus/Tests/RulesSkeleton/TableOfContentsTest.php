@@ -45,7 +45,7 @@ class TableOfContentsTest extends AbstractContentTest
             $anchors = $content->getElementsByTagName('a');
             self::assertNotEmpty($anchors->count(), 'Expected some anchors in table of contents ' . $content->outerHTML);
             foreach ($anchors as $anchor) {
-                $link = $anchor->getAttribute('href');
+                $link = (string)$anchor->getAttribute('href');
                 if (\strpos($link, '#') !== 0) {
                     continue;
                 }
@@ -75,7 +75,7 @@ class TableOfContentsTest extends AbstractContentTest
         foreach ($contents as $content) {
             $anchors = $content->getElementsByTagName('a');
             foreach ($anchors as $anchor) {
-                $link = $anchor->getAttribute('href');
+                $link = (string)$anchor->getAttribute('href');
                 if ($link !== '/tabulky') {
                     continue;
                 }

@@ -33,7 +33,7 @@ class AnchorsTest extends AbstractContentTest
                     "\n" . \implode(
                         "\n", \array_map(
                             static function (Element $anchor) {
-                                return $anchor->getAttribute('href');
+                                return (string)$anchor->getAttribute('href');
                             },
                             $localAnchors
                         )
@@ -50,7 +50,7 @@ class AnchorsTest extends AbstractContentTest
         $targets = [];
         $missingTargets = [];
         foreach ($this->getLocalAnchors() as $localAnchor) {
-            $expectedId = \substr($localAnchor->getAttribute('href'), 1); // just remove leading #
+            $expectedId = \substr($localAnchor->getAttribute('href') ?? '', 1); // just remove leading #
             $target = $html->getElementById($expectedId);
             if (!$target) {
                 $missingTargets[] = $expectedId;
@@ -96,7 +96,7 @@ class AnchorsTest extends AbstractContentTest
         $localAnchors = [];
         /** @var Element $anchor */
         foreach ($html->getElementsByTagName('a') as $anchor) {
-            if (\strpos($anchor->getAttribute('href'), '#') === 0) {
+            if (\strpos((string)$anchor->getAttribute('href'), '#') === 0) {
                 $localAnchors[] = $anchor;
             }
         }
@@ -330,7 +330,7 @@ class AnchorsTest extends AbstractContentTest
         $idLink = '#' . $noAnchorsForMe->getAttribute('id');
         /** @var \DOMElement $link */
         foreach ($links as $link) {
-            self::assertNotSame($idLink, $link->getAttribute('href'), "No anchor pointing to ID self expected: $idLink");
+            self::assertNotSame($idLink, $link->getAttribute('href') ?? '', "No anchor pointing to ID self expected: $idLink");
         }
     }
 
@@ -396,7 +396,7 @@ class AnchorsTest extends AbstractContentTest
         self::assertCount(1, $anchors);
         $anchor = $anchors->item(0);
         self::assertNotNull($anchor);
-        self::assertSame('#' . self::ID_WITH_ALLOWED_ELEMENTS_ONLY, $anchor->getAttribute('href'));
+        self::assertSame('#' . self::ID_WITH_ALLOWED_ELEMENTS_ONLY, (string)$anchor->getAttribute('href'));
         foreach ($anchor->childNodes as $childNode) {
             self::assertContains($childNode->nodeName, ['#text', 'span', 'b', 'strong', 'i']);
         }
@@ -471,7 +471,7 @@ class AnchorsTest extends AbstractContentTest
         $urlsWithLocalHosts = [];
         /** @var Element $anchor */
         foreach ($this->getHtmlDocument(['mode' => 'prod' /* do not turn links to local */])->getElementsByTagName('a') as $anchor) {
-            $href = $anchor->getAttribute('href');
+            $href = (string)$anchor->getAttribute('href');
             self::assertNotEmpty($href);
             $parsedUrl = \parse_url($href);
             $hostname = $parsedUrl['host'] ?? null;
@@ -497,7 +497,7 @@ class AnchorsTest extends AbstractContentTest
             $html = $this->getHtmlDocument();
             /** @var Element $anchor */
             foreach ($html->getElementsByTagName('a') as $anchor) {
-                $link = $anchor->getAttribute('href');
+                $link = (string)$anchor->getAttribute('href');
                 if (\preg_match('~^(http|//)~', $link)) {
                     $externalAnchors[] = $link;
                 }
@@ -553,7 +553,7 @@ class AnchorsTest extends AbstractContentTest
         }
         $eshopUrl = $this->getConfiguration()->getEshopUrl();
         self::assertMatchesRegularExpression('~^https://obchod\.altar\.cz/[^/]+\.html$~', $eshopUrl);
-        self::assertSame($eshopUrl, $this->getLinkToEshop()->getAttribute('href'), 'Expected different link to e-shop');
+        self::assertSame($eshopUrl, $this->getLinkToEshop()->getAttribute('href') ?? '', 'Expected different link to e-shop');
     }
 
     private function getLinkToEshop(): Element
@@ -581,7 +581,7 @@ class AnchorsTest extends AbstractContentTest
             $lastElement->tagName,
             'Expected link to eshop to be the last child of ' . HtmlHelper::CLASS_RULES_AUTHORS
         );
-        $href = $lastElement->getAttribute('href');
+        $href = $lastElement->getAttribute('href') ?? '';
         $host = \parse_url($href, \PHP_URL_HOST);
         if ($host === 'obchod.altar.cz') {
             return $lastElement;

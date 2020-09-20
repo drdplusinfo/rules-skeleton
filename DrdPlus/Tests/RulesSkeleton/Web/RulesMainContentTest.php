@@ -105,7 +105,7 @@ class RulesMainContentTest extends MainContentTest
                 $anchors = $heading->getElementsByTagName('a');
                 self::assertCount(1, $anchors, 'Expected single anchor in ' . $heading->outerHTML);
                 $anchor = $anchors->current();
-                $href = $anchor->getAttribute('href');
+                $href = (string)$anchor->getAttribute('href');
                 self::assertNotEmpty($href, 'Expected some href of anchor in ' . $heading->outerHTML);
                 self::assertSame('#' . $id, $href, 'Expected anchor pointing to the heading ID');
                 $headingText = '';
