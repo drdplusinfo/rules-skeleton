@@ -32,7 +32,7 @@ class AnchorsTest extends AbstractContentTest
                     TestsConfiguration::HAS_LOCAL_LINKS,
                     "\n" . \implode(
                         "\n", \array_map(
-                            function (Element $anchor) {
+                            static function (Element $anchor) {
                                 return $anchor->getAttribute('href');
                             },
                             $localAnchors
@@ -51,7 +51,6 @@ class AnchorsTest extends AbstractContentTest
         $missingTargets = [];
         foreach ($this->getLocalAnchors() as $localAnchor) {
             $expectedId = \substr($localAnchor->getAttribute('href'), 1); // just remove leading #
-            /** @var Element $target */
             $target = $html->getElementById($expectedId);
             if (!$target) {
                 $missingTargets[] = $expectedId;
@@ -65,7 +64,7 @@ class AnchorsTest extends AbstractContentTest
             'Some local anchors point to non-existing IDs: ' . implode(
                 ',',
                 array_map(
-                    function (string $id) {
+                    static function (string $id) {
                         return "'$id'";
                     },
                     $missingTargets
@@ -114,7 +113,7 @@ class AnchorsTest extends AbstractContentTest
     {
         $skippedExternalUrls = [];
         foreach ($this->getExternalAnchors() as $originalLink) {
-            $link = HtmlHelper::turnToLocalLink($originalLink);
+            $link = $this->getHtmlHelper()->turnToLocalLink($originalLink);
             if (\in_array($link, self::$checkedExternalAnchors, true)) {
                 continue;
             }
@@ -231,14 +230,13 @@ class AnchorsTest extends AbstractContentTest
         );
         $skippedExternalUrls = [];
         foreach ($externalAnchorsWithHash as $originalLink) {
-            $link = HtmlHelper::turnToLocalLink($originalLink);
+            $link = $this->getHtmlHelper()->turnToLocalLink($originalLink);
             if ($this->isLinkAccessible($originalLink, $link)) {
                 $skippedExternalUrls[] = $link;
                 continue;
             }
             $html = $this->getExternalHtmlDocument($link);
             $expectedId = \substr($link, \strpos($link, '#') + 1); // just remove leading #
-            /** @var Element $target */
             $target = $html->getElementById($expectedId);
             self::assertNotEmpty(
                 $target,
@@ -329,7 +327,6 @@ class AnchorsTest extends AbstractContentTest
         self::assertNotEmpty($noAnchorsForMe, "Missing testing element with ID 'no-anchor-for-me'");
         $links = $noAnchorsForMe->getElementsByTagName('a');
         self::assertNotEmpty($links);
-        /** @var \DOMElement $noAnchorsForMe */
         $idLink = '#' . $noAnchorsForMe->getAttribute('id');
         /** @var \DOMElement $link */
         foreach ($links as $link) {
@@ -349,7 +346,7 @@ class AnchorsTest extends AbstractContentTest
                 0,
                 $originalIds,
                 'No original IDs, identified by CSS class ' . HtmlHelper::CLASS_INVISIBLE_ID . ' expected, got '
-                . \implode("\n", \array_map(function (Element $element) {
+                . \implode("\n", \array_map(static function (Element $element) {
                     return $element->outerHTML;
                 }, $this->collectionToArray($originalIds)))
             );
@@ -625,7 +622,7 @@ class AnchorsTest extends AbstractContentTest
     {
         $linksToCharacterSheet = [];
         foreach ($this->getExternalAnchors() as $link) {
-            $link = HtmlHelper::turnToLocalLink($link);
+            $link = $this->getHtmlHelper()->turnToLocalLink($link);
             if (\strpos($link, 'charakternik.pdf')) {
                 $linksToCharacterSheet[] = $link;
             }
@@ -637,7 +634,7 @@ class AnchorsTest extends AbstractContentTest
         }
         self::assertGreaterThan(0, \count($linksToCharacterSheet), 'PDF character sheet is missing');
         $expectedOriginalLink = 'https://www.drdplus.info/pdf/charakternik.pdf';
-        $expectedLink = HtmlHelper::turnToLocalLink($expectedOriginalLink);
+        $expectedLink = $this->getHtmlHelper()->turnToLocalLink($expectedOriginalLink);
         foreach ($linksToCharacterSheet as $linkToCharacterSheet) {
             self::assertSame(
                 $expectedLink,
@@ -654,7 +651,7 @@ class AnchorsTest extends AbstractContentTest
     {
         $linksToJournal = [];
         foreach ($this->getExternalAnchors() as $link) {
-            $link = HtmlHelper::turnToLocalLink($link);
+            $link = $this->getHtmlHelper()->turnToLocalLink($link);
             if (\preg_match('~/denik_\w+\.pdf$~', $link)) {
                 $linksToJournal[] = $link;
             }
@@ -668,7 +665,7 @@ class AnchorsTest extends AbstractContentTest
         if (!$this->getTestsConfiguration()->hasLinkToSingleJournal()) {
             foreach ($linksToJournal as $linkToJournal) {
                 self::assertMatchesRegularExpression(
-                    '~^' . \preg_quote(HtmlHelper::turnToLocalLink('https://www.drdplus.info'), '~') . '/pdf/deniky/denik_\w+[.]pdf$~',
+                    '~^' . \preg_quote($this->getHtmlHelper()->turnToLocalLink('https://www.drdplus.info'), '~') . '/pdf/deniky/denik_\w+[.]pdf$~',
                     $linkToJournal,
                     'Every link to PDF journal should lead to https://www.drdplus.info/pdf/deniky/denik_foo.pdf'
                 );
@@ -678,7 +675,7 @@ class AnchorsTest extends AbstractContentTest
         }
         self::assertTrue($this->getTestsConfiguration()->hasLinksToJournals());
         $expectedOriginalLink = $this->getExpectedLinkToJournal();
-        $expectedLink = HtmlHelper::turnToLocalLink($expectedOriginalLink);
+        $expectedLink = $this->getHtmlHelper()->turnToLocalLink($expectedOriginalLink);
         foreach ($linksToJournal as $linkToJournal) {
             self::assertSame(
                 $expectedLink,

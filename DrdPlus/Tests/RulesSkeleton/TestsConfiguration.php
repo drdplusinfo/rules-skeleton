@@ -57,9 +57,9 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const EXPECTED_HOME_BUTTON_TARGET_FROM_HOMEPAGE = 'expected_home_button_target_from_homepage';
     public const EXPECTED_HOME_BUTTON_TARGET_FROM_ROUTES = 'expected_home_button_target_from_routes';
 
-    public static function createFromYaml(string $yamlConfigFile)
+    public static function createFromYaml(string $yamlConfigFile, HtmlHelper $htmlHelper): TestsConfiguration
     {
-        return new static((new YamlFileReader($yamlConfigFile))->getValues());
+        return new static((new YamlFileReader($yamlConfigFile))->getValues(), $htmlHelper);
     }
 
     // every setting SHOULD be strict (expecting instead of ignoring)
@@ -145,11 +145,12 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
 
     /**
      * @param array $values
+     * @param HtmlHelper $htmlHelper
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidLocalUrl
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidPublicUrl
      * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\PublicUrlShouldUseHttps
      */
-    public function __construct(array $values)
+    public function __construct(array $values, HtmlHelper $htmlHelper)
     {
         $this->setHasTables($values);
         $this->setHasTablesRelatedContent($values, $this->hasTables());
@@ -158,7 +159,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setHasHeadings($values);
         $this->setHasAuthors($values);
         $this->setPublicUrl($values);
-        $this->setLocalUrl($this->expectedPublicUrl);
+        $this->setLocalUrl($this->expectedPublicUrl, $htmlHelper);
         $this->setHasExternalAnchorsWithHashes($values);
         $this->setHasCustomBodyContent($values);
         $this->setHasNotes($values);
@@ -318,9 +319,9 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         }
     }
 
-    private function setLocalUrl(string $publicUrl)
+    private function setLocalUrl(string $publicUrl, HtmlHelper $htmlHelper)
     {
-        $localUrl = HtmlHelper::turnToLocalLink($publicUrl);
+        $localUrl = $htmlHelper->turnToLocalLink($publicUrl);
         if (!$this->isLocalLinkAccessible($localUrl)) {
             throw new Exceptions\InvalidLocalUrl("Given local URL can not be reached or is not local: '$localUrl'");
         }

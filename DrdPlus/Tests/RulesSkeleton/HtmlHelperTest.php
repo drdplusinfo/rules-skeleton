@@ -20,7 +20,7 @@ class HtmlHelperTest extends AbstractContentTest
      */
     public function I_can_turn_public_link_to_local(string $publicLink, string $expectedLocalLink): void
     {
-        self::assertSame($expectedLocalLink, HtmlHelper::turnToLocalLink($publicLink));
+        self::assertSame($expectedLocalLink, $this->getHtmlHelper()->turnToLocalLink($publicLink));
     }
 
     public function providePublicToLocalLinks(): array
@@ -54,11 +54,13 @@ class HtmlHelperTest extends AbstractContentTest
      */
     public function I_can_find_out_if_I_am_in_production(bool $forcedProduction, bool $onDev, bool $isCli, bool $onLocalhost, bool $expectingProduction): void
     {
+        $dirs = $this->getDirs();
         $htmlHelperClass = $this->getHtmlHelperClass();
         /** @var HtmlHelper $htmlHelper */
         $htmlHelper = new $htmlHelperClass(
-            $this->getDirs(),
+            $dirs,
             $this->createEnvironment($onDev, $isCli, $onLocalhost),
+            $this->getConfiguration($dirs),
             false,
             $forcedProduction,
             false
@@ -66,7 +68,7 @@ class HtmlHelperTest extends AbstractContentTest
         self::assertSame($expectingProduction, $htmlHelper->isInProduction());
     }
 
-    public function provideEnvironment()
+    public function provideEnvironment(): array
     {
         return [
             'production' => [false, false, false, false, true],
@@ -107,9 +109,7 @@ class HtmlHelperTest extends AbstractContentTest
      */
     public function I_can_get_filtered_tables_from_content(): void
     {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs(), $this->getEnvironment());
+        $htmlHelper = $this->createSut();
 
         $tablesWithIds = $htmlHelper->findTablesWithIds($this->getHtmlDocument());
         if (!$this->getTestsConfiguration()->hasTables()) {
@@ -140,14 +140,20 @@ class HtmlHelperTest extends AbstractContentTest
         }
     }
 
+    protected function createSut(): HtmlHelper
+    {
+        /** @var HtmlHelper $htmlHelperClass */
+        $htmlHelperClass = static::getSutClass();
+        $dirs = $this->getDirs();
+        return $htmlHelperClass::createFromGlobals($dirs, $this->getEnvironment(), $this->getConfiguration($dirs));
+    }
+
     /**
      * @test
      */
     public function Filtering_tables_by_id_does_not_crash_on_table_without_id(): void
     {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs(), $this->getEnvironment());
+        $htmlHelper = $this->createSut();
 
         $allTables = $htmlHelper->findTablesWithIds(new HtmlDocument(<<<HTML
 <!DOCTYPE html>
@@ -182,9 +188,6 @@ HTML
 
             return;
         }
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs(), $this->getEnvironment());
         $someExpectedTableIds = $this->getTestsConfiguration()->getSomeExpectedTableIds();
         self::assertGreaterThan(
             0,
@@ -196,6 +199,9 @@ HTML
             )
         );
         $tableId = \current($someExpectedTableIds);
+
+        $htmlHelper = $this->createSut();
+
         $tables = $htmlHelper->findTablesWithIds($this->getHtmlDocument(), [$tableId, $tableId]);
         self::assertCount(1, $tables);
     }
@@ -205,9 +211,8 @@ HTML
      */
     public function It_will_not_add_anchor_into_anchor_with_id(): void
     {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs(), $this->getEnvironment());
+        $htmlHelper = $this->createSut();
+
         $content = '<!DOCTYPE html>
 <html lang="en"><body><a href="" id="someId">Foo</a></body></html>';
         $htmlDocument = new HtmlDocument($content);
@@ -220,9 +225,8 @@ HTML
      */
     public function Ids_are_turned_to_constant_like_diacritics_free_format(): void
     {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs(), $this->getEnvironment());
+        $htmlHelper = $this->createSut();
+
         $originalId = 'Příliš # žluťoučký # kůň # úpěl # ďábelské # ódy';
         $htmlDocument = new HtmlDocument(<<<HTML
         <!DOCTYPE html>
@@ -271,9 +275,8 @@ HTML
      */
     public function I_can_turn_public_drd_plus_links_to_locals(): void
     {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs(), $this->getEnvironment());
+        $htmlHelper = $this->createSut();
+
         $htmlDocument = new HtmlDocument(<<<HTML
         <!DOCTYPE html> 
 <html lang="cs">
@@ -295,7 +298,6 @@ HTML
         $localizedLink = $htmlDocument->getElementById('single_link');
         self::assertNotEmpty($localizedLink, 'No element found by ID single_link');
         self::assertSame('http://foo-bar.baz.drdplus.loc', $localizedLink->getAttribute('href'));
-        /** @var Element $localizedLocalLikeLink */
         $localizedLocalLikeLink = $htmlDocument->getElementById('marked_as_local');
         self::assertNotEmpty($localizedLocalLikeLink, 'No element found by ID marked_as_local');
         self::assertSame('http://qux.drdplus.loc', $localizedLocalLikeLink->getAttribute('href'));
@@ -310,9 +312,8 @@ HTML
      */
     public function I_can_inject_iframes_with_remote_tables(array $links, string $expectedIframe, string $expectedIframeId): void
     {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs(), $this->getEnvironment());
+        $htmlHelper = $this->createSut();
+
         $implodedLinks = \implode("\n", $links);
         $htmlDocument = new HtmlDocument(<<<HTML
         <!DOCTYPE html>
@@ -367,9 +368,8 @@ HTML
      */
     public function I_can_mark_external_links_by_class(): void
     {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs(), $this->getEnvironment());
+        $htmlHelper = $this->createSut();
+
         $htmlDocument = new HtmlDocument(<<<HTML
         <!DOCTYPE html>
 <html lang="cs">
@@ -386,7 +386,6 @@ HTML
         self::assertNull($htmlDocument->body->getAttribute(HtmlHelper::DATA_HAS_MARKED_EXTERNAL_URLS));
         $htmlHelper->markExternalLinksByClass($htmlDocument);
         self::assertSame('1', $htmlDocument->body->getAttribute(HtmlHelper::DATA_HAS_MARKED_EXTERNAL_URLS));
-        /** @var Element $linkWithoutAnchor */
         $linkWithoutAnchor = $htmlDocument->getElementById('link_without_anchor');
         self::assertFalse($linkWithoutAnchor->classList->contains(HtmlHelper::CLASS_EXTERNAL_URL));
     }
@@ -396,9 +395,8 @@ HTML
      */
     public function I_can_add_id_to_table(): void
     {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs(), $this->getEnvironment());
+        $htmlHelper = $this->createSut();
+
         $htmlDocument = new HtmlDocument($content = <<<HTML
         <!DOCTYPE html>
 <html lang="cs">
@@ -432,9 +430,8 @@ HTML
      */
     public function No_ids_are_added_to_table_with_id_in_head_cell(): void
     {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs(), $this->getEnvironment());
+        $htmlHelper = $this->createSut();
+
         $htmlDocument = new HtmlDocument($content = <<<HTML
         <!DOCTYPE html>
 <html lang="cs">

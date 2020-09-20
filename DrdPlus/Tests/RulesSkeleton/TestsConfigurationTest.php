@@ -120,7 +120,7 @@ class TestsConfigurationTest extends AbstractContentTest
     {
         $sutClass = static::getSutClass();
 
-        return new $sutClass(\array_merge($this->getTestsConfigurationDefaultValues(), $config));
+        return new $sutClass(\array_merge($this->getTestsConfigurationDefaultValues(), $config), $this->getHtmlHelper());
     }
 
     protected function getTestsConfigurationDefaultValues(): array
@@ -134,6 +134,11 @@ class TestsConfigurationTest extends AbstractContentTest
         ];
     }
 
+    /**
+     * @param string|null $sutTestClass
+     * @param string $regexp
+     * @return string|TestsConfiguration
+     */
     protected static function getSutClass(string $sutTestClass = null, string $regexp = '~(.+)Test$~'): string
     {
         return parent::getSutClass($sutTestClass, $regexp);
@@ -361,7 +366,7 @@ class TestsConfigurationTest extends AbstractContentTest
     public function Skeleton_boolean_tests_configuration_is_strict(string $directive, $value)
     {
         if (!$this->isRulesSkeletonChecked()) {
-            self::assertTrue(true, 'SKeleton already checked this for you');
+            self::assertTrue(true, 'Skeleton already checked this for you');
             return;
         }
         $getter = StringTools::assembleGetterForName($directive, '');
@@ -401,7 +406,7 @@ class TestsConfigurationTest extends AbstractContentTest
     public function Skeleton_array_tests_configuration_is_strict(string $directive, bool $hasContent)
     {
         if (!$this->isSkeletonChecked()) {
-            self::assertTrue(true, 'SKeleton already checked this for you');
+            self::assertTrue(true, 'Skeleton already checked this for you');
             return;
         }
         $getter = StringTools::assembleGetterForName($directive, 'get');

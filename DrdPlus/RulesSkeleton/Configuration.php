@@ -5,7 +5,7 @@ namespace DrdPlus\RulesSkeleton;
 use Granam\Strict\Object\StrictObject;
 use Granam\YamlReader\YamlFileReader;
 
-class Configuration extends StrictObject
+class Configuration extends StrictObject implements ProjectUrlConfiguration
 {
     public const CONFIG_LOCAL_YML = 'config.local.yml';
     public const CONFIG_DISTRIBUTION_YML = 'config.distribution.yml';
@@ -41,6 +41,8 @@ class Configuration extends StrictObject
     public const PROTECTED_ACCESS = 'protected_access';
     public const ESHOP_URL = 'eshop_url';
     public const FAVICON = 'favicon';
+    public const DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REGEXP = 'default_public_to_local_url_part_regexp';
+    public const DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT = 'default_public_to_local_url_part_replacement';
     // google
     public const GOOGLE = 'google';
     public const ANALYTICS_ID = 'analytics_id';
@@ -317,4 +319,17 @@ class Configuration extends StrictObject
     {
         return $this->getSettings()[static::APPLICATION][static::DEFAULT_YAML_FILE_WITH_ROUTES] ?? 'routes.yml';
     }
+
+    public function getPublicUrlPartRegexp(): string
+    {
+        return $this->getSettings()[static::WEB][static::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REGEXP]
+            ?? '~https?://((?:[^.]+[.])*)drdplus[.]info~';
+    }
+
+    public function getPublicToLocalUrlReplacement(): string
+    {
+        return $this->getSettings()[static::WEB][static::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT]
+            ?? 'http://$1drdplus.loc';
+    }
+
 }

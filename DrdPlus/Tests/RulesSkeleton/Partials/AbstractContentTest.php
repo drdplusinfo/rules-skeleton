@@ -66,9 +66,9 @@ abstract class AbstractContentTest extends TestWithMockery
     {
         static $testsConfiguration;
         if ($testsConfiguration === null) {
-            /** @var TestsConfiguration $class */
+            /** @var TestsConfiguration|string $class */
             $class = $class ?? TestsConfiguration::class;
-            $testsConfiguration = $class::createFromYaml(\DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml');
+            $testsConfiguration = $class::createFromYaml(\DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml', $this->getHtmlHelper());
         }
 
         return $testsConfiguration;
@@ -231,7 +231,7 @@ abstract class AbstractContentTest extends TestWithMockery
     }
 
     /**
-     * @param Dirs $dirs
+     * @param Dirs|null $dirs
      * @param bool $inDevMode
      * @param bool $inForcedProductionMode
      * @param bool $shouldHideCovered
@@ -244,7 +244,15 @@ abstract class AbstractContentTest extends TestWithMockery
         bool $shouldHideCovered = false
     ): HtmlHelper
     {
-        return new HtmlHelper($dirs ?? $this->getDirs(), $this->getEnvironment(), $inDevMode, $inForcedProductionMode, $shouldHideCovered);
+        $dirs = $dirs ?? $this->getDirs();
+        return new HtmlHelper(
+            $dirs,
+            $this->getEnvironment(),
+            $this->getConfiguration($dirs),
+            $inDevMode,
+            $inForcedProductionMode,
+            $shouldHideCovered
+        );
     }
 
     protected function fetchNonCachedContent(RulesApplication $rulesApplication = null, bool $backupGlobals = true): string
@@ -411,7 +419,7 @@ TEXT
 
     /**
      * @param array $customSettings
-     * @param Dirs $dirs = null
+     * @param Dirs|null $dirs = null
      * @return Configuration|MockInterface
      */
     protected function createCustomConfiguration(array $customSettings, Dirs $dirs = null): Configuration
@@ -777,8 +785,7 @@ TEXT
 
     protected function createEmptyHead(): HeadInterface
     {
-        return new class implements HeadInterface
-        {
+        return new class implements HeadInterface {
             public function __toString()
             {
                 return $this->getValue();

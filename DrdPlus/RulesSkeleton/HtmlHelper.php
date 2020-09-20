@@ -36,21 +36,16 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public const DATA_CACHED_AT = 'data-cached-at';
     public const DATA_HAS_MARKED_EXTERNAL_URLS = 'data-has-marked-external-urls';
 
-    /**
-     * Turn link into local version
-     * @param string $link
-     * @return string
-     */
-    public static function turnToLocalLink(string $link): string
-    {
-        return \preg_replace('~https?://((?:[^.]+[.])*)drdplus\.info~', 'http://$1drdplus.loc', $link);
-    }
-
-    public static function createFromGlobals(Dirs $dirs, Environment $environment): HtmlHelper
+    public static function createFromGlobals(
+        Dirs $dirs,
+        Environment $environment,
+        ProjectUrlConfiguration $projectUrlConfiguration
+    ): HtmlHelper
     {
         return new static(
             $dirs,
             $environment,
+            $projectUrlConfiguration,
             !empty($_GET['mode']) && \strpos(\trim($_GET['mode']), 'dev') === 0,
             !empty($_GET['mode']) && \strpos(\trim($_GET['mode']), 'prod') === 0,
             !empty($_GET['hide']) && \strpos(\trim($_GET['hide']), 'cover') === 0
@@ -59,6 +54,8 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
 
     /** @var Environment */
     private $environment;
+    /** @var ProjectUrlConfiguration */
+    private $projectUrlConfiguration;
     /** @var bool */
     private $inDevMode;
     /** @var bool */
@@ -66,13 +63,35 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     /** @var bool */
     private $shouldHideCovered;
 
-    public function __construct(Dirs $dirs, Environment $environment, bool $inDevMode, bool $inForcedProductionMode, bool $shouldHideCovered)
+    public function __construct(
+        Dirs $dirs,
+        Environment $environment,
+        ProjectUrlConfiguration $projectUrlConfiguration,
+        bool $inDevMode,
+        bool $inForcedProductionMode,
+        bool $shouldHideCovered
+    )
     {
         parent::__construct($dirs);
         $this->environment = $environment;
+        $this->projectUrlConfiguration = $projectUrlConfiguration;
         $this->inDevMode = $inDevMode;
         $this->inForcedProductionMode = $inForcedProductionMode;
         $this->shouldHideCovered = $shouldHideCovered;
+    }
+
+    /**
+     * Turn link into local version
+     * @param string $link
+     * @return string
+     */
+    public function turnToLocalLink(string $link): string
+    {
+        return \preg_replace(
+            $this->projectUrlConfiguration->getPublicUrlPartRegexp(),
+            $this->projectUrlConfiguration->getPublicToLocalUrlReplacement(),
+            $link
+        );
     }
 
     /**
@@ -291,14 +310,14 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public function makeExternalDrdPlusLinksLocal(HtmlDocument $htmlDocument): HtmlDocument
     {
         foreach ($this->getExternalAnchors($htmlDocument) as $externalAnchor) {
-            $externalAnchor->setAttribute('href', self::turnToLocalLink($externalAnchor->getAttribute('href') ?? ''));
+            $externalAnchor->setAttribute('href', $this->turnToLocalLink($externalAnchor->getAttribute('href') ?? ''));
         }
         foreach ($this->getInternalAnchors($htmlDocument) as $internalAnchor) {
-            $internalAnchor->setAttribute('href', self::turnToLocalLink($internalAnchor->getAttribute('href') ?? ''));
+            $internalAnchor->setAttribute('href', $this->turnToLocalLink($internalAnchor->getAttribute('href') ?? ''));
         }
         /** @var Element $iFrame */
         foreach ($htmlDocument->getElementsByTagName('iframe') as $iFrame) {
-            $iFrame->setAttribute('src', self::turnToLocalLink($iFrame->getAttribute('src')));
+            $iFrame->setAttribute('src', $this->turnToLocalLink($iFrame->getAttribute('src')));
             $iFrame->setAttribute('id', \str_replace('drdplus.info', 'drdplus.loc', $iFrame->getAttribute('id')));
         }
 

@@ -11,12 +11,16 @@ $documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER[
 require_once $documentRoot . '/vendor/autoload.php';
 
 $dirs = $dirs ?? new \DrdPlus\RulesSkeleton\Dirs($documentRoot);
+$configuration = \DrdPlus\RulesSkeleton\Configuration::createFromYml($dirs);
 $htmlHelper = $htmlHelper
-    ?? \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($dirs, \DrdPlus\RulesSkeleton\Environment::createFromGlobals());
+    ?? \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals(
+        $dirs,
+        \DrdPlus\RulesSkeleton\Environment::createFromGlobals(),
+        $configuration
+    );
 if (PHP_SAPI !== 'cli') {
     \DrdPlus\RulesSkeleton\TracyDebugger::enable($htmlHelper->isInProduction());
 }
-$configuration = \DrdPlus\RulesSkeleton\Configuration::createFromYml($dirs);
 $servicesContainer = new \DrdPlus\RulesSkeleton\ServicesContainer($configuration, $htmlHelper);
 
 $rulesApplication = $rulesApplication ?? $controller ?? new \DrdPlus\RulesSkeleton\RulesApplication($servicesContainer);
