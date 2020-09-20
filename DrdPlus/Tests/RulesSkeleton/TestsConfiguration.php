@@ -2,6 +2,7 @@
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidUrl;
 use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
@@ -323,7 +324,19 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     {
         $localUrl = $htmlHelper->turnToLocalLink($publicUrl);
         if (!$this->isLocalLinkAccessible($localUrl)) {
-            throw new Exceptions\InvalidLocalUrl("Given local URL can not be reached or is not local: '$localUrl'");
+            throw new Exceptions\InvalidLocalUrl(
+                sprintf(
+                    <<<TEXT
+Given local URL can not be reached or is not local: '$localUrl'.
+You can change public-to-local-URL conversion via configuration %s.%s and %s.%s
+TEXT
+                    ,
+                    Configuration::WEB,
+                    Configuration::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REGEXP,
+                    Configuration::WEB,
+                    Configuration::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT,
+                )
+            );
         }
         $this->guardValidUrl($localUrl);
         $this->localUrl = $localUrl;
