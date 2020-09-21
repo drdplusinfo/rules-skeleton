@@ -457,7 +457,7 @@ class AnchorsTest extends AbstractContentTest
 
             return;
         }
-        self::assertNotEmpty($linksToAltar, 'Expected some links to Altar');
+        self::assertNotEmpty($linksToAltar, sprintf("Expected some links to Altar as test configuration says by '%s'", TestsConfiguration::HAS_LINKS_TO_ALTAR));
         foreach ($linksToAltar as $linkToAltar) {
             self::assertStringStartsWith('https', $linkToAltar, "Every link to Altar should be via https: '$linkToAltar'");
         }
