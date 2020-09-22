@@ -60,14 +60,21 @@ class ContactsContentTest extends AbstractContentTest
     public function I_can_use_mail_to_link_to_drdplus_info_email(): void
     {
         $debugContactsElement = $this->getDebugContactsElement();
-        if (!$this->getTestsConfiguration()->hasDebugContacts()) {
-            self::assertNull($debugContactsElement, 'Debug contacts have not been expected');
+        if (!$this->getTestsConfiguration()->hasDebugContacts() || !$this->getTestsConfiguration()->hasDebugContactsWithMail()) {
+            self::assertNull(
+                $debugContactsElement,
+                sprintf(
+                    "Debug contacts have not been expected as test configuration says by '%s' or '%s'",
+                    TestsConfiguration::HAS_DEBUG_CONTACTS,
+                    TestsConfiguration::HAS_DEBUG_CONTACTS_WITH_MAIL
+                )
+            );
 
             return;
         }
         $this->guardDebugContactsAreNotEmpty($debugContactsElement);
         $anchors = $debugContactsElement->getElementsByTagName('a');
-        self::assertNotEmpty($anchors, 'No anchors found in debug contacts');
+        self::assertGreaterThan(0, $anchors->count(), 'No anchors found in debug contacts');
         $mailTo = null;
         foreach ($anchors as $anchor) {
             $href = (string)$anchor->getAttribute('href');
@@ -76,7 +83,15 @@ class ContactsContentTest extends AbstractContentTest
             }
             $mailTo = $href;
         }
-        self::assertNotEmpty($mailTo, 'Missing mailto: in debug contacts ' . $debugContactsElement->innerHTML);
+        self::assertNotEmpty(
+            $mailTo,
+            sprintf(
+                "Expected 'mailto:' in debug contacts as test configuration says by '%s' and '%s':\n%s",
+                TestsConfiguration::HAS_DEBUG_CONTACTS,
+                TestsConfiguration::HAS_DEBUG_CONTACTS_WITH_MAIL,
+                $debugContactsElement->prop_get_outerHTML()
+            )
+        );
         self::assertSame('mailto:info@drdplus.info', $mailTo);
     }
 

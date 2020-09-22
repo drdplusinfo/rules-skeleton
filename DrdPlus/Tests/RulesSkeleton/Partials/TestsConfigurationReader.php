@@ -68,6 +68,8 @@ interface TestsConfigurationReader
 
     public function hasDebugContacts(): bool;
 
+    public function hasDebugContactsWithMail(): bool;
+
     public function hasAuthors(): bool;
 
     public function getExpectedLicence(): string;

@@ -38,6 +38,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const HAS_LINK_TO_SINGLE_JOURNAL = 'has_link_to_single_journal';
     public const HAS_PDF = 'has_pdf';
     public const HAS_DEBUG_CONTACTS = 'has_debug_contacts';
+    public const HAS_DEBUG_CONTACTS_WITH_MAIL = 'has_debug_contacts_with_mail';
     public const HAS_BUTTONS = 'has_buttons';
     public const HAS_SHOWN_HOME_BUTTON = 'has_shown_home_button';
     public const HAS_SHOWN_HOME_BUTTON_ON_HOMEPAGE = 'has_shown_home_button_on_homepage';
@@ -134,6 +135,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private $hasLinkToSingleJournal = true;
     /** @var bool */
     private $hasDebugContacts = true;
+    /** @var bool */
+    private $hasDebugContactsWithMail = true;
     /** @var string */
     private $expectedLicence = self::LICENCE_BY_ACCESS;
     /** @var array|string[] */
@@ -179,6 +182,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setCanBeBoughtOnEshop($values);
         $this->setExpectedEshopUrlRegexp($values, $this->canBeBoughtOnEshop());
         $this->setHasDebugContacts($values);
+        $this->setHasDebugContactsWithMail($values);
         $this->setExpectedLicence($values);
         $this->setHasCharacterSheet($values);
         $this->setHasLinksToJournals($values);
@@ -499,6 +503,11 @@ TEXT
         $this->hasDebugContacts = (bool)($values[self::HAS_DEBUG_CONTACTS] ?? $this->hasDebugContacts);
     }
 
+    private function setHasDebugContactsWithMail(array $values)
+    {
+        $this->hasDebugContactsWithMail = (bool)($values[self::HAS_DEBUG_CONTACTS_WITH_MAIL] ?? $this->hasDebugContactsWithMail);
+    }
+
     private function setExpectedLicence(array $values)
     {
         $this->expectedLicence = (string)($values[self::EXPECTED_LICENCE] ?? $this->expectedLicence);
@@ -709,6 +718,11 @@ TEXT
     public function hasDebugContacts(): bool
     {
         return $this->hasDebugContacts;
+    }
+
+    public function hasDebugContactsWithMail(): bool
+    {
+        return $this->hasDebugContactsWithMail;
     }
 
     public function getExpectedLicence(): string
