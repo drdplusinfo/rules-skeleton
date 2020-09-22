@@ -68,7 +68,9 @@ interface TestsConfigurationReader
 
     public function hasDebugContacts(): bool;
 
-    public function hasDebugContactsWithMail(): bool;
+    public function hasDebugContactsWithEmail(): bool;
+
+    public function getDebugContactsEmail(): string;
 
     public function hasAuthors(): bool;
 

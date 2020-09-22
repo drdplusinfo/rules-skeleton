@@ -38,7 +38,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const HAS_LINK_TO_SINGLE_JOURNAL = 'has_link_to_single_journal';
     public const HAS_PDF = 'has_pdf';
     public const HAS_DEBUG_CONTACTS = 'has_debug_contacts';
-    public const HAS_DEBUG_CONTACTS_WITH_MAIL = 'has_debug_contacts_with_mail';
+    public const HAS_DEBUG_CONTACTS_WITH_EMAIL = 'has_debug_contacts_with_email';
+    public const DEBUG_CONTACTS_EMAIL = 'debug_contacts_email';
     public const HAS_BUTTONS = 'has_buttons';
     public const HAS_SHOWN_HOME_BUTTON = 'has_shown_home_button';
     public const HAS_SHOWN_HOME_BUTTON_ON_HOMEPAGE = 'has_shown_home_button_on_homepage';
@@ -136,7 +137,9 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     /** @var bool */
     private $hasDebugContacts = true;
     /** @var bool */
-    private $hasDebugContactsWithMail = true;
+    private $hasDebugContactsWithEmail = true;
+    /** @var string */
+    private $debugContactsEmail = 'info@drdplus.info';
     /** @var string */
     private $expectedLicence = self::LICENCE_BY_ACCESS;
     /** @var array|string[] */
@@ -183,6 +186,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setExpectedEshopUrlRegexp($values, $this->canBeBoughtOnEshop());
         $this->setHasDebugContacts($values);
         $this->setHasDebugContactsWithMail($values);
+        $this->setDebugContactsEmail($values, $this->hasDebugContactsWithEmail());
         $this->setExpectedLicence($values);
         $this->setHasCharacterSheet($values);
         $this->setHasLinksToJournals($values);
@@ -495,7 +499,7 @@ TEXT
                 sprintf("Expected valid regexp with same opening and ending character, got '%s'", $values[self::EXPECTED_ESHOP_URL_REGEXP])
             );
         }
-        $this->expectedEshopUrlRegexp = (string)($values[self::EXPECTED_ESHOP_URL_REGEXP] ?? $this->expectedEshopUrlRegexp);
+        $this->expectedEshopUrlRegexp = $expectedEshopUrlRegexp;
     }
 
     private function setHasDebugContacts(array $values)
@@ -505,7 +509,16 @@ TEXT
 
     private function setHasDebugContactsWithMail(array $values)
     {
-        $this->hasDebugContactsWithMail = (bool)($values[self::HAS_DEBUG_CONTACTS_WITH_MAIL] ?? $this->hasDebugContactsWithMail);
+        $this->hasDebugContactsWithEmail = (bool)($values[self::HAS_DEBUG_CONTACTS_WITH_EMAIL] ?? $this->hasDebugContactsWithEmail);
+    }
+
+    private function setDebugContactsEmail(array $values, bool $hasDebugContactsWithEmail)
+    {
+        $debugContactsEmail = (string)($values[self::DEBUG_CONTACTS_EMAIL] ?? $this->debugContactsEmail);
+        if ($hasDebugContactsWithEmail && !filter_var($debugContactsEmail, FILTER_VALIDATE_EMAIL)) {
+            throw new Exceptions\InvalidDebugContactsEmail("Expected valid email for debut contacts, got '$debugContactsEmail'");
+        }
+        $this->debugContactsEmail = $debugContactsEmail;
     }
 
     private function setExpectedLicence(array $values)
@@ -720,9 +733,14 @@ TEXT
         return $this->hasDebugContacts;
     }
 
-    public function hasDebugContactsWithMail(): bool
+    public function hasDebugContactsWithEmail(): bool
     {
-        return $this->hasDebugContactsWithMail;
+        return $this->hasDebugContactsWithEmail;
+    }
+
+    public function getDebugContactsEmail(): string
+    {
+        return $this->debugContactsEmail;
     }
 
     public function getExpectedLicence(): string

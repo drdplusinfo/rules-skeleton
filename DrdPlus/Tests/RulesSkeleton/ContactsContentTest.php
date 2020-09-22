@@ -60,13 +60,12 @@ class ContactsContentTest extends AbstractContentTest
     public function I_can_use_mail_to_link_to_drdplus_info_email(): void
     {
         $debugContactsElement = $this->getDebugContactsElement();
-        if (!$this->getTestsConfiguration()->hasDebugContacts() || !$this->getTestsConfiguration()->hasDebugContactsWithMail()) {
+        if (!$this->getTestsConfiguration()->hasDebugContacts()) {
             self::assertNull(
                 $debugContactsElement,
                 sprintf(
-                    "Debug contacts have not been expected as test configuration says by '%s' or '%s'",
+                    "Debug contacts have not been expected as test configuration says by '%s'",
                     TestsConfiguration::HAS_DEBUG_CONTACTS,
-                    TestsConfiguration::HAS_DEBUG_CONTACTS_WITH_MAIL
                 )
             );
 
@@ -83,16 +82,27 @@ class ContactsContentTest extends AbstractContentTest
             }
             $mailTo = $href;
         }
-        self::assertNotEmpty(
-            $mailTo,
-            sprintf(
-                "Expected 'mailto:' in debug contacts as test configuration says by '%s' and '%s':\n%s",
-                TestsConfiguration::HAS_DEBUG_CONTACTS,
-                TestsConfiguration::HAS_DEBUG_CONTACTS_WITH_MAIL,
-                $debugContactsElement->prop_get_outerHTML()
-            )
-        );
-        self::assertSame('mailto:info@drdplus.info', $mailTo);
+        if (!$this->getTestsConfiguration()->hasDebugContactsWithEmail()) {
+            self::assertNull(
+                $mailTo,
+                sprintf(
+                    "Expected no 'mailto:' in debug contacts as test configuration says by '%s':\n%s",
+                    TestsConfiguration::HAS_DEBUG_CONTACTS_WITH_EMAIL,
+                    $debugContactsElement->prop_get_outerHTML()
+                )
+            );
+        } else {
+            self::assertNotEmpty(
+                $mailTo,
+                sprintf(
+                    "Expected 'mailto:' in debug contacts as test configuration says by '%s' and '%s':\n%s",
+                    TestsConfiguration::HAS_DEBUG_CONTACTS,
+                    TestsConfiguration::HAS_DEBUG_CONTACTS_WITH_EMAIL,
+                    $debugContactsElement->prop_get_outerHTML()
+                )
+            );
+            self::assertSame('mailto:' . $this->getTestsConfiguration()->getDebugContactsEmail(), $mailTo);
+        }
     }
 
     private function getDebugContactsElement(): ?Element
