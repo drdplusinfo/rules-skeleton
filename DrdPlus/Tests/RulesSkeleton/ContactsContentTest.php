@@ -82,8 +82,12 @@ class ContactsContentTest extends AbstractContentTest
 
     private function getDebugContactsElement(): ?Element
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->getHtmlDocument()->getElementById(HtmlHelper::ID_DEBUG_CONTACTS);
+        return $this->getHtmlDocument()->getElementById($this->getDebugContactsId());
+    }
+
+    private function getDebugContactsId(): string
+    {
+        return HtmlHelper::toId(HtmlHelper::ID_DEBUG_CONTACTS);
     }
 
     private function guardDebugContactsAreNotEmpty(?Element $debugContactsElement): void
@@ -92,4 +96,27 @@ class ContactsContentTest extends AbstractContentTest
         self::assertNotEmpty($debugContactsElement->textContent, 'Debug contacts are empty');
     }
 
+    /**
+     * @test
+     */
+    public function I_am_not_confused_by_link_to_debug_contacts_element()
+    {
+        $debugContactsElement = $this->getDebugContactsElement();
+        self::assertNotEmpty($debugContactsElement, 'Debug contacts are missing');
+        $anchors = $debugContactsElement->getElementsByTagName('a');
+        $debugContactsLocalLink = '#' . $this->getDebugContactsId();
+        foreach ($anchors as $anchor) {
+            $href = $anchor->href;
+            self::assertNotSame(
+                $debugContactsLocalLink,
+                $href,
+                sprintf(
+                    "Internal link to debug contacts in contacts itself by '%s' is devastating user experience. Tag debug contacts element by '%s' class:\n'%s'",
+                    $debugContactsLocalLink,
+                    HtmlHelper::CLASS_WITHOUT_ANCHOR_TO_ID,
+                    $debugContactsElement->prop_get_outerHTML()
+                )
+            );
+        }
+    }
 }

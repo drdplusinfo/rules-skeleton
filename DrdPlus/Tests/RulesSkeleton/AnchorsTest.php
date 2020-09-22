@@ -552,7 +552,15 @@ class AnchorsTest extends AbstractContentTest
             return;
         }
         $eshopUrl = $this->getConfiguration()->getEshopUrl();
-        self::assertMatchesRegularExpression('~^https://obchod\.altar\.cz/[^/]+\.html$~', $eshopUrl);
+        $eshopUrlRegexp = $this->getTestsConfiguration()->getExpectedEshopUrlRegexp();
+        self::assertMatchesRegularExpression(
+            $eshopUrlRegexp,
+            $eshopUrl,
+            sprintf(
+                "Expected configured valid URL to Altar e-shop as test configuration says by '%s'",
+                TestsConfiguration::CAN_BE_BOUGHT_ON_ESHOP
+            )
+        );
         self::assertSame($eshopUrl, $this->getLinkToEshop()->getAttribute('href') ?? '', 'Expected different link to e-shop');
     }
 
@@ -628,11 +636,19 @@ class AnchorsTest extends AbstractContentTest
             }
         }
         if (!$this->getTestsConfiguration()->hasCharacterSheet()) {
-            self::assertCount(0, $linksToCharacterSheet, 'No links to PDF character sheet expected');
+            self::assertCount(
+                0,
+                $linksToCharacterSheet,
+                sprintf("No links to PDF character sheet expected as test configuration says by '%s'", TestsConfiguration::HAS_CHARACTER_SHEET)
+            );
 
             return;
         }
-        self::assertGreaterThan(0, \count($linksToCharacterSheet), 'PDF character sheet is missing');
+        self::assertGreaterThan(
+            0,
+            \count($linksToCharacterSheet),
+            sprintf("PDF character sheet expected  as test configuration says by '%s'", TestsConfiguration::HAS_CHARACTER_SHEET)
+        );
         $expectedOriginalLink = 'https://www.drdplus.info/pdf/charakternik.pdf';
         $expectedLink = $this->getHtmlHelper()->turnToLocalLink($expectedOriginalLink);
         foreach ($linksToCharacterSheet as $linkToCharacterSheet) {
@@ -657,11 +673,27 @@ class AnchorsTest extends AbstractContentTest
             }
         }
         if (!$this->getTestsConfiguration()->hasLinksToJournals() && !$this->getTestsConfiguration()->hasLinkToSingleJournal()) {
-            self::assertCount(0, $linksToJournal, 'No links to PDF journal expected');
+            self::assertCount(
+                0,
+                $linksToJournal,
+                sprintf(
+                    "No links to PDF journal expected as test configuration says by '%s' and '%s'",
+                    TestsConfiguration::HAS_LINKS_TO_JOURNALS,
+                    TestsConfiguration::HAS_LINK_TO_SINGLE_JOURNAL
+                )
+            );
 
             return;
         }
-        self::assertGreaterThan(0, \count($linksToJournal), 'PDF journals are missing');
+        self::assertGreaterThan(
+            0,
+            \count($linksToJournal),
+            sprintf(
+                "PDF journals expected as test configuration says by '%s' or '%s'",
+                TestsConfiguration::HAS_LINKS_TO_JOURNALS,
+                TestsConfiguration::HAS_LINK_TO_SINGLE_JOURNAL
+            )
+        );
         if (!$this->getTestsConfiguration()->hasLinkToSingleJournal()) {
             foreach ($linksToJournal as $linkToJournal) {
                 self::assertMatchesRegularExpression(

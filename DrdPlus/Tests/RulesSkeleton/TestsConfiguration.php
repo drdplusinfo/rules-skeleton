@@ -51,6 +51,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const EXPECTED_PAGE_TITLE = 'expected_page_title';
     public const EXPECTED_GOOGLE_ANALYTICS_ID = 'expected_google_analytics_id';
     public const CAN_BE_BOUGHT_ON_ESHOP = 'can_be_bought_on_eshop';
+    public const EXPECTED_ESHOP_URL_REGEXP = 'expected_eshop_url_regexp';
     public const EXPECTED_LICENCE = 'expected_licence';
     public const TOO_SHORT_FAILURE_NAMES = 'too_short_failure_names';
     public const TOO_SHORT_SUCCESS_NAMES = 'too_short_success_names';
@@ -123,6 +124,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private $hasPdf = true;
     /** @var bool */
     private $canBeBoughtOnEshop = true;
+    /** @var string */
+    private $expectedEshopUrlRegexp = '~^https://obchod\.altar\.cz/[^/]+\.html$~';
     /** @var bool */
     private $hasCharacterSheet = true;
     /** @var bool */
@@ -174,6 +177,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setHasProtectedAccess($values);
         $this->setHasPdf($values);
         $this->setCanBeBoughtOnEshop($values);
+        $this->setExpectedEshopUrlRegexp($values, $this->canBeBoughtOnEshop());
         $this->setHasDebugContacts($values);
         $this->setExpectedLicence($values);
         $this->setHasCharacterSheet($values);
@@ -334,7 +338,7 @@ TEXT
                     Configuration::WEB,
                     Configuration::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REGEXP,
                     Configuration::WEB,
-                    Configuration::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT,
+                    Configuration::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT
                 )
             );
         }
@@ -477,6 +481,17 @@ TEXT
     private function setCanBeBoughtOnEshop(array $values)
     {
         $this->canBeBoughtOnEshop = (bool)($values[self::CAN_BE_BOUGHT_ON_ESHOP] ?? $this->canBeBoughtOnEshop);
+    }
+
+    private function setExpectedEshopUrlRegexp(array $values, bool $canBeBoughtOnEshop)
+    {
+        $expectedEshopUrlRegexp = (string)($values[self::EXPECTED_ESHOP_URL_REGEXP] ?? $this->expectedEshopUrlRegexp);
+        if ($canBeBoughtOnEshop && !preg_match('~^(.).+\1$~', $expectedEshopUrlRegexp)) {
+            throw new Exceptions\InvalidExpectedEshopUrlRegexp(
+                sprintf("Expected valid regexp with same opening and ending character, got '%s'", $values[self::EXPECTED_ESHOP_URL_REGEXP])
+            );
+        }
+        $this->expectedEshopUrlRegexp = (string)($values[self::EXPECTED_ESHOP_URL_REGEXP] ?? $this->expectedEshopUrlRegexp);
     }
 
     private function setHasDebugContacts(array $values)
@@ -669,6 +684,11 @@ TEXT
     public function canBeBoughtOnEshop(): bool
     {
         return $this->canBeBoughtOnEshop;
+    }
+
+    public function getExpectedEshopUrlRegexp(): string
+    {
+        return $this->expectedEshopUrlRegexp;
     }
 
     public function hasCharacterSheet(): bool

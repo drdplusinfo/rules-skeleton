@@ -58,6 +58,8 @@ interface TestsConfigurationReader
 
     public function canBeBoughtOnEshop(): bool;
 
+    public function getExpectedEshopUrlRegexp(): string;
+
     public function hasCharacterSheet(): bool;
 
     public function hasLinksToJournals(): bool;

@@ -15,7 +15,7 @@ class DebugContactsBody extends StrictObject implements BodyInterface
     public function getValue(): string
     {
         ob_start();
-        include __DIR__ . '/content/debug-contacts.html';
+        include __DIR__ . '/content/debug-contacts.php';
         return ob_get_clean();
     }
 }
