@@ -29,15 +29,27 @@ class EnvironmentTest extends TestCase
 
     /**
      * @test
+     * @dataProvider provideValuesForDevelopmentDetection
+     * @param string $phpSapi
+     * @param string|null $projectEnvironment
+     * @param bool $expectedAsDev
      */
-    public function I_can_control_development_environment_by_env_variable()
+    public function I_can_control_development_environment_by_env_variable(string $phpSapi, ?string $projectEnvironment, bool $expectedAsDev)
     {
-        $environmentWithoutProject = new Environment('foo', null, null);
-        self::assertFalse($environmentWithoutProject->isOnDevEnvironment(), 'dev environment was not expected');
-        $environmentOnStrangeProject = new Environment('foo', 'unknown', null);
-        self::assertFalse($environmentOnStrangeProject->isOnDevEnvironment());
-        $environmentOnDevProject = new Environment('foo', 'dev', null);
-        self::assertTrue($environmentOnDevProject->isOnDevEnvironment());
+        $environmentWithoutProject = new Environment($phpSapi, $projectEnvironment, null);
+        self::assertSame($expectedAsDev, $environmentWithoutProject->isOnDevEnvironment());
+    }
+
+    public function provideValuesForDevelopmentDetection(): array
+    {
+        return [
+            'project environment as NULL' => ['foo', null, false],
+            'project environment as strange string' => ['foo', 'unknown', false],
+            'project environment as shortest dev name' => ['foo', 'dev', true],
+            'project environment as long dev name' => ['foo', 'development', true],
+            'project environment as uppercase short dev name' => ['foo', 'DEV', true],
+            'project environment as capitalized long dev name' => ['foo', 'Development', true],
+        ];
     }
 
     /**
