@@ -37,7 +37,7 @@ class Environment extends StrictObject
 
     public function isOnDevEnvironment(): bool
     {
-        return $this->projectEnvironment === 'dev';
+        return $this->projectEnvironment && stripos($this->projectEnvironment, 'dev') === 0;
     }
 
     public function isOnLocalhost(): bool
