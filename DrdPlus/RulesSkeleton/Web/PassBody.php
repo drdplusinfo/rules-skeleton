@@ -2,6 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\HtmlDocument;
 
@@ -22,9 +23,10 @@ class PassBody extends StrictObject implements RulesBodyInterface
 
     public function getValue(): string
     {
+        $backgroundImageClass = HtmlHelper::CLASS_BACKGROUND_IMAGE;
         return <<<HTML
 <div class="main pass">
-  <div class="background-image"></div>
+  <div class="{$backgroundImageClass}"></div>
   {$this->pass->getValue()}
 </div>
 HTML;

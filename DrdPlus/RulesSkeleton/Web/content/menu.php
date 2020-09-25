@@ -9,9 +9,10 @@ if ($configuration->isShowHomeButton()
     || ($configuration->isShowHomeButtonOnHomepage() && $homepageDetector->isHomepageRequested())
     || ($configuration->isShowHomeButtonOnRoutes() && !$homepageDetector->isHomepageRequested())
 ) {
+    $homeButtonId = \DrdPlus\RulesSkeleton\HtmlHelper::ID_HOME_BUTTON;
     $homeButton = <<<HTML
 <span class="menu">
-    <a id="homeButton" class="internal-url" href="{$configuration->getHomeButtonTarget()}">
+    <a id="{$homeButtonId}" class="internal-url" href="{$configuration->getHomeButtonTarget()}">
         <img class="home" alt="Small dragon menu" src="/images/generic/skeleton/drdplus-dragon-menu-2x22.png">
     </a>
 </span>

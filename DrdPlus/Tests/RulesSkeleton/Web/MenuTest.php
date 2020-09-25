@@ -4,11 +4,11 @@ namespace DrdPlus\Tests\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\HomepageDetector;
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\PathProvider;
 use DrdPlus\RulesSkeleton\Web\Menu;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\WebContentBuilder\HtmlDocument;
-use Gt\Dom\Element;
 use Mockery\MockInterface;
 
 class MenuTest extends AbstractContentTest
@@ -41,8 +41,7 @@ class MenuTest extends AbstractContentTest
 </html>
 HTML
                 );
-                /** @var Element $homeButton */
-                $homeButton = $htmlDocument->getElementById('homeButton');
+                $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
                 self::assertNotEmpty($homeButton, 'Home button is missing');
                 self::assertSame(
                     'https://www.drdplus.info',
@@ -87,8 +86,7 @@ HTML
 </html>
 HTML
             );
-            /** @var Element $homeButton */
-            $homeButton = $htmlDocument->getElementById('homeButton');
+            $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
             self::assertNotEmpty($homeButton, 'Home button is missing');
             self::assertSame(
                 'https://www.drdplus.info',
@@ -132,7 +130,7 @@ HTML
 </html>
 HTML
             );
-            $homeButton = $htmlDocument->getElementById('homeButton');
+            $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
             self::assertEmpty($homeButton, 'Home button should not be used at all');
         }
     }
@@ -189,8 +187,7 @@ HTML
 </html>
 HTML
             );
-            /** @var Element $homeButton */
-            $homeButton = $htmlDocument->getElementById('homeButton');
+            $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
             self::assertNotEmpty($homeButton, 'Home button is missing');
             self::assertSame(
                 'https://www.drdplus.info',
@@ -234,7 +231,7 @@ HTML
 </html>
 HTML
             );
-            $homeButton = $htmlDocument->getElementById('homeButton');
+            $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
             self::assertEmpty($homeButton, 'Home button should not be used at all');
         }
     }
@@ -271,8 +268,7 @@ HTML
 </html>
 HTML
                 );
-                /** @var Element $homeButton */
-                $homeButton = $htmlDocument->getElementById('homeButton');
+                $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
                 self::assertNotEmpty($homeButton, 'Home button expected');
                 self::assertSame($expectedTarget, $homeButton->getAttribute('href'));
             }
@@ -310,8 +306,7 @@ HTML
 </html>
 HTML
         );
-        /** @var Element $homeButton */
-        $homeButton = $htmlDocument->getElementById('homeButton');
+        $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
         self::assertNotEmpty($homeButton, 'Home button is missing');
         self::assertSame(
             $expectedTarget,
