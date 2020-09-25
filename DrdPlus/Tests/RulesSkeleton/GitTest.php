@@ -21,13 +21,13 @@ class GitTest extends AbstractContentTest
         ['output' => $output, 'resultCode' => $resultCode] = $this->getGitFolderIgnoring($assetsDir);
         if (!$this->getTestsConfiguration()->areGenericAssetsVersioned()) {
             self::assertSame(
-                1,
+                0, // GIT check-ignore results into 0 (as a successful ignore check) if dir is ignored
                 $resultCode,
                 sprintf(
                     "The $assetsDir dir should be ignored by Git as tests configuration says by '%s'",
                     TestsConfiguration::ARE_GENERIC_ASSETS_VERSIONED
                 )
-            ); // GIT check-ignore results into 0 if dir is ignored
+            );
             self::assertSame(
                 [$assetsDir],
                 $output,
@@ -38,10 +38,10 @@ class GitTest extends AbstractContentTest
             );
         } else {
             self::assertLessThanOrEqual(
-                1, // GIT check-ignore results into 1 if dir is NOT ignored
+                1, // GIT check-ignore results into 1 (as a failed ignore check) if dir is NOT ignored
                 $resultCode,
                 sprintf(
-                    "The $assetsDir dir should not be ignored by Git as tests configuration says by '%s'",
+                    "The $assetsDir dir should should be versioned by Git as tests configuration says by '%s'",
                     TestsConfiguration::ARE_GENERIC_ASSETS_VERSIONED
                 )
             );
@@ -49,7 +49,7 @@ class GitTest extends AbstractContentTest
                 [],
                 $output,
                 sprintf(
-                    "The $assetsDir dir should not be ignored by Git as tests configuration says by '%s'",
+                    "The $assetsDir dir should should be versioned by Git as tests configuration says by '%s'",
                     TestsConfiguration::ARE_GENERIC_ASSETS_VERSIONED
                 )
             );
@@ -65,9 +65,11 @@ class GitTest extends AbstractContentTest
         if ($this->isSkeletonChecked()) {
             self::assertSame(0, $resultCode);
             self::assertSame([$this->getVendorRoot()], $output, 'The vendor dir should be ignored for skeleton');
-        } elseif (!$this->getTestsConfiguration()->isVendorDirVersioned()) {
+            return;
+        }
+        if (!$this->getTestsConfiguration()->isVendorDirVersioned()) {
             self::assertLessThanOrEqual(
-                0, // GIT check-ignore results into 0 if dir is ignored
+                0, // GIT check-ignore results into 0 (as a successful ignore check) if dir is ignored
                 $resultCode,
                 sprintf(
                     "The vendor dir '{$this->getVendorRoot()}' should be ignored by Git as tests configuration says by '%s'",
@@ -82,14 +84,24 @@ class GitTest extends AbstractContentTest
                     TestsConfiguration::IS_VENDOR_DIR_VERSIONED
                 )
             );
-        } else {
-            self::assertLessThanOrEqual(
-                1, // GIT check-ignore results into 1 if dir is not ignored
-                $resultCode,
-                "Vendor dir should not be ignored for final project ({$this->getVendorRoot()})"
-            );
-            self::assertSame([], $output, "The vendor dir should be versioned, but is ignored ({$this->getVendorRoot()})");
+            return;
         }
+        self::assertLessThanOrEqual(
+            1, // GIT check-ignore results into 1 (as a failed ignore check) if dir is not ignored
+            $resultCode,
+            sprintf(
+                "The vendor dir '{$this->getVendorRoot()}' should be versioned by Git as tests configuration says by '%s'",
+                TestsConfiguration::IS_VENDOR_DIR_VERSIONED
+            )
+        );
+        self::assertSame(
+            [],
+            $output,
+            sprintf(
+                "The vendor dir '{$this->getVendorRoot()}' should be versioned by Git as tests configuration says by '%s'",
+                TestsConfiguration::IS_VENDOR_DIR_VERSIONED
+            )
+        );
     }
 
     /**
