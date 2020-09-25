@@ -36,6 +36,8 @@ interface TestsConfigurationReader
 
     public function hasLocalRepositories(): bool;
 
+    public function areGenericAssetsVersioned(): bool;
+
     public function hasLocalLinks(): bool;
 
     public function hasLinksToAltar();

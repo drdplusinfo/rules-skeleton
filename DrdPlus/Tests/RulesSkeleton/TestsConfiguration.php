@@ -45,6 +45,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const HAS_SHOWN_HOME_BUTTON_ON_HOMEPAGE = 'has_shown_home_button_on_homepage';
     public const HAS_SHOWN_HOME_BUTTON_ON_ROUTES = 'has_shown_home_button_on_routes';
     public const HAS_LOCAL_REPOSITORIES = 'has_local_repositories';
+    public const ARE_GENERIC_ASSETS_VERSIONED = 'are_generic_assets_versioned';
 
     public const SOME_EXPECTED_TABLE_IDS = 'some_expected_table_ids';
     public const EXPECTED_PUBLIC_URL = 'expected_public_url';
@@ -110,6 +111,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private $hasMarkedResult = true;
     /** @var bool */
     private $hasLocalRepositories = false;
+    /** @var bool */
+    private $areGenericAssetsVersioned = true;
     /** @var string */
     private $expectedWebName;
     /** @var string */
@@ -202,6 +205,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setHasMarkedContent($values);
         $this->setHasMarkedResult($values);
         $this->setHasLocalRepositories($values);
+        $this->setGenericAssetsVersioned($values);
         $this->setExpectedHomeButtonTargetFromHomepage($values);
         $this->setExpectedHomeButtonTargetFromRoutes($values);
     }
@@ -421,6 +425,11 @@ TEXT
     private function setHasLocalRepositories(array $values)
     {
         $this->hasLocalRepositories = (bool)($values[self::HAS_LOCAL_REPOSITORIES] ?? $this->hasLocalRepositories);
+    }
+
+    private function setGenericAssetsVersioned(array $values)
+    {
+        $this->areGenericAssetsVersioned = (bool)($values[self::ARE_GENERIC_ASSETS_VERSIONED] ?? $this->areGenericAssetsVersioned);
     }
 
     private function setHasLocalLinks(array $values)
@@ -645,6 +654,11 @@ TEXT
     public function hasLocalRepositories(): bool
     {
         return $this->hasLocalRepositories;
+    }
+
+    public function areGenericAssetsVersioned(): bool
+    {
+        return $this->areGenericAssetsVersioned;
     }
 
     public function hasShownHomeButton(): bool
