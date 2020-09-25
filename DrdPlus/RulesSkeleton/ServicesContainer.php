@@ -11,9 +11,9 @@ use DrdPlus\RulesSkeleton\Web\Pass;
 use DrdPlus\RulesSkeleton\Web\PassContent;
 use DrdPlus\RulesSkeleton\Web\RulesMainContent;
 use DrdPlus\RulesSkeleton\Web\TablesContent;
-use DrdPlus\RulesSkeleton\Web\WebFiles;
-use DrdPlus\RulesSkeleton\Web\WebPartsContainer;
-use DrdPlus\RulesSkeleton\Web\WebRootProvider;
+use DrdPlus\RulesSkeleton\Web\Tools\WebFiles;
+use DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer;
+use DrdPlus\RulesSkeleton\Web\Tools\WebRootProvider;
 use DrdPlus\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
@@ -470,7 +470,6 @@ class ServicesContainer extends StrictObject
     public function getNow(): \DateTimeImmutable
     {
         if ($this->now === null) {
-            /** @noinspection PhpUnhandledExceptionInspection */
             $this->now = new \DateTimeImmutable();
         }
         return $this->now;

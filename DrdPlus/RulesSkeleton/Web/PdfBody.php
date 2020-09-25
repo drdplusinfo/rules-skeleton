@@ -57,6 +57,11 @@ class PdfBody extends StrictObject implements RulesBodyInterface
         return $this->pdfFile ?: null;
     }
 
+    public function preProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
+    {
+        return $htmlDocument;
+    }
+
     public function postProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
     {
         return $htmlDocument;

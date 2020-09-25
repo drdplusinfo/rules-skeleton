@@ -25,7 +25,7 @@ class DebugContactsBodyTest extends AbstractContentTest
 <body>
   $debugContactsBody
 </body>
-</htm>
+</html>
 HTML;
         $HTMLDocument = new HTMLDocument($html);
         $debugContactsId = HtmlHelper::toId(HtmlHelper::ID_DEBUG_CONTACTS);

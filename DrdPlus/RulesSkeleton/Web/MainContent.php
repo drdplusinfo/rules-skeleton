@@ -25,6 +25,9 @@ abstract class MainContent extends Content
     {
         $htmlDocument = new HtmlDocument($content);
         $htmlDocument->body->classList->add('container');
+
+        $this->body->preProcessDocument($htmlDocument);
+
         $this->solveIds($htmlDocument);
         $this->solveLinks($htmlDocument);
         $this->htmlHelper->injectIframesWithRemoteTables($htmlDocument);

@@ -42,6 +42,11 @@ HTML;
         return ob_get_clean();
     }
 
+    public function preProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
+    {
+        return $htmlDocument;
+    }
+
     public function postProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
     {
         return $htmlDocument;

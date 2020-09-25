@@ -165,7 +165,7 @@ class HtmlHelperTest extends AbstractContentTest
 <body>
   <table>No ID here</table>
 </body>
-</htm>
+</html>
 HTML
         ));
         self::assertCount(0, $allTables);
@@ -238,7 +238,7 @@ HTML
 <body>
   <div class="test" id="$originalId"></div>
 </body>
-</htm>
+</html>
 HTML
         );
         $htmlHelper->unifyIds($htmlDocument);
@@ -289,7 +289,7 @@ HTML
   <a href="https://qux.drdplus.info" id="marked_as_local">Sub-doména na DrD+ info označená jako local</a>
   <a>Tohle je takový divný odkaz bez href, stává se.</a>
 </body>
-</htm>
+</html>
 HTML
         );
         /** @var Element $localizedLink */
@@ -326,7 +326,7 @@ HTML
   $implodedLinks
     <a>Tohle je takový divný odkaz bez href, stává se.</a>
 </body>
-</htm>
+</html>
 HTML
         );
         $htmlHelper->markExternalLinksByClass($htmlDocument);
@@ -380,7 +380,7 @@ HTML
 <body>
   <a id="link_without_anchor">Link without anchor</a>
 </body>
-</htm>
+</html>
 HTML
         );
         self::assertNull($htmlDocument->body->getAttribute(HtmlHelper::DATA_HAS_MARKED_EXTERNAL_URLS));

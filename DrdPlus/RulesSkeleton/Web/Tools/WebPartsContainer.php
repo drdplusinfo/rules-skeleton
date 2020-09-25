@@ -1,10 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton\Web;
+namespace DrdPlus\RulesSkeleton\Web\Tools;
 
 use DrdPlus\RulesSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
+use DrdPlus\RulesSkeleton\Web\DebugContactsBody;
+use DrdPlus\RulesSkeleton\Web\NotFoundBody;
+use DrdPlus\RulesSkeleton\Web\Pass;
+use DrdPlus\RulesSkeleton\Web\PassBody;
+use DrdPlus\RulesSkeleton\Web\PdfBody;
+use DrdPlus\RulesSkeleton\Web\RulesMainBody;
+use DrdPlus\RulesSkeleton\Web\TablesBody;
 use Granam\Strict\Object\StrictObject;
 
 class WebPartsContainer extends StrictObject
@@ -27,6 +34,8 @@ class WebPartsContainer extends StrictObject
     private $pdfBody;
     /** @var RulesMainBody */
     private $rulesMainBody;
+    /** @var RulesMainBodyPreProcessor */
+    private $rulesMainBodyPreProcessor;
     /** @var NotFoundBody */
     private $notFoundBody;
     /** @var TablesBody */
@@ -76,9 +85,22 @@ class WebPartsContainer extends StrictObject
     public function getRulesMainBody(): RulesMainBody
     {
         if ($this->rulesMainBody === null) {
-            $this->rulesMainBody = new RulesMainBody($this->webFiles, $this);
+            $this->rulesMainBody = new RulesMainBody(
+                $this->webFiles,
+                $this,
+                $this->getRulesMainBodyPreProcessor(),
+                null
+            );
         }
         return $this->rulesMainBody;
+    }
+
+    protected function getRulesMainBodyPreProcessor(): RulesMainBodyPreProcessor
+    {
+        if (!$this->rulesMainBodyPreProcessor) {
+            $this->rulesMainBodyPreProcessor = new RulesMainBodyPreProcessor();
+        }
+        return $this->rulesMainBodyPreProcessor;
     }
 
     public function getNotFoundBody(): NotFoundBody

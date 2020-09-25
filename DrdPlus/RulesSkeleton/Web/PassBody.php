@@ -30,6 +30,11 @@ class PassBody extends StrictObject implements RulesBodyInterface
 HTML;
     }
 
+    public function preProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
+    {
+        return $htmlDocument;
+    }
+
     public function postProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
     {
         return $htmlDocument;

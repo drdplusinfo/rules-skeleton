@@ -7,5 +7,7 @@ use Granam\WebContentBuilder\Web\BodyInterface;
 
 interface RulesBodyInterface extends BodyInterface
 {
+    public function preProcessDocument(HtmlDocument $htmlDocument): HtmlDocument;
+
     public function postProcessDocument(HtmlDocument $htmlDocument): HtmlDocument;
 }

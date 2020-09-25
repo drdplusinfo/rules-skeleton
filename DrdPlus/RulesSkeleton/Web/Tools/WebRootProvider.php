@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton\Web;
+namespace DrdPlus\RulesSkeleton\Web\Tools;
 
 use DrdPlus\RulesSkeleton\Dirs;
 use Granam\Strict\Object\StrictObject;
@@ -8,9 +8,7 @@ use Granam\WebContentBuilder\Web\SourceDirProviderInterface;
 
 class WebRootProvider extends StrictObject implements SourceDirProviderInterface
 {
-    /**
-     * @var Dirs
-     */
+    /** @var Dirs */
     private $dirs;
 
     public function __construct(Dirs $dirs)

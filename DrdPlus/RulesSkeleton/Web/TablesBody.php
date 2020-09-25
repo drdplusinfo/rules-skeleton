@@ -46,6 +46,11 @@ class TablesBody extends StrictObject implements RulesBodyInterface
         return $tablesContent;
     }
 
+    public function preProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
+    {
+        return $htmlDocument;
+    }
+
     public function postProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
     {
         $tablesWithIds = $this->htmlHelper->findTablesWithIds($htmlDocument, $this->request->getRequestedTablesIds());
