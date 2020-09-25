@@ -130,7 +130,7 @@ class TestsTest extends AbstractContentTest
             if ($folder === '.' || $folder === '..') {
                 continue;
             }
-            if (!\preg_match('~\.php$~', $folder)) {
+            if (!\preg_match('~^[[:upper:]].*\.php$~', $folder)) {
                 if (\is_dir($dir . '/' . $folder)) {
                     foreach ($this->getClassesFromDir($dir . '/' . $folder) as $class) {
                         $classes[] = $class;
