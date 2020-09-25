@@ -10,8 +10,8 @@ $documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER[
 /** @noinspection PhpIncludeInspection */
 require_once $documentRoot . '/vendor/autoload.php';
 
-$dirs = $dirs ?? new \DrdPlus\RulesSkeleton\Dirs($documentRoot);
-$configuration = \DrdPlus\RulesSkeleton\Configuration::createFromYml($dirs);
+$dirs = $dirs ?? new \DrdPlus\RulesSkeleton\Configurations\Dirs($documentRoot);
+$configuration = \DrdPlus\RulesSkeleton\Configurations\Configuration::createFromYml($dirs);
 $htmlHelper = $htmlHelper
     ?? \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals(
         $dirs,

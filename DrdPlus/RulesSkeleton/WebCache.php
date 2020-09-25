@@ -2,6 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\Configurations\Dirs;
 use Granam\Git\Git;
 
 class WebCache extends Cache

@@ -2,7 +2,7 @@
 
 namespace DrdPlus\Tests\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\HomepageDetector;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\PathProvider;

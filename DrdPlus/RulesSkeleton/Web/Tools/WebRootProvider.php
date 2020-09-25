@@ -2,7 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Web\Tools;
 
-use DrdPlus\RulesSkeleton\Dirs;
+use DrdPlus\RulesSkeleton\Configurations\Dirs;
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\Web\SourceDirProviderInterface;
 

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
-use DrdPlus\RulesSkeleton\Dirs;
+use DrdPlus\RulesSkeleton\Configurations\Dirs;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 
 class DirsTest extends AbstractContentTest

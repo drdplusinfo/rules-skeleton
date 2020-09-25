@@ -2,7 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\WebContentBuilder\Web\CssFiles;
 use Granam\WebContentBuilder\Web\JsFiles;

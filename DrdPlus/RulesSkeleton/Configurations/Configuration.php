@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton;
+namespace DrdPlus\RulesSkeleton\Configurations;
 
 use Granam\Strict\Object\StrictObject;
 use Granam\YamlReader\YamlFileReader;
@@ -78,7 +78,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
 
     /**
      * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\InvalidGoogleAnalyticsId
+     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidGoogleAnalyticsId
      */
     protected function guardValidGoogleAnalyticsId(array $settings): void
     {
@@ -96,7 +96,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
 
     /**
      * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\InvalidMenuPosition
+     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidMenuPosition
      */
     protected function guardSetIfUseFixedMenuPosition(array $settings): void
     {
@@ -113,7 +113,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
 
     /**
      * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\MissingWebName
+     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\MissingWebName
      */
     protected function guardNonEmptyWebName(array $settings): void
     {
@@ -130,7 +130,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
 
     /**
      * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\TitleSmileyIsNotSet
+     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\TitleSmileyIsNotSet
      */
     protected function guardSetTitleSmiley(array $settings): void
     {
@@ -147,7 +147,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
 
     /**
      * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\InvalidEshopUrl
+     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidEshopUrl
      */
     protected function guardValidEshopUrl(array $settings): void
     {

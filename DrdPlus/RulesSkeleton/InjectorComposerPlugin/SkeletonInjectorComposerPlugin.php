@@ -10,8 +10,8 @@ use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
-use DrdPlus\RulesSkeleton\Configuration;
-use DrdPlus\RulesSkeleton\Dirs;
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\Dirs;
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\AssetsVersion;
 

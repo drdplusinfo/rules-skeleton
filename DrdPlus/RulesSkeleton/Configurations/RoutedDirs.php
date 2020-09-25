@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton;
+namespace DrdPlus\RulesSkeleton\Configurations;
+
+use DrdPlus\RulesSkeleton\PathProvider;
 
 class RoutedDirs extends Dirs
 {

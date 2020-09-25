@@ -2,9 +2,9 @@
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\CookiesService;
-use DrdPlus\RulesSkeleton\Dirs;
+use DrdPlus\RulesSkeleton\Configurations\Dirs;
 use DrdPlus\RulesSkeleton\RouteMatch;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;

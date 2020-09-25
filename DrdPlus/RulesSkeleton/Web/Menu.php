@@ -2,7 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\HomepageDetector;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringInterface;

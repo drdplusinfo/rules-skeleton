@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
-use DrdPlus\RulesSkeleton\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
 
@@ -36,7 +36,8 @@ class ConfigurationTest extends AbstractContentTest
         $yamlTestingDir = $this->getYamlTestingDir();
         $this->createYamlLocalConfig($localYamlContent, $yamlTestingDir);
         $this->createYamlDistributionConfig($distributionYamlContent, $yamlTestingDir);
-        $configuration = Configuration::createFromYml($dirs = $this->createDirs($yamlTestingDir));
+        $dirs = $this->createDirs($yamlTestingDir);
+        $configuration = Configuration::createFromYml($dirs);
         self::assertSame($expectedYamlContent, $configuration->getSettings());
         self::assertSame($expectedYamlContent[Configuration::GOOGLE][Configuration::ANALYTICS_ID], $configuration->getGoogleAnalyticsId());
         self::assertSame($dirs, $configuration->getDirs());
@@ -126,7 +127,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_create_it_with_invalid_google_analytics_id(): void
     {
-        $this->expectException(\DrdPlus\RulesSkeleton\Exceptions\InvalidGoogleAnalyticsId::class);
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidGoogleAnalyticsId::class);
         $this->expectExceptionMessageMatches('~GoogleItself~');
         $completeSettings = $this->getSomeCompleteSettings();
         $completeSettings[Configuration::GOOGLE][Configuration::ANALYTICS_ID] = 'GoogleItself';
@@ -138,7 +139,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_create_it_without_defining_if_menu_should_be_fixed(): void
     {
-        $this->expectException(\DrdPlus\RulesSkeleton\Exceptions\InvalidMenuPosition::class);
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidMenuPosition::class);
         $completeSettings = $this->getSomeCompleteSettings();
         unset($completeSettings[Configuration::WEB][Configuration::MENU_POSITION_FIXED]);
         new Configuration($this->getDirs(), $completeSettings);
@@ -149,7 +150,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_create_it_without_defining_if_show_home_button(): void
     {
-        $this->expectException(\DrdPlus\RulesSkeleton\Exceptions\MissingShownHomeButtonConfiguration::class);
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\MissingShownHomeButtonConfiguration::class);
         $completeSettings = $this->getSomeCompleteSettings();
         unset($completeSettings[Configuration::WEB][Configuration::SHOW_HOME_BUTTON]);
         new Configuration($this->getDirs(), $completeSettings);
@@ -160,7 +161,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_create_it_without_web_name(): void
     {
-        $this->expectException(\DrdPlus\RulesSkeleton\Exceptions\MissingWebName::class);
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\MissingWebName::class);
         $completeSettings = $this->getSomeCompleteSettings();
         $completeSettings[Configuration::WEB][Configuration::NAME] = '';
         new Configuration($this->getDirs(), $completeSettings);
@@ -171,7 +172,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_create_it_without_set_title_smiley(): void
     {
-        $this->expectException(\DrdPlus\RulesSkeleton\Exceptions\TitleSmileyIsNotSet::class);
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\TitleSmileyIsNotSet::class);
         $completeSettings = $this->getSomeCompleteSettings();
         unset($completeSettings[Configuration::WEB][Configuration::TITLE_SMILEY]);
         new Configuration($this->getDirs(), $completeSettings);
@@ -252,7 +253,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_ommit_eshop_url_on_protected_access()
     {
-        $this->expectException(\DrdPlus\RulesSkeleton\Exceptions\InvalidEshopUrl::class);
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidEshopUrl::class);
         $settings = $this->getSomeCompleteSettings();
 
         $settings[Configuration::WEB][Configuration::PROTECTED_ACCESS] = true;

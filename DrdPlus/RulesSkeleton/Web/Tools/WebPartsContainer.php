@@ -2,7 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Web\Tools;
 
-use DrdPlus\RulesSkeleton\Dirs;
+use DrdPlus\RulesSkeleton\Configurations\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\Web\DebugContactsBody;

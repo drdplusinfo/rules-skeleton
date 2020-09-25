@@ -3,6 +3,9 @@
 namespace DrdPlus\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\Dirs;
+use DrdPlus\RulesSkeleton\Configurations\RoutedDirs;
 use DrdPlus\RulesSkeleton\Web\EmptyMenu;
 use DrdPlus\RulesSkeleton\Web\Head;
 use DrdPlus\RulesSkeleton\Web\Menu;

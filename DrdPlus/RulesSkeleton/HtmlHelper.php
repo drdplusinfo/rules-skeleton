@@ -2,6 +2,8 @@
 
 namespace DrdPlus\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\Configurations\Dirs;
+use DrdPlus\RulesSkeleton\Configurations\ProjectUrlConfiguration;
 use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLCollection;

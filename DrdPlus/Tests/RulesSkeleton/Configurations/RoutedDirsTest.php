@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
+use DrdPlus\RulesSkeleton\Configurations\RoutedDirs;
 use DrdPlus\RulesSkeleton\PathProvider;
-use DrdPlus\RulesSkeleton\RoutedDirs;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Mockery\MockInterface;
 
