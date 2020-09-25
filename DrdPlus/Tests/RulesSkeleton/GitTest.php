@@ -37,8 +37,22 @@ class GitTest extends AbstractContentTest
                 )
             );
         } else {
-            self::assertLessThanOrEqual(1, $resultCode); // GIT check-ignore results into 1 if dir is NOT ignored
-            self::assertSame([], $output, "The $assetsDir dir should be versioned, but is ignored");
+            self::assertLessThanOrEqual(
+                1, // GIT check-ignore results into 1 if dir is NOT ignored
+                $resultCode,
+                sprintf(
+                    "The $assetsDir dir should not be ignored by Git as tests configuration says by '%s'",
+                    TestsConfiguration::ARE_GENERIC_ASSETS_VERSIONED
+                )
+            );
+            self::assertSame(
+                [],
+                $output,
+                sprintf(
+                    "The $assetsDir dir should not be ignored by Git as tests configuration says by '%s'",
+                    TestsConfiguration::ARE_GENERIC_ASSETS_VERSIONED
+                )
+            );
         }
     }
 
@@ -51,6 +65,23 @@ class GitTest extends AbstractContentTest
         if ($this->isSkeletonChecked()) {
             self::assertSame(0, $resultCode);
             self::assertSame([$this->getVendorRoot()], $output, 'The vendor dir should be ignored for skeleton');
+        } elseif (!$this->getTestsConfiguration()->isVendorDirVersioned()) {
+            self::assertLessThanOrEqual(
+                0, // GIT check-ignore results into 0 if dir is ignored
+                $resultCode,
+                sprintf(
+                    "The vendor dir '{$this->getVendorRoot()}' should be ignored by Git as tests configuration says by '%s'",
+                    TestsConfiguration::IS_VENDOR_DIR_VERSIONED
+                )
+            );
+            self::assertSame(
+                [$this->getVendorRoot()],
+                $output,
+                sprintf(
+                    "The vendor dir '{$this->getVendorRoot()}' should be ignored by Git as tests configuration says by '%s'",
+                    TestsConfiguration::IS_VENDOR_DIR_VERSIONED
+                )
+            );
         } else {
             self::assertLessThanOrEqual(
                 1, // GIT check-ignore results into 1 if dir is not ignored

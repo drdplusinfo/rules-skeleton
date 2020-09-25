@@ -38,6 +38,8 @@ interface TestsConfigurationReader
 
     public function areGenericAssetsVersioned(): bool;
 
+    public function isVendorDirVersioned(): bool;
+
     public function hasLocalLinks(): bool;
 
     public function hasLinksToAltar();
