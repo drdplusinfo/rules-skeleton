@@ -60,8 +60,9 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const TOO_SHORT_FAILURE_NAMES = 'too_short_failure_names';
     public const TOO_SHORT_SUCCESS_NAMES = 'too_short_success_names';
     public const TOO_SHORT_RESULT_NAMES = 'too_short_result_names';
-    public const EXPECTED_HOME_BUTTON_TARGET_FROM_HOMEPAGE = 'expected_home_button_target_from_homepage';
-    public const EXPECTED_HOME_BUTTON_TARGET_FROM_ROUTES = 'expected_home_button_target_from_routes';
+    public const HAS_HOME_BUTTON_ON_HOMEPAGE = 'has_home_button_on_homepage';
+    public const HAS_HOME_BUTTON_ON_ROUTES = 'has_home_button_on_routes';
+    public const EXPECTED_HOME_BUTTON_TARGET = 'expected_home_button_target';
 
     public static function createFromYaml(string $yamlConfigFile, HtmlHelper $htmlHelper): TestsConfiguration
     {
@@ -155,10 +156,12 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private $tooShortSuccessNames = ['všiml si'];
     /** @var array|string[] */
     private $tooShortResultNames = ['Bonus', 'Postih'];
+    /** @var bool */
+    private $hasHomeButtonOnHomepage = true;
+    /** @var bool */
+    private $hasHomeButtonOnRoutes = true;
     /** @var string */
-    private $expectedHomeButtonTargetFromHomepage = 'https://www.drdplus.info';
-    /** @var string */
-    private $expectedHomeButtonTargetFromRoutes = 'https://www.drdplus.info';
+    private $expectedHomeButtonTarget = 'https://www.drdplus.info';
 
     /**
      * @param array $values
@@ -211,7 +214,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setHasLocalRepositories($values);
         $this->setGenericAssetsVersioned($values);
         $this->setIsVendorDirVersioned($values);
-        $this->setExpectedHomeButtonTargetFromHomepage($values);
+        $this->setHasHomeButtonOnHomepage($values);
+        $this->setHasHomeButtonOnRoutes($values);
         $this->setExpectedHomeButtonTargetFromRoutes($values);
     }
 
@@ -599,16 +603,21 @@ TEXT
         }
     }
 
-    private function setExpectedHomeButtonTargetFromHomepage(array $values)
+    private function setHasHomeButtonOnHomepage(array $values)
     {
-        $this->expectedHomeButtonTargetFromHomepage = $values[self::EXPECTED_HOME_BUTTON_TARGET_FROM_HOMEPAGE]
-            ?? $this->expectedHomeButtonTargetFromHomepage;
+        $this->hasHomeButtonOnHomepage = $values[self::HAS_HOME_BUTTON_ON_HOMEPAGE]
+            ?? $this->hasHomeButtonOnHomepage;
+    }
+
+    private function setHasHomeButtonOnRoutes(array $values)
+    {
+        $this->hasHomeButtonOnRoutes = $values[self::HAS_HOME_BUTTON_ON_ROUTES]
+            ?? $this->hasHomeButtonOnRoutes;
     }
 
     private function setExpectedHomeButtonTargetFromRoutes(array $values)
     {
-        $this->expectedHomeButtonTargetFromRoutes = $values[self::EXPECTED_HOME_BUTTON_TARGET_FROM_ROUTES]
-            ?? $this->expectedHomeButtonTargetFromRoutes;
+        $this->expectedHomeButtonTarget = $values[self::EXPECTED_HOME_BUTTON_TARGET] ?? $this->expectedHomeButtonTarget;
     }
 
     public function getExpectedPublicUrl(): string
@@ -801,13 +810,18 @@ TEXT
         return $this->tooShortResultNames;
     }
 
-    public function getExpectedHomeButtonTargetFromHomepage(): string
+    public function hasHomeButtonOnHomepage(): bool
     {
-        return $this->expectedHomeButtonTargetFromHomepage;
+        return $this->hasHomeButtonOnHomepage;
     }
 
-    public function getExpectedHomeButtonTargetFromRoutes(): string
+    public function hasHomeButtonOnRoutes(): bool
     {
-        return $this->expectedHomeButtonTargetFromRoutes;
+        return $this->hasHomeButtonOnRoutes;
+    }
+
+    public function getExpectedHomeButtonTarget(): string
+    {
+        return $this->expectedHomeButtonTarget;
     }
 }

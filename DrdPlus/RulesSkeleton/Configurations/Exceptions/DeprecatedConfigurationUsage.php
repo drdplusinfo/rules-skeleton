@@ -2,7 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Configurations\Exceptions;
 
-class InvalidMenuPosition extends InvalidConfiguration
+class DeprecatedConfigurationUsage extends \LogicException implements Logic
 {
 
 }

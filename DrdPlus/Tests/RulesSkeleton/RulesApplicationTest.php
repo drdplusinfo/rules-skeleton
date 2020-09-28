@@ -3,6 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Redirect;
 use DrdPlus\RulesSkeleton\Request;
@@ -11,7 +12,6 @@ use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\WebContentBuilder\HtmlDocument;
-use Gt\Dom\Element;
 use Gt\Dom\TokenList;
 use Mockery\MockInterface;
 
@@ -23,20 +23,25 @@ class RulesApplicationTest extends AbstractContentTest
     public function I_can_ask_if_menu_is_fixed(): void
     {
         $configurationWithoutFixedMenu = $this->createCustomConfiguration(
-            [Configuration::WEB => [Configuration::MENU_POSITION_FIXED => false]]
+            [Configuration::WEB => [Configuration::MENU => [MenuConfiguration::POSITION_FIXED => false]]]
         );
-        self::assertFalse($configurationWithoutFixedMenu->isMenuPositionFixed(), 'Expected configuration with menu position not fixed');
+        self::assertFalse(
+            $configurationWithoutFixedMenu->getMenuConfiguration()->isPositionFixed(),
+            'Expected configuration with menu position not fixed'
+        );
         if ($this->isSkeletonChecked()) {
-            /** @var Element $menu */
             $menu = $this->getHtmlDocument()->getElementById(HtmlHelper::ID_MENU);
             self::assertNotEmpty($menu, 'Contacts are missing');
             self::assertTrue($menu->classList->contains('top'), 'Contacts should be positioned on top');
             self::assertFalse($menu->classList->contains('fixed'), 'Contacts should not be fixed as application does not say so');
         }
         $configurationWithFixedMenu = $this->createCustomConfiguration(
-            [Configuration::WEB => [Configuration::MENU_POSITION_FIXED => true]]
+            [Configuration::WEB => [Configuration::MENU => [MenuConfiguration::POSITION_FIXED => true]]]
         );
-        self::assertTrue($configurationWithFixedMenu->isMenuPositionFixed(), 'Expected configuration with menu position fixed');
+        self::assertTrue(
+            $configurationWithFixedMenu->getMenuConfiguration()->isPositionFixed(),
+            'Expected configuration with menu position fixed'
+        );
         $rulesApplication = $this->createRulesApplication($this->createServicesContainer($configurationWithFixedMenu));
         if ($this->isSkeletonChecked()) {
             $content = $this->fetchNonCachedContent($rulesApplication);
@@ -68,7 +73,6 @@ class RulesApplicationTest extends AbstractContentTest
      */
     public function I_can_activate_trial(): void
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $now = new \DateTimeImmutable();
         $trialExpectedExpiration = $now->modify('+4 minutes');
         $usagePolicy = $this->createUsagePolicy($trialExpectedExpiration);
@@ -109,8 +113,7 @@ class RulesApplicationTest extends AbstractContentTest
         $configuration = $this->getConfiguration();
         $htmlHelper = $this->createHtmlHelper();
 
-        return new class($usagePolicy, $configuration, $htmlHelper) extends ServicesContainer
-        {
+        return new class($usagePolicy, $configuration, $htmlHelper) extends ServicesContainer {
             /** @var UsagePolicy */
             private $usagePolicy;
 
@@ -211,13 +214,13 @@ class RulesApplicationTest extends AbstractContentTest
                 '<!DOCTYPE html>',
                 $content,
                 sprintf("No PDF expected due to tests configuration '%s'", TestsConfiguration::HAS_PDF)
-        );
+            );
         } else {
             $pdfFile = glob($this->getDirs()->getPdfRoot() . '/*.pdf')[0] ?? null;
             self::assertNotNull(
                 $pdfFile,
                 sprintf(
-                    "No PDF file found in %s/*.pdf as says test comfiguration '%s'",
+                    "No PDF file found in %s/*.pdf as says test configuration '%s'",
                     $this->getDirs()->getPdfRoot(),
                     TestsConfiguration::HAS_PDF
                 )

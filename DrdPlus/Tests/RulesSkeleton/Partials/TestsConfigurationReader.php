@@ -88,7 +88,9 @@ interface TestsConfigurationReader
 
     public function hasTableOfContents(): bool;
 
-    public function getExpectedHomeButtonTargetFromHomepage(): string;
+    public function hasHomeButtonOnHomepage(): bool;
 
-    public function getExpectedHomeButtonTargetFromRoutes(): string;
+    public function hasHomeButtonOnRoutes(): bool;
+
+    public function getExpectedHomeButtonTarget(): string;
 }

@@ -29,13 +29,15 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
         return new static($dirs, $config);
     }
 
-    // web
-    public const WEB = 'web';
+    // moved from web and deprecated by old way
     public const MENU_POSITION_FIXED = 'menu_position_fixed';
     public const SHOW_HOME_BUTTON = 'show_home_button';
     public const SHOW_HOME_BUTTON_ON_HOMEPAGE = 'show_home_button_on_homepage';
     public const SHOW_HOME_BUTTON_ON_ROUTES = 'show_home_button_on_routes';
     public const HOME_BUTTON_TARGET = 'home_button_target';
+
+    // web
+    public const WEB = 'web';
     public const NAME = 'name';
     public const TITLE_SMILEY = 'title_smiley';
     public const PROTECTED_ACCESS = 'protected_access';
@@ -43,6 +45,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
     public const FAVICON = 'favicon';
     public const DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REGEXP = 'default_public_to_local_url_part_regexp';
     public const DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT = 'default_public_to_local_url_part_replacement';
+    public const MENU = 'menu';
     // google
     public const GOOGLE = 'google';
     public const ANALYTICS_ID = 'analytics_id';
@@ -53,6 +56,8 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
 
     /** @var Dirs */
     private $dirs;
+    /** @var MenuConfiguration */
+    private $menuConfiguration;
     /** @var array */
     private $settings;
 
@@ -63,18 +68,123 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
     public function __construct(Dirs $dirs, array $settings)
     {
         $this->dirs = $dirs;
+        $this->menuConfiguration = $this->createMenuConfiguration($settings);
+
         $this->guardValidGoogleAnalyticsId($settings);
-        $this->guardSetIfUseFixedMenuPosition($settings);
         $this->guardNonEmptyWebName($settings);
         $this->guardSetTitleSmiley($settings);
         $this->guardValidEshopUrl($settings);
         $this->guardSetProtectedAccess($settings);
-        $this->guardSetShowHomeButton($settings);
-        $this->guardSetShowHomeButtonOnHomepage($settings);
-        $this->guardSetShowHomeButtonOnRoutes($settings);
         $this->guardValidFaviconUrl($settings);
         $this->settings = $settings;
     }
+
+    // MENU
+
+    protected function createMenuConfiguration(array $settings): MenuConfiguration
+    {
+        $this->guardFixedMenuPositionIsNotSetByOldWay($settings);
+        $this->guardShowHomeButtonIsNotSetByOldWay($settings);
+        $this->guardShowHomeButtonOnHomepageIsNotSetByOldWay($settings);
+        $this->guardShowHomeButtonOnRoutesIsNotSetByOldWay($settings);
+        $this->guardHomeButtonTargetIsNotSetByOldWay($settings);
+
+        $this->guardMenuConfigurationExists($settings);
+        return new MenuConfiguration($settings[static::WEB][static::MENU], [static::WEB, static::MENU]);
+    }
+
+    protected function guardMenuConfigurationExists(array $settings)
+    {
+        if (!is_array($settings[static::WEB][static::MENU] ?? null)) {
+            throw new Exceptions\InvalidConfiguration(
+                sprintf("Missing configuration '%s'", implode('.', [static::WEB, static::MENU]))
+            );
+        }
+    }
+
+    /**
+     * @param array $settings
+     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\ConfigurationDirectiveDeprecated
+     */
+    protected function guardFixedMenuPositionIsNotSetByOldWay(array $settings): void
+    {
+        if (array_key_exists(static::MENU_POSITION_FIXED, $settings[static::WEB])) {
+            $this->throwDeprecatedConfigurationUsage(static::MENU_POSITION_FIXED, [static::WEB, static::MENU, MenuConfiguration::POSITION_FIXED]);
+        }
+    }
+
+    protected function throwDeprecatedConfigurationUsage(string $oldKey, array $newPath): void
+    {
+        throw new Exceptions\ConfigurationDirectiveDeprecated(
+            sprintf('%s is deprecated, use %s instead', implode('.', [static::WEB, $oldKey]), implode('.', $newPath))
+        );
+    }
+
+    protected function guardShowHomeButtonIsNotSetByOldWay(array $settings): void
+    {
+        if (array_key_exists(self::SHOW_HOME_BUTTON, $settings[static::WEB])) {
+            $this->throwDeprecatedHomeButtonUsage();
+        }
+    }
+
+    protected function throwDeprecatedHomeButtonUsage()
+    {
+        throw new Exceptions\ConfigurationDirectiveDeprecated(
+            sprintf(
+                '%s is deprecated, use %s and %s instead',
+                implode('.', [static::WEB, static::SHOW_HOME_BUTTON]),
+                implode('.', [static::WEB, static::MENU, MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE]),
+                implode('.', [static::WEB, static::MENU, MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES])
+            )
+        );
+    }
+
+    protected function guardShowHomeButtonOnHomepageIsNotSetByOldWay(array $settings)
+    {
+        if (array_key_exists(self::SHOW_HOME_BUTTON_ON_HOMEPAGE, $settings[static::WEB])) {
+            $this->throwDeprecatedHomeButtonOnHomepageUsage();
+        }
+    }
+
+    protected function throwDeprecatedHomeButtonOnHomepageUsage()
+    {
+        $this->throwDeprecatedConfigurationUsage(
+            static::SHOW_HOME_BUTTON_ON_HOMEPAGE,
+            [static::WEB, static::MENU, MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE]
+        );
+    }
+
+    protected function guardShowHomeButtonOnRoutesIsNotSetByOldWay(array $settings)
+    {
+        if (array_key_exists(self::SHOW_HOME_BUTTON_ON_ROUTES, $settings[static::WEB])) {
+            $this->throwDeprecatedHomeButtonOnRoutesUsage();
+        }
+    }
+
+    protected function throwDeprecatedHomeButtonOnRoutesUsage()
+    {
+        $this->throwDeprecatedConfigurationUsage(
+            static::SHOW_HOME_BUTTON_ON_ROUTES,
+            [static::WEB, static::MENU, MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES]
+        );
+    }
+
+    protected function guardHomeButtonTargetIsNotSetByOldWay(array $settings)
+    {
+        if (array_key_exists(self::HOME_BUTTON_TARGET, $settings[static::WEB])) {
+            $this->throwDeprecatedHomeButtonTargetUsage();
+        }
+    }
+
+    protected function throwDeprecatedHomeButtonTargetUsage()
+    {
+        $this->throwDeprecatedConfigurationUsage(
+            static::HOME_BUTTON_TARGET,
+            [static::WEB, static::MENU, MenuConfiguration::HOME_BUTTON_TARGET]
+        );
+    }
+
+    // WEB
 
     /**
      * @param array $settings
@@ -96,29 +206,12 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
 
     /**
      * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidMenuPosition
-     */
-    protected function guardSetIfUseFixedMenuPosition(array $settings): void
-    {
-        if (($settings[static::WEB][static::MENU_POSITION_FIXED] ?? null) === null) {
-            throw new Exceptions\InvalidMenuPosition(
-                sprintf(
-                    'Expected explicitly defined menu position fix to true or false in configuration %s.%s, got nothing',
-                    static::WEB,
-                    static::MENU_POSITION_FIXED
-                )
-            );
-        }
-    }
-
-    /**
-     * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\MissingWebName
+     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration
      */
     protected function guardNonEmptyWebName(array $settings): void
     {
         if (($settings[static::WEB][static::NAME] ?? '') === '') {
-            throw new Exceptions\MissingWebName(
+            throw new Exceptions\InvalidConfiguration(
                 sprintf(
                     'Expected some web name in configuration %s.%s',
                     static::WEB,
@@ -130,12 +223,12 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
 
     /**
      * @param array $settings
-     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\TitleSmileyIsNotSet
+     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration
      */
     protected function guardSetTitleSmiley(array $settings): void
     {
         if (!\array_key_exists(static::TITLE_SMILEY, $settings[static::WEB])) {
-            throw new Exceptions\TitleSmileyIsNotSet(
+            throw new Exceptions\InvalidConfiguration(
                 sprintf(
                     'Title smiley should be set in configuration %s.%s, even if just an empty string',
                     static::WEB,
@@ -168,58 +261,11 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
     protected function guardSetProtectedAccess(array $settings): void
     {
         if (($settings[static::WEB][static::PROTECTED_ACCESS] ?? null) === null) {
-            throw new Exceptions\MissingProtectedAccessConfiguration(
+            throw new Exceptions\InvalidConfiguration(
                 sprintf(
                     'Configuration if web has protected access is missing in configuration %s.%s',
                     static::WEB,
                     static::PROTECTED_ACCESS
-                )
-            );
-        }
-    }
-
-    protected function guardSetShowHomeButton(array $settings): void
-    {
-        if (($settings[static::WEB][static::SHOW_HOME_BUTTON] ?? null) === null
-            && (($settings[static::WEB][static::SHOW_HOME_BUTTON_ON_HOMEPAGE] ?? null) === null
-                || ($settings[static::WEB][static::SHOW_HOME_BUTTON_ON_ROUTES] ?? null) === null
-            )
-        ) {
-            throw new Exceptions\MissingShownHomeButtonConfiguration(
-                sprintf(
-                    'Configuration if home button should be shown is missing in configuration %s.%s',
-                    static::WEB,
-                    static::SHOW_HOME_BUTTON
-                )
-            );
-        }
-    }
-
-    protected function guardSetShowHomeButtonOnHomepage(array $settings): void
-    {
-        if (($settings[static::WEB][static::SHOW_HOME_BUTTON] ?? null) === null
-            && ($settings[static::WEB][static::SHOW_HOME_BUTTON_ON_HOMEPAGE] ?? null) === null
-        ) {
-            throw new Exceptions\MissingShownHomeButtonOnHomepageConfiguration(
-                sprintf(
-                    'Configuration if home button should be shown on homepage is missing in configuration %s.%s',
-                    static::WEB,
-                    static::SHOW_HOME_BUTTON_ON_HOMEPAGE
-                )
-            );
-        }
-    }
-
-    protected function guardSetShowHomeButtonOnRoutes(array $settings): void
-    {
-        if (($settings[static::WEB][static::SHOW_HOME_BUTTON] ?? null) === null
-            && ($settings[static::WEB][static::SHOW_HOME_BUTTON_ON_ROUTES] ?? null) === null
-        ) {
-            throw new Exceptions\MissingShownHomeButtonOnRoutesConfiguration(
-                sprintf(
-                    'Configuration if home button should be shown on routes is missing in configuration %s.%s',
-                    static::WEB,
-                    static::SHOW_HOME_BUTTON_ON_ROUTES
                 )
             );
         }
@@ -238,6 +284,11 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
         }
     }
 
+    public function getMenuConfiguration(): MenuConfiguration
+    {
+        return $this->menuConfiguration;
+    }
+
     public function getDirs(): Dirs
     {
         return $this->dirs;
@@ -253,36 +304,51 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
         return $this->getSettings()[static::GOOGLE][static::ANALYTICS_ID];
     }
 
-    public function isMenuPositionFixed(): bool
+    /**
+     * @deprecated
+     */
+    public function isMenuPositionFixed()
     {
-        return (bool)$this->getSettings()[static::WEB][static::MENU_POSITION_FIXED];
+        throw new Exceptions\DeprecatedConfigurationUsage(
+            sprintf(
+                "'%s::%s' is deprecaed, use similar from '%s' instead",
+                static::class,
+                __FUNCTION__,
+                MenuConfiguration::class
+            )
+        );
     }
 
     /**
-     * @return bool
      * @deprecated
      */
-    public function isShowHomeButton(): bool
+    public function isShowHomeButton()
     {
-        return ($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON] ?? false)
-            || (($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON_ON_HOMEPAGE] ?? false)
-                && ($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON_ON_ROUTES] ?? false)
-            );
+        $this->throwDeprecatedHomeButtonUsage();
     }
 
-    public function isShowHomeButtonOnHomepage(): bool
+    /**
+     * @deprecated
+     */
+    public function isShowHomeButtonOnHomepage()
     {
-        return ($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON_ON_HOMEPAGE] ?? false) || $this->isShowHomeButton();
+        $this->throwDeprecatedHomeButtonOnHomepageUsage();
     }
 
-    public function isShowHomeButtonOnRoutes(): bool
+    /**
+     * @deprecated
+     */
+    public function isShowHomeButtonOnRoutes()
     {
-        return ($this->getSettings()[static::WEB][static::SHOW_HOME_BUTTON_ON_ROUTES] ?? false) || $this->isShowHomeButton();
+        $this->throwDeprecatedHomeButtonOnRoutesUsage();
     }
 
-    public function getHomeButtonTarget(): string
+    /**
+     * @deprecated
+     */
+    public function getHomeButtonTarget()
     {
-        return $this->getSettings()[static::WEB][static::HOME_BUTTON_TARGET] ?? 'https://www.drdplus.info';
+        $this->throwDeprecatedHomeButtonTargetUsage();
     }
 
     public function getWebName(): string

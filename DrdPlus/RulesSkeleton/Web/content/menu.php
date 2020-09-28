@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
-/** @var $configuration \DrdPlus\RulesSkeleton\Configuration */
-/** @var $homepageDetector \DrdPlus\RulesSkeleton\HomepageDetector */
-$fixed = $configuration->isMenuPositionFixed()
+/** @var $configuration \DrdPlus\RulesSkeleton\Configurations\Configuration */
+$menuConfiguration = $configuration->getMenuConfiguration();
+$fixed = $menuConfiguration->isPositionFixed()
     ? 'fixed'
     : '';
 $homeButton = '';
-if ($configuration->isShowHomeButton()
-    || ($configuration->isShowHomeButtonOnHomepage() && $homepageDetector->isHomepageRequested())
-    || ($configuration->isShowHomeButtonOnRoutes() && !$homepageDetector->isHomepageRequested())
+/** @var $homepageDetector \DrdPlus\RulesSkeleton\HomepageDetector */
+if (($menuConfiguration->isShowHomeButtonOnHomepage() && $homepageDetector->isHomepageRequested())
+    || ($menuConfiguration->isShowHomeButtonOnRoutes() && !$homepageDetector->isHomepageRequested())
 ) {
     $homeButtonId = \DrdPlus\RulesSkeleton\HtmlHelper::ID_HOME_BUTTON;
     $homeButton = <<<HTML
 <span class="menu">
-    <a id="{$homeButtonId}" class="internal-url" href="{$configuration->getHomeButtonTarget()}">
+    <a id="{$homeButtonId}" class="internal-url" href="{$menuConfiguration->getHomeButtonTarget()}">
         <img class="home" alt="Small dragon menu" src="/images/generic/skeleton/drdplus-dragon-menu-2x22.png">
     </a>
 </span>

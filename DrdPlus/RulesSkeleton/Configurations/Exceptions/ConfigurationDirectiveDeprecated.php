@@ -2,7 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Configurations\Exceptions;
 
-class MissingShownHomeButtonConfiguration extends InvalidConfiguration
+class ConfigurationDirectiveDeprecated extends \LogicException implements Logic
 {
 
 }

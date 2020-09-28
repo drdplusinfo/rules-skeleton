@@ -3,6 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\RulesSkeleton\HomepageDetector;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\PathProvider;
@@ -16,132 +17,85 @@ class MenuTest extends AbstractContentTest
     /**
      * @test
      * @dataProvider provideConfigurationToShowHomeButton
-     * @param bool $showHomeButton
      * @param bool $showHomeButtonOnHomepage
      * @param bool $showHomeButtonOnRoutes
+     * @param bool $onHomepage
      */
-    public function I_can_show_home_button(bool $showHomeButton, bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes): void
+    public function I_can_show_home_button(bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes, bool $onHomepage): void
     {
-        $configuration = $this->createCustomConfiguration(
-            [Configuration::WEB => [
-                Configuration::SHOW_HOME_BUTTON => $showHomeButton,
-                Configuration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
-                Configuration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
-            ]]
-        );
-        self::assertTrue($configuration->isShowHomeButton(), 'Expected configuration with shown home button');
-        foreach ([true, false] as $isHomepageRequested) {
-            $menuOnHomepage = $this->createMenu($configuration, $isHomepageRequested);
-            if ($this->isSkeletonChecked()) {
-                $htmlDocument = new HtmlDocument(<<<HTML
+        $configuration = $this->createCustomConfiguration([
+            Configuration::WEB => [
+                Configuration::MENU => [
+                    MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
+                    MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
+                ],
+            ],
+        ]);
+        $menuOnHomepage = $this->createMenu($configuration, $onHomepage);
+        $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
 {$menuOnHomepage->getValue()}
 </body>
 </html>
 HTML
-                );
-                $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
-                self::assertNotEmpty($homeButton, 'Home button is missing');
-                self::assertSame(
-                    'https://www.drdplus.info',
-                    $homeButton->getAttribute('href'), 'Link of home button should lead to home'
-                );
-            }
-        }
+        );
+        $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
+        self::assertNotEmpty($homeButton, 'Home button is missing');
+        self::assertSame(
+            $this->getTestsConfiguration()->getExpectedHomeButtonTarget(),
+            $homeButton->getAttribute('href'), 'Link of home button should lead to home'
+        );
     }
 
     public function provideConfigurationToShowHomeButton(): array
     {
         return [
-            'show home button global config' => [true, false, false],
-            'show home button local configs' => [false, true, true],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider provideConfigurationToShowHomeButtonOnHomepage
-     * @param bool $showHomeButton
-     * @param bool $showHomeButtonOnHomepage
-     * @param bool $showHomeButtonOnRoutes
-     */
-    public function I_can_show_home_button_on_homepage(bool $showHomeButton, bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes): void
-    {
-        $configuration = $this->createCustomConfiguration(
-            [Configuration::WEB => [
-                Configuration::SHOW_HOME_BUTTON => $showHomeButton,
-                Configuration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
-                Configuration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
-            ]]
-        );
-        self::assertTrue($configuration->isShowHomeButtonOnHomepage(), 'Expected configuration with shown home button on homepage');
-        $menu = $this->createMenu($configuration, true);
-        if ($this->isSkeletonChecked()) {
-            $htmlDocument = new HtmlDocument(<<<HTML
-<html lang="cs">
-<body>
-{$menu->getValue()}
-</body>
-</html>
-HTML
-            );
-            $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
-            self::assertNotEmpty($homeButton, 'Home button is missing');
-            self::assertSame(
-                'https://www.drdplus.info',
-                $homeButton->getAttribute('href'), 'Link of home button should lead to home'
-            );
-        }
-    }
-
-    public function provideConfigurationToShowHomeButtonOnHomepage(): array
-    {
-        return [
-            'show home button global config' => [true, false, false],
-            'show home button on homepage only' => [false, true, false],
+            'show home button on homepage' => [true, true, true],
+            'show home button on homepage only' => [true, false, true],
+            'show home button on routes' => [false, true, false],
         ];
     }
 
     /**
      * @test
      * @dataProvider provideConfigurationToHideHomeButtonOnHomepage
-     * @param bool $showHomeButton
      * @param bool $showHomeButtonOnHomepage
      * @param bool $showHomeButtonOnRoutes
      */
-    public function I_can_hide_home_button_on_homepage(bool $showHomeButton, bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes): void
+    public function I_can_hide_home_button_on_homepage(bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes): void
     {
-        $configuration = $this->createCustomConfiguration(
-            [Configuration::WEB => [
-                Configuration::SHOW_HOME_BUTTON => $showHomeButton,
-                Configuration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
-                Configuration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
-            ]]
-        );
-        self::assertFalse($configuration->isShowHomeButtonOnHomepage(), 'Expected configuration with hidden home button');
-        $menu = $this->createMenu($configuration, true);
-        if ($this->isSkeletonChecked()) {
-            $htmlDocument = new HtmlDocument(<<<HTML
+        $configuration = $this->createCustomConfiguration([
+            Configuration::WEB => [
+                Configuration::MENU => [
+                    MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
+                    MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
+                ],
+            ],
+        ]);
+        $menu = $this->createMenu($configuration, self::HOMEPAGE_IS_REQUESTED);
+        $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
 {$menu->getValue()}
 </body>
 </html>
 HTML
-            );
-            $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
-            self::assertEmpty($homeButton, 'Home button should not be used at all');
-        }
+        );
+        $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
+        self::assertEmpty($homeButton, 'Home button should not be used at all');
     }
 
     public function provideConfigurationToHideHomeButtonOnHomepage(): array
     {
         return [
-            'hide home button everywhere' => [false, false, false],
-            'show home button only on route' => [false, false, true],
+            'hide home button everywhere' => [false, false],
+            'show home button only on route' => [false, true],
         ];
     }
+
+    private const HOMEPAGE_IS_REQUESTED = true;
+    private const HOMEPAGE_IS_NOT_REQUESTED = false;
 
     private function createMenu(Configuration $configuration, bool $isHomepageRequested): Menu
     {
@@ -162,85 +116,38 @@ HTML
 
     /**
      * @test
-     * @dataProvider provideConfigurationToShowHomeButtonOnRoutes
-     * @param bool $showHomeButton
-     * @param bool $showHomeButtonOnHomepage
-     * @param bool $showHomeButtonOnRoutes
-     */
-    public function I_can_show_home_button_on_routes(bool $showHomeButton, bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes): void
-    {
-        $configuration = $this->createCustomConfiguration(
-            [Configuration::WEB => [
-                Configuration::SHOW_HOME_BUTTON => $showHomeButton,
-                Configuration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
-                Configuration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
-            ]]
-        );
-        self::assertTrue($configuration->isShowHomeButtonOnRoutes(), 'Expected configuration with shown home button on routes');
-        $menu = $this->createMenu($configuration, false);
-        if ($this->isSkeletonChecked()) {
-            $htmlDocument = new HtmlDocument(<<<HTML
-<html lang="cs">
-<body>
-{$menu->getValue()}
-</body>
-</html>
-HTML
-            );
-            $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
-            self::assertNotEmpty($homeButton, 'Home button is missing');
-            self::assertSame(
-                'https://www.drdplus.info',
-                $homeButton->getAttribute('href'), 'Link of home button should lead to home'
-            );
-        }
-    }
-
-    public function provideConfigurationToShowHomeButtonOnRoutes(): array
-    {
-        return [
-            'show home button global config' => [true, false, false],
-            'show home button on routes only' => [false, false, true],
-        ];
-    }
-
-    /**
-     * @test
      * @dataProvider provideConfigurationToHideHomeButtonOnRoutes
-     * @param bool $showHomeButton
      * @param bool $showHomeButtonOnHomepage
      * @param bool $showHomeButtonOnRoutes
      */
-    public function I_can_hide_home_button_on_routes(bool $showHomeButton, bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes): void
+    public function I_can_hide_home_button_on_routes(bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes): void
     {
-        $configuration = $this->createCustomConfiguration(
-            [Configuration::WEB => [
-                Configuration::SHOW_HOME_BUTTON => $showHomeButton,
-                Configuration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
-                Configuration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
-            ]]
-        );
-        self::assertFalse($configuration->isShowHomeButtonOnRoutes(), 'Expected configuration with hidden home button on routes');
-        $menu = $this->createMenu($configuration, false);
-        if ($this->isSkeletonChecked()) {
-            $htmlDocument = new HtmlDocument(<<<HTML
+        $configuration = $this->createCustomConfiguration([
+            Configuration::WEB => [
+                Configuration::MENU => [
+                    MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
+                    MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
+                ],
+            ],
+        ]);
+        $menu = $this->createMenu($configuration, self::HOMEPAGE_IS_NOT_REQUESTED);
+        $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
 {$menu->getValue()}
 </body>
 </html>
 HTML
-            );
-            $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
-            self::assertEmpty($homeButton, 'Home button should not be used at all');
-        }
+        );
+        $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
+        self::assertEmpty($homeButton, 'Home button should not be used at all');
     }
 
     public function provideConfigurationToHideHomeButtonOnRoutes(): array
     {
         return [
-            'hide home button everywhere' => [false, false, false],
-            'show home button only on homepage' => [false, true, false],
+            'hide home button everywhere' => [false, false],
+            'show home button only on homepage' => [true, false],
         ];
     }
 
@@ -250,28 +157,27 @@ HTML
     public function Home_button_target_leads_to_expected_link(): void
     {
         foreach ([true, false] as $showHomeButtonOnHomepage) {
-            $configuration = $this->createCustomConfiguration(
-                [Configuration::WEB => [
-                    Configuration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
-                    Configuration::SHOW_HOME_BUTTON_ON_ROUTES => !$showHomeButtonOnHomepage,
-                    Configuration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
-                ]]
-            );
-            self::assertSame($configuration->getHomeButtonTarget(), $expectedTarget);
+            $configuration = $this->createCustomConfiguration([
+                Configuration::WEB => [
+                    Configuration::MENU => [
+                        MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
+                        MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => !$showHomeButtonOnHomepage,
+                        MenuConfiguration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
+                    ],
+                ],
+            ]);
             $menu = $this->createMenu($configuration, $showHomeButtonOnHomepage);
-            if ($this->isSkeletonChecked()) {
-                $htmlDocument = new HtmlDocument(<<<HTML
+            $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
 {$menu->getValue()}
 </body>
 </html>
 HTML
-                );
-                $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
-                self::assertNotEmpty($homeButton, 'Home button expected');
-                self::assertSame($expectedTarget, $homeButton->getAttribute('href'));
-            }
+            );
+            $homeButton = $htmlDocument->getElementById(HtmlHelper::ID_HOME_BUTTON);
+            self::assertNotEmpty($homeButton, 'Home button expected');
+            self::assertSame($expectedTarget, $homeButton->getAttribute('href'));
         }
     }
 
@@ -280,15 +186,15 @@ HTML
      */
     public function I_can_get_menu_even_on_not_found_route(): void
     {
-        $configuration = $this->createCustomConfiguration(
-            [Configuration::WEB => [
-                Configuration::SHOW_HOME_BUTTON => false,
-                Configuration::SHOW_HOME_BUTTON_ON_HOMEPAGE => false,
-                Configuration::SHOW_HOME_BUTTON_ON_ROUTES => true,
-                Configuration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
-            ]]
-        );
-        self::assertTrue($configuration->isShowHomeButtonOnRoutes(), 'Expected configuration with shown home button on routes');
+        $configuration = $this->createCustomConfiguration([
+            Configuration::WEB => [
+                Configuration::MENU => [
+                    MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => false,
+                    MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => true,
+                    MenuConfiguration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
+                ],
+            ],
+        ]);
         $menu = new Menu(
             $configuration,
             new HomepageDetector(

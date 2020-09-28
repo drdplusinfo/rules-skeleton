@@ -3,6 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
 
@@ -98,8 +99,12 @@ class ConfigurationTest extends AbstractContentTest
     {
         return [
             Configuration::WEB => [
-                Configuration::MENU_POSITION_FIXED => false,
-                Configuration::SHOW_HOME_BUTTON => true,
+                Configuration::MENU => [
+                    MenuConfiguration::POSITION_FIXED => false,
+                    MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => true,
+                    MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => true,
+                    MenuConfiguration::HOME_BUTTON_TARGET => 'foo',
+                ],
                 Configuration::NAME => 'Foo',
                 Configuration::TITLE_SMILEY => '',
                 Configuration::PROTECTED_ACCESS => true,
@@ -139,20 +144,31 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_create_it_without_defining_if_menu_should_be_fixed(): void
     {
-        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidMenuPosition::class);
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
         $completeSettings = $this->getSomeCompleteSettings();
-        unset($completeSettings[Configuration::WEB][Configuration::MENU_POSITION_FIXED]);
+        unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::POSITION_FIXED]);
         new Configuration($this->getDirs(), $completeSettings);
     }
 
     /**
      * @test
      */
-    public function I_can_not_create_it_without_defining_if_show_home_button(): void
+    public function I_can_not_create_it_without_defining_if_show_home_button_on_homepage(): void
     {
-        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\MissingShownHomeButtonConfiguration::class);
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
         $completeSettings = $this->getSomeCompleteSettings();
-        unset($completeSettings[Configuration::WEB][Configuration::SHOW_HOME_BUTTON]);
+        unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE]);
+        new Configuration($this->getDirs(), $completeSettings);
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_not_create_it_without_defining_if_show_home_button_on_routes(): void
+    {
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
+        $completeSettings = $this->getSomeCompleteSettings();
+        unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES]);
         new Configuration($this->getDirs(), $completeSettings);
     }
 
@@ -161,7 +177,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_create_it_without_web_name(): void
     {
-        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\MissingWebName::class);
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
         $completeSettings = $this->getSomeCompleteSettings();
         $completeSettings[Configuration::WEB][Configuration::NAME] = '';
         new Configuration($this->getDirs(), $completeSettings);
@@ -172,7 +188,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_create_it_without_set_title_smiley(): void
     {
-        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\TitleSmileyIsNotSet::class);
+        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
         $completeSettings = $this->getSomeCompleteSettings();
         unset($completeSettings[Configuration::WEB][Configuration::TITLE_SMILEY]);
         new Configuration($this->getDirs(), $completeSettings);
@@ -217,8 +233,16 @@ class ConfigurationTest extends AbstractContentTest
     public function I_will_get_default_home_button_target_if_none_custom_is_set()
     {
         $completeSettings = $this->getSomeCompleteSettings();
+        $expectedHomeButtonTarget = $completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON_TARGET];
         $configuration = new Configuration($this->getDirs(), $completeSettings);
-        self::assertSame('https://www.drdplus.info', $configuration->getHomeButtonTarget());
+        self::assertSame(
+            $expectedHomeButtonTarget,
+            $configuration->getMenuConfiguration()->getHomeButtonTarget()
+        );
+        self::assertSame(
+            $expectedHomeButtonTarget,
+            $configuration->getMenuConfiguration()->getHomeButtonTarget()
+        );
     }
 
     /**
@@ -227,9 +251,9 @@ class ConfigurationTest extends AbstractContentTest
     public function I_can_overwrite_default_home_button_target()
     {
         $completeSettings = $this->getSomeCompleteSettings();
-        $completeSettings[Configuration::WEB][Configuration::HOME_BUTTON_TARGET] = '..';
+        $completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON_TARGET] = '..';
         $configuration = new Configuration($this->getDirs(), $completeSettings);
-        self::assertSame('..', $configuration->getHomeButtonTarget());
+        self::assertSame('..', $configuration->getMenuConfiguration()->getHomeButtonTarget());
     }
 
     /**
