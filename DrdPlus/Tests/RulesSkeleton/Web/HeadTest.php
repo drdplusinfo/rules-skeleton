@@ -13,16 +13,8 @@ class HeadTest extends AbstractContentTest
      */
     public function Head_contains_google_analytics_with_id(): void
     {
-        /** @var Head $headClass */
-        $headClass = static::getSutClass();
-        $servicesContainer = $this->createServicesContainer(null, $this->createHtmlHelper(null, true /* forced production mode */));
-        /** @var Head $head */
-        $head = new $headClass(
-            $servicesContainer->getConfiguration(),
-            $servicesContainer->getHtmlHelper(),
-            $servicesContainer->getCssFiles(),
-            $servicesContainer->getJsFiles()
-        );
+        $servicesContainer = $this->createServicesContainer(null, $this->createEnvironment('prod'));
+        $head = $servicesContainer->getHead();
         $headString = $head->getValue();
         $htmlDocument = new HtmlDocument(<<<HTML
 <!DOCTYPE html>
@@ -34,7 +26,6 @@ class HeadTest extends AbstractContentTest
 </html>
 HTML
         );
-        /** @var \DOMElement $googleAnalytics */
         $googleAnalytics = $htmlDocument->getElementById('googleAnalyticsId');
         self::assertNotEmpty($googleAnalytics, 'Missing Google analytics ID');
         $src = $googleAnalytics->getAttribute('src');
@@ -49,16 +40,8 @@ HTML
      */
     public function Head_does_not_contain_google_analytics_if_not_in_production(): void
     {
-        /** @var Head $headClass */
-        $headClass = static::getSutClass();
         $servicesContainer = $this->createServicesContainer(); // non-production mode will be detected
-        /** @var Head $head */
-        $head = new $headClass(
-            $servicesContainer->getConfiguration(),
-            $servicesContainer->getHtmlHelper(),
-            $servicesContainer->getCssFiles(),
-            $servicesContainer->getJsFiles()
-        );
+        $head = $servicesContainer->getHead();
         $headString = $head->getValue();
         $htmlDocument = new HtmlDocument(<<<HTML
 <!DOCTYPE html>
@@ -70,7 +53,6 @@ HTML
 </html>
 HTML
         );
-        /** @var \DOMElement $googleAnalytics */
         $googleAnalytics = $htmlDocument->getElementById('googleAnalyticsId');
         self::assertEmpty($googleAnalytics, 'Google analytics has not been expected on non-production mode');
     }
@@ -84,8 +66,10 @@ HTML
         $headClass = static::getSutClass();
         $servicesContainer = $this->createServicesContainer();
         /** @var Head $head */
-        $head = new $headClass($servicesContainer->getConfiguration(),
+        $head = new $headClass(
+            $servicesContainer->getConfiguration(),
             $servicesContainer->getHtmlHelper(),
+            $servicesContainer->getEnvironment(),
             $servicesContainer->getCssFiles(),
             $servicesContainer->getJsFiles(),
             $pageName = 'foo BAR'

@@ -232,26 +232,39 @@ abstract class AbstractContentTest extends TestWithMockery
 
     /**
      * @param Dirs|null $dirs
-     * @param bool $inDevMode
-     * @param bool $inForcedProductionMode
+     * @param string|null $forcedMode
      * @param bool $shouldHideCovered
      * @return HtmlHelper|\Mockery\MockInterface
      */
     protected function createHtmlHelper(
         Dirs $dirs = null,
-        bool $inForcedProductionMode = false,
-        bool $inDevMode = false,
+        string $forcedMode = null,
         bool $shouldHideCovered = false
     ): HtmlHelper
     {
         $dirs = $dirs ?? $this->getDirs();
+        $env = $this->createEnvironment($forcedMode);
         return new HtmlHelper(
             $dirs,
-            $this->getEnvironment(),
             $this->getConfiguration($dirs),
-            $inDevMode,
-            $inForcedProductionMode,
+            $env->isOnForcedDevelopmentMode(),
             $shouldHideCovered
+        );
+    }
+
+    protected function createEnvironment(
+        string $forcedMode = null,
+        string $phpSapi = PHP_SAPI,
+        string $projectEnvironment = null,
+        string $remoteAddress = null
+    ): Environment
+    {
+        $environmentClass = $this->getEnvironmentClass();
+        return new $environmentClass(
+            $phpSapi,
+            $projectEnvironment ?? $_ENV['PROJECT_ENVIRONMENT'] ?? null,
+            $remoteAddress ?? $_SERVER['REMOTE_ADDR'] ?? null,
+            $forcedMode ?? $_GET['mode'] ?? null
         );
     }
 
@@ -430,7 +443,6 @@ TEXT
             $dirs ?? $originalConfiguration->getDirs(),
             \array_replace_recursive($originalConfiguration->getSettings(), $customSettings)
         );
-        /** Configuration|MockInterface */
         return $customConfiguration;
     }
 
@@ -450,11 +462,16 @@ TEXT
         return $servicesContainer;
     }
 
-    protected function createServicesContainer(Configuration $configuration = null, HtmlHelper $htmlHelper = null): ServicesContainer
+    protected function createServicesContainer(
+        Configuration $configuration = null,
+        Environment $environment = null,
+        HtmlHelper $htmlHelper = null
+    ): ServicesContainer
     {
         return new ServicesContainer(
             $configuration ?? $this->getConfiguration(),
-            $htmlHelper ?? $this->createHtmlHelper($this->getDirs())
+            $environment ?? $this->getEnvironment(),
+            $htmlHelper ?? $this->getHtmlHelper()
         );
     }
 

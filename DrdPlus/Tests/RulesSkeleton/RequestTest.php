@@ -303,23 +303,19 @@ class RequestTest extends AbstractContentTest
      */
     public function I_can_find_out_if_request_comes_from_cli(): void
     {
-        $request = new Request($this->getBot(), $this->createEnvironment('paper'), [], [], [], []);
+        $request = new Request($this->getBot(), $this->mockEnvironment(false), [], [], [], []);
         self::assertFalse($request->isCliRequest());
 
-        $request = new Request($this->getBot(), $this->createEnvironment('cli'), [], [], [], []);
+        $request = new Request($this->getBot(), $this->mockEnvironment(true), [], [], [], []);
         self::assertTrue($request->isCliRequest());
     }
 
-    /**
-     * @param string $phpSapi
-     * @return Environment|MockInterface
-     */
-    private function createEnvironment(string $phpSapi): Environment
+    protected function mockEnvironment(bool $isCliRequest): Environment
     {
         $environment = $this->mockery(Environment::class);
-        $environment->shouldReceive('getPhpSapi')
-            ->andReturn($phpSapi);
-        $environment->makePartial();
+        $environment->shouldReceive('isCliRequest')
+            ->andReturn($isCliRequest);
+        /** @var $environment Environment|MockInterface */
         return $environment;
     }
 

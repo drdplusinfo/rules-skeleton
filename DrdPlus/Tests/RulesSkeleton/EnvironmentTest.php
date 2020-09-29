@@ -12,9 +12,9 @@ class EnvironmentTest extends TestCase
      */
     public function I_can_detect_cli_request()
     {
-        $environment = new Environment('stone', null, null, false);
+        $environment = new Environment('stone');
         self::assertFalse($environment->isCliRequest());
-        $environment = new Environment('cli', null, null, false);
+        $environment = new Environment('cli');
         self::assertTrue($environment->isCliRequest());
     }
 
@@ -23,7 +23,7 @@ class EnvironmentTest extends TestCase
      */
     public function I_can_get_php_sapi(): void
     {
-        $environment = new Environment('stone', null, null, false);
+        $environment = new Environment('stone');
         self::assertSame('stone', $environment->getPhpSapi());
     }
 
@@ -36,7 +36,7 @@ class EnvironmentTest extends TestCase
      */
     public function I_can_control_development_environment_by_env_variable(string $phpSapi, ?string $projectEnvironment, bool $expectedAsDev)
     {
-        $environmentWithoutProject = new Environment($phpSapi, $projectEnvironment, null, false);
+        $environmentWithoutProject = new Environment($phpSapi, $projectEnvironment);
         self::assertSame($expectedAsDev, $environmentWithoutProject->isOnDevEnvironment());
     }
 
@@ -57,11 +57,11 @@ class EnvironmentTest extends TestCase
      */
     public function I_can_detect_localhost()
     {
-        $environmentWithoutRemoteAddress = new Environment('foo', null, null, false);
+        $environmentWithoutRemoteAddress = new Environment('foo');
         self::assertFalse($environmentWithoutRemoteAddress->isOnLocalhost(), 'Localhost should not be detected');
-        $environmentWithRemoteAddress = new Environment('foo', null, '999.999.999.999', false);
+        $environmentWithRemoteAddress = new Environment('foo', null, '999.999.999.999');
         self::assertFalse($environmentWithRemoteAddress->isOnLocalhost());
-        $environmentWithLocalAddress = new Environment('foo', null, '127.0.0.1', false);
+        $environmentWithLocalAddress = new Environment('foo', null, '127.0.0.1');
         self::assertTrue($environmentWithLocalAddress->isOnLocalhost());
     }
 
@@ -72,26 +72,26 @@ class EnvironmentTest extends TestCase
      * @param string $phpSapi
      * @param string|null $projectEnvironment
      * @param string|null $remoteAddr
-     * @param bool $inForcedProductionMode
+     * @param string|null $forcedMode
      */
     public function I_can_find_out_if_I_am_in_production(
         bool $expectedProduction,
         string $phpSapi,
         ?string $projectEnvironment,
         ?string $remoteAddr,
-        bool $inForcedProductionMode
+        ?string $forcedMode
     ): void
     {
         self::assertSame(
             $expectedProduction,
-            (new Environment($phpSapi, $projectEnvironment, $remoteAddr, $inForcedProductionMode))->isInProduction()
+            (new Environment($phpSapi, $projectEnvironment, $remoteAddr, $forcedMode))->isInProduction()
         );
     }
 
     private const NOT_EXPECTED_PRODUCTION = false;
     private const EXPECTED_PRODUCTION = true;
-    private const NOT_FORCED_PRODUCTION = false;
-    private const FORCED_PRODUCTION = true;
+    private const NOT_FORCED_MODE = null;
+    private const FORCED_PROD = 'PRODUCTION';
     private const CLI_PHP_SAPI = 'cli';
     private const PHP_FPM_PHP_SAPI = 'fpm-fcgi';
     private const DEVELOPMENT = 'Development';
@@ -100,18 +100,23 @@ class EnvironmentTest extends TestCase
     public function provideEnvironmentToDetectProduction(): array
     {
         return [
-            'production' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, null, null, self::NOT_FORCED_PRODUCTION],
-            'forced production on production' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, null, null, self::FORCED_PRODUCTION],
-            'dev' => [self::NOT_EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, self::DEVELOPMENT, null, self::NOT_FORCED_PRODUCTION],
-            'forced production on dev' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, self::DEVELOPMENT, null, self::FORCED_PRODUCTION],
-            'cli' => [self::NOT_EXPECTED_PRODUCTION, self::CLI_PHP_SAPI, null, null, self::NOT_FORCED_PRODUCTION],
-            'forced production on cli' => [self::EXPECTED_PRODUCTION, self::CLI_PHP_SAPI, null, null, self::FORCED_PRODUCTION],
-            'localhost' => [self::NOT_EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, null, self::LOCALHOST_IP, self::NOT_FORCED_PRODUCTION],
-            'forced production on localhost' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, null, self::LOCALHOST_IP, self::FORCED_PRODUCTION],
-            'dev cli' => [self::NOT_EXPECTED_PRODUCTION, self::CLI_PHP_SAPI, self::DEVELOPMENT, null, self::NOT_FORCED_PRODUCTION],
-            'forced production on dev cli' => [self::EXPECTED_PRODUCTION, self::CLI_PHP_SAPI, self::DEVELOPMENT, null, self::FORCED_PRODUCTION],
-            'dev localhost' => [self::NOT_EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, self::DEVELOPMENT, self::LOCALHOST_IP, self::NOT_FORCED_PRODUCTION],
-            'forced production on dev localhost' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, self::DEVELOPMENT, self::LOCALHOST_IP, self::FORCED_PRODUCTION],
+            'production' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, null, null, self::NOT_FORCED_MODE],
+            'forced production on production' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, null, null, self::FORCED_PROD],
+
+            'dev' => [self::NOT_EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, self::DEVELOPMENT, null, self::NOT_FORCED_MODE],
+            'forced production on dev' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, self::DEVELOPMENT, null, self::FORCED_PROD],
+
+            'cli' => [self::NOT_EXPECTED_PRODUCTION, self::CLI_PHP_SAPI, null, null, self::NOT_FORCED_MODE],
+            'forced production on cli' => [self::EXPECTED_PRODUCTION, self::CLI_PHP_SAPI, null, null, self::FORCED_PROD],
+
+            'localhost' => [self::NOT_EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, null, self::LOCALHOST_IP, self::NOT_FORCED_MODE],
+            'forced production on localhost' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, null, self::LOCALHOST_IP, self::FORCED_PROD],
+
+            'dev cli' => [self::NOT_EXPECTED_PRODUCTION, self::CLI_PHP_SAPI, self::DEVELOPMENT, null, self::NOT_FORCED_MODE],
+            'forced production on dev cli' => [self::EXPECTED_PRODUCTION, self::CLI_PHP_SAPI, self::DEVELOPMENT, null, self::FORCED_PROD],
+
+            'dev localhost' => [self::NOT_EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, self::DEVELOPMENT, self::LOCALHOST_IP, self::NOT_FORCED_MODE],
+            'forced production on dev localhost' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, self::DEVELOPMENT, self::LOCALHOST_IP, self::FORCED_PROD],
         ];
     }
 

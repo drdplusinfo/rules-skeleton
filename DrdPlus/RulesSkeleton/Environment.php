@@ -12,8 +12,8 @@ class Environment extends StrictObject
     private $projectEnvironment;
     /** @var string|null */
     private $remoteAddress;
-    /** @var bool */
-    private $inForcedProductionMode;
+    /** @var string|null */
+    private $forcedMode;
 
     public static function createFromGlobals(): Environment
     {
@@ -21,21 +21,21 @@ class Environment extends StrictObject
             \PHP_SAPI,
             $_ENV['PROJECT_ENVIRONMENT'] ?? null,
             $_SERVER['REMOTE_ADDR'] ?? null,
-            !empty($_GET['mode']) && \strpos(\trim($_GET['mode']), 'prod') === 0
+            $_GET['mode'] ?? null
         );
     }
 
     public function __construct(
         string $phpSapi,
-        ?string $projectEnvironment,
-        ?string $remoteAddress,
-        bool $inForcedProductionMode
+        string $projectEnvironment = null,
+        string $remoteAddress = null,
+        string $forcedMode = null
     )
     {
         $this->phpSapi = $phpSapi;
         $this->projectEnvironment = $projectEnvironment;
         $this->remoteAddress = $remoteAddress;
-        $this->inForcedProductionMode = $inForcedProductionMode;
+        $this->forcedMode = $forcedMode ? trim($forcedMode) : null;
     }
 
     public function isCliRequest(): bool
@@ -60,7 +60,17 @@ class Environment extends StrictObject
 
     public function isInProduction(): bool
     {
-        return $this->inForcedProductionMode
+        return $this->isOnForcedProductionMode()
             || (!$this->isOnDevEnvironment() && (!$this->isCliRequest() && !$this->isOnLocalhost()));
+    }
+
+    public function isOnForcedProductionMode(): bool
+    {
+        return $this->forcedMode && stripos($this->forcedMode, 'prod') === 0;
+    }
+
+    public function isOnForcedDevelopmentMode(): bool
+    {
+        return $this->forcedMode && stripos($this->forcedMode, 'dev') === 0;
     }
 }

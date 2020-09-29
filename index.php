@@ -22,7 +22,7 @@ $htmlHelper = $htmlHelper
         \DrdPlus\RulesSkeleton\Environment::createFromGlobals(),
         $configuration
     );
-$servicesContainer = new \DrdPlus\RulesSkeleton\ServicesContainer($configuration, $htmlHelper);
+$servicesContainer = new \DrdPlus\RulesSkeleton\ServicesContainer($configuration, $environment, $htmlHelper);
 
 $rulesApplication = $rulesApplication ?? $controller ?? new \DrdPlus\RulesSkeleton\RulesApplication($servicesContainer);
 $rulesApplication->run();

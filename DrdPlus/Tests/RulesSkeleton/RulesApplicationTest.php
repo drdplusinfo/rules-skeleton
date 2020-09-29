@@ -4,6 +4,7 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
+use DrdPlus\RulesSkeleton\Environment;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Redirect;
 use DrdPlus\RulesSkeleton\Request;
@@ -111,16 +112,17 @@ class RulesApplicationTest extends AbstractContentTest
     private function createServicesContainerWithUsagePolicy(UsagePolicy $usagePolicy)
     {
         $configuration = $this->getConfiguration();
+        $environment = $this->getEnvironment();
         $htmlHelper = $this->createHtmlHelper();
 
-        return new class($usagePolicy, $configuration, $htmlHelper) extends ServicesContainer {
+        return new class($usagePolicy, $configuration, $environment, $htmlHelper) extends ServicesContainer {
             /** @var UsagePolicy */
             private $usagePolicy;
 
-            public function __construct(usagePolicy $usagePolicy, Configuration $configuration, HtmlHelper $htmlHelper)
+            public function __construct(UsagePolicy $usagePolicy, Configuration $configuration, Environment $environment, HtmlHelper $htmlHelper)
             {
                 $this->usagePolicy = $usagePolicy;
-                parent::__construct($configuration, $htmlHelper);
+                parent::__construct($configuration, $environment, $htmlHelper);
             }
 
             public function getUsagePolicy(): UsagePolicy

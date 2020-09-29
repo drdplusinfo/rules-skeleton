@@ -46,39 +46,29 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     {
         return new static(
             $dirs,
-            $environment,
             $projectUrlConfiguration,
-            !empty($_GET['mode']) && \strpos(\trim($_GET['mode']), 'dev') === 0,
-            !empty($_GET['mode']) && \strpos(\trim($_GET['mode']), 'prod') === 0,
+            $environment->isOnForcedDevelopmentMode(),
             !empty($_GET['hide']) && \strpos(\trim($_GET['hide']), 'cover') === 0
         );
     }
 
-    /** @var Environment */
-    private $environment;
     /** @var ProjectUrlConfiguration */
     private $projectUrlConfiguration;
     /** @var bool */
     private $inDevMode;
     /** @var bool */
-    private $inForcedProductionMode;
-    /** @var bool */
     private $shouldHideCovered;
 
     public function __construct(
         Dirs $dirs,
-        Environment $environment,
         ProjectUrlConfiguration $projectUrlConfiguration,
         bool $inDevMode,
-        bool $inForcedProductionMode,
         bool $shouldHideCovered
     )
     {
         parent::__construct($dirs);
-        $this->environment = $environment;
         $this->projectUrlConfiguration = $projectUrlConfiguration;
         $this->inDevMode = $inDevMode;
-        $this->inForcedProductionMode = $inForcedProductionMode;
         $this->shouldHideCovered = $shouldHideCovered;
     }
 
@@ -336,12 +326,6 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         }
 
         return $internalAnchors;
-    }
-
-    public function isInProduction(): bool
-    {
-        return $this->inForcedProductionMode
-            || (!$this->environment->isOnDevEnvironment() && (!$this->environment->isCliRequest() && !$this->environment->isOnLocalhost()));
     }
 
     public function replaceDiacriticsFromDrdPlusAnchorHashes(HtmlDocument $htmlDocument): HtmlDocument

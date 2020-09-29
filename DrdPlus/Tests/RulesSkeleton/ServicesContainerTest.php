@@ -19,7 +19,7 @@ class ServicesContainerTest extends AbstractContentTest
     {
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->getEnvironment(), $this->getHtmlHelper());
         self::assertNotEmpty($servicesContainer->getCurrentWebVersion());
     }
 
@@ -30,7 +30,7 @@ class ServicesContainerTest extends AbstractContentTest
     {
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->getEnvironment(), $this->getHtmlHelper());
         self::assertNotEmpty($servicesContainer->getRoutedWebFiles());
     }
 
@@ -41,7 +41,7 @@ class ServicesContainerTest extends AbstractContentTest
     {
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->getEnvironment(), $this->getHtmlHelper());
         self::assertNotEmpty($servicesContainer->getRequest());
     }
 
@@ -62,7 +62,7 @@ class ServicesContainerTest extends AbstractContentTest
             $dirs
         );
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($configuration, $this->createHtmlHelper());
+        $servicesContainer = new $servicesContainerClass($configuration, $this->getEnvironment(), $this->getHtmlHelper());
         $rulesUrlMatcher = $servicesContainer->getRulesUrlMatcher();
         self::assertNotEmpty($rulesUrlMatcher);
         self::assertEquals(
@@ -110,7 +110,7 @@ class ServicesContainerTest extends AbstractContentTest
         ]);
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($configuration, $this->createHtmlHelper());
+        $servicesContainer = new $servicesContainerClass($configuration, $this->getEnvironment(), $this->getHtmlHelper());
         $rulesUrlMatcher = $servicesContainer->getRulesUrlMatcher();
         self::assertNotEmpty($rulesUrlMatcher);
         self::assertEquals(new RouteMatch(['path' => '/']), $rulesUrlMatcher->match('/anything'));
@@ -128,7 +128,7 @@ class ServicesContainerTest extends AbstractContentTest
         ]);
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($configuration, $this->createHtmlHelper());
+        $servicesContainer = new $servicesContainerClass($configuration, $this->getEnvironment(), $this->getHtmlHelper());
         $rulesUrlMatcher = $servicesContainer->getRulesUrlMatcher();
         self::assertNotEmpty($rulesUrlMatcher);
         self::assertEquals(new RouteMatch(['path' => 'something', '_route' => 'root']), $rulesUrlMatcher->match('/something'));
@@ -141,11 +141,11 @@ class ServicesContainerTest extends AbstractContentTest
     {
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper(null, true /* in production */));
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createEnvironment('prod'), $this->getHtmlHelper());
         self::assertTrue($servicesContainer->getPassedWebCache()->isInProduction(), 'Expected page cache to be in production mode');
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createEnvironment(), $this->getHtmlHelper());
         self::assertFalse($servicesContainer->getPassedWebCache()->isInProduction(), 'Expected page cache to be not in production mode');
     }
 
@@ -156,7 +156,7 @@ class ServicesContainerTest extends AbstractContentTest
     {
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->getEnvironment(), $this->getHtmlHelper());
         self::assertEquals(new CookiesService($servicesContainer->getRequest()), $servicesContainer->getCookiesService());
     }
 
@@ -165,8 +165,7 @@ class ServicesContainerTest extends AbstractContentTest
      */
     public function I_can_get_table_request_detector_even_if_no_route_file()
     {
-        $servicesContainer = new class($this->getConfiguration(), $this->getHtmlHelper()) extends ServicesContainer
-        {
+        $servicesContainer = new class($this->getConfiguration(), $this->getEnvironment(), $this->getHtmlHelper()) extends ServicesContainer {
             protected function getYamlFileWithRoutes(): string
             {
                 return '';
@@ -183,7 +182,7 @@ class ServicesContainerTest extends AbstractContentTest
     {
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->getEnvironment(), $this->getHtmlHelper());
         $rootWebFiles = $servicesContainer->getRootWebFiles();
         $routedWebFiles = $servicesContainer->getRoutedWebFiles();
         self::assertNotEquals($rootWebFiles, $routedWebFiles);
@@ -196,7 +195,7 @@ class ServicesContainerTest extends AbstractContentTest
     {
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
-        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->getEnvironment(), $this->getHtmlHelper());
         $rootWebPartsContainer = $servicesContainer->getRootWebPartsContainer();
         $routedWebPartsContainer = $servicesContainer->getRoutedWebPartsContainer();
         self::assertNotEquals($rootWebPartsContainer, $routedWebPartsContainer);

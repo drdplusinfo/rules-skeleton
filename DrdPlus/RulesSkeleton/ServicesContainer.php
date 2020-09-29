@@ -115,9 +115,10 @@ class ServicesContainer extends StrictObject
     /** @var TablesRequestDetector */
     private $tablesRequestDetector;
 
-    public function __construct(Configuration $configuration, HtmlHelper $htmlHelper)
+    public function __construct(Configuration $configuration, Environment $environment, HtmlHelper $htmlHelper)
     {
         $this->configuration = $configuration;
+        $this->environment = $environment;
         $this->htmlHelper = $htmlHelper;
     }
 
@@ -164,9 +165,6 @@ class ServicesContainer extends StrictObject
 
     public function getEnvironment(): Environment
     {
-        if ($this->environment === null) {
-            $this->environment = Environment::createFromGlobals();
-        }
         return $this->environment;
     }
 
