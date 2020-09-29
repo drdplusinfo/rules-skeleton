@@ -8,6 +8,13 @@ web:
     show_home_button_on_homepage: true
     show_home_button_on_routes: true
     home_button_target: 'https://www.drdplus.info'
+    items:
+      email: "mailto:info@drdplus.info"
+      rpgforum: "https://rpgforum.cz/forum/viewtopic.php?f=238&t=14870"
+      discord: "https://discord.com/invite/FVz5V3Q"
+      twitter: "https://twitter.com/DrdInfo"
+      facebook: "https://www.facebook.com/drdplus.info"
+      trello: "https://trello.com/b/L64FNYj3/drdplusinfo"
 google:
   analytics_id: 'UA-121206931-0'
 application:

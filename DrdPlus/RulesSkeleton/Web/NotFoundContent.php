@@ -2,15 +2,16 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
+use DrdPlus\RulesSkeleton\Environment;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\HeadInterface;
 
 class NotFoundContent extends MainContent
 {
-    public function __construct(HtmlHelper $htmlHelper, HeadInterface $head, NotFoundBody $body)
+    public function __construct(HtmlHelper $htmlHelper, Environment  $environment, HeadInterface $head, NotFoundBody $body)
     {
-        parent::__construct($htmlHelper, $head, $body);
+        parent::__construct($htmlHelper, $environment, $head, $body);
     }
 
     protected function solveIds(HtmlDocument $htmlDocument): void

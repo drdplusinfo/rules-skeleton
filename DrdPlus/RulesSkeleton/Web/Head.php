@@ -3,6 +3,7 @@
 namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Environment;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\WebContentBuilder\Web\CssFiles;
 use Granam\WebContentBuilder\Web\JsFiles;
@@ -12,6 +13,7 @@ class Head extends \Granam\WebContentBuilder\Web\Head
     public function __construct(
         Configuration $configuration,
         HtmlHelper $htmlHelper,
+        Environment $environment,
         CssFiles $cssFiles,
         JsFiles $jsFiles,
         string $customWebName = null
@@ -24,7 +26,7 @@ class Head extends \Granam\WebContentBuilder\Web\Head
             $jsFiles,
             $pageTitle,
             $configuration->getFavicon(),
-            $htmlHelper->isInProduction()
+            $environment->isInProduction()
                 ? $configuration->getGoogleAnalyticsId()
                 : ''
         );

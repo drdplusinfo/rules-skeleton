@@ -2,6 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
+use DrdPlus\RulesSkeleton\Environment;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\Content;
@@ -11,11 +12,14 @@ class PassContent extends Content
 {
     /** @var HtmlHelper */
     protected $htmlHelper;
+    /** @var Environment */
+    protected $environment;
 
-    public function __construct(HtmlHelper $htmlHelper, HeadInterface $head, PassBody $passBody)
+    public function __construct(HtmlHelper $htmlHelper, Environment $environment, HeadInterface $head, PassBody $passBody)
     {
         parent::__construct($htmlHelper, $head, $passBody);
         $this->htmlHelper = $htmlHelper;
+        $this->environment = $environment;
     }
 
     protected function buildHtmlDocument(string $content): HtmlDocument
@@ -39,7 +43,7 @@ class PassContent extends Content
         $this->htmlHelper->externalLinksTargetToBlank($htmlDocument);
         $this->htmlHelper->markExternalLinksByClass($htmlDocument);
         $this->htmlHelper->addVersionHashToAssets($htmlDocument);
-        if (!$this->htmlHelper->isInProduction()) {
+        if (!$this->environment->isInProduction()) {
             $this->htmlHelper->makeExternalDrdPlusLinksLocal($htmlDocument);
         }
     }

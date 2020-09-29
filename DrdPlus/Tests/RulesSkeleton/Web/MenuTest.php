@@ -23,15 +23,11 @@ class MenuTest extends AbstractContentTest
      */
     public function I_can_show_home_button(bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes, bool $onHomepage): void
     {
-        $configuration = $this->createCustomConfiguration([
-            Configuration::WEB => [
-                Configuration::MENU => [
-                    MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
-                    MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
-                ],
-            ],
+        $configuration = $this->createConfigurationWithCustomMenu([
+            MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
+            MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
         ]);
-        $menuOnHomepage = $this->createMenu($configuration, $onHomepage);
+        $menuOnHomepage = $this->createMenu($configuration->getMenuConfiguration(), $onHomepage);
         $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
@@ -57,6 +53,15 @@ HTML
         ];
     }
 
+    protected function createConfigurationWithCustomMenu(array $menuConfiguration): Configuration
+    {
+        return $this->createCustomConfiguration([
+            Configuration::WEB => [
+                Configuration::MENU => $menuConfiguration,
+            ],
+        ]);
+    }
+
     /**
      * @test
      * @dataProvider provideConfigurationToHideHomeButtonOnHomepage
@@ -65,15 +70,11 @@ HTML
      */
     public function I_can_hide_home_button_on_homepage(bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes): void
     {
-        $configuration = $this->createCustomConfiguration([
-            Configuration::WEB => [
-                Configuration::MENU => [
-                    MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
-                    MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
-                ],
-            ],
+        $configuration = $this->createConfigurationWithCustomMenu([
+            MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
+            MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
         ]);
-        $menu = $this->createMenu($configuration, self::HOMEPAGE_IS_REQUESTED);
+        $menu = $this->createMenu($configuration->getMenuConfiguration(), self::HOMEPAGE_IS_REQUESTED);
         $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
@@ -97,9 +98,9 @@ HTML
     private const HOMEPAGE_IS_REQUESTED = true;
     private const HOMEPAGE_IS_NOT_REQUESTED = false;
 
-    private function createMenu(Configuration $configuration, bool $isHomepageRequested): Menu
+    private function createMenu(MenuConfiguration $menuConfiguration, bool $isHomepageRequested): Menu
     {
-        return new Menu($configuration, $this->createHomepageDetector($isHomepageRequested));
+        return new Menu($menuConfiguration, $this->createHomepageDetector($isHomepageRequested));
     }
 
     /**
@@ -122,15 +123,11 @@ HTML
      */
     public function I_can_hide_home_button_on_routes(bool $showHomeButtonOnHomepage, bool $showHomeButtonOnRoutes): void
     {
-        $configuration = $this->createCustomConfiguration([
-            Configuration::WEB => [
-                Configuration::MENU => [
-                    MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
-                    MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
-                ],
-            ],
+        $configuration = $this->createConfigurationWithCustomMenu([
+            MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
+            MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
         ]);
-        $menu = $this->createMenu($configuration, self::HOMEPAGE_IS_NOT_REQUESTED);
+        $menu = $this->createMenu($configuration->getMenuConfiguration(), self::HOMEPAGE_IS_NOT_REQUESTED);
         $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
@@ -157,16 +154,12 @@ HTML
     public function Home_button_target_leads_to_expected_link(): void
     {
         foreach ([true, false] as $showHomeButtonOnHomepage) {
-            $configuration = $this->createCustomConfiguration([
-                Configuration::WEB => [
-                    Configuration::MENU => [
-                        MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
-                        MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => !$showHomeButtonOnHomepage,
-                        MenuConfiguration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
-                    ],
-                ],
+            $configuration = $this->createConfigurationWithCustomMenu([
+                MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
+                MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => !$showHomeButtonOnHomepage,
+                MenuConfiguration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
             ]);
-            $menu = $this->createMenu($configuration, $showHomeButtonOnHomepage);
+            $menu = $this->createMenu($configuration->getMenuConfiguration(), $showHomeButtonOnHomepage);
             $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
@@ -186,17 +179,13 @@ HTML
      */
     public function I_can_get_menu_even_on_not_found_route(): void
     {
-        $configuration = $this->createCustomConfiguration([
-            Configuration::WEB => [
-                Configuration::MENU => [
-                    MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => false,
-                    MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => true,
-                    MenuConfiguration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
-                ],
-            ],
+        $configuration = $this->createConfigurationWithCustomMenu([
+            MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => false,
+            MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => true,
+            MenuConfiguration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
         ]);
         $menu = new Menu(
-            $configuration,
+            $configuration->getMenuConfiguration(),
             new HomepageDetector(
                 new PathProvider(
                     $this->getServicesContainer()->getRulesUrlMatcher(),

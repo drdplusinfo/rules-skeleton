@@ -2,13 +2,11 @@
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\Environment;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
 use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
-use Mockery\MockInterface;
 
 class HtmlHelperTest extends AbstractContentTest
 {
@@ -41,67 +39,6 @@ class HtmlHelperTest extends AbstractContentTest
         $htmlHelperClass = static::getSutClass();
         self::assertSame('kuala_lumpur', $htmlHelperClass::toId('Kuala lumpur'));
         self::assertSame('krizaly_s_mrkvi', $htmlHelperClass::toId('Křížaly s mrkví'));
-    }
-
-    /**
-     * @test
-     * @dataProvider provideEnvironment
-     * @param bool $forcedProduction
-     * @param bool $onDev
-     * @param bool $isCli
-     * @param bool $onLocalhost
-     * @param bool $expectingProduction
-     */
-    public function I_can_find_out_if_I_am_in_production(bool $forcedProduction, bool $onDev, bool $isCli, bool $onLocalhost, bool $expectingProduction): void
-    {
-        $dirs = $this->getDirs();
-        $htmlHelperClass = $this->getHtmlHelperClass();
-        /** @var HtmlHelper $htmlHelper */
-        $htmlHelper = new $htmlHelperClass(
-            $dirs,
-            $this->createEnvironment($onDev, $isCli, $onLocalhost),
-            $this->getConfiguration($dirs),
-            false,
-            $forcedProduction,
-            false
-        );
-        self::assertSame($expectingProduction, $htmlHelper->isInProduction());
-    }
-
-    public function provideEnvironment(): array
-    {
-        return [
-            'production' => [false, false, false, false, true],
-            'forced production on production' => [true, false, false, false, true],
-            'dev' => [false, true, false, false, false],
-            'forced production on dev' => [true, true, false, false, true],
-            'cli' => [false, false, true, false, false],
-            'forced production on cli' => [true, false, true, false, true],
-            'localhost' => [false, false, false, true, false],
-            'forced production on localhost' => [true, false, false, true, true],
-            'dev cli' => [false, true, true, false, false],
-            'forced production on dev cli' => [true, true, true, false, true],
-            'dev localhost' => [false, true, true, false, false],
-            'forced production on dev localhost' => [true, true, true, false, true],
-        ];
-    }
-
-    /**
-     * @param bool $onDev
-     * @param bool $isCli
-     * @param bool $onLocalhost
-     * @return Environment|MockInterface
-     */
-    private function createEnvironment(bool $onDev, bool $isCli, bool $onLocalhost): Environment
-    {
-        $environment = $this->mockery(Environment::class);
-        $environment->shouldReceive('isOnDevEnvironment')
-            ->andReturn($onDev);
-        $environment->shouldReceive('isCliRequest')
-            ->andReturn($isCli);
-        $environment->shouldReceive('isOnLocalhost')
-            ->andReturn($onLocalhost);
-        return $environment;
     }
 
     /**

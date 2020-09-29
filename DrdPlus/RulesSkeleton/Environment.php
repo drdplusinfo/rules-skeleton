@@ -12,17 +12,30 @@ class Environment extends StrictObject
     private $projectEnvironment;
     /** @var string|null */
     private $remoteAddress;
+    /** @var bool */
+    private $inForcedProductionMode;
 
     public static function createFromGlobals(): Environment
     {
-        return new static(\PHP_SAPI, $_ENV['PROJECT_ENVIRONMENT'] ?? null, $_SERVER['REMOTE_ADDR'] ?? null);
+        return new static(
+            \PHP_SAPI,
+            $_ENV['PROJECT_ENVIRONMENT'] ?? null,
+            $_SERVER['REMOTE_ADDR'] ?? null,
+            !empty($_GET['mode']) && \strpos(\trim($_GET['mode']), 'prod') === 0
+        );
     }
 
-    public function __construct(string $phpSapi, ?string $projectEnvironment, ?string $remoteAddress)
+    public function __construct(
+        string $phpSapi,
+        ?string $projectEnvironment,
+        ?string $remoteAddress,
+        bool $inForcedProductionMode
+    )
     {
         $this->phpSapi = $phpSapi;
         $this->projectEnvironment = $projectEnvironment;
         $this->remoteAddress = $remoteAddress;
+        $this->inForcedProductionMode = $inForcedProductionMode;
     }
 
     public function isCliRequest(): bool
@@ -43,5 +56,11 @@ class Environment extends StrictObject
     public function isOnLocalhost(): bool
     {
         return $this->remoteAddress === '127.0.0.1';
+    }
+
+    public function isInProduction(): bool
+    {
+        return $this->inForcedProductionMode
+            || (!$this->isOnDevEnvironment() && (!$this->isCliRequest() && !$this->isOnLocalhost()));
     }
 }

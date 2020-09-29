@@ -47,6 +47,7 @@ class MainContentTest extends AbstractContentTest
     {
         $rulesMainContent = new RulesMainContent(
             $this->createHtmlHelper(),
+            $this->getEnvironment(),
             $this->createEmptyHead(),
             $this->createMainBody(sprintf('<a href="%s">Some link</a>', $linkToDrdPlus))
         );
@@ -71,6 +72,7 @@ class MainContentTest extends AbstractContentTest
         self::assertDoesNotMatchRegularExpression('~drdplus[.](loc|info)~', $linkOutOfDrdPlus);
         $rulesMainContent = new RulesMainContent(
             $this->createHtmlHelper(),
+            $this->getEnvironment(),
             $this->createEmptyHead(),
             $this->createMainBody(\sprintf('<a href="%s">Some link</a>', $linkOutOfDrdPlus))
         );
@@ -93,6 +95,7 @@ class MainContentTest extends AbstractContentTest
     {
         $rulesMainContent = new RulesMainContent(
             $this->createHtmlHelper(),
+            $this->getEnvironment(),
             $this->createEmptyHead(),
             $this->createMainBody('<a href="https://blog.drdplus.info/#!index.md">To blog</a>')
         );

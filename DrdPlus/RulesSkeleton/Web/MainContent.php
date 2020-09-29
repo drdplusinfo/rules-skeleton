@@ -2,6 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
+use DrdPlus\RulesSkeleton\Environment;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\Content;
@@ -11,13 +12,16 @@ abstract class MainContent extends Content
 {
     /** @var HtmlHelper */
     protected $htmlHelper;
+    /** @var Environment */
+    protected $environment;
     /** @var RulesBodyInterface */
     protected $body;
 
-    public function __construct(HtmlHelper $htmlHelper, HeadInterface $head, RulesBodyInterface $body)
+    public function __construct(HtmlHelper $htmlHelper, Environment $environment, HeadInterface $head, RulesBodyInterface $body)
     {
         parent::__construct($htmlHelper, $head, $body);
         $this->htmlHelper = $htmlHelper;
+        $this->environment = $environment;
         $this->body = $body;
     }
 
@@ -51,7 +55,7 @@ abstract class MainContent extends Content
         $this->htmlHelper->prepareSourceCodeLinks($htmlDocument);
         $this->htmlHelper->markExternalLinksByClass($htmlDocument);
         $this->htmlHelper->addVersionHashToAssets($htmlDocument);
-        if (!$this->htmlHelper->isInProduction()) {
+        if (!$this->environment->isInProduction()) {
             $this->htmlHelper->makeExternalDrdPlusLinksLocal($htmlDocument);
         }
     }

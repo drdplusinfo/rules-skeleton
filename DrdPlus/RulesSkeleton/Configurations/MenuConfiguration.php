@@ -10,6 +10,7 @@ class MenuConfiguration extends StrictObject
     public const SHOW_HOME_BUTTON_ON_HOMEPAGE = 'show_home_button_on_homepage';
     public const SHOW_HOME_BUTTON_ON_ROUTES = 'show_home_button_on_routes';
     public const HOME_BUTTON_TARGET = 'home_button_target';
+    public const ITEMS = 'items';
 
     /** @var array */
     private $settings;
@@ -20,6 +21,7 @@ class MenuConfiguration extends StrictObject
         $this->guardShowOfHomeButtonOnHomepageIsSet($settings, $pathToMenu);
         $this->guardShowOfHomeButtonOnRoutesIsSet($settings, $pathToMenu);
         $this->guardHomeButtonTargetIsSet($settings, $pathToMenu);
+        $this->guardItemsAreArrayOrNothing($settings, $pathToMenu);
         $this->settings = $settings;
     }
 
@@ -92,6 +94,39 @@ class MenuConfiguration extends StrictObject
         }
     }
 
+    protected function guardItemsAreArrayOrNothing(array $settings, array $pathToMenu)
+    {
+        if (!array_key_exists(static::ITEMS, $settings)) {
+            return;
+        }
+        $this->guardConfigurationSettingIsObject(static::ITEMS, $settings, $pathToMenu);
+    }
+
+    protected function guardConfigurationSettingIsObject(string $settingsKey, array $settings, array $pathToMenu): void
+    {
+        if (!is_array($settings[$settingsKey])) {
+            throw new Exceptions\InvalidConfiguration(
+                sprintf(
+                    "Expected configuration '%s' to be a non-empty array, got %s",
+                    $this->getConfigurationPath($settingsKey, $pathToMenu),
+                    var_export($settings[$settingsKey], true)
+                )
+            );
+        }
+        foreach ($settings[$settingsKey] as $itemKey => $itemValue) {
+            if (!is_string($itemKey)) {
+                throw new Exceptions\InvalidConfiguration(
+                    sprintf(
+                        "Expected configuration '%s' to be an array indexed only by strings, got key %s (with value '%s')",
+                        $this->getConfigurationPath($settingsKey, $pathToMenu),
+                        var_export($itemValue, true),
+                        $itemValue
+                    )
+                );
+            }
+        }
+    }
+
     public function getSettings(): array
     {
         return $this->settings;
@@ -115,5 +150,13 @@ class MenuConfiguration extends StrictObject
     public function getHomeButtonTarget(): string
     {
         return $this->getSettings()[static::HOME_BUTTON_TARGET];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getItems(): array
+    {
+        return $this->getSettings()[static::ITEMS] ?? [];
     }
 }

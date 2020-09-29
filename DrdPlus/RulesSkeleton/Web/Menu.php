@@ -2,21 +2,21 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\RulesSkeleton\HomepageDetector;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringInterface;
 
 class Menu extends StrictObject implements StringInterface
 {
-    /** @var Configuration */
-    private $configuration;
+    /** @var MenuConfiguration */
+    private $menuConfiguration;
     /** @var HomepageDetector */
     private $homepageDetector;
 
-    public function __construct(Configuration $configuration, HomepageDetector $homepageDetector)
+    public function __construct(MenuConfiguration $menuConfiguration, HomepageDetector $homepageDetector)
     {
-        $this->configuration = $configuration;
+        $this->menuConfiguration = $menuConfiguration;
         $this->homepageDetector = $homepageDetector;
     }
 
@@ -28,7 +28,7 @@ class Menu extends StrictObject implements StringInterface
     public function getValue(): string
     {
         /** @noinspection PhpUnusedLocalVariableInspection */
-        $configuration = $this->configuration;
+        $menuConfiguration = $this->menuConfiguration;
         /** @noinspection PhpUnusedLocalVariableInspection */
         $homepageDetector = $this->homepageDetector;
         ob_start();
@@ -36,8 +36,8 @@ class Menu extends StrictObject implements StringInterface
         return ob_get_clean();
     }
 
-    protected function getConfiguration(): Configuration
+    protected function getMenuConfiguration(): MenuConfiguration
     {
-        return $this->configuration;
+        return $this->menuConfiguration;
     }
 }

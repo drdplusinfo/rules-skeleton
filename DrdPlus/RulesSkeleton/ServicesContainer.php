@@ -191,6 +191,7 @@ class ServicesContainer extends StrictObject
         if ($this->rulesMainContent === null) {
             $this->rulesMainContent = new RulesMainContent(
                 $this->getHtmlHelper(),
+                $this->getEnvironment(),
                 $this->getHead(),
                 $this->getRoutedWebPartsContainer()->getRulesMainBody()
             );
@@ -217,6 +218,7 @@ class ServicesContainer extends StrictObject
         if ($this->tablesMainContent === null) {
             $this->tablesMainContent = new TablesContent(
                 $this->getHtmlHelper(),
+                $this->getEnvironment(),
                 $this->getHeadForTables(),
                 $this->getRootWebPartsContainer()->getTablesBody()
             );
@@ -251,6 +253,7 @@ class ServicesContainer extends StrictObject
         if ($this->passContent === null) {
             $this->passContent = new PassContent(
                 $this->getHtmlHelper(),
+                $this->getEnvironment(),
                 $this->getHead(),
                 $this->getRoutedWebPartsContainer()->getPassBody()
             );
@@ -263,6 +266,7 @@ class ServicesContainer extends StrictObject
         if ($this->notFoundContent === null) {
             $this->notFoundContent = new NotFoundContent(
                 $this->getHtmlHelper(),
+                $this->getEnvironment(),
                 $this->getHead(),
                 $this->getRoutedWebPartsContainer()->getNotFoundBody()
             );
@@ -278,7 +282,7 @@ class ServicesContainer extends StrictObject
     public function getMenu(): Menu
     {
         if ($this->menu === null) {
-            $this->menu = new Menu($this->getConfiguration(), $this->getHomepageDetector());
+            $this->menu = new Menu($this->getConfiguration()->getMenuConfiguration(), $this->getHomepageDetector());
         }
         return $this->menu;
     }
@@ -286,7 +290,13 @@ class ServicesContainer extends StrictObject
     public function getHead(): Head
     {
         if ($this->head === null) {
-            $this->head = new Head($this->getConfiguration(), $this->getHtmlHelper(), $this->getCssFiles(), $this->getJsFiles());
+            $this->head = new Head(
+                $this->getConfiguration(),
+                $this->getHtmlHelper(),
+                $this->getEnvironment(),
+                $this->getCssFiles(),
+                $this->getJsFiles()
+            );
         }
         return $this->head;
     }
@@ -296,6 +306,7 @@ class ServicesContainer extends StrictObject
         return new Head(
             $this->getConfiguration(),
             $this->getHtmlHelper(),
+            $this->getEnvironment(),
             $this->getCssFiles(),
             $this->getJsFiles(),
             'Tabulky pro ' . $this->getHead()->getPageTitle()
@@ -325,7 +336,7 @@ class ServicesContainer extends StrictObject
     public function getCssFiles(): CssFiles
     {
         if ($this->cssFiles === null) {
-            $this->cssFiles = new CssFiles($this->getDirs(), $this->getHtmlHelper()->isInProduction());
+            $this->cssFiles = new CssFiles($this->getDirs(), $this->getEnvironment()->isInProduction());
         }
         return $this->cssFiles;
     }
@@ -333,7 +344,7 @@ class ServicesContainer extends StrictObject
     public function getJsFiles(): JsFiles
     {
         if ($this->jsFiles === null) {
-            $this->jsFiles = new JsFiles($this->getConfiguration()->getDirs(), $this->getHtmlHelper()->isInProduction());
+            $this->jsFiles = new JsFiles($this->getConfiguration()->getDirs(), $this->getEnvironment()->isInProduction());
         }
         return $this->jsFiles;
     }
@@ -443,7 +454,7 @@ class ServicesContainer extends StrictObject
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
-                $this->getHtmlHelper()->isInProduction()
+                $this->getEnvironment()->isInProduction()
             );
         }
         return $this->routerCache;
@@ -497,7 +508,7 @@ class ServicesContainer extends StrictObject
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
-                $this->getHtmlHelper()->isInProduction()
+                $this->getEnvironment()->isInProduction()
             );
         }
         return $this->tablesWebCache;
@@ -514,7 +525,7 @@ class ServicesContainer extends StrictObject
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
-                $this->getHtmlHelper()->isInProduction()
+                $this->getEnvironment()->isInProduction()
             );
         }
         return $this->passWebCache;
@@ -531,7 +542,7 @@ class ServicesContainer extends StrictObject
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
-                $this->getHtmlHelper()->isInProduction()
+                $this->getEnvironment()->isInProduction()
             );
         }
         return $this->passedWebCache;
@@ -548,7 +559,7 @@ class ServicesContainer extends StrictObject
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
-                $this->getHtmlHelper()->isInProduction()
+                $this->getEnvironment()->isInProduction()
             );
         }
         return $this->notFoundCache;
@@ -577,7 +588,7 @@ class ServicesContainer extends StrictObject
     public function getEmptyMenu(): EmptyMenu
     {
         return new EmptyMenu(
-            $this->getConfiguration(),
+            $this->getConfiguration()->getMenuConfiguration(),
             $this->getHomepageDetector()
         );
     }
@@ -592,7 +603,7 @@ class ServicesContainer extends StrictObject
             $this->getContentIrrelevantRequestAliases(),
             $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
-            $this->getHtmlHelper()->isInProduction()
+            $this->getEnvironment()->isInProduction()
         );
     }
 
