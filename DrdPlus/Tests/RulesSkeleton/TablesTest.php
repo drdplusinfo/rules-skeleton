@@ -84,7 +84,14 @@ class TablesTest extends AbstractContentTest
     {
         $someExpectedTableIds = $this->getTestsConfiguration()->getSomeExpectedTableIds();
         $missingIds = \array_diff($someExpectedTableIds, $tableIds);
-        self::assertEmpty($missingIds, 'Some expected table IDs are missing: ' . \implode(',', $missingIds));
+        self::assertEmpty(
+            $missingIds,
+            sprintf(
+                'Some expected table IDs are missing: %s, got only %s',
+                implode(',', $missingIds),
+                implode(',', $tableIds)
+            )
+        );
     }
 
     protected function There_is_no_other_content_than_tables(HtmlDocument $htmlDocument): void
