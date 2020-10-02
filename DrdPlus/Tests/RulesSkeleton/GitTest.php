@@ -67,13 +67,13 @@ class GitTest extends AbstractContentTest
             self::assertSame([$this->getVendorRoot()], $output, 'The vendor dir should be ignored for skeleton');
             return;
         }
-        if (!$this->getTestsConfiguration()->isVendorDirVersioned()) {
+        if (!$this->getTestsConfiguration()->hasVendorDirVersioned()) {
             self::assertLessThanOrEqual(
                 0, // GIT check-ignore results into 0 (as a successful ignore check) if dir is ignored
                 $resultCode,
                 sprintf(
                     "The vendor dir '{$this->getVendorRoot()}' should be ignored by Git as tests configuration says by '%s'",
-                    TestsConfiguration::IS_VENDOR_DIR_VERSIONED
+                    TestsConfiguration::HAS_VENDOR_DIR_VERSIONED
                 )
             );
             self::assertSame(
@@ -81,7 +81,7 @@ class GitTest extends AbstractContentTest
                 $output,
                 sprintf(
                     "The vendor dir '{$this->getVendorRoot()}' should be ignored by Git as tests configuration says by '%s'",
-                    TestsConfiguration::IS_VENDOR_DIR_VERSIONED
+                    TestsConfiguration::HAS_VENDOR_DIR_VERSIONED
                 )
             );
             return;
@@ -91,7 +91,7 @@ class GitTest extends AbstractContentTest
             $resultCode,
             sprintf(
                 "The vendor dir '{$this->getVendorRoot()}' should be versioned by Git as tests configuration says by '%s'",
-                TestsConfiguration::IS_VENDOR_DIR_VERSIONED
+                TestsConfiguration::HAS_VENDOR_DIR_VERSIONED
             )
         );
         self::assertSame(
@@ -99,7 +99,7 @@ class GitTest extends AbstractContentTest
             $output,
             sprintf(
                 "The vendor dir '{$this->getVendorRoot()}' should be versioned by Git as tests configuration says by '%s'",
-                TestsConfiguration::IS_VENDOR_DIR_VERSIONED
+                TestsConfiguration::HAS_VENDOR_DIR_VERSIONED
             )
         );
     }

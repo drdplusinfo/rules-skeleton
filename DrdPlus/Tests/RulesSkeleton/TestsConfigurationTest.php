@@ -2,7 +2,6 @@
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\Configurations\ProjectUrlConfiguration;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
 
@@ -293,6 +292,20 @@ class TestsConfigurationTest extends AbstractContentTest
     /**
      * @test
      */
+    public function Expected_access_is_same_as_configured()
+    {
+        $testsConfiguration = $this->getTestsConfiguration();
+        $configuration = $this->getConfiguration();
+        self::assertSame(
+            $testsConfiguration->hasProtectedAccess(),
+            $configuration->hasProtectedAccess(),
+            'Expected same test and project configuration of access'
+        );
+    }
+
+    /**
+     * @test
+     */
     public function I_can_set_too_short_failure_names(): void
     {
         $testsConfiguration = $this->createTestsConfiguration();
@@ -383,26 +396,20 @@ class TestsConfigurationTest extends AbstractContentTest
 
     public function provideStrictBooleanConfiguration(): array
     {
-        return [
-            TestsConfiguration::HAS_LOCAL_LINKS => [TestsConfiguration::HAS_LOCAL_LINKS, true],
-            TestsConfiguration::HAS_EXTERNAL_ANCHORS_WITH_HASHES => [TestsConfiguration::HAS_EXTERNAL_ANCHORS_WITH_HASHES, true],
-            TestsConfiguration::HAS_IDS => [TestsConfiguration::HAS_IDS, true],
-            TestsConfiguration::HAS_CALCULATIONS => [TestsConfiguration::HAS_CALCULATIONS, true],
-            TestsConfiguration::HAS_LINKS_TO_ALTAR => [TestsConfiguration::HAS_LINKS_TO_ALTAR, true],
-            TestsConfiguration::CAN_BE_BOUGHT_ON_ESHOP => [TestsConfiguration::CAN_BE_BOUGHT_ON_ESHOP, true],
-            TestsConfiguration::HAS_LINK_TO_SINGLE_JOURNAL => [TestsConfiguration::HAS_LINK_TO_SINGLE_JOURNAL, true],
-            TestsConfiguration::HAS_LINKS_TO_JOURNALS => [TestsConfiguration::HAS_LINKS_TO_JOURNALS, true],
-            TestsConfiguration::HAS_BUTTONS => [TestsConfiguration::HAS_BUTTONS, true],
-            TestsConfiguration::HAS_MARKED_CONTENT => [TestsConfiguration::HAS_MARKED_CONTENT, true],
-            TestsConfiguration::HAS_TABLES => [TestsConfiguration::HAS_TABLES, true],
-            TestsConfiguration::HAS_PROTECTED_ACCESS => [TestsConfiguration::HAS_PROTECTED_ACCESS, true],
-            TestsConfiguration::HAS_NOTES => [TestsConfiguration::HAS_NOTES, true],
-            TestsConfiguration::HAS_HEADINGS => [TestsConfiguration::HAS_HEADINGS, true],
-            TestsConfiguration::HAS_AUTHORS => [TestsConfiguration::HAS_AUTHORS, true],
-            TestsConfiguration::HAS_SHOWN_HOME_BUTTON => [TestsConfiguration::HAS_SHOWN_HOME_BUTTON, false],
-            TestsConfiguration::HAS_SHOWN_HOME_BUTTON_ON_HOMEPAGE => [TestsConfiguration::HAS_SHOWN_HOME_BUTTON_ON_HOMEPAGE, true],
-            TestsConfiguration::HAS_SHOWN_HOME_BUTTON_ON_ROUTES => [TestsConfiguration::HAS_SHOWN_HOME_BUTTON_ON_ROUTES, true],
-        ];
+        $sutClass = static::getSutClass();
+        $reflection = new \ReflectionClass($sutClass);
+        $booleanConstants = [];
+        foreach ($reflection->getConstants() as $constantValue) {
+            if (stripos($constantValue, 'has_') === 0) {
+                $booleanConstants[] = $constantValue;
+            }
+        }
+        $strictBooleanConfiguration = [];
+        foreach ($booleanConstants as $booleanConstant) {
+            $strictBooleanConfiguration[$booleanConstant] = [$booleanConstant, true];
+        }
+        $strictBooleanConfiguration[TestsConfiguration::HAS_LOCAL_REPOSITORIES] = [TestsConfiguration::HAS_LOCAL_REPOSITORIES, false]; // the only exception
+        return $strictBooleanConfiguration;
     }
 
     /**

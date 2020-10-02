@@ -41,12 +41,11 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const HAS_DEBUG_CONTACTS_WITH_EMAIL = 'has_debug_contacts_with_email';
     public const DEBUG_CONTACTS_EMAIL = 'debug_contacts_email';
     public const HAS_BUTTONS = 'has_buttons';
-    public const HAS_SHOWN_HOME_BUTTON = 'has_shown_home_button';
     public const HAS_SHOWN_HOME_BUTTON_ON_HOMEPAGE = 'has_shown_home_button_on_homepage';
     public const HAS_SHOWN_HOME_BUTTON_ON_ROUTES = 'has_shown_home_button_on_routes';
     public const HAS_LOCAL_REPOSITORIES = 'has_local_repositories';
     public const ARE_GENERIC_ASSETS_VERSIONED = 'are_generic_assets_versioned';
-    public const IS_VENDOR_DIR_VERSIONED = 'is_vendor_dir_versioned';
+    public const HAS_VENDOR_DIR_VERSIONED = 'has_vendor_dir_versioned';
 
     public const SOME_EXPECTED_TABLE_IDS = 'some_expected_table_ids';
     public const EXPECTED_PUBLIC_URL = 'expected_public_url';
@@ -101,8 +100,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private $hasLinksToAltar = true;
     /** @var bool */
     private $hasButtons = true;
-    /** @var bool @deprecated */
-    private $hasShownHomeButton = false;
     /** @var bool */
     private $hasShownHomeButtonOnHomepage = true;
     /** @var bool */
@@ -116,7 +113,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     /** @var bool */
     private $areGenericAssetsVersioned = true;
     /** @var bool */
-    private $isVendorDirVersioned = true;
+    private $hasVendorDirVersioned = true;
 
     /** @var string */
     private $expectedWebName;
@@ -205,7 +202,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setTooShortSuccessNames($values);
         $this->setTooShortResultNames($values);
         $this->setHasCalculations($values);
-        $this->setHasShownHomeButton($values);
         $this->setHasShownHomeButtonOnHomepage($values);
         $this->setHasShownHomeButtonOnRoutes($values);
         $this->setHasButtons($values);
@@ -213,7 +209,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setHasMarkedResult($values);
         $this->setHasLocalRepositories($values);
         $this->setGenericAssetsVersioned($values);
-        $this->setIsVendorDirVersioned($values);
+        $this->setHasVendorDirVersioned($values);
         $this->setHasHomeButtonOnHomepage($values);
         $this->setHasHomeButtonOnRoutes($values);
         $this->setExpectedHomeButtonTargetFromRoutes($values);
@@ -401,11 +397,6 @@ TEXT
         $this->hasCalculations = (bool)($values[self::HAS_CALCULATIONS] ?? $this->hasCalculations);
     }
 
-    private function setHasShownHomeButton(array $values)
-    {
-        $this->hasShownHomeButton = (bool)($values[self::HAS_SHOWN_HOME_BUTTON] ?? $this->hasShownHomeButton);
-    }
-
     private function setHasShownHomeButtonOnHomepage(array $values)
     {
         $this->hasShownHomeButtonOnHomepage = (bool)($values[self::HAS_SHOWN_HOME_BUTTON_ON_HOMEPAGE] ?? $this->hasShownHomeButtonOnHomepage);
@@ -441,9 +432,9 @@ TEXT
         $this->areGenericAssetsVersioned = (bool)($values[self::ARE_GENERIC_ASSETS_VERSIONED] ?? $this->areGenericAssetsVersioned);
     }
 
-    private function setIsVendorDirVersioned(array $values)
+    private function setHasVendorDirVersioned(array $values)
     {
-        $this->isVendorDirVersioned = (bool)($values[self::IS_VENDOR_DIR_VERSIONED] ?? $this->isVendorDirVersioned);
+        $this->hasVendorDirVersioned = (bool)($values[self::HAS_VENDOR_DIR_VERSIONED] ?? $this->hasVendorDirVersioned);
     }
 
     private function setHasLocalLinks(array $values)
@@ -680,14 +671,9 @@ TEXT
         return $this->areGenericAssetsVersioned;
     }
 
-    public function isVendorDirVersioned(): bool
+    public function hasVendorDirVersioned(): bool
     {
-        return $this->isVendorDirVersioned;
-    }
-
-    public function hasShownHomeButton(): bool
-    {
-        return $this->hasShownHomeButton;
+        return $this->hasVendorDirVersioned;
     }
 
     public function hasShownHomeButtonOnHomepage(): bool

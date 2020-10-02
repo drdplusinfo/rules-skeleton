@@ -24,8 +24,6 @@ interface TestsConfigurationReader
 
     public function hasButtons(): bool;
 
-    public function hasShownHomeButton(): bool;
-
     public function hasShownHomeButtonOnHomepage(): bool;
 
     public function hasShownHomeButtonOnRoutes(): bool;
@@ -38,7 +36,7 @@ interface TestsConfigurationReader
 
     public function areGenericAssetsVersioned(): bool;
 
-    public function isVendorDirVersioned(): bool;
+    public function hasVendorDirVersioned(): bool;
 
     public function hasLocalLinks(): bool;
 
