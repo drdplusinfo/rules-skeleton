@@ -40,7 +40,7 @@ class MainContentTest extends AbstractContentTest
      * @param string $linkToDrdPlus
      * @param string $expectedLinkWithoutDiacritics
      */
-    public function Link_to_drdplus_is_has_removed_diacritics_from_hash(
+    public function Link_to_drdplus_has_removed_diacritics_from_hash(
         string $linkToDrdPlus,
         string $expectedLinkWithoutDiacritics
     ): void

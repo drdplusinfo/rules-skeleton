@@ -179,7 +179,8 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         foreach ($this->getExternalAnchors($htmlDocument) as $anchor) {
             if (!\preg_match(
                 '~(?<protocol>(?:https?:)?//)(?<host>[[:alpha:]]+[.]drdplus[.](?:info|loc))/[^#]*#(?<tableId>tabulka_\w+)~',
-                (string)$anchor->getAttribute('href'), $matches
+                (string)$anchor->getAttribute('href'),
+                $matches
             )) {
                 continue;
             }
@@ -196,7 +197,7 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
                 $iFrame->setAttribute('id', $remoteDrdPlusHost); // we will target that iframe via JS by remote host name
                 $iFrame->setAttribute(
                     'src',
-                    "{$protocol}{$remoteDrdPlusHost}/?tables=" . \htmlspecialchars(\implode(',', \array_unique($tableIds)))
+                    "{$protocol}{$remoteDrdPlusHost}/?tables=" . htmlspecialchars(implode(',', array_unique($tableIds)))
                 );
                 $iFrame->setAttribute('class', static::CLASS_HIDDEN);
             }
@@ -310,7 +311,6 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         /** @var Element $iFrame */
         foreach ($htmlDocument->getElementsByTagName('iframe') as $iFrame) {
             $iFrame->setAttribute('src', $this->turnToLocalLink($iFrame->getAttribute('src')));
-            $iFrame->setAttribute('id', \str_replace('drdplus.info', 'drdplus.loc', $iFrame->getAttribute('id')));
         }
 
         return $htmlDocument;
