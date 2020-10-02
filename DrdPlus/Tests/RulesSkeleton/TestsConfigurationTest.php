@@ -131,37 +131,13 @@ class TestsConfigurationTest extends AbstractContentTest
         );
     }
 
-    protected function createProjectUrlConfiguration(string $getPublicUrlPartRegexp, string $getPublicToLocalUrlReplacement): ProjectUrlConfiguration
-    {
-        return new class($getPublicUrlPartRegexp, $getPublicToLocalUrlReplacement) implements ProjectUrlConfiguration {
-            private $publicUrlPartRegexp;
-            private $publicToLocalUrlReplacement;
-
-            public function __construct(string $getPublicUrlPartRegexp, string $getPublicToLocalUrlReplacement)
-            {
-                $this->publicUrlPartRegexp = $getPublicUrlPartRegexp;
-                $this->publicToLocalUrlReplacement = $getPublicToLocalUrlReplacement;
-            }
-
-            public function getPublicUrlPartRegexp(): string
-            {
-                return $this->publicUrlPartRegexp;
-            }
-
-            public function getPublicToLocalUrlReplacement(): string
-            {
-                return $this->publicToLocalUrlReplacement;
-            }
-        };
-    }
-
     protected function getTestsConfigurationDefaultValues(): array
     {
         return [
             TestsConfiguration::SOME_EXPECTED_TABLE_IDS => [],
             TestsConfiguration::EXPECTED_PUBLIC_URL => 'https://www.drdplus.info',
-            TestsConfiguration::EXPECTED_WEB_NAME => 'foo',
-            TestsConfiguration::EXPECTED_PAGE_TITLE => 'foo',
+            TestsConfiguration::EXPECTED_WEB_NAME => 'Michelangelo',
+            TestsConfiguration::EXPECTED_PAGE_TITLE => 'Donatello',
             TestsConfiguration::EXPECTED_GOOGLE_ANALYTICS_ID => 'UA-UB-1',
         ];
     }

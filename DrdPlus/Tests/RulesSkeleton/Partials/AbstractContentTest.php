@@ -272,6 +272,30 @@ abstract class AbstractContentTest extends TestWithMockery
         );
     }
 
+    protected function createProjectUrlConfiguration(string $getPublicUrlPartRegexp, string $getPublicToLocalUrlReplacement): ProjectUrlConfiguration
+    {
+        return new class($getPublicUrlPartRegexp, $getPublicToLocalUrlReplacement) implements ProjectUrlConfiguration {
+            private $publicUrlPartRegexp;
+            private $publicToLocalUrlReplacement;
+
+            public function __construct(string $getPublicUrlPartRegexp, string $getPublicToLocalUrlReplacement)
+            {
+                $this->publicUrlPartRegexp = $getPublicUrlPartRegexp;
+                $this->publicToLocalUrlReplacement = $getPublicToLocalUrlReplacement;
+            }
+
+            public function getPublicUrlPartRegexp(): string
+            {
+                return $this->publicUrlPartRegexp;
+            }
+
+            public function getPublicToLocalUrlReplacement(): string
+            {
+                return $this->publicToLocalUrlReplacement;
+            }
+        };
+    }
+
     protected function fetchNonCachedContent(RulesApplication $rulesApplication = null, bool $backupGlobals = true): string
     {
         $originalGet = $_GET;

@@ -13,20 +13,28 @@ class HtmlHelperTest extends AbstractContentTest
     /**
      * @test
      * @dataProvider providePublicToLocalLinks
+     * @param string $publicUrlPartRegexp
+     * @param string $publicToLocalUrlReplacement
      * @param string $publicLink
      * @param string $expectedLocalLink
      */
-    public function I_can_turn_public_link_to_local(string $publicLink, string $expectedLocalLink): void
+    public function I_can_turn_public_link_to_local(
+        string $publicUrlPartRegexp,
+        string $publicToLocalUrlReplacement,
+        string $publicLink,
+        string $expectedLocalLink
+    ): void
     {
-        self::assertSame($expectedLocalLink, $this->getHtmlHelper()->turnToLocalLink($publicLink));
+        $projectUrlConfiguration = $this->createProjectUrlConfiguration($publicUrlPartRegexp, $publicToLocalUrlReplacement);
+        self::assertSame($expectedLocalLink, $this->createHtmlHelper($projectUrlConfiguration)->turnToLocalLink($publicLink));
     }
 
     public function providePublicToLocalLinks(): array
     {
         return [
-            ['https://www.drdplus.info', 'http://www.drdplus.loc'],
-            ['https://hranicar.drdplus.info', 'http://hranicar.drdplus.loc'],
-            ['https://bestiar.ppj.drdplus.info', 'http://bestiar.ppj.drdplus.loc'],
+            ['~https?://((?:[^.]+[.])*)example[.]com~', 'http://$1example.loc', 'https://www.example.com', 'http://www.example.loc'],
+            ['~https?://((?:[^.]+[.])*)example[.]com~', 'http://$1example.loc', 'https://free.example.com', 'http://free.example.loc'],
+            ['~https?://((?:[^.]+[.])*)example[.]com~', 'http://$1example.loc', 'https://paid.example.com', 'http://paid.example.loc'],
         ];
     }
 
@@ -77,12 +85,19 @@ class HtmlHelperTest extends AbstractContentTest
         }
     }
 
-    protected function createSut(): HtmlHelper
+    protected function createSut(
+        string $publicUrlPartRegexp = '~https?://((?:[^.]+[.])*)example[.]com~',
+        string $publicToLocalUrlReplacement = 'http://$1example.loc'
+    ): HtmlHelper
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
         $dirs = $this->getDirs();
-        return $htmlHelperClass::createFromGlobals($dirs, $this->getEnvironment(), $this->getConfiguration($dirs));
+        return $htmlHelperClass::createFromGlobals(
+            $dirs,
+            $this->getEnvironment(),
+            $this->createProjectUrlConfiguration($publicUrlPartRegexp, $publicToLocalUrlReplacement)
+        );
     }
 
     /**
@@ -212,7 +227,10 @@ HTML
      */
     public function I_can_turn_public_drd_plus_links_to_locals(): void
     {
-        $htmlHelper = $this->createSut();
+        $htmlHelper = $this->createSut(
+            '~https?://((?:[^.]+[.])*)drdplus[.]info~',
+            'http://$1drdplus.loc'
+        );
 
         $htmlDocument = new HtmlDocument(<<<HTML
         <!DOCTYPE html> 
