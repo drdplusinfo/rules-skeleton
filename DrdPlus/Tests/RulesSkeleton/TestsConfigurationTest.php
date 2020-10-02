@@ -2,6 +2,7 @@
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\Configurations\ProjectUrlConfiguration;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
 
@@ -119,8 +120,39 @@ class TestsConfigurationTest extends AbstractContentTest
     protected function createTestsConfiguration(array $config = []): TestsConfiguration
     {
         $sutClass = static::getSutClass();
+        $projectUrlConfiguration = $this->createProjectUrlConfiguration(
+            '~https?://((?:[^.]+[.])*)drdplus[.]info~',
+            'http://$1drdplus.loc'
+        );
 
-        return new $sutClass(\array_merge($this->getTestsConfigurationDefaultValues(), $config), $this->getHtmlHelper());
+        return new $sutClass(
+            \array_merge($this->getTestsConfigurationDefaultValues(), $config),
+            $this->createHtmlHelper($projectUrlConfiguration)
+        );
+    }
+
+    protected function createProjectUrlConfiguration(string $getPublicUrlPartRegexp, string $getPublicToLocalUrlReplacement): ProjectUrlConfiguration
+    {
+        return new class($getPublicUrlPartRegexp, $getPublicToLocalUrlReplacement) implements ProjectUrlConfiguration {
+            private $publicUrlPartRegexp;
+            private $publicToLocalUrlReplacement;
+
+            public function __construct(string $getPublicUrlPartRegexp, string $getPublicToLocalUrlReplacement)
+            {
+                $this->publicUrlPartRegexp = $getPublicUrlPartRegexp;
+                $this->publicToLocalUrlReplacement = $getPublicToLocalUrlReplacement;
+            }
+
+            public function getPublicUrlPartRegexp(): string
+            {
+                return $this->publicUrlPartRegexp;
+            }
+
+            public function getPublicToLocalUrlReplacement(): string
+            {
+                return $this->publicToLocalUrlReplacement;
+            }
+        };
     }
 
     protected function getTestsConfigurationDefaultValues(): array

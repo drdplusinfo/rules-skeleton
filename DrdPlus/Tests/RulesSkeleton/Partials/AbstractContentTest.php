@@ -4,6 +4,7 @@ namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
 use DeviceDetector\Parser\Bot;
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\ProjectUrlConfiguration;
 use DrdPlus\RulesSkeleton\ContentIrrelevantParametersFilter;
 use DrdPlus\RulesSkeleton\ContentIrrelevantRequestAliases;
 use DrdPlus\RulesSkeleton\CookiesService;
@@ -231,12 +232,14 @@ abstract class AbstractContentTest extends TestWithMockery
     }
 
     /**
+     * @param ProjectUrlConfiguration|null $projectUrlConfiguration
      * @param Dirs|null $dirs
      * @param string|null $forcedMode
      * @param bool $shouldHideCovered
      * @return HtmlHelper|\Mockery\MockInterface
      */
     protected function createHtmlHelper(
+        ProjectUrlConfiguration $projectUrlConfiguration = null,
         Dirs $dirs = null,
         string $forcedMode = null,
         bool $shouldHideCovered = false
@@ -244,9 +247,10 @@ abstract class AbstractContentTest extends TestWithMockery
     {
         $dirs = $dirs ?? $this->getDirs();
         $env = $this->createEnvironment($forcedMode);
+        $projectUrlConfiguration = $projectUrlConfiguration ?? $this->createCustomConfiguration([], $dirs);
         return new HtmlHelper(
             $dirs,
-            $this->getConfiguration($dirs),
+            $projectUrlConfiguration,
             $env->isOnForcedDevelopmentMode(),
             $shouldHideCovered
         );

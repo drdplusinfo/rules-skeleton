@@ -179,7 +179,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setHasHeadings($values);
         $this->setHasAuthors($values);
         $this->setPublicUrl($values);
-        $this->setLocalUrl($this->expectedPublicUrl, $htmlHelper);
+        $this->setLocalUrl($this->getExpectedPublicUrl(), $htmlHelper);
         $this->setHasExternalAnchorsWithHashes($values);
         $this->setHasCustomBodyContent($values);
         $this->setHasNotes($values);
