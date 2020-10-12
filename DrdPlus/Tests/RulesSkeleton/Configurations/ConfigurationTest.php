@@ -3,6 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\GatewayConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
@@ -39,7 +40,7 @@ class ConfigurationTest extends AbstractContentTest
         $this->createYamlDistributionConfig($distributionYamlContent, $yamlTestingDir);
         $dirs = $this->createDirs($yamlTestingDir);
         $configuration = Configuration::createFromYml($dirs);
-        self::assertSame($expectedYamlContent, $configuration->getSettings());
+        self::assertSame($expectedYamlContent, $configuration->getValues());
         self::assertSame($expectedYamlContent[Configuration::GOOGLE][Configuration::ANALYTICS_ID], $configuration->getGoogleAnalyticsId());
         self::assertSame($dirs, $configuration->getDirs());
     }
@@ -107,7 +108,9 @@ class ConfigurationTest extends AbstractContentTest
                 ],
                 Configuration::NAME => 'Foo',
                 Configuration::TITLE_SMILEY => '',
-                Configuration::PROTECTED_ACCESS => true,
+                Configuration::GATEWAY => [
+                    GatewayConfiguration::PROTECTED_ACCESS => true,
+                ],
                 Configuration::ESHOP_URL => 'https://example.com',
             ],
             Configuration::GOOGLE => [Configuration::ANALYTICS_ID => 'UA-121206931-999'],
@@ -263,12 +266,12 @@ class ConfigurationTest extends AbstractContentTest
     {
         $settings = $this->getSomeCompleteSettings();
 
-        $settings[Configuration::WEB][Configuration::PROTECTED_ACCESS] = false;
+        $settings[Configuration::WEB][Configuration::GATEWAY][GatewayConfiguration::PROTECTED_ACCESS] = false;
         unset($settings[Configuration::WEB][Configuration::ESHOP_URL]);
 
         $configuration = new Configuration($this->getDirs(), $settings);
 
-        self::assertFalse($configuration->hasProtectedAccess());
+        self::assertFalse($configuration->getGatewayConfiguration()->hasProtectedAccess());
         self::assertSame('', $configuration->getEshopUrl());
     }
 
@@ -280,7 +283,7 @@ class ConfigurationTest extends AbstractContentTest
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidEshopUrl::class);
         $settings = $this->getSomeCompleteSettings();
 
-        $settings[Configuration::WEB][Configuration::PROTECTED_ACCESS] = true;
+        $settings[Configuration::WEB][Configuration::GATEWAY][GatewayConfiguration::PROTECTED_ACCESS] = true;
         unset($settings[Configuration::WEB][Configuration::ESHOP_URL]);
 
         new Configuration($this->getDirs(), $settings);

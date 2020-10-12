@@ -112,13 +112,21 @@ JSON
 
     private function projectConfigIsCopied(string $dir)
     {
-        $projectConfigFile = $this->getProjectRoot() . '/config.distribution.yml';
-        self::assertFileExists($projectConfigFile);
+        $originalProjectConfigFile = $this->getProjectRoot() . '/config.distribution.yml';
+        self::assertFileExists($originalProjectConfigFile);
 
         $copiedProjectConfigFile = $dir . '/config.distribution.yml';
 
         self::assertFileExists($copiedProjectConfigFile);
-        self::assertFileEquals($projectConfigFile, $copiedProjectConfigFile);
+        self::assertFileEquals(
+            $originalProjectConfigFile,
+            $copiedProjectConfigFile,
+            sprintf(
+                "Expected injected configuration '%s' to be same as original '%s'",
+                $copiedProjectConfigFile,
+                $originalProjectConfigFile
+            )
+        );
     }
 
     private function cacheDirIsCreatedWithGitIgnore(string $dir)

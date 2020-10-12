@@ -8,7 +8,7 @@ use DrdPlus\RulesSkeleton\UsagePolicy;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringInterface;
 
-class Pass extends StrictObject implements StringInterface
+class Gateway extends StrictObject implements StringInterface
 {
     /** @var Configuration */
     private $configuration;
@@ -57,14 +57,14 @@ HTML;
         /** @noinspection PhpUnusedLocalVariableInspection */
         $request = $this->request;
         ob_start();
-        include __DIR__ . '/content/pass.php';
+        include __DIR__ . '/content/gateway.php';
         return ob_get_clean();
     }
 
     private function getFooterString(): string
     {
         ob_start();
-        include __DIR__ . '/content/pass-footer.html';
+        include __DIR__ . '/content/gateway-footer.html';
         return ob_get_clean();
     }
 }

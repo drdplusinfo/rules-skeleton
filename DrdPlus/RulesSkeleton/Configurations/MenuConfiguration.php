@@ -2,9 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Configurations;
 
-use Granam\Strict\Object\StrictObject;
-
-class MenuConfiguration extends StrictObject
+class MenuConfiguration extends SubMenu
 {
     public const POSITION_FIXED = 'position_fixed';
     public const SHOW_HOME_BUTTON_ON_HOMEPAGE = 'show_home_button_on_homepage';
@@ -13,7 +11,7 @@ class MenuConfiguration extends StrictObject
     public const ITEMS = 'items';
 
     /** @var array */
-    private $settings;
+    private $values;
 
     public function __construct(array $settings, array $pathToMenu)
     {
@@ -22,45 +20,13 @@ class MenuConfiguration extends StrictObject
         $this->guardShowOfHomeButtonOnRoutesIsSet($settings, $pathToMenu);
         $this->guardHomeButtonTargetIsSet($settings, $pathToMenu);
         $this->guardItemsAreArrayOrNothing($settings, $pathToMenu);
-        $this->settings = $settings;
+        $this->values = $settings;
     }
 
     protected function guardFixedMenuPositionUsageIsSet(array $settings, array $pathToMenu): void
     {
         $this->guardConfigurationSettingIsSet(static::POSITION_FIXED, $settings, $pathToMenu);
         $this->guardConfigurationSettingIsBoolean(static::POSITION_FIXED, $settings, $pathToMenu);
-    }
-
-    protected function guardConfigurationSettingIsSet(string $settingsKey, array $settings, array $pathToMenu): void
-    {
-        if (($settings[$settingsKey] ?? null) === null) {
-            throw new Exceptions\InvalidConfiguration(
-                sprintf(
-                    "Expected explicitly defined configuration '%s', got nothing",
-                    $this->getConfigurationPath($settingsKey, $pathToMenu)
-                )
-            );
-        }
-    }
-
-    protected function guardConfigurationSettingIsBoolean(string $settingsKey, array $settings, array $pathToMenu): void
-    {
-        if (!is_bool($settings[$settingsKey])) {
-            throw new Exceptions\InvalidConfiguration(
-                sprintf(
-                    "Expected configuration '%s' to be a boolean, got %s",
-                    $this->getConfigurationPath($settingsKey, $pathToMenu),
-                    var_export($settings[$settingsKey], true)
-                )
-            );
-        }
-    }
-
-    protected function getConfigurationPath(string $configurationKey, array $pathToMenu): string
-    {
-        $configurationPath = $pathToMenu;
-        $configurationPath[] = $configurationKey;
-        return implode('.', $configurationPath);
     }
 
     protected function guardShowOfHomeButtonOnHomepageIsSet(array $settings, array $pathToMenu): void
@@ -81,19 +47,6 @@ class MenuConfiguration extends StrictObject
         $this->guardConfigurationSettingIsString(static::HOME_BUTTON_TARGET, $settings, $pathToMenu);
     }
 
-    protected function guardConfigurationSettingIsString(string $settingsKey, array $settings, array $pathToMenu): void
-    {
-        if (!is_string($settings[$settingsKey]) || $settings[$settingsKey] === '') {
-            throw new Exceptions\InvalidConfiguration(
-                sprintf(
-                    "Expected configuration '%s' to be a non-empty string, got %s",
-                    $this->getConfigurationPath($settingsKey, $pathToMenu),
-                    var_export($settings[$settingsKey], true)
-                )
-            );
-        }
-    }
-
     protected function guardItemsAreArrayOrNothing(array $settings, array $pathToMenu)
     {
         if (!array_key_exists(static::ITEMS, $settings)) {
@@ -102,54 +55,29 @@ class MenuConfiguration extends StrictObject
         $this->guardConfigurationSettingIsObject(static::ITEMS, $settings, $pathToMenu);
     }
 
-    protected function guardConfigurationSettingIsObject(string $settingsKey, array $settings, array $pathToMenu): void
+    public function getValues(): array
     {
-        if (!is_array($settings[$settingsKey])) {
-            throw new Exceptions\InvalidConfiguration(
-                sprintf(
-                    "Expected configuration '%s' to be a non-empty array, got %s",
-                    $this->getConfigurationPath($settingsKey, $pathToMenu),
-                    var_export($settings[$settingsKey], true)
-                )
-            );
-        }
-        foreach ($settings[$settingsKey] as $itemKey => $itemValue) {
-            if (!is_string($itemKey)) {
-                throw new Exceptions\InvalidConfiguration(
-                    sprintf(
-                        "Expected configuration '%s' to be an array indexed only by strings, got key %s (with value '%s')",
-                        $this->getConfigurationPath($settingsKey, $pathToMenu),
-                        var_export($itemValue, true),
-                        $itemValue
-                    )
-                );
-            }
-        }
-    }
-
-    public function getSettings(): array
-    {
-        return $this->settings;
+        return $this->values;
     }
 
     public function isPositionFixed(): bool
     {
-        return (bool)$this->getSettings()[static::POSITION_FIXED];
+        return (bool)$this->getValues()[static::POSITION_FIXED];
     }
 
     public function isShowHomeButtonOnHomepage(): bool
     {
-        return ($this->getSettings()[static::SHOW_HOME_BUTTON_ON_HOMEPAGE] ?? false);
+        return ($this->getValues()[static::SHOW_HOME_BUTTON_ON_HOMEPAGE] ?? false);
     }
 
     public function isShowHomeButtonOnRoutes(): bool
     {
-        return ($this->getSettings()[static::SHOW_HOME_BUTTON_ON_ROUTES] ?? false);
+        return ($this->getValues()[static::SHOW_HOME_BUTTON_ON_ROUTES] ?? false);
     }
 
     public function getHomeButtonTarget(): string
     {
-        return $this->getSettings()[static::HOME_BUTTON_TARGET];
+        return $this->getValues()[static::HOME_BUTTON_TARGET];
     }
 
     /**
@@ -157,6 +85,6 @@ class MenuConfiguration extends StrictObject
      */
     public function getItems(): array
     {
-        return $this->getSettings()[static::ITEMS] ?? [];
+        return $this->getValues()[static::ITEMS] ?? [];
     }
 }

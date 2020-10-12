@@ -18,7 +18,7 @@ class RulesContent extends StrictObject implements StringInterface
     public const TABLES = 'tables';
     public const FULL = ' full';
     public const PDF = 'pdf';
-    public const PASS = 'pass';
+    public const GATEWAY = 'gateway';
     public const NOT_FOUND = 'not_found';
 
     /** @var HtmlContentInterface */
@@ -158,7 +158,7 @@ class RulesContent extends StrictObject implements StringInterface
 
     public function containsPass(): bool
     {
-        return $this->contentType === self::PASS;
+        return $this->contentType === self::GATEWAY;
     }
 
     public function containsNotFound(): bool

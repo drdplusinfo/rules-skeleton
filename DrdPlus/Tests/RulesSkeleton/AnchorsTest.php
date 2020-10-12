@@ -521,7 +521,7 @@ class AnchorsTest extends AbstractContentTest
                 $invalidAnchors,
                 'Some anchors from content points to invalid links ' . implode(',', $invalidAnchors)
             );
-            $invalidAnchors = $this->parseInvalidAnchors($this->getPassContent());
+            $invalidAnchors = $this->parseInvalidAnchors($this->getGatewayContent());
             self::assertCount(
                 0,
                 $invalidAnchors,

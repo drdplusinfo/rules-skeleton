@@ -10,8 +10,8 @@ use DrdPlus\RulesSkeleton\Web\EmptyMenu;
 use DrdPlus\RulesSkeleton\Web\Head;
 use DrdPlus\RulesSkeleton\Web\Menu;
 use DrdPlus\RulesSkeleton\Web\NotFoundContent;
-use DrdPlus\RulesSkeleton\Web\Pass;
-use DrdPlus\RulesSkeleton\Web\PassContent;
+use DrdPlus\RulesSkeleton\Web\Gateway;
+use DrdPlus\RulesSkeleton\Web\GatewayContent;
 use DrdPlus\RulesSkeleton\Web\RulesMainContent;
 use DrdPlus\RulesSkeleton\Web\TablesContent;
 use DrdPlus\RulesSkeleton\Web\Tools\WebFiles;
@@ -108,7 +108,7 @@ class ServicesContainer extends StrictObject
     private $notFoundCache;
     /** @var UsagePolicy */
     private $usagePolicy;
-    /** @var Pass */
+    /** @var Gateway */
     private $pass;
     /** @var RulesUrlMatcher */
     private $rulesUrlMatcher;
@@ -246,10 +246,10 @@ class ServicesContainer extends StrictObject
         return $this->rulesPdfWebContent;
     }
 
-    public function getPassContent(): PassContent
+    public function getPassContent(): GatewayContent
     {
         if ($this->passContent === null) {
-            $this->passContent = new PassContent(
+            $this->passContent = new GatewayContent(
                 $this->getHtmlHelper(),
                 $this->getEnvironment(),
                 $this->getHead(),
@@ -518,7 +518,7 @@ class ServicesContainer extends StrictObject
             $this->passWebCache = new WebCache(
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
-                WebCache::PASS,
+                WebCache::GATEWAY,
                 $this->getRequest(),
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
@@ -535,7 +535,7 @@ class ServicesContainer extends StrictObject
             $this->passedWebCache = new WebCache(
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
-                WebCache::PASSED,
+                WebCache::PASSED_GATEWAY,
                 $this->getRequest(),
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
@@ -563,10 +563,10 @@ class ServicesContainer extends StrictObject
         return $this->notFoundCache;
     }
 
-    public function getPass(): Pass
+    public function getPass(): Gateway
     {
         if ($this->pass === null) {
-            $this->pass = new Pass($this->getConfiguration(), $this->getUsagePolicy(), $this->getRequest());
+            $this->pass = new Gateway($this->getConfiguration(), $this->getUsagePolicy(), $this->getRequest());
         }
         return $this->pass;
     }

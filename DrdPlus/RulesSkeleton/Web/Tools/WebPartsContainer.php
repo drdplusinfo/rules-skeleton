@@ -7,8 +7,8 @@ use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\Web\DebugContactsBody;
 use DrdPlus\RulesSkeleton\Web\NotFoundBody;
-use DrdPlus\RulesSkeleton\Web\Pass;
-use DrdPlus\RulesSkeleton\Web\PassBody;
+use DrdPlus\RulesSkeleton\Web\Gateway;
+use DrdPlus\RulesSkeleton\Web\GatewayBody;
 use DrdPlus\RulesSkeleton\Web\PdfBody;
 use DrdPlus\RulesSkeleton\Web\RulesMainBody;
 use DrdPlus\RulesSkeleton\Web\TablesBody;
@@ -16,7 +16,7 @@ use Granam\Strict\Object\StrictObject;
 
 class WebPartsContainer extends StrictObject
 {
-    /** @var Pass */
+    /** @var Gateway */
     private $pass;
     /** @var Dirs */
     private $dirs;
@@ -26,7 +26,7 @@ class WebPartsContainer extends StrictObject
     private $request;
     /** @var WebFiles */
     private $webFiles;
-    /** @var PassBody */
+    /** @var GatewayBody */
     private $passBody;
     /** @var DebugContactsBody */
     private $debugContactsBody;
@@ -41,7 +41,7 @@ class WebPartsContainer extends StrictObject
     /** @var TablesBody */
     private $tablesBody;
 
-    public function __construct(Pass $pass, WebFiles $webFiles, Dirs $dirs, HtmlHelper $htmlHelper, Request $request)
+    public function __construct(Gateway $pass, WebFiles $webFiles, Dirs $dirs, HtmlHelper $htmlHelper, Request $request)
     {
         $this->pass = $pass;
         $this->dirs = $dirs;
@@ -50,10 +50,10 @@ class WebPartsContainer extends StrictObject
         $this->webFiles = $webFiles;
     }
 
-    public function getPassBody(): PassBody
+    public function getPassBody(): GatewayBody
     {
         if ($this->passBody === null) {
-            $this->passBody = new PassBody($this->pass);
+            $this->passBody = new GatewayBody($this->pass);
         }
         return $this->passBody;
     }

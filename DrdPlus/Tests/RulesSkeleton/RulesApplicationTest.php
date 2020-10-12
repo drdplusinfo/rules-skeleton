@@ -143,7 +143,7 @@ class RulesApplicationTest extends AbstractContentTest
     public function I_will_be_redirected_via_html_meta_on_trial(string $requestType): void
     {
         self::assertCount(0, $this->getMetaRefreshes($this->getHtmlDocument()), 'No meta tag with refresh meaning expected so far');
-        $this->passOut();
+        $this->goOut();
         $rulesApplication = null;
         $now = \time();
         $trialExpiredAt = $now + 240 + 1;
@@ -193,7 +193,7 @@ class RulesApplicationTest extends AbstractContentTest
     public function I_will_not_be_redirected_as_owner_via_html_meta_even_on_trial(): void
     {
         self::assertCount(0, $this->getMetaRefreshes($this->getHtmlDocument()), 'No meta tag with refresh meaning expected');
-        $this->passOut();
+        $this->goOut();
         self::assertNull($_POST[Request::TRIAL] ?? null, 'Globals have not been reset');
         $rulesApplication = $this->createRulesApplication($servicesContainer = $this->createServicesContainer());
         $servicesContainer->getUsagePolicy()->activateTrial(new \DateTimeImmutable('+1 year'));

@@ -26,7 +26,7 @@
     "ext-posix": "*",
     "ext-yaml": "*",
     "ext-zlib": "*",
-    "composer-plugin-api": "^1.0",
+    "composer-plugin-api": "^1.1",
     "drdplus/web-versions": "^1.0",
     "erusev/parsedown": "^1.7",
     "granam/git": "^1.2",

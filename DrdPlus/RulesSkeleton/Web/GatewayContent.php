@@ -8,16 +8,16 @@ use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\Content;
 use Granam\WebContentBuilder\Web\HeadInterface;
 
-class PassContent extends Content
+class GatewayContent extends Content
 {
     /** @var HtmlHelper */
     protected $htmlHelper;
     /** @var Environment */
     protected $environment;
 
-    public function __construct(HtmlHelper $htmlHelper, Environment $environment, HeadInterface $head, PassBody $passBody)
+    public function __construct(HtmlHelper $htmlHelper, Environment $environment, HeadInterface $head, GatewayBody $gatewayBody)
     {
-        parent::__construct($htmlHelper, $head, $passBody);
+        parent::__construct($htmlHelper, $head, $gatewayBody);
         $this->htmlHelper = $htmlHelper;
         $this->environment = $environment;
     }

@@ -8,8 +8,8 @@ use Granam\Git\Git;
 class WebCache extends Cache
 {
     public const TABLES = 'tables';
-    public const PASS = 'pass';
-    public const PASSED = 'passed';
+    public const GATEWAY = 'gateway';
+    public const PASSED_GATEWAY = 'passed_gateway';
     public const NOT_FOUND = 'not_found';
     public const DUMMY = 'dummy';
     public const ROUTER = 'router';

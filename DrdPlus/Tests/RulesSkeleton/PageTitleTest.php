@@ -18,8 +18,8 @@ class PageTitleTest extends AbstractContentTest
         self::assertSame($expectedPageTitle, $currentPageTitle, 'Current page title differs from expected one');
         $rulesTitle = $this->getCurrentPageTitle($this->getHtmlDocument());
         self::assertNotEmpty($rulesTitle, 'Rules title is missing');
-        $passTitle = $this->getCurrentPageTitle($this->getPassDocument());
-        self::assertNotEmpty($passTitle, 'Pass title is missing');
-        self::assertSame($rulesTitle, $passTitle, 'Rules and pass titles should be the same');
+        $gatewayTitle = $this->getCurrentPageTitle($this->getGatewayDocument());
+        self::assertNotEmpty($gatewayTitle, 'Gateway title is missing');
+        self::assertSame($rulesTitle, $gatewayTitle, 'Rules and gateway titles should be the same');
     }
 }

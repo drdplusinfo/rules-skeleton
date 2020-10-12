@@ -6,7 +6,7 @@ use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\WebContentBuilder\HtmlDocument;
 
-class PassContentTest extends AbstractContentTest
+class GatewayContentTest extends AbstractContentTest
 {
     /**
      * @test
@@ -20,22 +20,22 @@ class PassContentTest extends AbstractContentTest
         }
         $someHeadingsChecked = false;
         foreach (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as $headingTag) {
-            foreach ($this->getPassDocument()->getElementsByTagName($headingTag) as $heading) {
+            foreach ($this->getGatewayDocument()->getElementsByTagName($headingTag) as $heading) {
                 self::assertCount(
                     0,
                     $heading->getElementsByTagName('a'),
-                    'No anchors expected in pass heading ' . $heading->outerHTML
+                    'No anchors expected in gateway heading ' . $heading->outerHTML
                 );
                 $someHeadingsChecked = true;
             }
         }
-        self::assertTrue($someHeadingsChecked, 'Some headings expected on pass');
+        self::assertTrue($someHeadingsChecked, 'Some headings expected on gateway');
     }
 
     /**
      * @test
      */
-    public function Pass_does_not_reset_requested_path_and_query(): void
+    public function Gateway_does_not_reset_requested_path_and_query(): void
     {
         if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
             self::assertFalse(false, 'Nothing to test here');
@@ -49,8 +49,8 @@ class PassContentTest extends AbstractContentTest
         $content = $this->fetchContentFromUrl($url, true)['content'];
         self::assertNotEmpty($content, 'No content fetched from ' . $url);
 
-        $pass = new HtmlDocument($content);
-        foreach ($pass->getElementsByTagName('form') as $form) {
+        $gatewayDocument = new HtmlDocument($content);
+        foreach ($gatewayDocument->getElementsByTagName('form') as $form) {
             $action = $form->getAttribute('action');
             if (!preg_match('~^/[^/]*$~', $action)) {
                 continue; // not a local link

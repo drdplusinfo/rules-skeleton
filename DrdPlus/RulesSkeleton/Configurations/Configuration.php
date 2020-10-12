@@ -5,7 +5,7 @@ namespace DrdPlus\RulesSkeleton\Configurations;
 use Granam\Strict\Object\StrictObject;
 use Granam\YamlReader\YamlFileReader;
 
-class Configuration extends StrictObject implements ProjectUrlConfiguration
+class Configuration extends StrictObject implements ProjectUrlConfiguration, ConfigurationValues
 {
     public const CONFIG_LOCAL_YML = 'config.local.yml';
     public const CONFIG_DISTRIBUTION_YML = 'config.distribution.yml';
@@ -35,17 +35,18 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
     public const SHOW_HOME_BUTTON_ON_HOMEPAGE = 'show_home_button_on_homepage';
     public const SHOW_HOME_BUTTON_ON_ROUTES = 'show_home_button_on_routes';
     public const HOME_BUTTON_TARGET = 'home_button_target';
+    public const PROTECTED_ACCESS = 'protected_access';
 
     // web
     public const WEB = 'web';
     public const NAME = 'name';
     public const TITLE_SMILEY = 'title_smiley';
-    public const PROTECTED_ACCESS = 'protected_access';
     public const ESHOP_URL = 'eshop_url';
     public const FAVICON = 'favicon';
     public const DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REGEXP = 'default_public_to_local_url_part_regexp';
     public const DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT = 'default_public_to_local_url_part_replacement';
     public const MENU = 'menu';
+    public const GATEWAY = 'gateway';
     // google
     public const GOOGLE = 'google';
     public const ANALYTICS_ID = 'analytics_id';
@@ -58,57 +59,76 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
     private $dirs;
     /** @var MenuConfiguration */
     private $menuConfiguration;
+    /** @var GatewayConfiguration */
+    private $gatewayConfiguration;
     /** @var array */
-    private $settings;
+    private $values;
 
     /**
      * @param Dirs $dirs
-     * @param array $settings
+     * @param array $values
      */
-    public function __construct(Dirs $dirs, array $settings)
+    public function __construct(Dirs $dirs, array $values)
     {
         $this->dirs = $dirs;
-        $this->menuConfiguration = $this->createMenuConfiguration($settings);
+        $this->menuConfiguration = $this->createMenuConfiguration($values);
+        $this->gatewayConfiguration = $this->createGatewayConfiguration($values);
 
-        $this->guardValidGoogleAnalyticsId($settings);
-        $this->guardNonEmptyWebName($settings);
-        $this->guardSetTitleSmiley($settings);
-        $this->guardValidEshopUrl($settings);
-        $this->guardSetProtectedAccess($settings);
-        $this->guardValidFaviconUrl($settings);
-        $this->settings = $settings;
+        $this->guardValidGoogleAnalyticsId($values);
+        $this->guardNonEmptyWebName($values);
+        $this->guardSetTitleSmiley($values);
+        $this->guardValidEshopUrl($values);
+        $this->guardValidFaviconUrl($values);
+        $this->values = $values;
     }
 
     // MENU
 
-    protected function createMenuConfiguration(array $settings): MenuConfiguration
+    protected function createMenuConfiguration(array $values): MenuConfiguration
     {
-        $this->guardFixedMenuPositionIsNotSetByOldWay($settings);
-        $this->guardShowHomeButtonIsNotSetByOldWay($settings);
-        $this->guardShowHomeButtonOnHomepageIsNotSetByOldWay($settings);
-        $this->guardShowHomeButtonOnRoutesIsNotSetByOldWay($settings);
-        $this->guardHomeButtonTargetIsNotSetByOldWay($settings);
+        $this->guardFixedMenuPositionIsNotSetByOldWay($values);
+        $this->guardShowHomeButtonIsNotSetByOldWay($values);
+        $this->guardShowHomeButtonOnHomepageIsNotSetByOldWay($values);
+        $this->guardShowHomeButtonOnRoutesIsNotSetByOldWay($values);
+        $this->guardHomeButtonTargetIsNotSetByOldWay($values);
 
-        $this->guardMenuConfigurationExists($settings);
-        return new MenuConfiguration($settings[static::WEB][static::MENU], [static::WEB, static::MENU]);
+        $this->guardMenuConfigurationExists($values);
+        return new MenuConfiguration($values[static::WEB][static::MENU], [static::WEB, static::MENU]);
     }
 
-    protected function guardMenuConfigurationExists(array $settings)
+    protected function createGatewayConfiguration(array $values): GatewayConfiguration
     {
-        if (!is_array($settings[static::WEB][static::MENU] ?? null)) {
+        $this->guardProtectedAccessIsNotSetByOldWay($values);
+
+        $this->guardGatewayConfigurationExists($values);
+        return new GatewayConfiguration($values[static::WEB][static::GATEWAY], [static::WEB, static::GATEWAY]);
+    }
+
+    protected function guardMenuConfigurationExists(array $values)
+    {
+        if (!is_array($values[static::WEB][static::MENU] ?? null)) {
             throw new Exceptions\InvalidConfiguration(
                 sprintf("Missing configuration '%s'", implode('.', [static::WEB, static::MENU]))
             );
         }
     }
 
+    protected function guardGatewayConfigurationExists(array $values)
+    {
+        if (!is_array($values[static::WEB][static::GATEWAY] ?? null)) {
+            throw new Exceptions\InvalidConfiguration(
+                sprintf("Missing configuration '%s'", implode('.', [static::WEB, static::GATEWAY]))
+            );
+        }
+    }
+
     /**
-     * @param array $settings
+     * @param array $values
      * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\ConfigurationDirectiveDeprecated
      */
-    protected function guardFixedMenuPositionIsNotSetByOldWay(array $settings): void
+    protected function guardFixedMenuPositionIsNotSetByOldWay(array $values): void
     {
-        if (array_key_exists(static::MENU_POSITION_FIXED, $settings[static::WEB])) {
+        if (array_key_exists(static::MENU_POSITION_FIXED, $values[static::WEB])) {
             $this->throwDeprecatedConfigurationUsage(static::MENU_POSITION_FIXED, [static::WEB, static::MENU, MenuConfiguration::POSITION_FIXED]);
         }
     }
@@ -120,9 +140,9 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
         );
     }
 
-    protected function guardShowHomeButtonIsNotSetByOldWay(array $settings): void
+    protected function guardShowHomeButtonIsNotSetByOldWay(array $values): void
     {
-        if (array_key_exists(self::SHOW_HOME_BUTTON, $settings[static::WEB])) {
+        if (array_key_exists(self::SHOW_HOME_BUTTON, $values[static::WEB])) {
             $this->throwDeprecatedHomeButtonUsage();
         }
     }
@@ -139,9 +159,9 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
         );
     }
 
-    protected function guardShowHomeButtonOnHomepageIsNotSetByOldWay(array $settings)
+    protected function guardShowHomeButtonOnHomepageIsNotSetByOldWay(array $values)
     {
-        if (array_key_exists(self::SHOW_HOME_BUTTON_ON_HOMEPAGE, $settings[static::WEB])) {
+        if (array_key_exists(self::SHOW_HOME_BUTTON_ON_HOMEPAGE, $values[static::WEB])) {
             $this->throwDeprecatedHomeButtonOnHomepageUsage();
         }
     }
@@ -154,9 +174,9 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
         );
     }
 
-    protected function guardShowHomeButtonOnRoutesIsNotSetByOldWay(array $settings)
+    protected function guardShowHomeButtonOnRoutesIsNotSetByOldWay(array $values)
     {
-        if (array_key_exists(self::SHOW_HOME_BUTTON_ON_ROUTES, $settings[static::WEB])) {
+        if (array_key_exists(self::SHOW_HOME_BUTTON_ON_ROUTES, $values[static::WEB])) {
             $this->throwDeprecatedHomeButtonOnRoutesUsage();
         }
     }
@@ -169,11 +189,26 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
         );
     }
 
-    protected function guardHomeButtonTargetIsNotSetByOldWay(array $settings)
+    protected function guardHomeButtonTargetIsNotSetByOldWay(array $values)
     {
-        if (array_key_exists(self::HOME_BUTTON_TARGET, $settings[static::WEB])) {
+        if (array_key_exists(self::HOME_BUTTON_TARGET, $values[static::WEB])) {
             $this->throwDeprecatedHomeButtonTargetUsage();
         }
+    }
+
+    protected function guardProtectedAccessIsNotSetByOldWay(array $values)
+    {
+        if (array_key_exists(self::PROTECTED_ACCESS, $values[static::WEB])) {
+            $this->throwDeprecatedProtectedAccessUsage();
+        }
+    }
+
+    protected function throwDeprecatedProtectedAccessUsage()
+    {
+        $this->throwDeprecatedConfigurationUsage(
+            static::PROTECTED_ACCESS,
+            [static::WEB, static::PROTECTED_ACCESS, GatewayConfiguration::PROTECTED_ACCESS]
+        );
     }
 
     protected function throwDeprecatedHomeButtonTargetUsage()
@@ -187,30 +222,30 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
     // WEB
 
     /**
-     * @param array $settings
+     * @param array $values
      * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidGoogleAnalyticsId
      */
-    protected function guardValidGoogleAnalyticsId(array $settings): void
+    protected function guardValidGoogleAnalyticsId(array $values): void
     {
-        if (!\preg_match('~^UA-121206931-\d+$~', $settings[static::GOOGLE][static::ANALYTICS_ID] ?? '')) {
+        if (!\preg_match('~^UA-121206931-\d+$~', $values[static::GOOGLE][static::ANALYTICS_ID] ?? '')) {
             throw new Exceptions\InvalidGoogleAnalyticsId(
                 sprintf(
                     'Expected something like UA-121206931-1 in configuration %s.%s, got %s',
                     static::GOOGLE,
                     static::ANALYTICS_ID,
-                    $settings[static::GOOGLE][static::ANALYTICS_ID] ?? 'nothing'
+                    $values[static::GOOGLE][static::ANALYTICS_ID] ?? 'nothing'
                 )
             );
         }
     }
 
     /**
-     * @param array $settings
+     * @param array $values
      * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration
      */
-    protected function guardNonEmptyWebName(array $settings): void
+    protected function guardNonEmptyWebName(array $values): void
     {
-        if (($settings[static::WEB][static::NAME] ?? '') === '') {
+        if (($values[static::WEB][static::NAME] ?? '') === '') {
             throw new Exceptions\InvalidConfiguration(
                 sprintf(
                     'Expected some web name in configuration %s.%s',
@@ -222,12 +257,12 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
     }
 
     /**
-     * @param array $settings
+     * @param array $values
      * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration
      */
-    protected function guardSetTitleSmiley(array $settings): void
+    protected function guardSetTitleSmiley(array $values): void
     {
-        if (!\array_key_exists(static::TITLE_SMILEY, $settings[static::WEB])) {
+        if (!\array_key_exists(static::TITLE_SMILEY, $values[static::WEB])) {
             throw new Exceptions\InvalidConfiguration(
                 sprintf(
                     'Title smiley should be set in configuration %s.%s, even if just an empty string',
@@ -239,41 +274,28 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
     }
 
     /**
-     * @param array $settings
+     * @param array $values
      * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidEshopUrl
      */
-    protected function guardValidEshopUrl(array $settings): void
+    protected function guardValidEshopUrl(array $values): void
     {
-        if (!empty($settings[static::WEB][static::PROTECTED_ACCESS])
-            && !\filter_var($settings[static::WEB][static::ESHOP_URL] ?? '', FILTER_VALIDATE_URL)
+        if (!filter_var($values[static::WEB][static::ESHOP_URL] ?? '', FILTER_VALIDATE_URL)
+            && $this->getGatewayConfiguration()->hasProtectedAccess()
         ) {
             throw new Exceptions\InvalidEshopUrl(
                 sprintf(
                     'Given e-shop URL is not valid, expected some URL in configuration %s.%s, got %s',
                     static::WEB,
                     static::ESHOP_URL,
-                    $settings[static::WEB][static::ESHOP_URL] ?? 'nothing'
+                    $values[static::WEB][static::ESHOP_URL] ?? 'nothing'
                 )
             );
         }
     }
 
-    protected function guardSetProtectedAccess(array $settings): void
+    protected function guardValidFaviconUrl(array $values): void
     {
-        if (($settings[static::WEB][static::PROTECTED_ACCESS] ?? null) === null) {
-            throw new Exceptions\InvalidConfiguration(
-                sprintf(
-                    'Configuration if web has protected access is missing in configuration %s.%s',
-                    static::WEB,
-                    static::PROTECTED_ACCESS
-                )
-            );
-        }
-    }
-
-    protected function guardValidFaviconUrl(array $settings): void
-    {
-        $favicon = $settings[static::WEB][static::FAVICON] ?? null;
+        $favicon = $values[static::WEB][static::FAVICON] ?? null;
         if ($favicon === null) {
             return;
         }
@@ -289,19 +311,24 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
         return $this->menuConfiguration;
     }
 
+    public function getGatewayConfiguration(): GatewayConfiguration
+    {
+        return $this->gatewayConfiguration;
+    }
+
     public function getDirs(): Dirs
     {
         return $this->dirs;
     }
 
-    public function getSettings(): array
+    public function getValues(): array
     {
-        return $this->settings;
+        return $this->values;
     }
 
     public function getGoogleAnalyticsId(): string
     {
-        return $this->getSettings()[static::GOOGLE][static::ANALYTICS_ID];
+        return $this->getValues()[static::GOOGLE][static::ANALYTICS_ID];
     }
 
     /**
@@ -353,48 +380,51 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration
 
     public function getWebName(): string
     {
-        return $this->getSettings()[static::WEB][static::NAME];
+        return $this->getValues()[static::WEB][static::NAME];
     }
 
     public function getTitleSmiley(): string
     {
-        return (string)$this->getSettings()[static::WEB][static::TITLE_SMILEY];
+        return (string)$this->getValues()[static::WEB][static::TITLE_SMILEY];
     }
 
-    public function hasProtectedAccess(): bool
+    /**
+     * @deprecated
+     */
+    public function hasProtectedAccess()
     {
-        return (bool)$this->getSettings()[self::WEB][self::PROTECTED_ACCESS];
+        $this->throwDeprecatedProtectedAccessUsage();
     }
 
     public function getEshopUrl(): string
     {
-        return $this->getSettings()[self::WEB][self::ESHOP_URL] ?? '';
+        return $this->getValues()[self::WEB][self::ESHOP_URL] ?? '';
     }
 
     public function getFavicon(): string
     {
-        return $this->getSettings()[static::WEB][static::FAVICON] ?? '';
+        return $this->getValues()[static::WEB][static::FAVICON] ?? '';
     }
 
     public function getYamlFileWithRoutes(): string
     {
-        return $this->getSettings()[static::APPLICATION][static::YAML_FILE_WITH_ROUTES] ?? '';
+        return $this->getValues()[static::APPLICATION][static::YAML_FILE_WITH_ROUTES] ?? '';
     }
 
     public function getDefaultYamlFileWithRoutes(): string
     {
-        return $this->getSettings()[static::APPLICATION][static::DEFAULT_YAML_FILE_WITH_ROUTES] ?? 'routes.yml';
+        return $this->getValues()[static::APPLICATION][static::DEFAULT_YAML_FILE_WITH_ROUTES] ?? 'routes.yml';
     }
 
     public function getPublicUrlPartRegexp(): string
     {
-        return $this->getSettings()[static::WEB][static::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REGEXP]
+        return $this->getValues()[static::WEB][static::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REGEXP]
             ?? '~https?://((?:[^.]+[.])*)drdplus[.]info~';
     }
 
     public function getPublicToLocalUrlReplacement(): string
     {
-        return $this->getSettings()[static::WEB][static::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT]
+        return $this->getValues()[static::WEB][static::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT]
             ?? 'http://$1drdplus.loc';
     }
 

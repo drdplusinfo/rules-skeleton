@@ -6,14 +6,14 @@ use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\HtmlDocument;
 
-class PassBody extends StrictObject implements RulesBodyInterface
+class GatewayBody extends StrictObject implements RulesBodyInterface
 {
-    /** @var Pass */
-    private $pass;
+    /** @var Gateway */
+    private $gateway;
 
-    public function __construct(Pass $pass)
+    public function __construct(Gateway $gateway)
     {
-        $this->pass = $pass;
+        $this->gateway = $gateway;
     }
 
     public function __toString()
@@ -25,9 +25,9 @@ class PassBody extends StrictObject implements RulesBodyInterface
     {
         $backgroundImageClass = HtmlHelper::CLASS_BACKGROUND_IMAGE;
         return <<<HTML
-<div class="main pass">
+<div class="main gateway">
   <div class="{$backgroundImageClass}"></div>
-  {$this->pass->getValue()}
+  {$this->gateway->getValue()}
 </div>
 HTML;
     }

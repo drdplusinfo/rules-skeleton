@@ -59,7 +59,7 @@ abstract class AbstractContentTest extends TestWithMockery
             self::markTestSkipped("Missing constant 'DRD_PLUS_INDEX_FILE_NAME_TO_TEST'");
         }
         if ($this->getTestsConfiguration()->hasProtectedAccess()) {
-            $this->passIn();
+            $this->goIn();
         }
     }
 
@@ -75,12 +75,12 @@ abstract class AbstractContentTest extends TestWithMockery
         return $testsConfiguration;
     }
 
-    protected function passIn(): bool
+    protected function goIn(): bool
     {
         $_COOKIE[UsagePolicy::OWNERSHIP_COOKIE_NAME] = $this->getNameForLocalOwnershipConfirmation();
         $_COOKIE[$this->getNameForLocalOwnershipConfirmation()] = true; // this cookie simulates confirmation of ownership
         $usagePolicy = new UsagePolicy(
-            $this->getVariablePartOfNameForPass(),
+            $this->getVariablePartOfNameForGateway(),
             $request = Request::createFromGlobals($this->getBot(), $this->getEnvironment()),
             $this->createCookiesService($request)
         );
@@ -94,11 +94,11 @@ abstract class AbstractContentTest extends TestWithMockery
         return true;
     }
 
-    protected function passOut(): bool
+    protected function goOut(): bool
     {
         unset($_COOKIE[$this->getNameForLocalOwnershipConfirmation()], $_COOKIE[UsagePolicy::OWNERSHIP_COOKIE_NAME]);
         $usagePolicy = new UsagePolicy(
-            $this->getVariablePartOfNameForPass(),
+            $this->getVariablePartOfNameForGateway(),
             $request = Request::createFromGlobals($this->getBot(), $this->getEnvironment()),
             $this->createCookiesService($request)
         );
@@ -142,9 +142,9 @@ abstract class AbstractContentTest extends TestWithMockery
                 $_SERVER['REQUEST_URI'] .= '?' . http_build_query($_GET);
             }
             if ($this->needPassIn()) {
-                $this->passIn();
+                $this->goIn();
             } elseif ($this->needPassOut()) {
-                $this->passOut();
+                $this->goOut();
             }
             \ob_start();
             /** @noinspection PhpIncludeInspection */
@@ -469,7 +469,7 @@ TEXT
         $configurationClass = \get_class($originalConfiguration);
         $customConfiguration = new $configurationClass(
             $dirs ?? $originalConfiguration->getDirs(),
-            \array_replace_recursive($originalConfiguration->getSettings(), $customSettings)
+            \array_replace_recursive($originalConfiguration->getValues(), $customSettings)
         );
         return $customConfiguration;
     }
@@ -596,7 +596,7 @@ TEXT
      */
     protected function getLicenceSwitchers(): array
     {
-        return [[$this, 'passIn'], [$this, 'passOut']];
+        return [[$this, 'goIn'], [$this, 'goOut']];
     }
 
     protected function isRulesSkeletonChecked(): bool
@@ -624,34 +624,34 @@ TEXT
         return $skeletonChecked[$skeletonDocumentRoot];
     }
 
-    protected function getPassDocument(bool $notCached = false): HtmlDocument
+    protected function getGatewayDocument(bool $notCached = false): HtmlDocument
     {
         if ($notCached) {
-            return new HtmlDocument($this->getPassContent($notCached));
+            return new HtmlDocument($this->getGatewayContent($notCached));
         }
-        static $passDocument;
-        if ($passDocument === null) {
+        static $gatewayDocument;
+        if ($gatewayDocument === null) {
             $this->removeOwnerShipConfirmation();
-            $passDocument = new HtmlDocument($this->getPassContent($notCached));
+            $gatewayDocument = new HtmlDocument($this->getGatewayContent($notCached));
         }
 
-        return $passDocument;
+        return $gatewayDocument;
     }
 
-    protected function getPassContent(bool $notCached = false): string
+    protected function getGatewayContent(bool $notCached = false): string
     {
         if ($notCached) {
             $this->removeOwnerShipConfirmation();
 
             return $this->fetchNonCachedContent();
         }
-        static $passContent;
-        if ($passContent === null) {
+        static $gatewayContent;
+        if ($gatewayContent === null) {
             $this->removeOwnerShipConfirmation();
-            $passContent = $this->fetchNonCachedContent();
+            $gatewayContent = $this->fetchNonCachedContent();
         }
 
-        return $passContent;
+        return $gatewayContent;
     }
 
     private function getNameForLocalOwnershipConfirmation(): string
@@ -669,7 +669,7 @@ TEXT
         static $nameOfOwnershipConfirmation;
         if ($nameOfOwnershipConfirmation === null) {
             $usagePolicy = new UsagePolicy(
-                $this->getVariablePartOfNameForPass(),
+                $this->getVariablePartOfNameForGateway(),
                 Request::createFromGlobals($this->getBot(), $this->getEnvironment()),
                 $this->getCookiesService()
             );
@@ -688,7 +688,7 @@ TEXT
         return $nameOfOwnershipConfirmation;
     }
 
-    protected function getVariablePartOfNameForPass(): string
+    protected function getVariablePartOfNameForGateway(): string
     {
         return StringTools::toVariableName($this->getTestsConfiguration()->getExpectedWebName());
     }
@@ -716,7 +716,7 @@ TEXT
             }
             $content = $this->getContent($get);
             $rulesContentForDev[$show][$hide] = $content;
-            self::assertNotSame($this->getPassContent(), $rulesContentForDev[$show]);
+            self::assertNotSame($this->getGatewayContent(), $rulesContentForDev[$show]);
         }
 
         return $rulesContentForDev[$show][$hide];

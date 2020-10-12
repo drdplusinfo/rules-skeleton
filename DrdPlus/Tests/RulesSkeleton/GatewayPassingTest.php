@@ -8,7 +8,7 @@ use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 
-class PassingTest extends AbstractContentTest
+class GatewayPassingTest extends AbstractContentTest
 {
 
     /**
@@ -24,7 +24,7 @@ class PassingTest extends AbstractContentTest
 
             return;
         }
-        $html = new HTMLDocument($this->getPassContent());
+        $html = new HTMLDocument($this->getGatewayContent());
         $forms = $html->getElementsByTagName('form');
         self::assertCount(3, $forms);
         foreach ($forms as $index => $form) {
@@ -96,25 +96,25 @@ class PassingTest extends AbstractContentTest
 
             return;
         }
-        $passContent = $this->getPassContent(true /* not cached */);
-        $this->passIn();
+        $gatewayContent = $this->getGatewayContent(true /* not cached */);
+        $this->goIn();
         $rulesContent = $this->fetchNonCachedContent();
-        $this->passOut();
-        $passContentDocument = new HTMLDocument($passContent);
+        $this->goOut();
+        $gatewayContentDocument = new HTMLDocument($gatewayContent);
         $rulesContentDocument = new HTMLDocument($rulesContent);
         self::assertNotSame(
-            $passContentDocument->body->innerHTML,
+            $gatewayContentDocument->body->innerHTML,
             $rulesContentDocument->body->innerHTML,
-            'Expected pass for a non-bot visitor'
+            'Expected gateway for a non-bot visitor'
         );
         foreach (RequestTest::getCrawlerUserAgents() as $crawlerUserAgent) {
             $_SERVER['HTTP_USER_AGENT'] = $crawlerUserAgent;
-            $passContent = $this->getPassContent(true /* not cached */);
+            $gatewayContent = $this->getGatewayContent(true /* not cached */);
             $rulesContent = $this->fetchNonCachedContent();
-            $passContentDocument = new HTMLDocument($passContent);
+            $gatewayContentDocument = new HTMLDocument($gatewayContent);
             $rulesContentDocument = new HTMLDocument($rulesContent);
             self::assertSame(
-                \preg_replace('~' . HtmlHelper::DATA_CACHED_AT . '="[^"]+"~', '', $passContentDocument->body->innerHTML),
+                \preg_replace('~' . HtmlHelper::DATA_CACHED_AT . '="[^"]+"~', '', $gatewayContentDocument->body->innerHTML),
                 \preg_replace('~' . HtmlHelper::DATA_CACHED_AT . '="[^"]+"~', '', $rulesContentDocument->body->innerHTML),
                 'Expected rules content for a crawler, skipping ownership confirmation page'
             );
@@ -131,7 +131,7 @@ class PassingTest extends AbstractContentTest
 
             return;
         }
-        $this->passOut();
+        $this->goOut();
         $warningsOnFirstVisit = $this->getHtmlDocument()->getElementsByClassName('warning');
         self::assertCount(0, $warningsOnFirstVisit, 'No warnings expected so far');
         $warningsOnTrialExpiration = $this->getHtmlDocument([Request::TRIAL_EXPIRED_AT => time() - 1])
@@ -152,7 +152,7 @@ class PassingTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_do_not_lost_previous_url_because_of_pass(): void
+    public function I_do_not_lost_previous_url_because_of_gateway(): void
     {
         if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
             self::assertFalse(false, 'Free content does not have trial');
@@ -164,22 +164,22 @@ class PassingTest extends AbstractContentTest
 
             return;
         }
-        $this->passOut();
+        $this->goOut();
         $forms = $this->getHtmlDocument(['foo' => 'bar'], [], [], '/routed')->getElementsByTagName('form');
-        self::assertNotEmpty($forms, 'Expeted some forms on pass');
+        self::assertNotEmpty($forms, 'Expected some forms on gateway');
         foreach ($forms as $form) {
             $action = $form->getAttribute('action');
             if (strpos($action, 'https://obchod.altar.cz') === 0) {
                 continue;
             }
-            self::assertSame('/routed?foo=bar', $action, 'Expected passing link with original values');
+            self::assertSame('/routed?foo=bar', $action, 'Expected gateway passing link with original values');
         }
     }
 
     /**
      * @test
      */
-    public function I_am_not_bordered_by_empty_query_on_pass(): void
+    public function I_am_not_bordered_by_empty_query_on_gateway(): void
     {
         if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
             self::assertFalse(false, 'Free content does not have trial');
@@ -191,15 +191,15 @@ class PassingTest extends AbstractContentTest
 
             return;
         }
-        $this->passOut();
+        $this->goOut();
         $forms = $this->getHtmlDocument([Request::TRIAL_EXPIRED_AT => time() - 1])->getElementsByTagName('form');
-        self::assertNotEmpty($forms, 'Expeted some forms on pass');
+        self::assertNotEmpty($forms, 'Expected some forms on gateway');
         foreach ($forms as $form) {
             $action = $form->getAttribute('action');
             if (strpos($action, 'https://obchod.altar.cz') === 0) {
                 continue;
             }
-            self::assertSame('/', $action, 'Expected empty pass link');
+            self::assertSame('/', $action, 'Expected empty gateway pass link');
         }
     }
 }

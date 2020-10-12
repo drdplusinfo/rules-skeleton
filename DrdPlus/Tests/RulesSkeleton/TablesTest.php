@@ -19,7 +19,7 @@ class TablesTest extends AbstractContentTest
      */
     public function I_can_get_tables_only(array $get, string $url): void
     {
-        $this->passOut(); // tables should be accessible for free
+        $this->goOut(); // tables should be accessible for free
         $htmlDocumentWithTablesOnly = $this->getHtmlDocument($get, [], [], $url);
         /** @var NodeList|Element[] $tables */
         $tables = $htmlDocumentWithTablesOnly->getElementsByTagName('table');
@@ -51,7 +51,7 @@ class TablesTest extends AbstractContentTest
     {
         static $tableIds;
         if ($tableIds === null) {
-            $this->passIn(); // parse table IDs from passed content
+            $this->goIn(); // parse table IDs from passed content
             $tableIds = $this->parseTableIds($this->getHtmlDocument());
             \sort($tableIds);
             $this->Expected_table_ids_are_present($tableIds);
@@ -195,9 +195,9 @@ class TablesTest extends AbstractContentTest
             );
         } else {
             $tablesRoute = $this->getTestsConfiguration()->getLocalUrl() . '/tables?foo=bar&' . Request::TRIAL . '=1';
-            $this->passIn();
+            $this->goIn();
             $response = $this->fetchContentFromUrl($tablesRoute, false);
-            $this->passOut();
+            $this->goOut();
             $response['content'] = strlen($response['content']) > 123
                 ? (substr($response['content'], 0, 120) . '...')
                 : $response['content'];

@@ -209,9 +209,9 @@ class RulesMainContentTest extends MainContentTest
     public function I_will_get_pretty_not_found_page_on_unknown_route()
     {
         $nonExistingRoute = $this->getTestsConfiguration()->getLocalUrl() . '/' . uniqid('non-existing-route-', true);
-        $this->passIn();
+        $this->goIn();
         $response = $this->fetchContentFromUrl($nonExistingRoute . '?' . Request::TRIAL . '=1', true);
-        $this->passOut();
+        $this->goOut();
         self::assertSame(404, $response['responseHttpCode']);
         self::assertStringContainsStringIgnoringCase('kde nic tu nic', $response['content']);
     }

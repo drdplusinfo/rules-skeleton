@@ -107,7 +107,7 @@ class RulesApplication extends StrictObject
                 $servicesContainer->getMenu(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getPassWebCache(),
-                RulesContent::PASS,
+                RulesContent::GATEWAY,
                 $this->getRedirect()
             );
 
@@ -135,7 +135,7 @@ class RulesApplication extends StrictObject
         if ($this->canPassIn !== null) {
             return $this->canPassIn;
         }
-        $canPassIn = !$this->configuration->hasProtectedAccess();
+        $canPassIn = !$this->configuration->getGatewayConfiguration()->hasProtectedAccess();
         if (!$canPassIn) {
             $usagePolicy = $this->servicesContainer->getUsagePolicy();
             $canPassIn = $usagePolicy->isVisitorBot();

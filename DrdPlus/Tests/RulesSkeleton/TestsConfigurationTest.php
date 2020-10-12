@@ -298,7 +298,7 @@ class TestsConfigurationTest extends AbstractContentTest
         $configuration = $this->getConfiguration();
         self::assertSame(
             $testsConfiguration->hasProtectedAccess(),
-            $configuration->hasProtectedAccess(),
+            $configuration->getGatewayConfiguration()->hasProtectedAccess(),
             'Expected same test and project configuration of access'
         );
     }

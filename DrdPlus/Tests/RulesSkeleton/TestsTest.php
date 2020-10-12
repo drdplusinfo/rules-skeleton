@@ -112,7 +112,7 @@ class TestsTest extends AbstractContentTest
             self::class,
             static::class,
             CoveredPartsCanBeHiddenTest::class,
-            PassingTest::class,
+            GatewayPassingTest::class,
             ContactsContentTest::class,
             DevModeTest::class,
             CalculationsTest::class,

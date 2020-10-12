@@ -47,7 +47,6 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->io = $io;
     }
 
-    /** @noinspection PhpUnused */
     public function plugInSkeleton(PackageEvent $event)
     {
         if ($this->alreadyInjected || !$this->isThisPackageChanged($event)) {
@@ -172,14 +171,14 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             ],
             $documentRoot
         );
-        $this->removeIfHasFreeAccess(['./css/generic/skeleton/rules-pass.css'], $documentRoot);
+        $this->removeIfHasFreeAccess(['./css/generic/skeleton/rules-gateway.css'], $documentRoot);
     }
 
     private function removeIfHasFreeAccess(array $filesToRemove, string $documentRoot)
     {
         $dirs = $this->getDirs($documentRoot);
         $configuration = $this->getConfiguration($dirs);
-        if ($configuration && $configuration->hasProtectedAccess()) {
+        if ($configuration && $configuration->getGatewayConfiguration()->hasProtectedAccess()) {
             return;
         }
         $this->passThrough(
@@ -218,8 +217,8 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         );
         $this->removeIfHasFreeAccess(
             [
-                './js/generic/skeleton/rules-pass-expiration.js',
-                './js/generic/skeleton/rules-pass-hash.js',
+                './js/generic/skeleton/rules-gateway-pass-expiration.js',
+                './js/generic/skeleton/rules-gateway-pass-hash.js',
             ],
             $documentRoot
         );
