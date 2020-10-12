@@ -93,6 +93,8 @@ class EnvironmentTest extends TestCase
     private const NOT_FORCED_MODE = null;
     private const FORCED_PROD = 'PRODUCTION';
     private const CLI_PHP_SAPI = 'cli';
+    private const PHPDBG_PHP_SAPI = 'phpdbg';
+    private const EMBED_PHP_SAPI = 'embed';
     private const PHP_FPM_PHP_SAPI = 'fpm-fcgi';
     private const DEVELOPMENT = 'Development';
     private const LOCALHOST_IP = '127.0.0.1';
@@ -108,6 +110,12 @@ class EnvironmentTest extends TestCase
 
             'cli' => [self::NOT_EXPECTED_PRODUCTION, self::CLI_PHP_SAPI, null, null, self::NOT_FORCED_MODE],
             'forced production on cli' => [self::EXPECTED_PRODUCTION, self::CLI_PHP_SAPI, null, null, self::FORCED_PROD],
+
+            'phpdbg' => [self::NOT_EXPECTED_PRODUCTION, self::PHPDBG_PHP_SAPI, null, null, self::NOT_FORCED_MODE],
+            'forced production on debug (cli)' => [self::EXPECTED_PRODUCTION, self::PHPDBG_PHP_SAPI, null, null, self::FORCED_PROD],
+
+            'embed' => [self::NOT_EXPECTED_PRODUCTION, self::EMBED_PHP_SAPI, null, null, self::NOT_FORCED_MODE],
+            'forced production on embed (cli)' => [self::EXPECTED_PRODUCTION, self::EMBED_PHP_SAPI, null, null, self::FORCED_PROD],
 
             'localhost' => [self::NOT_EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, null, self::LOCALHOST_IP, self::NOT_FORCED_MODE],
             'forced production on localhost' => [self::EXPECTED_PRODUCTION, self::PHP_FPM_PHP_SAPI, null, self::LOCALHOST_IP, self::FORCED_PROD],

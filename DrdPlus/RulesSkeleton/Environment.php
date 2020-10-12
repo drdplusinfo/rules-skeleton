@@ -40,7 +40,7 @@ class Environment extends StrictObject
 
     public function isCliRequest(): bool
     {
-        return $this->getPhpSapi() === 'cli';
+        return in_array($this->getPhpSapi(), ['cli', 'phpdbg', 'embed'], true);
     }
 
     public function getPhpSapi(): string
