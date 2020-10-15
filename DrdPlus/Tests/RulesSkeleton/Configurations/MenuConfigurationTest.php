@@ -3,6 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
 use DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration;
+use DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 
@@ -11,9 +12,11 @@ class MenuConfigurationTest extends AbstractContentTest
 
     protected static $validMenuConfiguration = [
         MenuConfiguration::POSITION_FIXED => true,
-        MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => true,
-        MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => true,
-        MenuConfiguration::HOME_BUTTON_TARGET => 'hit!',
+        MenuConfiguration::HOME_BUTTON => [
+            HomeButtonConfiguration::SHOW_ON_HOMEPAGE => true,
+            HomeButtonConfiguration::SHOW_ON_ROUTES => true,
+            HomeButtonConfiguration::TARGET => 'hit!',
+        ],
     ];
 
     /**

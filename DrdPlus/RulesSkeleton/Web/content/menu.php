@@ -5,13 +5,13 @@ $fixed = $menuConfiguration->isPositionFixed()
     : '';
 $homeButton = '';
 /** @var $homepageDetector \DrdPlus\RulesSkeleton\HomepageDetector */
-if (($menuConfiguration->isShowHomeButtonOnHomepage() && $homepageDetector->isHomepageRequested())
-    || ($menuConfiguration->isShowHomeButtonOnRoutes() && !$homepageDetector->isHomepageRequested())
+if (($menuConfiguration->getHomeButtonConfiguration()->showOnHomePage() && $homepageDetector->isHomepageRequested())
+    || ($menuConfiguration->getHomeButtonConfiguration()->showOnRoutes() && !$homepageDetector->isHomepageRequested())
 ) {
     $homeButtonId = \DrdPlus\RulesSkeleton\HtmlHelper::ID_HOME_BUTTON;
     $homeButton = <<<HTML
 <span class="home-menu">
-    <a id="{$homeButtonId}" class="internal-url" href="{$menuConfiguration->getHomeButtonTarget()}">
+    <a id="{$homeButtonId}" class="internal-url" href="{$menuConfiguration->getHomeButtonConfiguration()->getTarget()}">
         <img class="home" alt="Small dragon menu" src="/images/generic/skeleton/drdplus-dragon-menu-2x22.png">
     </a>
 </span>

@@ -69,7 +69,10 @@ abstract class AbstractContentTest extends TestWithMockery
         if ($testsConfiguration === null) {
             /** @var TestsConfiguration|string $class */
             $class = $class ?? TestsConfiguration::class;
-            $testsConfiguration = $class::createFromYaml(\DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml', $this->getHtmlHelper());
+            $testsConfiguration = $class::createFromYaml(
+                DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml',
+                $this->getHtmlHelper()
+            );
         }
 
         return $testsConfiguration;

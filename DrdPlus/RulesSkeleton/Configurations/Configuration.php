@@ -2,10 +2,9 @@
 
 namespace DrdPlus\RulesSkeleton\Configurations;
 
-use Granam\Strict\Object\StrictObject;
 use Granam\YamlReader\YamlFileReader;
 
-class Configuration extends StrictObject implements ProjectUrlConfiguration, ConfigurationValues
+class Configuration extends AbstractConfiguration implements ProjectUrlConfiguration
 {
     public const CONFIG_LOCAL_YML = 'config.local.yml';
     public const CONFIG_DISTRIBUTION_YML = 'config.distribution.yml';
@@ -31,7 +30,6 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
 
     // moved from web and deprecated by old way
     public const MENU_POSITION_FIXED = 'menu_position_fixed';
-    public const SHOW_HOME_BUTTON = 'show_home_button';
     public const SHOW_HOME_BUTTON_ON_HOMEPAGE = 'show_home_button_on_homepage';
     public const SHOW_HOME_BUTTON_ON_ROUTES = 'show_home_button_on_routes';
     public const HOME_BUTTON_TARGET = 'home_button_target';
@@ -86,11 +84,10 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
 
     protected function createMenuConfiguration(array $values): MenuConfiguration
     {
-        $this->guardFixedMenuPositionIsNotSetByOldWay($values);
-        $this->guardShowHomeButtonIsNotSetByOldWay($values);
-        $this->guardShowHomeButtonOnHomepageIsNotSetByOldWay($values);
-        $this->guardShowHomeButtonOnRoutesIsNotSetByOldWay($values);
-        $this->guardHomeButtonTargetIsNotSetByOldWay($values);
+        $values = $this->upgradeFixedMenuPositionToNewWay($values);
+        $values = $this->upgradeShowHomeButtonOnHomepageToNewWay($values);
+        $values = $this->upgradeShowHomeButtonOnRoutesToNewWay($values);
+        $values = $this->upgradeHomeButtonTargetToNewWay($values);
 
         $this->guardMenuConfigurationExists($values);
         return new MenuConfiguration($values[static::WEB][static::MENU], [static::WEB, static::MENU]);
@@ -98,13 +95,13 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
 
     protected function createGatewayConfiguration(array $values): GatewayConfiguration
     {
-        $this->guardProtectedAccessIsNotSetByOldWay($values);
+        $values = $this->upgradeProtectedAccessToNewWay($values);
 
         $this->guardGatewayConfigurationExists($values);
         return new GatewayConfiguration($values[static::WEB][static::GATEWAY], [static::WEB, static::GATEWAY]);
     }
 
-    protected function guardMenuConfigurationExists(array $values)
+    private function guardMenuConfigurationExists(array $values)
     {
         if (!is_array($values[static::WEB][static::MENU] ?? null)) {
             throw new Exceptions\InvalidConfiguration(
@@ -113,7 +110,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
         }
     }
 
-    protected function guardGatewayConfigurationExists(array $values)
+    private function guardGatewayConfigurationExists(array $values)
     {
         if (!is_array($values[static::WEB][static::GATEWAY] ?? null)) {
             throw new Exceptions\InvalidConfiguration(
@@ -122,101 +119,59 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
         }
     }
 
-    /**
-     * @param array $values
-     * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\ConfigurationDirectiveDeprecated
-     */
-    protected function guardFixedMenuPositionIsNotSetByOldWay(array $values): void
+    protected function upgradeFixedMenuPositionToNewWay(array $values): array
     {
-        if (array_key_exists(static::MENU_POSITION_FIXED, $values[static::WEB])) {
-            $this->throwDeprecatedConfigurationUsage(static::MENU_POSITION_FIXED, [static::WEB, static::MENU, MenuConfiguration::POSITION_FIXED]);
-        }
-    }
-
-    protected function throwDeprecatedConfigurationUsage(string $oldKey, array $newPath): void
-    {
-        throw new Exceptions\ConfigurationDirectiveDeprecated(
-            sprintf('%s is deprecated, use %s instead', implode('.', [static::WEB, $oldKey]), implode('.', $newPath))
+        $values[static::WEB] = $this->diveConfigurationStructure(
+            static::MENU_POSITION_FIXED,
+            static::MENU,
+            MenuConfiguration::POSITION_FIXED,
+            $values[static::WEB]
         );
+        return $values;
     }
 
-    protected function guardShowHomeButtonIsNotSetByOldWay(array $values): void
+    protected function upgradeShowHomeButtonOnHomepageToNewWay(array $values): array
     {
-        if (array_key_exists(self::SHOW_HOME_BUTTON, $values[static::WEB])) {
-            $this->throwDeprecatedHomeButtonUsage();
-        }
-    }
-
-    protected function throwDeprecatedHomeButtonUsage()
-    {
-        throw new Exceptions\ConfigurationDirectiveDeprecated(
-            sprintf(
-                '%s is deprecated, use %s and %s instead',
-                implode('.', [static::WEB, static::SHOW_HOME_BUTTON]),
-                implode('.', [static::WEB, static::MENU, MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE]),
-                implode('.', [static::WEB, static::MENU, MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES])
-            )
-        );
-    }
-
-    protected function guardShowHomeButtonOnHomepageIsNotSetByOldWay(array $values)
-    {
-        if (array_key_exists(self::SHOW_HOME_BUTTON_ON_HOMEPAGE, $values[static::WEB])) {
-            $this->throwDeprecatedHomeButtonOnHomepageUsage();
-        }
-    }
-
-    protected function throwDeprecatedHomeButtonOnHomepageUsage()
-    {
-        $this->throwDeprecatedConfigurationUsage(
+        $values[static::WEB] = $this->diveConfigurationStructure(
             static::SHOW_HOME_BUTTON_ON_HOMEPAGE,
-            [static::WEB, static::MENU, MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE]
+            static::MENU,
+            MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE,
+            $values[static::WEB]
         );
+        return $values;
     }
 
-    protected function guardShowHomeButtonOnRoutesIsNotSetByOldWay(array $values)
+    protected function upgradeShowHomeButtonOnRoutesToNewWay(array $values): array
     {
-        if (array_key_exists(self::SHOW_HOME_BUTTON_ON_ROUTES, $values[static::WEB])) {
-            $this->throwDeprecatedHomeButtonOnRoutesUsage();
-        }
-    }
-
-    protected function throwDeprecatedHomeButtonOnRoutesUsage()
-    {
-        $this->throwDeprecatedConfigurationUsage(
+        $values[static::WEB] = $this->diveConfigurationStructure(
             static::SHOW_HOME_BUTTON_ON_ROUTES,
-            [static::WEB, static::MENU, MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES]
+            static::MENU,
+            MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES,
+            $values[static::WEB]
         );
+        return $values;
     }
 
-    protected function guardHomeButtonTargetIsNotSetByOldWay(array $values)
+    protected function upgradeHomeButtonTargetToNewWay(array $values): array
     {
-        if (array_key_exists(self::HOME_BUTTON_TARGET, $values[static::WEB])) {
-            $this->throwDeprecatedHomeButtonTargetUsage();
-        }
-    }
-
-    protected function guardProtectedAccessIsNotSetByOldWay(array $values)
-    {
-        if (array_key_exists(self::PROTECTED_ACCESS, $values[static::WEB])) {
-            $this->throwDeprecatedProtectedAccessUsage();
-        }
-    }
-
-    protected function throwDeprecatedProtectedAccessUsage()
-    {
-        $this->throwDeprecatedConfigurationUsage(
-            static::PROTECTED_ACCESS,
-            [static::WEB, static::PROTECTED_ACCESS, GatewayConfiguration::PROTECTED_ACCESS]
-        );
-    }
-
-    protected function throwDeprecatedHomeButtonTargetUsage()
-    {
-        $this->throwDeprecatedConfigurationUsage(
+        $values[static::WEB] = $this->diveConfigurationStructure(
             static::HOME_BUTTON_TARGET,
-            [static::WEB, static::MENU, MenuConfiguration::HOME_BUTTON_TARGET]
+            static::MENU,
+            MenuConfiguration::HOME_BUTTON_TARGET,
+            $values[static::WEB]
         );
+        return $values;
+    }
+
+    private function upgradeProtectedAccessToNewWay(array $values): array
+    {
+        $values[static::WEB] = $this->diveConfigurationStructure(
+            static::PROTECTED_ACCESS,
+            static::GATEWAY,
+            GatewayConfiguration::PROTECTED_ACCESS,
+            $values[static::WEB]
+        );
+        return $values;
     }
 
     // WEB
@@ -225,7 +180,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
      * @param array $values
      * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidGoogleAnalyticsId
      */
-    protected function guardValidGoogleAnalyticsId(array $values): void
+    private function guardValidGoogleAnalyticsId(array $values): void
     {
         if (!\preg_match('~^UA-121206931-\d+$~', $values[static::GOOGLE][static::ANALYTICS_ID] ?? '')) {
             throw new Exceptions\InvalidGoogleAnalyticsId(
@@ -243,7 +198,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
      * @param array $values
      * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration
      */
-    protected function guardNonEmptyWebName(array $values): void
+    private function guardNonEmptyWebName(array $values): void
     {
         if (($values[static::WEB][static::NAME] ?? '') === '') {
             throw new Exceptions\InvalidConfiguration(
@@ -260,7 +215,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
      * @param array $values
      * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration
      */
-    protected function guardSetTitleSmiley(array $values): void
+    private function guardSetTitleSmiley(array $values): void
     {
         if (!\array_key_exists(static::TITLE_SMILEY, $values[static::WEB])) {
             throw new Exceptions\InvalidConfiguration(
@@ -277,7 +232,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
      * @param array $values
      * @throws \DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidEshopUrl
      */
-    protected function guardValidEshopUrl(array $values): void
+    private function guardValidEshopUrl(array $values): void
     {
         if (!filter_var($values[static::WEB][static::ESHOP_URL] ?? '', FILTER_VALIDATE_URL)
             && $this->getGatewayConfiguration()->hasProtectedAccess()
@@ -293,7 +248,7 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
         }
     }
 
-    protected function guardValidFaviconUrl(array $values): void
+    private function guardValidFaviconUrl(array $values): void
     {
         $favicon = $values[static::WEB][static::FAVICON] ?? null;
         if ($favicon === null) {
@@ -333,49 +288,66 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
 
     /**
      * @deprecated
+     * Use \DrdPlus\RulesSkeleton\Configurations\MenuConfiguration::isPositionFixed instead
      */
-    public function isMenuPositionFixed()
+    public function isMenuPositionFixed(): bool
     {
-        throw new Exceptions\DeprecatedConfigurationUsage(
+        trigger_error(
             sprintf(
-                "'%s::%s' is deprecaed, use similar from '%s' instead",
-                static::class,
-                __FUNCTION__,
-                MenuConfiguration::class
-            )
+                '%s is deprecated, use \DrdPlus\RulesSkeleton\Configurations\MenuConfiguration::isPositionFixed instead',
+                __FUNCTION__
+            ),
+            E_USER_DEPRECATED
         );
+        return $this->getMenuConfiguration()->isPositionFixed();
     }
 
     /**
      * @deprecated
+     * Use \DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration::showOnHomePage instead
      */
-    public function isShowHomeButton()
+    public function isShowHomeButtonOnHomepage(): bool
     {
-        $this->throwDeprecatedHomeButtonUsage();
+        trigger_error(
+            sprintf(
+                '%s is deprecated, use \DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration::showOnHomePage instead',
+                __FUNCTION__
+            ),
+            E_USER_DEPRECATED
+        );
+        return $this->getMenuConfiguration()->getHomeButtonConfiguration()->showOnHomePage();
     }
 
     /**
      * @deprecated
+     * Use \DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration::showOnRoutes instead
      */
-    public function isShowHomeButtonOnHomepage()
+    public function isShowHomeButtonOnRoutes(): bool
     {
-        $this->throwDeprecatedHomeButtonOnHomepageUsage();
+        trigger_error(
+            sprintf(
+                '%s is deprecated, use \DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration::showOnRoutes instead',
+                __FUNCTION__
+            ),
+            E_USER_DEPRECATED
+        );
+        return $this->getMenuConfiguration()->getHomeButtonConfiguration()->showOnRoutes();
     }
 
     /**
      * @deprecated
+     * Use \DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration::getTarget instead
      */
-    public function isShowHomeButtonOnRoutes()
+    public function getHomeButtonTarget(): string
     {
-        $this->throwDeprecatedHomeButtonOnRoutesUsage();
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getHomeButtonTarget()
-    {
-        $this->throwDeprecatedHomeButtonTargetUsage();
+        trigger_error(
+            sprintf(
+                '%s is deprecated, use \DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration::getTarget instead',
+                __FUNCTION__
+            ),
+            E_USER_DEPRECATED
+        );
+        return $this->getMenuConfiguration()->getHomeButtonConfiguration()->getTarget();
     }
 
     public function getWebName(): string
@@ -390,10 +362,18 @@ class Configuration extends StrictObject implements ProjectUrlConfiguration, Con
 
     /**
      * @deprecated
+     * Use \DrdPlus\RulesSkeleton\Configurations\GatewayConfiguration::hasProtectedAccess instead
      */
-    public function hasProtectedAccess()
+    public function hasProtectedAccess(): bool
     {
-        $this->throwDeprecatedProtectedAccessUsage();
+        trigger_error(
+            sprintf(
+                '%s is deprecated, use \DrdPlus\RulesSkeleton\Configurations\GatewayConfiguration::hasProtectedAccess instead',
+                __FUNCTION__
+            ),
+            E_USER_DEPRECATED
+        );
+        return $this->getGatewayConfiguration()->hasProtectedAccess();
     }
 
     public function getEshopUrl(): string

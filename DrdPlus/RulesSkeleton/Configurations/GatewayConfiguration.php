@@ -2,7 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Configurations;
 
-class GatewayConfiguration extends SubMenu
+class GatewayConfiguration extends AbstractConfiguration
 {
     public const PROTECTED_ACCESS = 'protected_access';
 
@@ -17,8 +17,8 @@ class GatewayConfiguration extends SubMenu
 
     protected function guardProtectedAccessIsSet(array $settings, array $pathToMenu): void
     {
-        $this->guardConfigurationSettingIsSet(static::PROTECTED_ACCESS, $settings, $pathToMenu);
-        $this->guardConfigurationSettingIsBoolean(static::PROTECTED_ACCESS, $settings, $pathToMenu);
+        $this->guardConfigurationValueIsSet(static::PROTECTED_ACCESS, $settings, $pathToMenu);
+        $this->guardConfigurationValueIsBoolean(static::PROTECTED_ACCESS, $settings, $pathToMenu);
     }
 
     public function getValues(): array

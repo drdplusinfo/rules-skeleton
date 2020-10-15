@@ -4,6 +4,7 @@ namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\GatewayConfiguration;
+use DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
@@ -102,9 +103,11 @@ class ConfigurationTest extends AbstractContentTest
             Configuration::WEB => [
                 Configuration::MENU => [
                     MenuConfiguration::POSITION_FIXED => false,
-                    MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => true,
-                    MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => true,
-                    MenuConfiguration::HOME_BUTTON_TARGET => 'foo',
+                    MenuConfiguration::HOME_BUTTON => [
+                        HomeButtonConfiguration::SHOW_ON_ROUTES => true,
+                        HomeButtonConfiguration::SHOW_ON_HOMEPAGE => true,
+                        HomeButtonConfiguration::TARGET => 'foo',
+                    ],
                 ],
                 Configuration::NAME => 'Foo',
                 Configuration::TITLE_SMILEY => '',
@@ -132,14 +135,25 @@ class ConfigurationTest extends AbstractContentTest
 
     /**
      * @test
+     * @dataProvider provideInvalidGoogleAnalyticsId
+     * @param string $invalidGoogleAnalyticsId
      */
-    public function I_can_not_create_it_with_invalid_google_analytics_id(): void
+    public function I_can_not_create_it_with_invalid_google_analytics_id(string $invalidGoogleAnalyticsId): void
     {
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidGoogleAnalyticsId::class);
-        $this->expectExceptionMessageMatches('~GoogleItself~');
+        $this->expectExceptionMessageMatches('~' . preg_quote($invalidGoogleAnalyticsId, '~') . '~');
+
         $completeSettings = $this->getSomeCompleteSettings();
-        $completeSettings[Configuration::GOOGLE][Configuration::ANALYTICS_ID] = 'GoogleItself';
+        $completeSettings[Configuration::GOOGLE][Configuration::ANALYTICS_ID] = $invalidGoogleAnalyticsId;
         new Configuration($this->getDirs(), $completeSettings);
+    }
+
+    public function provideInvalidGoogleAnalyticsId(): array
+    {
+        return [
+            'some strange string' => ['GoogleItself'],
+            'valid but with white space' => [' UA-121206931-1'],
+        ];
     }
 
     /**
@@ -160,7 +174,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
         $completeSettings = $this->getSomeCompleteSettings();
-        unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE]);
+        unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON][HomeButtonConfiguration::SHOW_ON_HOMEPAGE]);
         new Configuration($this->getDirs(), $completeSettings);
     }
 
@@ -171,7 +185,7 @@ class ConfigurationTest extends AbstractContentTest
     {
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
         $completeSettings = $this->getSomeCompleteSettings();
-        unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES]);
+        unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON][HomeButtonConfiguration::SHOW_ON_ROUTES]);
         new Configuration($this->getDirs(), $completeSettings);
     }
 
@@ -236,15 +250,15 @@ class ConfigurationTest extends AbstractContentTest
     public function I_will_get_default_home_button_target_if_none_custom_is_set()
     {
         $completeSettings = $this->getSomeCompleteSettings();
-        $expectedHomeButtonTarget = $completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON_TARGET];
+        $expectedHomeButtonTarget = $completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON][HomeButtonConfiguration::TARGET];
         $configuration = new Configuration($this->getDirs(), $completeSettings);
         self::assertSame(
             $expectedHomeButtonTarget,
-            $configuration->getMenuConfiguration()->getHomeButtonTarget()
+            $configuration->getMenuConfiguration()->getHomeButtonConfiguration()->getTarget()
         );
         self::assertSame(
             $expectedHomeButtonTarget,
-            $configuration->getMenuConfiguration()->getHomeButtonTarget()
+            $configuration->getMenuConfiguration()->getHomeButtonConfiguration()->getTarget()
         );
     }
 
@@ -254,9 +268,9 @@ class ConfigurationTest extends AbstractContentTest
     public function I_can_overwrite_default_home_button_target()
     {
         $completeSettings = $this->getSomeCompleteSettings();
-        $completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON_TARGET] = '..';
+        $completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON][HomeButtonConfiguration::TARGET] = '..';
         $configuration = new Configuration($this->getDirs(), $completeSettings);
-        self::assertSame('..', $configuration->getMenuConfiguration()->getHomeButtonTarget());
+        self::assertSame('..', $configuration->getMenuConfiguration()->getHomeButtonConfiguration()->getTarget());
     }
 
     /**
