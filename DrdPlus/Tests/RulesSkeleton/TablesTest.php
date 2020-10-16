@@ -99,7 +99,12 @@ class TablesTest extends AbstractContentTest
         $menuWrapper = $htmlDocument->getElementById(HtmlHelper::ID_MENU_WRAPPER);
         $menuWrapper->remove();
 
-        $classesToRemove = [HtmlHelper::CLASS_INVISIBLE_ID, HtmlHelper::CLASS_INVISIBLE, HtmlHelper::CLASS_TABLES_RELATED];
+        $classesToRemove = [
+            HtmlHelper::CLASS_INVISIBLE_ID,
+            HtmlHelper::CLASS_INVISIBLE,
+            HtmlHelper::CLASS_TABLES_RELATED,
+            HtmlHelper::CLASS_BACKGROUND_RELATED,
+        ];
         foreach ($classesToRemove as $classToRemove) {
             foreach ($htmlDocument->getElementsByClassName($classToRemove) as $elementToRemove) {
                 $elementToRemove->remove();

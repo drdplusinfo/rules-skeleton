@@ -36,6 +36,8 @@ class WebPartsContainer extends StrictObject
     private $rulesMainBody;
     /** @var RulesMainBodyPreProcessor */
     private $rulesMainBodyPreProcessor;
+    /** @var TablesBodyPostProcessor */
+    private $tablesBodyPostProcessor;
     /** @var NotFoundBody */
     private $notFoundBody;
     /** @var TablesBody */
@@ -77,7 +79,7 @@ class WebPartsContainer extends StrictObject
     public function getTablesBody(): TablesBody
     {
         if ($this->tablesBody === null) {
-            $this->tablesBody = new TablesBody($this->getRulesMainBody(), $this->htmlHelper, $this->request);
+            $this->tablesBody = new TablesBody($this->getRulesMainBody(), $this->getTablesBodyPostProcessor());
         }
         return $this->tablesBody;
     }
@@ -98,9 +100,17 @@ class WebPartsContainer extends StrictObject
     protected function getRulesMainBodyPreProcessor(): RulesMainBodyPreProcessor
     {
         if (!$this->rulesMainBodyPreProcessor) {
-            $this->rulesMainBodyPreProcessor = new RulesMainBodyPreProcessor();
+            $this->rulesMainBodyPreProcessor = new RulesMainBodyPreProcessor($this->htmlHelper);
         }
         return $this->rulesMainBodyPreProcessor;
+    }
+
+    protected function getTablesBodyPostProcessor(): TablesBodyPostProcessor
+    {
+        if (!$this->tablesBodyPostProcessor) {
+            $this->tablesBodyPostProcessor = new TablesBodyPostProcessor($this->request, $this->htmlHelper);
+        }
+        return $this->tablesBodyPostProcessor;
     }
 
     public function getNotFoundBody(): NotFoundBody

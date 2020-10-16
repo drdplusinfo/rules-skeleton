@@ -11,7 +11,6 @@ use Granam\String\StringInterface;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\Body;
 use Granam\WebContentBuilder\Web\HtmlContentInterface;
-use Gt\Dom\Element;
 
 class RulesContent extends StrictObject implements StringInterface
 {
@@ -99,17 +98,10 @@ class RulesContent extends StrictObject implements StringInterface
         if ($this->htmlDocument === null) {
             $htmlDocument = $this->htmlContent->getHtmlDocument();
 
-            $patchVersion = $this->currentWebVersion->getCurrentPatchVersion();
-            $htmlDocument->documentElement->setAttribute('data-content-version', $patchVersion);
-            $htmlDocument->documentElement->setAttribute('data-cached-at', \date(\DATE_ATOM));
-
-            /** @var Element $headElement */
-            $headElement = $htmlDocument->createElement('div');
-            $headElement->setAttribute('id', HtmlHelper::ID_MENU_WRAPPER);
-            $headElement->prop_set_innerHTML($this->menu->getValue());
-            $htmlDocument->body->insertBefore($headElement, $htmlDocument->body->firstElementChild);
-
+            $this->injectCacheStamp($htmlDocument);
+            $this->injectMenuWrapper($htmlDocument);
             $this->injectCacheId($htmlDocument);
+            $this->injectBackgroundWallpaper($htmlDocument);
 
             $this->htmlDocument = $htmlDocument;
         }
@@ -117,9 +109,39 @@ class RulesContent extends StrictObject implements StringInterface
         return $this->htmlDocument;
     }
 
+    private function injectCacheStamp(HtmlDocument $htmlDocument): void
+    {
+        $patchVersion = $this->currentWebVersion->getCurrentPatchVersion();
+        $htmlDocument->documentElement->setAttribute('data-content-version', $patchVersion);
+        $htmlDocument->documentElement->setAttribute('data-cached-at', \date(\DATE_ATOM));
+    }
+
+    private function injectMenuWrapper(HtmlDocument $htmlDocument): void
+    {
+        $headElement = $htmlDocument->createElement('div');
+        $headElement->setAttribute('id', HtmlHelper::ID_MENU_WRAPPER);
+        $headElement->prop_set_innerHTML($this->menu->getValue());
+        $htmlDocument->body->insertBefore($headElement, $htmlDocument->body->firstElementChild);
+    }
+
     private function injectCacheId(HtmlDocument $htmlDocument): void
     {
         $htmlDocument->documentElement->setAttribute(HtmlHelper::DATA_CACHE_STAMP, $this->cache->getCacheId());
+    }
+
+    private function injectBackgroundWallpaper(HtmlDocument $htmlDocument): void
+    {
+        $this->injectBackgroundWallpaperPart($htmlDocument, HtmlHelper::CLASS_BACKGROUND_WALLPAPER_RIGHT_PART);
+        $this->injectBackgroundWallpaperPart($htmlDocument, HtmlHelper::CLASS_BACKGROUND_WALLPAPER_LEFT_PART);
+    }
+
+    private function injectBackgroundWallpaperPart(HtmlDocument $htmlDocument, string $htmlClass): void
+    {
+        $backgroundWallpaper = $htmlDocument->createElement('div');
+        $backgroundWallpaper->classList->add($htmlClass);
+        $backgroundWallpaper->classList->add(HtmlHelper::CLASS_BACKGROUND_WALLPAPER);
+        $backgroundWallpaper->classList->add(HtmlHelper::CLASS_BACKGROUND_RELATED);
+        $htmlDocument->body->insertBefore($backgroundWallpaper, $htmlDocument->body->firstElementChild);
     }
 
     private function getCachedContent(): ?string

@@ -8,6 +8,15 @@ use Granam\WebContentBuilder\HtmlDocument;
 
 class RulesMainBodyPreProcessor extends StrictObject implements HtmlDocumentProcessorInterface
 {
+    /**
+     * @var HtmlHelper
+     */
+    private $htmlHelper;
+
+    public function __construct(HtmlHelper $htmlHelper)
+    {
+        $this->htmlHelper = $htmlHelper;
+    }
 
     public function processDocument(HtmlDocument $htmlDocument): HtmlDocument
     {
@@ -17,7 +26,7 @@ class RulesMainBodyPreProcessor extends StrictObject implements HtmlDocumentProc
 
     protected function solveLocalLinksInTableOfContents(HtmlDocument $htmlDocument)
     {
-        $tableOfContents = $htmlDocument->getElementById(HtmlHelper::ID_TABLE_OF_CONTENTS);
+        $tableOfContents = $htmlDocument->getElementById((string)$this->htmlHelper::ID_TABLE_OF_CONTENTS);
         if (!$tableOfContents) {
             return;
         }

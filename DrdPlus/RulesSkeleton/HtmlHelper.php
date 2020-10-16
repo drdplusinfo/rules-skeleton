@@ -17,11 +17,16 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public const ID_DEBUG_CONTACTS = 'debug_contacts';
     public const ID_HOME_BUTTON = 'home_button';
     public const ID_TABLE_OF_CONTENTS = 'table_of_contents';
+
     public const CLASS_RULES_AUTHORS = 'rules-authors';
     public const CLASS_CALCULATION = 'calculation';
     public const CLASS_COVERED_BY_CODE = 'covered-by-code';
     public const CLASS_QUOTE = 'quote';
+    public const CLASS_BACKGROUND_RELATED = 'background-related';
     public const CLASS_BACKGROUND_IMAGE = 'background-image';
+    public const CLASS_BACKGROUND_WALLPAPER = 'background-wallpaper';
+    public const CLASS_BACKGROUND_WALLPAPER_LEFT_PART = 'background-wallpaper-left-part';
+    public const CLASS_BACKGROUND_WALLPAPER_RIGHT_PART = 'background-wallpaper-right-part';
     public const CLASS_GENERIC = 'generic';
     public const CLASS_NOTE = 'note';
     public const CLASS_EXCLUDED = 'excluded';
@@ -34,6 +39,7 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public const CLASS_FORMULA = 'formula';
     public const CLASS_SOURCE_CODE_TITLE = 'source-code-title';
     public const CLASS_TABLES_RELATED = 'tables-related';
+
     public const DATA_CACHE_STAMP = 'data-cache-stamp';
     public const DATA_CACHED_AT = 'data-cached-at';
     public const DATA_HAS_MARKED_EXTERNAL_URLS = 'data-has-marked-external-urls';
@@ -118,6 +124,11 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         }
 
         return \array_intersect_key($tablesWithIds, $unifiedRequiredIds);
+    }
+
+    public function findBackgroundRelatedElements(HtmlDocument $htmlDocument): HTMLCollection
+    {
+        return $htmlDocument->getElementsByClassName(self::CLASS_BACKGROUND_RELATED);
     }
 
     public function findTablesRelatedElements(HtmlDocument $htmlDocument): HTMLCollection
