@@ -6,7 +6,7 @@ use DrdPlus\RulesSkeleton\Environment;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\WebContentBuilder\Web\HeadInterface;
 
-class TablesContent extends MainContent
+class TablesContent extends Content
 {
     public function __construct(HtmlHelper $htmlHelper, Environment $environment, HeadInterface $head, TablesBody $tablesBody)
     {

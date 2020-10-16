@@ -12,7 +12,7 @@ use DrdPlus\RulesSkeleton\Web\Menu;
 use DrdPlus\RulesSkeleton\Web\NotFoundContent;
 use DrdPlus\RulesSkeleton\Web\Gateway;
 use DrdPlus\RulesSkeleton\Web\GatewayContent;
-use DrdPlus\RulesSkeleton\Web\RulesMainContent;
+use DrdPlus\RulesSkeleton\Web\MainContent;
 use DrdPlus\RulesSkeleton\Web\TablesContent;
 use DrdPlus\RulesSkeleton\Web\Tools\WebFiles;
 use DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer;
@@ -78,13 +78,13 @@ class ServicesContainer extends StrictObject
     private $rootWebPartsContainer;
     /** @var WebPartsContainer */
     private $routedWebPartsContainer;
-    /** @var RulesMainContent */
+    /** @var MainContent */
     private $rulesMainContent;
-    /** @var RulesMainContent */
+    /** @var MainContent */
     private $tablesMainContent;
     /** @var HtmlContentInterface */
     private $rulesPdfWebContent;
-    /** @var RulesMainContent */
+    /** @var MainContent */
     private $passContent;
     /** @var NotFoundContent */
     private $notFoundContent;
@@ -184,10 +184,10 @@ class ServicesContainer extends StrictObject
         return $this->botParser;
     }
 
-    public function getRulesMainContent(): RulesMainContent
+    public function getRulesMainContent(): MainContent
     {
         if ($this->rulesMainContent === null) {
-            $this->rulesMainContent = new RulesMainContent(
+            $this->rulesMainContent = new MainContent(
                 $this->getHtmlHelper(),
                 $this->getEnvironment(),
                 $this->getHead(),

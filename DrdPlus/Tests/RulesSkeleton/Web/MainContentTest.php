@@ -2,103 +2,237 @@
 
 namespace DrdPlus\Tests\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\Web\RulesMainContent;
-use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
+use DrdPlus\RulesSkeleton\HtmlHelper;
+use DrdPlus\RulesSkeleton\Request;
+use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
+use Gt\Dom\Element;
+use Gt\Dom\Node;
 
-class MainContentTest extends AbstractContentTest
+class MainContentTest extends ContentTest
 {
     /**
      * @test
      */
-    public function I_can_get_content(): void
+    public function Every_plus_after_2d6_is_upper_indexed(): void
     {
-        self::assertSame($this->getHtmlDocument()->saveHTML(), $this->getContent());
+        self::assertSame(
+            0,
+            \preg_match(
+                '~.{0,10}2k6\s*(?!<span class="upper-index">\+</span>).{0,20}\+~',
+                $this->getContentWithoutIds(),
+                $matches
+            ),
+            \var_export($matches, true)
+        );
+    }
+
+    private function getContentWithoutIds(): string
+    {
+        $document = clone $this->getHtmlDocument();
+        /** @var Element $body */
+        $body = $document->getElementsByTagName('body')[0];
+        $this->removeIds($body);
+
+        return $document->saveHTML();
+    }
+
+    private function removeIds(Element $element): void
+    {
+        if ($element->hasAttribute('id')) {
+            $element->removeAttribute('id');
+        }
+        foreach ($element->children as $child) {
+            $this->removeIds($child);
+        }
     }
 
     /**
      * @test
      */
-    public function I_can_get_body(): void
+    public function Every_registered_trademark_and_trademark_symbols_are_upper_indexed(): void
     {
-        self::assertNotEmpty($this->getHtmlDocument()->body->innerHTML);
-    }
-
-    /**
-     * @test
-     */
-    public function Body_has_container_bootstrap_class(): void
-    {
-        self::assertTrue(
-            $this->getHtmlDocument()->body->classList->contains('container'),
-            'Body should has "container" class to be usable for Bootstrap'
+        self::assertSame(
+            0,
+            \preg_match(
+                '~.{0,10}(?:(?<!<span class="upper-index">)\s*[®™]|[®™]\s*(?!</span>).{0,10})~u',
+                $this->getContent(),
+                $matches
+            ),
+            \var_export($matches, true)
         );
     }
 
     /**
      * @test
-     * @dataProvider provideLinkToDrdPlus
-     * @param string $linkToDrdPlus
-     * @param string $expectedLinkWithoutDiacritics
      */
-    public function Link_to_drdplus_has_removed_diacritics_from_hash(
-        string $linkToDrdPlus,
-        string $expectedLinkWithoutDiacritics
-    ): void
+    public function Every_id_is_unique(): void
     {
-        $rulesMainContent = new RulesMainContent(
-            $this->createHtmlHelper(),
-            $this->getEnvironment(),
-            $this->createEmptyHead(),
-            $this->createMainBody(sprintf('<a href="%s">Some link</a>', $linkToDrdPlus))
+        $ids = $this->parseAllIds($this->getHtmlDocument());
+        $idsCount = \array_count_values($ids);
+        $duplicatedIds = \array_filter(
+            $idsCount,
+            static function (int $count) {
+                return $count > 1;
+            }
         );
-        self::assertStringContainsString($expectedLinkWithoutDiacritics, $rulesMainContent->getValue());
-    }
-
-    public function provideLinkToDrdPlus(): array
-    {
-        return [
-            ['https://pph.drdplus.info/foo#Příprava postavy', 'http://pph.drdplus.loc/foo#priprava_postavy'],
-            ['https://bojovnik.drdplus.info/#Nekonečné kopí', 'http://bojovnik.drdplus.loc/#nekonecne_kopi'],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider provideLinkOutOfDrdPlus
-     * @param string $linkOutOfDrdPlus
-     */
-    public function Link_outside_of_drdplus_has_untouched_diacritics_in_hash(string $linkOutOfDrdPlus): void
-    {
-        self::assertDoesNotMatchRegularExpression('~drdplus[.](loc|info)~', $linkOutOfDrdPlus);
-        $rulesMainContent = new RulesMainContent(
-            $this->createHtmlHelper(),
-            $this->getEnvironment(),
-            $this->createEmptyHead(),
-            $this->createMainBody(\sprintf('<a href="%s">Some link</a>', $linkOutOfDrdPlus))
-        );
-        $hash = \substr($linkOutOfDrdPlus, \strpos($linkOutOfDrdPlus, '#') + 1);
-        $expectedLinkOutOfDrdPlus = \str_replace('#' . $hash, '#' . \rawurlencode($hash), $linkOutOfDrdPlus);
-        self::assertStringContainsString($expectedLinkOutOfDrdPlus, $rulesMainContent->getValue());
-    }
-
-    public function provideLinkOutOfDrdPlus(): array
-    {
-        return [
-            ['https://obchod.altar.cz/drd-sada-zakladnich-prirucek-p-295.html#Copak to tu máme'],
-        ];
+        self::assertSame([], $duplicatedIds, 'Some IDs are used multiple times');
     }
 
     /**
      * @test
      */
-    public function Link_to_blog_is_not_broken(): void
+    public function I_can_navigate_to_every_heading_by_expected_anchor(): void
     {
-        $rulesMainContent = new RulesMainContent(
-            $this->createHtmlHelper(),
-            $this->getEnvironment(),
-            $this->createEmptyHead(),
-            $this->createMainBody('<a href="https://blog.drdplus.info/#!index.md">To blog</a>')
+        $htmlDocument = $this->getHtmlDocument();
+        $allHeadings = [];
+        for ($tagLevel = 1; $tagLevel <= 6; $tagLevel++) {
+            $headings = $htmlDocument->getElementsByTagName('h' . $tagLevel);
+            foreach ($headings as $heading) {
+                $allHeadings[] = $heading;
+                $id = $heading->id;
+                if ($heading->prop_get_classList()->contains(HtmlHelper::CLASS_HEADING_WITHOUT_ID)) {
+                    self::assertEmpty(
+                        $id,
+                        sprintf(
+                            "No ID expected for '%s' as is marked by class '%s'",
+                            $heading->outerHTML,
+                            HtmlHelper::CLASS_HEADING_WITHOUT_ID
+                        )
+                    );
+                    continue;
+                }
+                self::assertNotEmpty($id, 'Expected some ID for ' . $heading->outerHTML);
+                $anchors = $heading->getElementsByTagName('a');
+                self::assertCount(1, $anchors, 'Expected single anchor in ' . $heading->outerHTML);
+                $anchor = $anchors->current();
+                $href = (string)$anchor->getAttribute('href');
+                self::assertNotEmpty($href, 'Expected some href of anchor in ' . $heading->outerHTML);
+                self::assertSame('#' . $id, $href, 'Expected anchor pointing to the heading ID');
+                $headingText = '';
+                foreach ($anchor->childNodes as $childNode) {
+                    /** @var Node $childNode */
+                    if ($childNode->nodeType === \XML_TEXT_NODE) {
+                        $headingText = $childNode->textContent;
+                        break;
+                    }
+                }
+                self::assertNotEmpty($headingText, 'Expected some human name for heading ' . $heading->outerHTML);
+                $idFromText = HtmlHelper::toId($headingText);
+                self::assertSame($id, $idFromText, "Expected different ID as created from '$headingText' heading");
+            }
+        }
+        if (!$this->getTestsConfiguration()->hasHeadings()) {
+            self::assertCount(
+                0,
+                $allHeadings,
+                sprintf("No headings expected as test configuration says by '%s'", TestsConfiguration::HAS_HEADINGS)
+            );
+        } else {
+            self::assertNotEmpty($allHeadings, 'Expected some headings');
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function Authors_got_heading(): void
+    {
+        $authorsHeading = $this->getHtmlDocument()->getElementById(HtmlHelper::ID_AUTHORS);
+        if (!$this->getTestsConfiguration()->hasAuthors()) {
+            self::assertEmpty(
+                $authorsHeading,
+                sprintf("Authors are not expected as test configuration says by '%s'", TestsConfiguration::HAS_AUTHORS)
+            );
+
+            return;
+        }
+        self::assertNotEmpty(
+            $authorsHeading,
+            sprintf("Authors should have h3 heading as test configuration says by '%s'", TestsConfiguration::HAS_AUTHORS)
         );
-        self::assertStringContainsString('http://blog.drdplus.loc/#!index.md', $rulesMainContent->getValue());
+        self::assertSame(
+            'h3',
+            $authorsHeading->nodeName,
+            'Authors heading should be h3, but is ' . $authorsHeading->nodeName
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function Authors_are_mentioned(): void
+    {
+        $body = $this->getHtmlDocument()->body;
+        $rulesAuthors = $body->getElementsByClassName(HtmlHelper::CLASS_RULES_AUTHORS);
+        if (!$this->getTestsConfiguration()->hasAuthors()) {
+            self::assertCount(
+                0,
+                $rulesAuthors,
+                sprintf("No rules authors expected as test configuration says by '%s'", TestsConfiguration::HAS_AUTHORS)
+            );
+
+            return;
+        }
+        self::assertCount(
+            1,
+            $rulesAuthors,
+            sprintf(
+                "Expected one '%s' HTML class in rules content as test configuration says by '%s', got %d of them",
+                HtmlHelper::CLASS_RULES_AUTHORS,
+                TestsConfiguration::HAS_AUTHORS,
+                $rulesAuthors->count()
+            )
+        );
+        $rulesAuthors = $rulesAuthors->current();
+        self::assertNotEmpty(\trim($rulesAuthors->textContent), 'Expected some content of rules authors');
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_routed_content()
+    {
+        if (!$this->isSkeletonChecked()) {
+            self::assertTrue(true);
+            return;
+        }
+        $routedContent = $this->getHtmlDocument([], [], [], '/routed')->getElementById('just_some_element_from_routed_content');
+        self::assertNotEmpty($routedContent, 'Expected content not found on test route /routed');
+
+        $hyphenRoutedContent = $this->getHtmlDocument([], [], [], '/draci-a-dracata')->getElementById('just_some_element_from_draci_a_dracata');
+        self::assertNotEmpty($hyphenRoutedContent, 'Expected content not found on test route /draci-a-dracata');
+    }
+
+    /**
+     * @test
+     */
+    public function I_will_get_pretty_not_found_page_on_unknown_route()
+    {
+        $nonExistingRoute = $this->getTestsConfiguration()->getLocalUrl() . '/' . uniqid('non-existing-route-', true);
+        $this->goIn();
+        $response = $this->fetchContentFromUrl($nonExistingRoute . '?' . Request::TRIAL . '=1', true);
+        $this->goOut();
+        self::assertSame(404, $response['responseHttpCode']);
+        self::assertStringContainsStringIgnoringCase('kde nic tu nic', $response['content']);
+    }
+
+    /**
+     * @test
+     */
+    public function Content_is_styled()
+    {
+        $contents = $this->getHtmlDocument()->getElementsByClassName(HtmlHelper::CLASS_CONTENT);
+        if ($this->isRulesSkeletonChecked() || $this->getTestsConfiguration()->hasMarkedContent()) {
+            self::assertNotEmpty(
+                $contents,
+                sprintf("Expected some content marked by '%s' class as tests configuration says by '%s'", HtmlHelper::CLASS_CONTENT, TestsConfiguration::HAS_MARKED_CONTENT)
+            );
+        } else {
+            self::assertCount(
+                0,
+                $contents,
+                sprintf("No content marked by '%s' class expected as tests configuration says by '%s'", HtmlHelper::CLASS_CONTENT, TestsConfiguration::HAS_MARKED_CONTENT)
+            );
+        }
     }
 }

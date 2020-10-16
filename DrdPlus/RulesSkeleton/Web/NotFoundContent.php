@@ -7,7 +7,7 @@ use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\HeadInterface;
 
-class NotFoundContent extends MainContent
+class NotFoundContent extends Content
 {
     public function __construct(HtmlHelper $htmlHelper, Environment  $environment, HeadInterface $head, NotFoundBody $body)
     {
