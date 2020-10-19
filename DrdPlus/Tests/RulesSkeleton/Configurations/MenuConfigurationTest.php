@@ -2,6 +2,7 @@
 
 namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
@@ -50,6 +51,33 @@ class MenuConfigurationTest extends AbstractContentTest
         $values[MenuConfiguration::ITEMS] = '';
         $this->expectException(InvalidConfiguration::class);
         $this->expectExceptionMessageMatches("~'foo[.]bar[.]items'.+''~");
+        new MenuConfiguration($values, ['foo', 'bar']);
+    }
+
+    /**
+     * @test
+     */
+    public function I_am_stopped_on_missing_home_button_configuration_part()
+    {
+        $values = static::$validMenuConfiguration;
+        $this->expectException(InvalidConfiguration::class);
+        $this->expectExceptionMessageMatches("~'foo[.]bar[.]home_button'.+~");
+        unset($values[MenuConfiguration::HOME_BUTTON]);
+        new MenuConfiguration($values, ['foo', 'bar']);
+    }
+
+    /**
+     * @test
+     */
+    public function Missing_home_button_configuration_section_is_created()
+    {
+        $values = static::$validMenuConfiguration;
+        $values[Configuration::SHOW_HOME_BUTTON_ON_HOMEPAGE] = true;
+        unset($values[MenuConfiguration::HOME_BUTTON]);
+
+        $this->expectException(InvalidConfiguration::class);
+        $this->expectExceptionMessageMatches("~Expected explicitly defined configuration 'foo.bar.home_button.show_on_routes'.+~");
+
         new MenuConfiguration($values, ['foo', 'bar']);
     }
 

@@ -79,10 +79,19 @@ abstract class AbstractConfiguration extends StrictObject implements Configurati
     protected function diveConfigurationStructure(string $oldKey, string $subConfigurationKey, string $newKey, array $values): array
     {
         if (array_key_exists($oldKey, $values)) {
+            $values = $this->ensureSubConfigurationSection($subConfigurationKey, $values);
             if (!array_key_exists(MenuConfiguration::POSITION_FIXED, $values[$subConfigurationKey])) {
                 $values[$subConfigurationKey][$newKey] = $values[$oldKey];
             }
             unset($values[$oldKey]);
+        }
+        return $values;
+    }
+
+    protected function ensureSubConfigurationSection(string $sectionKey, array $values): array
+    {
+        if (!array_key_exists($sectionKey, $values)) {
+            $values[$sectionKey] = [];
         }
         return $values;
     }

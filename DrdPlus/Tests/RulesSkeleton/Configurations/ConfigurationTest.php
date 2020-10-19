@@ -3,6 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\GatewayConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
@@ -86,7 +87,7 @@ class ConfigurationTest extends AbstractContentTest
 
     public function provideCompleteLocalAndDistributionYamlContent(): array
     {
-        $completeYamlContent = $this->getSomeCompleteSettings();
+        $completeYamlContent = $this->getSomeValidConfigurationValues();
         $limitedWebSection = $completeYamlContent;
         $changedCompleteYamlContent = $completeYamlContent;
 
@@ -97,7 +98,7 @@ class ConfigurationTest extends AbstractContentTest
         ];
     }
 
-    protected function getSomeCompleteSettings(): array
+    protected function getSomeValidConfigurationValues(): array
     {
         return [
             Configuration::WEB => [
@@ -143,7 +144,7 @@ class ConfigurationTest extends AbstractContentTest
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidGoogleAnalyticsId::class);
         $this->expectExceptionMessageMatches('~' . preg_quote($invalidGoogleAnalyticsId, '~') . '~');
 
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         $completeSettings[Configuration::GOOGLE][Configuration::ANALYTICS_ID] = $invalidGoogleAnalyticsId;
         new Configuration($this->getDirs(), $completeSettings);
     }
@@ -162,7 +163,7 @@ class ConfigurationTest extends AbstractContentTest
     public function I_can_not_create_it_without_defining_if_menu_should_be_fixed(): void
     {
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::POSITION_FIXED]);
         new Configuration($this->getDirs(), $completeSettings);
     }
@@ -173,7 +174,7 @@ class ConfigurationTest extends AbstractContentTest
     public function I_can_not_create_it_without_defining_if_show_home_button_on_homepage(): void
     {
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON][HomeButtonConfiguration::SHOW_ON_HOMEPAGE]);
         new Configuration($this->getDirs(), $completeSettings);
     }
@@ -184,7 +185,7 @@ class ConfigurationTest extends AbstractContentTest
     public function I_can_not_create_it_without_defining_if_show_home_button_on_routes(): void
     {
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON][HomeButtonConfiguration::SHOW_ON_ROUTES]);
         new Configuration($this->getDirs(), $completeSettings);
     }
@@ -195,7 +196,7 @@ class ConfigurationTest extends AbstractContentTest
     public function I_can_not_create_it_without_web_name(): void
     {
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         $completeSettings[Configuration::WEB][Configuration::NAME] = '';
         new Configuration($this->getDirs(), $completeSettings);
     }
@@ -206,7 +207,7 @@ class ConfigurationTest extends AbstractContentTest
     public function I_can_not_create_it_without_set_title_smiley(): void
     {
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         unset($completeSettings[Configuration::WEB][Configuration::TITLE_SMILEY]);
         new Configuration($this->getDirs(), $completeSettings);
     }
@@ -216,7 +217,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_create_it_with_title_smiley_as_null(): void
     {
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         $completeSettings[Configuration::WEB][Configuration::TITLE_SMILEY] = null;
         $configuration = new Configuration($this->getDirs(), $completeSettings);
         self::assertSame('', $configuration->getTitleSmiley());
@@ -227,7 +228,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_create_it_without_yaml_file_with_routes(): void
     {
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         $completeSettings[Configuration::APPLICATION][Configuration::YAML_FILE_WITH_ROUTES] = null;
         $configuration = new Configuration($this->getDirs(), $completeSettings);
         self::assertSame('', $configuration->getYamlFileWithRoutes());
@@ -238,7 +239,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_get_yaml_file_with_routes(): void
     {
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         $completeSettings[Configuration::APPLICATION][Configuration::YAML_FILE_WITH_ROUTES] = 'foo';
         $configuration = new Configuration($this->getDirs(), $completeSettings);
         self::assertSame('foo', $configuration->getYamlFileWithRoutes());
@@ -249,7 +250,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_will_get_default_home_button_target_if_none_custom_is_set()
     {
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         $expectedHomeButtonTarget = $completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON][HomeButtonConfiguration::TARGET];
         $configuration = new Configuration($this->getDirs(), $completeSettings);
         self::assertSame(
@@ -267,7 +268,7 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_overwrite_default_home_button_target()
     {
-        $completeSettings = $this->getSomeCompleteSettings();
+        $completeSettings = $this->getSomeValidConfigurationValues();
         $completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON][HomeButtonConfiguration::TARGET] = '..';
         $configuration = new Configuration($this->getDirs(), $completeSettings);
         self::assertSame('..', $configuration->getMenuConfiguration()->getHomeButtonConfiguration()->getTarget());
@@ -278,12 +279,12 @@ class ConfigurationTest extends AbstractContentTest
      */
     public function I_can_ommit_eshop_url_on_free_access()
     {
-        $settings = $this->getSomeCompleteSettings();
+        $values = $this->getSomeValidConfigurationValues();
 
-        $settings[Configuration::WEB][Configuration::GATEWAY][GatewayConfiguration::PROTECTED_ACCESS] = false;
-        unset($settings[Configuration::WEB][Configuration::ESHOP_URL]);
+        $values[Configuration::WEB][Configuration::GATEWAY][GatewayConfiguration::PROTECTED_ACCESS] = false;
+        unset($values[Configuration::WEB][Configuration::ESHOP_URL]);
 
-        $configuration = new Configuration($this->getDirs(), $settings);
+        $configuration = new Configuration($this->getDirs(), $values);
 
         self::assertFalse($configuration->getGatewayConfiguration()->hasProtectedAccess());
         self::assertSame('', $configuration->getEshopUrl());
@@ -295,11 +296,11 @@ class ConfigurationTest extends AbstractContentTest
     public function I_can_not_ommit_eshop_url_on_protected_access()
     {
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidEshopUrl::class);
-        $settings = $this->getSomeCompleteSettings();
+        $values = $this->getSomeValidConfigurationValues();
 
-        $settings[Configuration::WEB][Configuration::GATEWAY][GatewayConfiguration::PROTECTED_ACCESS] = true;
-        unset($settings[Configuration::WEB][Configuration::ESHOP_URL]);
+        $values[Configuration::WEB][Configuration::GATEWAY][GatewayConfiguration::PROTECTED_ACCESS] = true;
+        unset($values[Configuration::WEB][Configuration::ESHOP_URL]);
 
-        new Configuration($this->getDirs(), $settings);
+        new Configuration($this->getDirs(), $values);
     }
 }
