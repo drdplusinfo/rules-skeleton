@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-/** @var \DrdPlus\RulesSkeleton\Web\DebugContactsBody $debugContactsBody */
+/** @var \DrdPlus\RulesSkeleton\Web\DebugContacts\DebugContactsBody $debugContactsBody */
 /** @var $request \DrdPlus\RulesSkeleton\Request */
 ?>
 <h1>Kde nic tu nic 😢</h1>

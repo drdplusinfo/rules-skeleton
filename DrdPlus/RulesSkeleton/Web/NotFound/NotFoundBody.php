@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton\Web;
+namespace DrdPlus\RulesSkeleton\Web\NotFound;
 
 use DrdPlus\RulesSkeleton\Request;
+use DrdPlus\RulesSkeleton\Web\DebugContacts\DebugContactsBody;
+use DrdPlus\RulesSkeleton\Web\RulesBodyInterface;
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\HtmlDocument;
 

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton\Web;
+namespace DrdPlus\RulesSkeleton\Web\DebugContacts;
 
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\Web\BodyInterface;

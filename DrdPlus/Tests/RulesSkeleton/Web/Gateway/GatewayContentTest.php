@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton\Web;
+namespace DrdPlus\Tests\RulesSkeleton\Web\Gateway;
 
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;

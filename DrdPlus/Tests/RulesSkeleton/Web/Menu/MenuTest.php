@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton\Web;
+namespace DrdPlus\Tests\RulesSkeleton\Web\Menu;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\RulesSkeleton\HomepageDetector;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\PathProvider;
-use DrdPlus\RulesSkeleton\Web\Menu;
+use DrdPlus\RulesSkeleton\Web\Menu\Menu;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\WebContentBuilder\HtmlDocument;
 use Mockery\MockInterface;

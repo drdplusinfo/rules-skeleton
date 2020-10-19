@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-/** @var $configuration \DrdPlus\RulesSkeleton\Configuration */
+/** @var $configuration \DrdPlus\RulesSkeleton\Configurations\Configuration */
 /** @var $request \DrdPlus\RulesSkeleton\Request */
 ?>
 <h1><?= $configuration->getWebName() ?></h1>

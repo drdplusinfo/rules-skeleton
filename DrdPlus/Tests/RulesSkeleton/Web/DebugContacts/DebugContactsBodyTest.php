@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton\Web;
+namespace DrdPlus\Tests\RulesSkeleton\Web\DebugContacts;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\RulesSkeleton\Web\DebugContactsBody;
+use DrdPlus\RulesSkeleton\Web\DebugContacts\DebugContactsBody;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\HTMLDocument;
 

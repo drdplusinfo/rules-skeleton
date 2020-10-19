@@ -3,7 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\RulesSkeleton\Web\DebugContactsBody;
+use DrdPlus\RulesSkeleton\Web\DebugContacts\DebugContactsBody;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 
@@ -65,7 +65,7 @@ class ContactsContentTest extends AbstractContentTest
                 $debugContactsElement,
                 sprintf(
                     "Debug contacts have not been expected as test configuration says by '%s'",
-                    TestsConfiguration::HAS_DEBUG_CONTACTS,
+                    TestsConfiguration::HAS_DEBUG_CONTACTS
                 )
             );
 

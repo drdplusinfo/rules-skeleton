@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton\Web;
+namespace DrdPlus\Tests\RulesSkeleton\Web\Main;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
+use DrdPlus\Tests\RulesSkeleton\Web\ContentTest;
 use Gt\Dom\Element;
 use Gt\Dom\Node;
 

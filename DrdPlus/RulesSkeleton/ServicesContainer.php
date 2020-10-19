@@ -6,14 +6,13 @@ use DeviceDetector\Parser\Bot;
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\Dirs;
 use DrdPlus\RulesSkeleton\Configurations\RoutedDirs;
-use DrdPlus\RulesSkeleton\Web\EmptyMenu;
+use DrdPlus\RulesSkeleton\Web\Gateway\GatewayContent;
 use DrdPlus\RulesSkeleton\Web\Head;
-use DrdPlus\RulesSkeleton\Web\Menu;
-use DrdPlus\RulesSkeleton\Web\NotFoundContent;
-use DrdPlus\RulesSkeleton\Web\Gateway;
-use DrdPlus\RulesSkeleton\Web\GatewayContent;
-use DrdPlus\RulesSkeleton\Web\MainContent;
-use DrdPlus\RulesSkeleton\Web\TablesContent;
+use DrdPlus\RulesSkeleton\Web\Main\MainContent;
+use DrdPlus\RulesSkeleton\Web\Menu\EmptyMenu;
+use DrdPlus\RulesSkeleton\Web\Menu\Menu;
+use DrdPlus\RulesSkeleton\Web\NotFound\NotFoundContent;
+use DrdPlus\RulesSkeleton\Web\Tables\TablesContent;
 use DrdPlus\RulesSkeleton\Web\Tools\WebFiles;
 use DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer;
 use DrdPlus\RulesSkeleton\Web\Tools\WebRootProvider;
@@ -84,8 +83,8 @@ class ServicesContainer extends StrictObject
     private $tablesMainContent;
     /** @var HtmlContentInterface */
     private $rulesPdfWebContent;
-    /** @var MainContent */
-    private $passContent;
+    /** @var GatewayContent */
+    private $gatewayContent;
     /** @var NotFoundContent */
     private $notFoundContent;
     /** @var CookiesService */
@@ -108,8 +107,6 @@ class ServicesContainer extends StrictObject
     private $notFoundCache;
     /** @var UsagePolicy */
     private $usagePolicy;
-    /** @var Gateway */
-    private $pass;
     /** @var RulesUrlMatcher */
     private $rulesUrlMatcher;
     /** @var TablesRequestDetector */
@@ -201,7 +198,8 @@ class ServicesContainer extends StrictObject
     {
         if ($this->routedWebPartsContainer === null) {
             $this->routedWebPartsContainer = new WebPartsContainer(
-                $this->getPass(),
+                $this->getConfiguration(),
+                $this->getUsagePolicy(),
                 $this->getRoutedWebFiles(),
                 $this->getDirs(),
                 $this->getHtmlHelper(),
@@ -228,7 +226,8 @@ class ServicesContainer extends StrictObject
     {
         if ($this->rootWebPartsContainer === null) {
             $this->rootWebPartsContainer = new WebPartsContainer(
-                $this->getPass(),
+                $this->getConfiguration(),
+                $this->getUsagePolicy(),
                 $this->getRootWebFiles(),
                 $this->getDirs(),
                 $this->getHtmlHelper(),
@@ -246,17 +245,17 @@ class ServicesContainer extends StrictObject
         return $this->rulesPdfWebContent;
     }
 
-    public function getPassContent(): GatewayContent
+    public function getGatewayContent(): GatewayContent
     {
-        if ($this->passContent === null) {
-            $this->passContent = new GatewayContent(
+        if ($this->gatewayContent === null) {
+            $this->gatewayContent = new GatewayContent(
                 $this->getHtmlHelper(),
                 $this->getEnvironment(),
                 $this->getHead(),
-                $this->getRoutedWebPartsContainer()->getPassBody()
+                $this->getRoutedWebPartsContainer()->getGatewayBody()
             );
         }
-        return $this->passContent;
+        return $this->gatewayContent;
     }
 
     public function getNotFoundContent(): NotFoundContent
@@ -561,14 +560,6 @@ class ServicesContainer extends StrictObject
             );
         }
         return $this->notFoundCache;
-    }
-
-    public function getPass(): Gateway
-    {
-        if ($this->pass === null) {
-            $this->pass = new Gateway($this->getConfiguration(), $this->getUsagePolicy(), $this->getRequest());
-        }
-        return $this->pass;
     }
 
     public function getUsagePolicy(): UsagePolicy

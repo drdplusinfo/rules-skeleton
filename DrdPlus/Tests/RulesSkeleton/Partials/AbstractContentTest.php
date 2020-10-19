@@ -16,7 +16,7 @@ use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesApplication;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
-use DrdPlus\RulesSkeleton\Web\RulesMainBody;
+use DrdPlus\RulesSkeleton\Web\Main\MainBody;
 use DrdPlus\Tests\RulesSkeleton\Exceptions\GlobalsAreNotBackedUp;
 use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
 use DrdPlus\WebVersions\WebVersions;
@@ -849,11 +849,11 @@ TEXT
 
     /**
      * @param string $content
-     * @return RulesMainBody|MockInterface
+     * @return MainBody|MockInterface
      */
-    protected function createMainBody(string $content): RulesMainBody
+    protected function createMainBody(string $content): MainBody
     {
-        $rulesMainBody = $this->mockery(RulesMainBody::class);
+        $rulesMainBody = $this->mockery(MainBody::class);
         $rulesMainBody->shouldReceive('getValue')
             ->andReturn($content);
         $rulesMainBody->makePartial();

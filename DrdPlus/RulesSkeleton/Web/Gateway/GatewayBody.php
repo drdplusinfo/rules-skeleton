@@ -1,22 +1,22 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton\Web;
+namespace DrdPlus\RulesSkeleton\Web\Gateway;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
+use DrdPlus\RulesSkeleton\Web\RulesBodyInterface;
 use Granam\Strict\Object\StrictObject;
-use Granam\String\StringInterface;
+use Granam\WebContentBuilder\HtmlDocument;
 
-class Gateway extends StrictObject implements StringInterface
+class GatewayBody extends StrictObject implements RulesBodyInterface
 {
     /** @var Configuration */
     private $configuration;
     /** @var UsagePolicy */
     private $usagePolicy;
-    /**
-     * @var Request
-     */
+    /** @var Request */
     private $request;
 
     public function __construct(Configuration $configuration, UsagePolicy $usagePolicy, Request $request)
@@ -33,10 +33,13 @@ class Gateway extends StrictObject implements StringInterface
 
     public function getValue(): string
     {
+        $backgroundImageClass = HtmlHelper::CLASS_BACKGROUND_IMAGE;
         return <<<HTML
-{$this->getTrialTimeExpiredString()}
-{$this->getLicenceManifestString()}
-{$this->getFooterString()}
+<div class="main gateway">
+  <div class="{$backgroundImageClass}"></div>
+  {$this->getTrialTimeExpiredString()}
+  {$this->getLicenceManifestString()}
+  {$this->getFooterString()}
 </div>
 HTML;
     }
@@ -66,5 +69,15 @@ HTML;
         ob_start();
         include __DIR__ . '/content/gateway-footer.html';
         return ob_get_clean();
+    }
+
+    public function preProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
+    {
+        return $htmlDocument;
+    }
+
+    public function postProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
+    {
+        return $htmlDocument;
     }
 }

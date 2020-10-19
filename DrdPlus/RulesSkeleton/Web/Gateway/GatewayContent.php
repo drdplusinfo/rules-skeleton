@@ -1,44 +1,34 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton\Web;
+namespace DrdPlus\RulesSkeleton\Web\Gateway;
 
 use DrdPlus\RulesSkeleton\Environment;
 use DrdPlus\RulesSkeleton\HtmlHelper;
+use DrdPlus\RulesSkeleton\Web\Content;
 use Granam\WebContentBuilder\HtmlDocument;
-use Granam\WebContentBuilder\Web\Content;
 use Granam\WebContentBuilder\Web\HeadInterface;
 
 class GatewayContent extends Content
 {
-    /** @var HtmlHelper */
-    protected $htmlHelper;
-    /** @var Environment */
-    protected $environment;
-
     public function __construct(HtmlHelper $htmlHelper, Environment $environment, HeadInterface $head, GatewayBody $gatewayBody)
     {
-        parent::__construct($htmlHelper, $head, $gatewayBody);
-        $this->htmlHelper = $htmlHelper;
-        $this->environment = $environment;
+        parent::__construct($htmlHelper, $environment, $head, $gatewayBody);
     }
 
-    protected function buildHtmlDocument(string $content): HtmlDocument
+    protected function processDocument(HtmlDocument $htmlDocument)
     {
-        $htmlDocument = new HtmlDocument($content);
         $htmlDocument->body->classList->add('container');
         $this->solveIds($htmlDocument);
         $this->solveLinks($htmlDocument);
-
-        return $htmlDocument;
     }
 
-    private function solveIds(HtmlDocument $htmlDocument): void
+    protected function solveIds(HtmlDocument $htmlDocument): void
     {
         $this->htmlHelper->unifyIds($htmlDocument);
         $this->htmlHelper->replaceDiacriticsFromDrdPlusAnchorHashes($htmlDocument);
     }
 
-    private function solveLinks(HtmlDocument $htmlDocument): void
+    protected function solveLinks(HtmlDocument $htmlDocument): void
     {
         $this->htmlHelper->externalLinksTargetToBlank($htmlDocument);
         $this->htmlHelper->markExternalLinksByClass($htmlDocument);

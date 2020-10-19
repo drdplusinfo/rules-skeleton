@@ -2,6 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Web\RulesContent;
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\Web\Exceptions\UnknownWebFilesDir;
@@ -42,7 +43,7 @@ class RulesApplication extends StrictObject
             }
         } catch (UnknownWebFilesDir | RouteNotFoundException | ResourceNotFoundException $invalidRoute) {
             $this->sendNotFoundHeaders();
-            echo $this->getNotFoundContent()->getValue();
+            echo $this->getNotFoundRulesContent()->getValue();
         }
     }
 
@@ -103,7 +104,7 @@ class RulesApplication extends StrictObject
         }
         if (!$this->canPassIn()) {
             $this->content = new RulesContent(
-                $servicesContainer->getPassContent(),
+                $servicesContainer->getGatewayContent(),
                 $servicesContainer->getMenu(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getPassWebCache(),
@@ -145,7 +146,6 @@ class RulesApplication extends StrictObject
                     $canPassIn = $usagePolicy->isVisitorUsingValidTrial();
                     if (!$canPassIn) {
                         if ($this->servicesContainer->getRequest()->getValueFromPost(Request::CONFIRM)) {
-                            /** @noinspection PhpUnhandledExceptionInspection */
                             $canPassIn = $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
                         }
                         if (!$canPassIn && $this->servicesContainer->getRequest()->getValue(Request::TRIAL)) {
@@ -206,7 +206,7 @@ class RulesApplication extends StrictObject
         http_response_code(404);
     }
 
-    private function getNotFoundContent(): RulesContent
+    private function getNotFoundRulesContent(): RulesContent
     {
         if ($this->notFoundContent) {
             return $this->notFoundContent;

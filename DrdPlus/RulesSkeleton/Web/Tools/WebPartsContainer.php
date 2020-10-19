@@ -2,22 +2,25 @@
 
 namespace DrdPlus\RulesSkeleton\Web\Tools;
 
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
-use DrdPlus\RulesSkeleton\Web\DebugContactsBody;
-use DrdPlus\RulesSkeleton\Web\NotFoundBody;
-use DrdPlus\RulesSkeleton\Web\Gateway;
-use DrdPlus\RulesSkeleton\Web\GatewayBody;
+use DrdPlus\RulesSkeleton\UsagePolicy;
+use DrdPlus\RulesSkeleton\Web\DebugContacts\DebugContactsBody;
+use DrdPlus\RulesSkeleton\Web\Gateway\GatewayBody;
+use DrdPlus\RulesSkeleton\Web\NotFound\NotFoundBody;
 use DrdPlus\RulesSkeleton\Web\PdfBody;
-use DrdPlus\RulesSkeleton\Web\RulesMainBody;
-use DrdPlus\RulesSkeleton\Web\TablesBody;
+use DrdPlus\RulesSkeleton\Web\Main\MainBody;
+use DrdPlus\RulesSkeleton\Web\Tables\TablesBody;
 use Granam\Strict\Object\StrictObject;
 
 class WebPartsContainer extends StrictObject
 {
-    /** @var Gateway */
-    private $pass;
+    /** @var Configuration */
+    private $configuration;
+    /** @var UsagePolicy */
+    private $usagePolicy;
     /** @var Dirs */
     private $dirs;
     /** @var HtmlHelper */
@@ -27,12 +30,12 @@ class WebPartsContainer extends StrictObject
     /** @var WebFiles */
     private $webFiles;
     /** @var GatewayBody */
-    private $passBody;
+    private $gatewayBody;
     /** @var DebugContactsBody */
     private $debugContactsBody;
     /** @var PdfBody */
     private $pdfBody;
-    /** @var RulesMainBody */
+    /** @var MainBody */
     private $rulesMainBody;
     /** @var RulesMainBodyPreProcessor */
     private $rulesMainBodyPreProcessor;
@@ -43,21 +46,29 @@ class WebPartsContainer extends StrictObject
     /** @var TablesBody */
     private $tablesBody;
 
-    public function __construct(Gateway $pass, WebFiles $webFiles, Dirs $dirs, HtmlHelper $htmlHelper, Request $request)
+    public function __construct(
+        Configuration $configuration,
+        UsagePolicy $usagePolicy,
+        WebFiles $webFiles,
+        Dirs $dirs,
+        HtmlHelper $htmlHelper,
+        Request $request
+    )
     {
-        $this->pass = $pass;
+        $this->configuration = $configuration;
+        $this->usagePolicy = $usagePolicy;
         $this->dirs = $dirs;
         $this->htmlHelper = $htmlHelper;
         $this->request = $request;
         $this->webFiles = $webFiles;
     }
 
-    public function getPassBody(): GatewayBody
+    public function getGatewayBody(): GatewayBody
     {
-        if ($this->passBody === null) {
-            $this->passBody = new GatewayBody($this->pass);
+        if ($this->gatewayBody === null) {
+            $this->gatewayBody = new GatewayBody($this->configuration, $this->usagePolicy, $this->request);
         }
-        return $this->passBody;
+        return $this->gatewayBody;
     }
 
     public function getDebugContactsBody(): DebugContactsBody
@@ -84,10 +95,10 @@ class WebPartsContainer extends StrictObject
         return $this->tablesBody;
     }
 
-    public function getRulesMainBody(): RulesMainBody
+    public function getRulesMainBody(): MainBody
     {
         if ($this->rulesMainBody === null) {
-            $this->rulesMainBody = new RulesMainBody(
+            $this->rulesMainBody = new MainBody(
                 $this->webFiles,
                 $this,
                 $this->getRulesMainBodyPreProcessor(),

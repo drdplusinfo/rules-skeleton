@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton\Web;
+namespace DrdPlus\RulesSkeleton\Web\Tables;
 
+use DrdPlus\RulesSkeleton\Web\RulesBodyInterface;
+use DrdPlus\RulesSkeleton\Web\Main\MainBody;
 use DrdPlus\RulesSkeleton\Web\Tools\TablesBodyPostProcessor;
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\HtmlDocument;
@@ -9,13 +11,13 @@ use Granam\WebContentBuilder\HtmlDocument;
 class TablesBody extends StrictObject implements RulesBodyInterface
 {
 
-    /** @var RulesMainBody */
+    /** @var MainBody */
     private $rulesMainBody;
     /** @var TablesBodyPostProcessor */
     private $tablesBodyPostProcessor;
 
     public function __construct(
-        RulesMainBody $rulesMainBody,
+        MainBody $rulesMainBody,
         TablesBodyPostProcessor $tablesBodyPostProcessor
     )
     {

@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton\Web;
+namespace DrdPlus\RulesSkeleton\Web\NotFound;
 
 use DrdPlus\RulesSkeleton\Environment;
 use DrdPlus\RulesSkeleton\HtmlHelper;
+use DrdPlus\RulesSkeleton\Web\Content;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\HeadInterface;
 

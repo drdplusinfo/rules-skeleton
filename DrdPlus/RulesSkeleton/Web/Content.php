@@ -7,7 +7,7 @@ use DrdPlus\RulesSkeleton\HtmlHelper;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\HeadInterface;
 
-abstract class Content extends \Granam\WebContentBuilder\Web\Content
+abstract class Content extends \Granam\WebContentBuilder\Web\Content implements ContentInterface
 {
     /** @var HtmlHelper */
     protected $htmlHelper;

@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton\Web;
+namespace DrdPlus\RulesSkeleton\Web\Main;
 
+use DrdPlus\RulesSkeleton\Web\RulesBodyInterface;
 use DrdPlus\RulesSkeleton\Web\Tools\HtmlDocumentProcessorInterface;
 use DrdPlus\RulesSkeleton\Web\Tools\RulesMainBodyPreProcessor;
 use DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer;
@@ -9,7 +10,7 @@ use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\Body;
 use Granam\WebContentBuilder\Web\WebFiles;
 
-class RulesMainBody extends Body implements RulesBodyInterface
+class MainBody extends Body implements RulesBodyInterface
 {
     /**
      * @var WebPartsContainer

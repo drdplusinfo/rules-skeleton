@@ -2,7 +2,7 @@
 
 namespace DrdPlus\Tests\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\Web\MainContent;
+use DrdPlus\RulesSkeleton\Web\Main\MainContent;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 
 class ContentTest extends AbstractContentTest
