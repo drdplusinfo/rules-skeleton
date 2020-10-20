@@ -19,39 +19,32 @@ class AnchorsTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Local_anchors_with_hashes_point_to_existing_ids(): void
+    public function Anchors_to_same_document_point_to_existing_ids(): void
     {
-        $html = $this->getHtmlDocument();
-        $localAnchors = $this->getLocalAnchors();
-        if (!$this->getTestsConfiguration()->hasLocalLinks()) {
+        $anchorsToSameDocument = $this->getAnchorsToSameDocument();
+        if (!$this->getTestsConfiguration()->hasAnchorsToSameDocument()) {
             self::assertCount(
                 0,
-                $localAnchors,
+                $anchorsToSameDocument,
                 sprintf(
-                    "No local anchors expected as tests config says by '%s'. But there are IDs to make anchors from: %s",
-                    TestsConfiguration::HAS_LOCAL_LINKS,
-                    "\n" . \implode(
-                        "\n", \array_map(
-                            static function (Element $anchor) {
-                                return (string)$anchor->getAttribute('href');
-                            },
-                            $localAnchors
-                        )
-                    )
+                    "No anchors pointing to same document expected as tests config says by '%s'. But there are IDs to make anchors from: %s",
+                    TestsConfiguration::HAS_ANCHORS_TO_SAME_DOCUMENT,
+                    "\n" . \implode("\n", $anchorsToSameDocument)
                 )
             );
 
             return;
         }
         self::assertNotEmpty(
-            $localAnchors,
-            sprintf("Some local anchors expected as tests config says by '%s'", TestsConfiguration::HAS_LOCAL_LINKS)
+            $anchorsToSameDocument,
+            sprintf("Some local anchors expected as tests config says by '%s'", TestsConfiguration::HAS_ANCHORS_TO_SAME_DOCUMENT)
         );
         $targets = [];
         $missingTargets = [];
-        foreach ($this->getLocalAnchors() as $localAnchor) {
-            $expectedId = \substr($localAnchor->getAttribute('href') ?? '', 1); // just remove leading #
-            $target = $html->getElementById($expectedId);
+        $htmlDocument = $this->getHtmlDocument();
+        foreach ($anchorsToSameDocument as $anchor) {
+            $expectedId = \substr($anchor, 1); // just remove leading #
+            $target = $htmlDocument->getElementById($expectedId);
             if (!$target) {
                 $missingTargets[] = $expectedId;
             } else {
@@ -88,20 +81,61 @@ class AnchorsTest extends AbstractContentTest
     }
 
     /**
-     * @return array|Element[]
+     * @return array|string[]
      */
-    private function getLocalAnchors(): array
+    private function getAnchorsToSameDocument(): array
     {
-        $html = $this->getHtmlDocument();
-        $localAnchors = [];
-        /** @var Element $anchor */
-        foreach ($html->getElementsByTagName('a') as $anchor) {
-            if (\strpos((string)$anchor->getAttribute('href'), '#') === 0) {
-                $localAnchors[] = $anchor;
+        $anchorsToSameDocument = [];
+        /** @var Element $localLink */
+        foreach ($this->getLocalLinks() as $localLink) {
+            if (\strpos($localLink, '#') === 0) {
+                $anchorsToSameDocument[] = $localLink;
             }
         }
 
-        return $localAnchors;
+        return $anchorsToSameDocument;
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_reach_every_local_link()
+    {
+        $localLinks = $this->getLocalLinks();
+    }
+
+    /**
+     * @return array|string[]
+     */
+    private function getLocalLinks(): array
+    {
+        return $this->getLinks()['local'];
+    }
+
+    /**
+     * @return array[]|string[][]
+     */
+    private function getLinks(): array
+    {
+        static $links;
+        if ($links) {
+            return $links;
+        }
+        $externalLinks = [];
+        $localLinks = [];
+        /** @var Element $anchor */
+        foreach ($this->getHtmlDocument()->getElementsByTagName('a') as $anchor) {
+            $link = (string)$anchor->getAttribute('href');
+            $urlParts = parse_url($link);
+            if (!empty($urlParts['host'])) {
+                $externalLinks[] = $link;
+            } else {
+                $localLinks[] = $link;
+            }
+        }
+        $links = ['local' => array_unique($localLinks), 'external' => array_unique($externalLinks)];
+
+        return $links;
     }
 
     private static $checkedExternalAnchors = [];
@@ -112,7 +146,7 @@ class AnchorsTest extends AbstractContentTest
     public function All_external_anchors_can_be_reached(): void
     {
         $skippedExternalUrls = [];
-        foreach ($this->getExternalAnchors() as $originalLink) {
+        foreach ($this->getExternalLinks() as $originalLink) {
             $link = $this->getHtmlHelper()->turnToLocalLink($originalLink);
             if (\in_array($link, self::$checkedExternalAnchors, true)) {
                 continue;
@@ -259,7 +293,7 @@ class AnchorsTest extends AbstractContentTest
     private function getExternalAnchorsWithHash(): array
     {
         $externalAnchorsWithHash = [];
-        foreach ($this->getExternalAnchors() as $anchor) {
+        foreach ($this->getExternalLinks() as $anchor) {
             if (\strpos($anchor, '#') > 0) {
                 $externalAnchorsWithHash[] = $anchor;
             }
@@ -439,7 +473,7 @@ class AnchorsTest extends AbstractContentTest
     public function Links_to_altar_uses_https(): void
     {
         $linksToAltar = [];
-        foreach ($this->getExternalAnchors() as $link) {
+        foreach ($this->getExternalLinks() as $link) {
             if (!\strpos($link, 'altar.cz')) {
                 continue;
             }
@@ -490,22 +524,19 @@ class AnchorsTest extends AbstractContentTest
         return $isDrdPlus ? ['trial' => 1] : [];
     }
 
-    private function getExternalAnchors(): array
+    /**
+     * @return array|string[]
+     */
+    private function getExternalLinks(): array
     {
-        static $externalAnchors = [];
-        if (!$externalAnchors) {
-            $html = $this->getHtmlDocument();
-            /** @var Element $anchor */
-            foreach ($html->getElementsByTagName('a') as $anchor) {
-                $link = (string)$anchor->getAttribute('href');
-                if (\preg_match('~^(http|//)~', $link)) {
-                    $externalAnchors[] = $link;
-                }
-            }
-            $externalAnchors[] = $this->getTestsConfiguration()->getExpectedPublicUrl();
+        static $externalLinks = [];
+        if (!$externalLinks) {
+            $externalLinks = $this->getLinks()['external'];
+            $externalLinks[] = $this->getTestsConfiguration()->getExpectedPublicUrl();
+            $externalLinks = array_unique($externalLinks);
         }
 
-        return $externalAnchors;
+        return $externalLinks;
     }
 
     /**
@@ -609,7 +640,7 @@ class AnchorsTest extends AbstractContentTest
     public function Links_to_vukogvazd_uses_https(): void
     {
         $linksToVukogvazd = [];
-        foreach ($this->getExternalAnchors() as $link) {
+        foreach ($this->getExternalLinks() as $link) {
             if (\strpos($link, 'vukogvazd.cz')) {
                 $linksToVukogvazd[] = $link;
             }
@@ -629,7 +660,7 @@ class AnchorsTest extends AbstractContentTest
     public function Character_sheet_comes_from_drdplus_info(): void
     {
         $linksToCharacterSheet = [];
-        foreach ($this->getExternalAnchors() as $link) {
+        foreach ($this->getExternalLinks() as $link) {
             $link = $this->getHtmlHelper()->turnToLocalLink($link);
             if (\strpos($link, 'charakternik.pdf')) {
                 $linksToCharacterSheet[] = $link;
@@ -666,7 +697,7 @@ class AnchorsTest extends AbstractContentTest
     public function Journal_comes_from_drdplus_info(): void
     {
         $linksToJournal = [];
-        foreach ($this->getExternalAnchors() as $link) {
+        foreach ($this->getExternalLinks() as $link) {
             $link = $this->getHtmlHelper()->turnToLocalLink($link);
             if (\preg_match('~/denik_\w+\.pdf$~', $link)) {
                 $linksToJournal[] = $link;

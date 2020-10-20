@@ -38,6 +38,8 @@ interface TestsConfigurationReader
 
     public function hasVendorDirVersioned(): bool;
 
+    public function hasAnchorsToSameDocument(): bool;
+
     public function hasLocalLinks(): bool;
 
     public function hasLinksToAltar();

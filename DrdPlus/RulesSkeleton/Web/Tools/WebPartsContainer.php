@@ -111,7 +111,10 @@ class WebPartsContainer extends StrictObject
     protected function getRulesMainBodyPreProcessor(): RulesMainBodyPreProcessor
     {
         if (!$this->rulesMainBodyPreProcessor) {
-            $this->rulesMainBodyPreProcessor = new RulesMainBodyPreProcessor($this->htmlHelper);
+            $this->rulesMainBodyPreProcessor = new RulesMainBodyPreProcessor(
+                $this->htmlHelper,
+                $this->request
+            );
         }
         return $this->rulesMainBodyPreProcessor;
     }

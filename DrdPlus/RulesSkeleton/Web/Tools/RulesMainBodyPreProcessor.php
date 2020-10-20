@@ -3,24 +3,28 @@
 namespace DrdPlus\RulesSkeleton\Web\Tools;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
+use DrdPlus\RulesSkeleton\Request;
 use Granam\Strict\Object\StrictObject;
+use Granam\String\StringTools;
 use Granam\WebContentBuilder\HtmlDocument;
 
 class RulesMainBodyPreProcessor extends StrictObject implements HtmlDocumentProcessorInterface
 {
-    /**
-     * @var HtmlHelper
-     */
+    /** @var HtmlHelper */
     private $htmlHelper;
+    /** @var Request */
+    private $request;
 
-    public function __construct(HtmlHelper $htmlHelper)
+    public function __construct(HtmlHelper $htmlHelper, Request $request)
     {
         $this->htmlHelper = $htmlHelper;
+        $this->request = $request;
     }
 
     public function processDocument(HtmlDocument $htmlDocument): HtmlDocument
     {
         $this->solveLocalLinksInTableOfContents($htmlDocument);
+        $this->injectRouteBodyClass($htmlDocument);
         return $htmlDocument;
     }
 
@@ -41,6 +45,20 @@ class RulesMainBodyPreProcessor extends StrictObject implements HtmlDocumentProc
             }
             $anchor->setAttribute('href', "#$text");
         }
+    }
+
+    protected function injectRouteBodyClass(HtmlDocument $htmlDocument)
+    {
+        $htmlDocument->body->classList->add($this->getRouteBodyClass());
+    }
+
+    protected function getRouteBodyClass(): string
+    {
+        $sanitizedPath = StringTools::toConstantLikeValue($this->request->getPath());
+        if ($sanitizedPath === '' || $sanitizedPath === '_') {
+            return HtmlHelper::CLASS_ROOT_PATH_ROUTE;
+        }
+        return HtmlHelper::CLASS_ROOTED_FROM_PATH_PREFIX . '_' . $sanitizedPath;
     }
 
 }

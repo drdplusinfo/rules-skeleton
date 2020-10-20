@@ -4,7 +4,7 @@
     <title>Just a test</title>
     <meta charset="utf-8">
   </head>
-  <body>
+  <body class="<?= \DrdPlus\RulesSkeleton\HtmlHelper::CLASS_ROOT_PATH_ROUTE ?>">
     <div id="<?= \DrdPlus\RulesSkeleton\HtmlHelper::ID_TABLE_OF_CONTENTS ?>">
       <a href="#<?= rawurlencode('Tak tohle to by se mělo změnit na místní odkaz') ?>">Tak tohle to by se mělo změnit na místní odkaz</a>
       <a href="#<?= rawurlencode('A tohle to taky') ?>">A tohle to taky</a>

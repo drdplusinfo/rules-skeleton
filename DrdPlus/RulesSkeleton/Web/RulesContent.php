@@ -6,7 +6,6 @@ use DrdPlus\RulesSkeleton\Cache;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Redirect;
-use DrdPlus\RulesSkeleton\Web\Menu\MenuBody;
 use DrdPlus\RulesSkeleton\Web\Menu\MenuBodyInterface;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringInterface;

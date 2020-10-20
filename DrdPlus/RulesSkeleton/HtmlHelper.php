@@ -39,6 +39,8 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public const CLASS_FORMULA = 'formula';
     public const CLASS_SOURCE_CODE_TITLE = 'source-code-title';
     public const CLASS_TABLES_RELATED = 'tables-related';
+    public const CLASS_ROOT_PATH_ROUTE = 'root-path-route';
+    public const CLASS_ROOTED_FROM_PATH_PREFIX = 'routed-from-path';
 
     public const DATA_CACHE_STAMP = 'data-cache-stamp';
     public const DATA_CACHED_AT = 'data-cached-at';

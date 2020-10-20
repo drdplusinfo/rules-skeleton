@@ -24,12 +24,17 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const HAS_CUSTOM_BODY_CONTENT = 'has_custom_body_content';
     public const HAS_NOTES = 'has_notes';
     public const HAS_IDS = 'has_ids';
-    public const HAS_CALCULATIONS = 'has_calculations';
+
     /** @see \DrdPlus\RulesSkeleton\HtmlHelper::CLASS_CALCULATION */
-    public const HAS_MARKED_CONTENT = 'has_marked_content';
+    public const HAS_CALCULATIONS = 'has_calculations';
+
     /** @see \DrdPlus\RulesSkeleton\HtmlHelper::CLASS_CONTENT */
-    public const HAS_MARKED_RESULT = 'has_marked_result';
+    public const HAS_MARKED_CONTENT = 'has_marked_content';
+
     /** @see \DrdPlus\RulesSkeleton\HtmlHelper::CLASS_RESULT */
+    public const HAS_MARKED_RESULT = 'has_marked_result';
+
+    public const HAS_ANCHORS_TO_SAME_DOCUMENT = 'has_anchors_to_same_document';
     public const HAS_LOCAL_LINKS = 'has_local_links';
     public const HAS_LINKS_TO_ALTAR = 'has_links_to_altar';
     public const HAS_PROTECTED_ACCESS = 'has_protected_access';
@@ -94,6 +99,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private $hasIds = true;
     /** @var bool */
     private $hasCalculations = true;
+    /** @var bool */
+    private $hasAnchorsToSameDocument = true;
     /** @var bool */
     private $hasLocalLinks = true;
     /** @var bool */
@@ -181,6 +188,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setHasCustomBodyContent($values);
         $this->setHasNotes($values);
         $this->setHasIds($values);
+        $this->setHasAnchorsToSameDocument($values);
         $this->setHasLocalLinks($values);
         $this->setHasLinksToAltar($values);
         $this->setExpectedWebName($values);
@@ -254,10 +262,13 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $someExpectedTableIds = $values[self::SOME_EXPECTED_TABLE_IDS] ?? null;
         if (!\is_array($someExpectedTableIds)) {
             throw new Exceptions\MissingSomeExpectedTableIdsInTestsConfiguration(
-                "Expected some '" . self::SOME_EXPECTED_TABLE_IDS . "', got "
-                . ($someExpectedTableIds === null
-                    ? 'nothing'
-                    : \var_export($someExpectedTableIds, true)
+                sprintf(
+                    "Expected some '%s' as tests config says by '%s'. Got %s",
+                    self::SOME_EXPECTED_TABLE_IDS,
+                    self::HAS_TABLES,
+                    $someExpectedTableIds === null
+                        ? 'nothing'
+                        : \var_export($someExpectedTableIds, true)
                 )
             );
         }
@@ -435,6 +446,11 @@ TEXT
     private function setHasVendorDirVersioned(array $values)
     {
         $this->hasVendorDirVersioned = (bool)($values[self::HAS_VENDOR_DIR_VERSIONED] ?? $this->hasVendorDirVersioned);
+    }
+
+    private function setHasAnchorsToSameDocument(array $values)
+    {
+        $this->hasAnchorsToSameDocument = (bool)($values[self::HAS_ANCHORS_TO_SAME_DOCUMENT] ?? $this->hasAnchorsToSameDocument);
     }
 
     private function setHasLocalLinks(array $values)
@@ -684,6 +700,11 @@ TEXT
     public function hasShownHomeButtonOnRoutes(): bool
     {
         return $this->hasShownHomeButtonOnRoutes;
+    }
+
+    public function hasAnchorsToSameDocument(): bool
+    {
+        return $this->hasAnchorsToSameDocument;
     }
 
     public function hasLocalLinks(): bool
