@@ -8,12 +8,12 @@ use DrdPlus\RulesSkeleton\HomepageDetector;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\PathProvider;
 use DrdPlus\RulesSkeleton\Ticket;
-use DrdPlus\RulesSkeleton\Web\Menu\Menu;
+use DrdPlus\RulesSkeleton\Web\Menu\MenuBody;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\WebContentBuilder\HtmlDocument;
 use Mockery\MockInterface;
 
-class MenuTest extends AbstractContentTest
+class MenuBodyTest extends AbstractContentTest
 {
     /**
      * @test
@@ -102,9 +102,9 @@ HTML
     private const CAN_PASS_IN = true;
     private const CAN_NOT_PASS_IN = false;
 
-    private function createMenu(MenuConfiguration $menuConfiguration, bool $isHomepageRequested, bool $canPassIn): Menu
+    private function createMenu(MenuConfiguration $menuConfiguration, bool $isHomepageRequested, bool $canPassIn): MenuBody
     {
-        return new Menu(
+        return new MenuBody(
             $menuConfiguration,
             $this->createHomepageDetector($isHomepageRequested),
             $this->createTicket($canPassIn)
@@ -204,7 +204,7 @@ HTML
             MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => true,
             MenuConfiguration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
         ]);
-        $menu = new Menu(
+        $menu = new MenuBody(
             $configuration->getMenuConfiguration(),
             new HomepageDetector(
                 new PathProvider(

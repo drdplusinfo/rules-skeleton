@@ -81,7 +81,7 @@ class RulesApplication extends StrictObject
         if ($servicesContainer->getTablesRequestDetector()->areTablesRequested()) {
             $this->content = new RulesContent(
                 $servicesContainer->getTablesContent(),
-                $servicesContainer->getPassedMenu(),
+                $servicesContainer->getPassedMenuBody(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getTablesWebCache(),
                 RulesContent::TABLES,
@@ -95,7 +95,7 @@ class RulesApplication extends StrictObject
         ) {
             $this->content = new RulesContent(
                 $servicesContainer->getPdfContent(),
-                $servicesContainer->getEmptyMenu(),
+                $servicesContainer->getEmptyMenuBody(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getDummyWebCache(),
                 RulesContent::PDF,
@@ -107,7 +107,7 @@ class RulesApplication extends StrictObject
         if (!$this->canPassIn()) {
             $this->content = new RulesContent(
                 $servicesContainer->getGatewayContent(),
-                $servicesContainer->getGatewayMenu(),
+                $servicesContainer->getGatewayMenuBody(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getGatewayWebCache(),
                 RulesContent::GATEWAY,
@@ -118,7 +118,7 @@ class RulesApplication extends StrictObject
         }
         $this->content = new RulesContent(
             $servicesContainer->getRulesMainContent(),
-            $servicesContainer->getPassedMenu(),
+            $servicesContainer->getPassedMenuBody(),
             $servicesContainer->getCurrentWebVersion(),
             $servicesContainer->getPassedWebCache(),
             RulesContent::FULL,
@@ -213,7 +213,7 @@ class RulesApplication extends StrictObject
         $servicesContainer = $this->servicesContainer;
         $this->notFoundContent = new RulesContent(
             $servicesContainer->getNotFoundContent(),
-            $servicesContainer->getPassedMenu(),
+            $servicesContainer->getPassedMenuBody(),
             $servicesContainer->getCurrentWebVersion(),
             $servicesContainer->getNotFoundCache(),
             RulesContent::NOT_FOUND,

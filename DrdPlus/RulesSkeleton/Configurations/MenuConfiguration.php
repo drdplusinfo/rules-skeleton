@@ -20,14 +20,14 @@ class MenuConfiguration extends AbstractShowOnConfiguration
 
     public function __construct(array $values, array $pathToMenu)
     {
-        parent::__construct($values, $pathToMenu);
-
         $this->pathToMenu = $pathToMenu;
+
+        $values = $this->ensureFixedMenuPosition($values);
+        $this->guardItemsAreArrayOrNothing($values);
 
         $this->homeButtonConfiguration = $this->createHomeButtonConfiguration($values);
 
-        $this->guardFixedMenuPositionUsageIsSet($values);
-        $this->guardItemsAreArrayOrNothing($values);
+        parent::__construct($values, $pathToMenu);
     }
 
     private function createHomeButtonConfiguration(array $values): HomeButtonConfiguration
@@ -46,10 +46,12 @@ class MenuConfiguration extends AbstractShowOnConfiguration
         $this->guardConfigurationValueIsSet(self::HOME_BUTTON, $values, $this->pathToMenu);
     }
 
-    private function guardFixedMenuPositionUsageIsSet(array $values): void
+    private function ensureFixedMenuPosition(array $values): array
     {
+        $values = $this->ensureConfigurationValue(static::POSITION_FIXED, $values, false);
         $this->guardConfigurationValueIsSet(static::POSITION_FIXED, $values, $this->pathToMenu);
         $this->guardConfigurationValueIsBoolean(static::POSITION_FIXED, $values, $this->pathToMenu);
+        return $values;
     }
 
     private function upgradeShowOfHomeButtonOnHomepageToNewWay(array $values): array

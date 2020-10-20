@@ -159,17 +159,6 @@ class ConfigurationTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_not_create_it_without_defining_if_menu_should_be_fixed(): void
-    {
-        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
-        $completeSettings = $this->getSomeValidConfigurationValues();
-        unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::POSITION_FIXED]);
-        new Configuration($this->getDirs(), $completeSettings);
-    }
-
-    /**
-     * @test
-     */
     public function I_can_not_create_it_without_web_name(): void
     {
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);

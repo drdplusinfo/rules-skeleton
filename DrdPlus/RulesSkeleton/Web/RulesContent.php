@@ -6,7 +6,8 @@ use DrdPlus\RulesSkeleton\Cache;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Redirect;
-use DrdPlus\RulesSkeleton\Web\Menu\Menu;
+use DrdPlus\RulesSkeleton\Web\Menu\MenuBody;
+use DrdPlus\RulesSkeleton\Web\Menu\MenuBodyInterface;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringInterface;
 use Granam\WebContentBuilder\HtmlDocument;
@@ -27,8 +28,8 @@ class RulesContent extends StrictObject implements StringInterface
     private $currentWebVersion;
     /** @var Head */
     private $head;
-    /** @var Menu */
-    private $menu;
+    /** @var MenuBodyInterface */
+    private $menuBody;
     /** @var Body */
     private $body;
     /** @var Cache */
@@ -42,7 +43,7 @@ class RulesContent extends StrictObject implements StringInterface
 
     public function __construct(
         HtmlContentInterface $htmlContent,
-        Menu $menu,
+        MenuBodyInterface $menuBody,
         CurrentWebVersion $currentWebVersion,
         Cache $cache,
         string $contentType,
@@ -51,7 +52,7 @@ class RulesContent extends StrictObject implements StringInterface
     {
         $this->htmlContent = $htmlContent;
         $this->currentWebVersion = $currentWebVersion;
-        $this->menu = $menu;
+        $this->menuBody = $menuBody;
         $this->cache = $cache;
         $this->contentType = $contentType;
         $this->redirect = $redirect;
@@ -121,7 +122,7 @@ class RulesContent extends StrictObject implements StringInterface
     {
         $menuWrapper = $htmlDocument->createElement('div');
         $menuWrapper->setAttribute('id', HtmlHelper::ID_MENU_WRAPPER);
-        $menuWrapper->prop_set_innerHTML($this->menu->getValue());
+        $menuWrapper->prop_set_innerHTML($this->menuBody->getValue());
         $htmlDocument->body->insertBefore($menuWrapper, $htmlDocument->body->firstElementChild);
     }
 

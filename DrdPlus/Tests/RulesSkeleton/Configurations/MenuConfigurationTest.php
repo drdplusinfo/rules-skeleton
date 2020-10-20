@@ -177,4 +177,16 @@ class MenuConfigurationTest extends AbstractContentTest
             ],
         ];
     }
+
+    /**
+     * @test
+     */
+    public function I_can_create_it_without_defining_if_menu_should_be_fixed(): void
+    {
+        $values = static::$validMenuConfiguration;
+        unset($values[MenuConfiguration::POSITION_FIXED]);
+        $menuConfiguration = new MenuConfiguration($values, ['foo']);
+        self::assertFalse($menuConfiguration->isPositionFixed());
+    }
+
 }

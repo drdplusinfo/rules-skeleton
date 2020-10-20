@@ -6,9 +6,8 @@ use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\RulesSkeleton\HomepageDetector;
 use DrdPlus\RulesSkeleton\Ticket;
 use Granam\Strict\Object\StrictObject;
-use Granam\String\StringInterface;
 
-class Menu extends StrictObject implements StringInterface
+class MenuBody extends StrictObject implements MenuBodyInterface
 {
     /** @var MenuConfiguration */
     private $menuConfiguration;

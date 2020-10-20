@@ -9,8 +9,8 @@ use DrdPlus\RulesSkeleton\Configurations\RoutedDirs;
 use DrdPlus\RulesSkeleton\Web\Gateway\GatewayContent;
 use DrdPlus\RulesSkeleton\Web\Head;
 use DrdPlus\RulesSkeleton\Web\Main\MainContent;
-use DrdPlus\RulesSkeleton\Web\Menu\EmptyMenu;
-use DrdPlus\RulesSkeleton\Web\Menu\Menu;
+use DrdPlus\RulesSkeleton\Web\Menu\EmptyMenuBody;
+use DrdPlus\RulesSkeleton\Web\Menu\MenuBody;
 use DrdPlus\RulesSkeleton\Web\NotFound\NotFoundContent;
 use DrdPlus\RulesSkeleton\Web\Tables\TablesContent;
 use DrdPlus\RulesSkeleton\Web\Tools\WebFiles;
@@ -47,10 +47,12 @@ class ServicesContainer extends StrictObject
     private $htmlHelper;
     /** @var Head */
     private $head;
-    /** @var Menu */
-    private $gatewayMenu;
-    /** @var Menu */
-    private $passedMenu;
+    /** @var MenuBody */
+    private $gatewayMenuBody;
+    /** @var MenuBody */
+    private $passedMenuBody;
+    /** @var EmptyMenuBody */
+    private $emptyMenuBody;
     /** @var Cache */
     private $tablesWebCache;
     /** @var CssFiles */
@@ -291,28 +293,28 @@ class ServicesContainer extends StrictObject
         return $this->htmlHelper;
     }
 
-    public function getGatewayMenu(): Menu
+    public function getGatewayMenuBody(): MenuBody
     {
-        if ($this->gatewayMenu === null) {
-            $this->gatewayMenu = new Menu(
+        if ($this->gatewayMenuBody === null) {
+            $this->gatewayMenuBody = new MenuBody(
                 $this->getConfiguration()->getMenuConfiguration(),
                 $this->getHomepageDetector(),
                 $this->getTicket()
             );
         }
-        return $this->gatewayMenu;
+        return $this->gatewayMenuBody;
     }
 
-    public function getPassedMenu(): Menu
+    public function getPassedMenuBody(): MenuBody
     {
-        if ($this->passedMenu === null) {
-            $this->passedMenu = new Menu(
+        if ($this->passedMenuBody === null) {
+            $this->passedMenuBody = new MenuBody(
                 $this->getConfiguration()->getMenuConfiguration(),
                 $this->getHomepageDetector(),
                 $this->getTicket()
             );
         }
-        return $this->passedMenu;
+        return $this->passedMenuBody;
     }
 
     public function getHead(): Head
@@ -610,12 +612,12 @@ class ServicesContainer extends StrictObject
         return $this->usagePolicy;
     }
 
-    public function getEmptyMenu(): EmptyMenu
+    public function getEmptyMenuBody(): EmptyMenuBody
     {
-        return new EmptyMenu(
-            $this->getConfiguration()->getMenuConfiguration(),
-            $this->getHomepageDetector()
-        );
+        if ($this->emptyMenuBody === null) {
+            $this->emptyMenuBody = new EmptyMenuBody();
+        }
+        return $this->emptyMenuBody;
     }
 
     public function getDummyWebCache(): DummyWebCache
