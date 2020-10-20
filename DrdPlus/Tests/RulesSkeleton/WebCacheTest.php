@@ -44,6 +44,7 @@ class WebCacheTest extends AbstractContentTest
             $this->getContentIrrelevantRequestAliases(),
             $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
+            $this->getConfiguration(),
             Cache::NOT_IN_PRODUCTION
         );
         self::assertSame($dirs->getCacheRoot() . '/web/' . $cacheSubDir . '/' . $version, $cache->getCacheDir());
@@ -98,6 +99,7 @@ class WebCacheTest extends AbstractContentTest
             $this->getContentIrrelevantRequestAliases(),
             $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
+            $this->getConfiguration(),
             Cache::NOT_IN_PRODUCTION
         );
         self::assertFalse($cache->isCacheValid(), 'Nothing should be cached so far');
@@ -132,6 +134,7 @@ class WebCacheTest extends AbstractContentTest
             $this->getContentIrrelevantRequestAliases(),
             $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
+            $this->getConfiguration(),
             Cache::NOT_IN_PRODUCTION
         );
         self::assertFalse($cache->isCacheValid(), 'Nothing should be cached so far');
@@ -183,6 +186,7 @@ class WebCacheTest extends AbstractContentTest
             $this->getContentIrrelevantRequestAliases(),
             $contentIrrelevantParametersFilter,
             $this->getGit(),
+            $this->getConfiguration(),
             Cache::NOT_IN_PRODUCTION
         );
         self::assertFalse($cacheWithoutTrial->isCacheValid(), 'Nothing should be cached so far');
@@ -199,6 +203,7 @@ class WebCacheTest extends AbstractContentTest
             $this->getContentIrrelevantRequestAliases(),
             $contentIrrelevantParametersFilter,
             $this->getGit(),
+            $this->getConfiguration(),
             Cache::NOT_IN_PRODUCTION
         );
         self::assertTrue($cacheWithTrialRequest->isCacheValid(), 'Expected content to be already cached');

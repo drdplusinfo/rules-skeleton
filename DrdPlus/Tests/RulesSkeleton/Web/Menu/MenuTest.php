@@ -7,6 +7,7 @@ use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\RulesSkeleton\HomepageDetector;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\PathProvider;
+use DrdPlus\RulesSkeleton\Ticket;
 use DrdPlus\RulesSkeleton\Web\Menu\Menu;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\WebContentBuilder\HtmlDocument;
@@ -27,7 +28,7 @@ class MenuTest extends AbstractContentTest
             MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
             MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
         ]);
-        $menuOnHomepage = $this->createMenu($configuration->getMenuConfiguration(), $onHomepage);
+        $menuOnHomepage = $this->createMenu($configuration->getMenuConfiguration(), $onHomepage, self::CAN_PASS_IN);
         $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
@@ -74,7 +75,7 @@ HTML
             MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
             MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
         ]);
-        $menu = $this->createMenu($configuration->getMenuConfiguration(), self::HOMEPAGE_IS_REQUESTED);
+        $menu = $this->createMenu($configuration->getMenuConfiguration(), self::HOMEPAGE_IS_REQUESTED, self::CAN_PASS_IN);
         $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
@@ -98,9 +99,16 @@ HTML
     private const HOMEPAGE_IS_REQUESTED = true;
     private const HOMEPAGE_IS_NOT_REQUESTED = false;
 
-    private function createMenu(MenuConfiguration $menuConfiguration, bool $isHomepageRequested): Menu
+    private const CAN_PASS_IN = true;
+    private const CAN_NOT_PASS_IN = false;
+
+    private function createMenu(MenuConfiguration $menuConfiguration, bool $isHomepageRequested, bool $canPassIn): Menu
     {
-        return new Menu($menuConfiguration, $this->createHomepageDetector($isHomepageRequested));
+        return new Menu(
+            $menuConfiguration,
+            $this->createHomepageDetector($isHomepageRequested),
+            $this->createTicket($canPassIn)
+        );
     }
 
     /**
@@ -116,6 +124,18 @@ HTML
     }
 
     /**
+     * @param bool $canPassIn
+     * @return Ticket|MockInterface
+     */
+    private function createTicket(bool $canPassIn): Ticket
+    {
+        $ticket = $this->mockery(Ticket::class);
+        $ticket->shouldReceive('canPassIn')
+            ->andReturn($canPassIn);
+        return $ticket;
+    }
+
+    /**
      * @test
      * @dataProvider provideConfigurationToHideHomeButtonOnRoutes
      * @param bool $showHomeButtonOnHomepage
@@ -127,7 +147,7 @@ HTML
             MenuConfiguration::SHOW_HOME_BUTTON_ON_HOMEPAGE => $showHomeButtonOnHomepage,
             MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => $showHomeButtonOnRoutes,
         ]);
-        $menu = $this->createMenu($configuration->getMenuConfiguration(), self::HOMEPAGE_IS_NOT_REQUESTED);
+        $menu = $this->createMenu($configuration->getMenuConfiguration(), self::HOMEPAGE_IS_NOT_REQUESTED, self::CAN_PASS_IN);
         $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
@@ -159,7 +179,7 @@ HTML
                 MenuConfiguration::SHOW_HOME_BUTTON_ON_ROUTES => !$showHomeButtonOnHomepage,
                 MenuConfiguration::HOME_BUTTON_TARGET => $expectedTarget = '/foo/bar?baz=qux',
             ]);
-            $menu = $this->createMenu($configuration->getMenuConfiguration(), $showHomeButtonOnHomepage);
+            $menu = $this->createMenu($configuration->getMenuConfiguration(), $showHomeButtonOnHomepage, self::CAN_PASS_IN);
             $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">
 <body>
@@ -191,7 +211,8 @@ HTML
                     $this->getServicesContainer()->getRulesUrlMatcher(),
                     uniqid('/non/existing/path', true)
                 )
-            )
+            ),
+            $this->createTicket(self::CAN_PASS_IN)
         );
         $htmlDocument = new HtmlDocument(<<<HTML
 <html lang="cs">

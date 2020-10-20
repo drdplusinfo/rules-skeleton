@@ -81,7 +81,7 @@ class RulesApplication extends StrictObject
         if ($servicesContainer->getTablesRequestDetector()->areTablesRequested()) {
             $this->content = new RulesContent(
                 $servicesContainer->getTablesContent(),
-                $servicesContainer->getMenu(),
+                $servicesContainer->getPassedMenu(),
                 $servicesContainer->getCurrentWebVersion(),
                 $servicesContainer->getTablesWebCache(),
                 RulesContent::TABLES,
@@ -90,7 +90,9 @@ class RulesApplication extends StrictObject
 
             return $this->content;
         }
-        if ($servicesContainer->getRequest()->isRequestedPdf() && $servicesContainer->getRoutedWebPartsContainer()->getPdfBody()->getPdfFile()) {
+        if ($servicesContainer->getRequest()->isRequestedPdf()
+            && $servicesContainer->getRoutedWebPartsContainer()->getPdfBody()->getPdfFile()
+        ) {
             $this->content = new RulesContent(
                 $servicesContainer->getPdfContent(),
                 $servicesContainer->getEmptyMenu(),
@@ -105,9 +107,9 @@ class RulesApplication extends StrictObject
         if (!$this->canPassIn()) {
             $this->content = new RulesContent(
                 $servicesContainer->getGatewayContent(),
-                $servicesContainer->getMenu(),
+                $servicesContainer->getGatewayMenu(),
                 $servicesContainer->getCurrentWebVersion(),
-                $servicesContainer->getPassWebCache(),
+                $servicesContainer->getGatewayWebCache(),
                 RulesContent::GATEWAY,
                 $this->getRedirect()
             );
@@ -116,7 +118,7 @@ class RulesApplication extends StrictObject
         }
         $this->content = new RulesContent(
             $servicesContainer->getRulesMainContent(),
-            $servicesContainer->getMenu(),
+            $servicesContainer->getPassedMenu(),
             $servicesContainer->getCurrentWebVersion(),
             $servicesContainer->getPassedWebCache(),
             RulesContent::FULL,
@@ -136,27 +138,24 @@ class RulesApplication extends StrictObject
         if ($this->canPassIn !== null) {
             return $this->canPassIn;
         }
-        $canPassIn = !$this->configuration->getGatewayConfiguration()->hasProtectedAccess();
-        if (!$canPassIn) {
-            $usagePolicy = $this->servicesContainer->getUsagePolicy();
-            $canPassIn = $usagePolicy->isVisitorBot();
-            if (!$canPassIn) {
-                $canPassIn = $usagePolicy->hasVisitorConfirmedOwnership();
-                if (!$canPassIn) {
-                    $canPassIn = $usagePolicy->isVisitorUsingValidTrial();
-                    if (!$canPassIn) {
-                        if ($this->servicesContainer->getRequest()->getValueFromPost(Request::CONFIRM)) {
-                            $canPassIn = $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
-                        }
-                        if (!$canPassIn && $this->servicesContainer->getRequest()->getValue(Request::TRIAL)) {
-                            $canPassIn = $this->activateTrial($this->servicesContainer->getNow());
-                        }
-                    }
-                }
+        if (!$this->servicesContainer->getTicket()->canPassIn()) {
+            if ($this->servicesContainer->getRequest()->getValueFromPost(Request::CONFIRM)) {
+                $this->servicesContainer->getUsagePolicy()->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
+                $this->checkThatCanPassNow();
+            } elseif ($this->servicesContainer->getRequest()->getValue(Request::TRIAL)) {
+                $this->activateTrial($this->servicesContainer->getNow());
+                $this->checkThatCanPassNow();
             }
         }
 
-        return $this->canPassIn = $canPassIn;
+        return $this->canPassIn = $this->servicesContainer->getTicket()->canPassIn();
+    }
+
+    private function checkThatCanPassNow()
+    {
+        if (!$this->servicesContainer->getTicket()->canPassIn()) {
+            throw new Exceptions\CanNotPassIn('Visitor should be able to pass in but still can not');
+        }
     }
 
     private function activateTrial(\DateTimeImmutable $now): bool
@@ -214,7 +213,7 @@ class RulesApplication extends StrictObject
         $servicesContainer = $this->servicesContainer;
         $this->notFoundContent = new RulesContent(
             $servicesContainer->getNotFoundContent(),
-            $servicesContainer->getMenu(),
+            $servicesContainer->getPassedMenu(),
             $servicesContainer->getCurrentWebVersion(),
             $servicesContainer->getNotFoundCache(),
             RulesContent::NOT_FOUND,

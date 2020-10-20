@@ -6,6 +6,33 @@ use Granam\Strict\Object\StrictObject;
 
 abstract class AbstractConfiguration extends StrictObject implements ConfigurationValues
 {
+
+    /** @var array */
+    protected $values;
+
+    protected function __construct(array $values)
+    {
+        $this->setValues($values);
+    }
+
+    protected function setValues(array $values)
+    {
+        $this->values = $values;
+    }
+
+    public function getValues(): array
+    {
+        return $this->values;
+    }
+
+    protected function ensureConfigurationValue(string $valueKey, array $values, $defaultValue): array
+    {
+        if (!array_key_exists($valueKey, $values)) {
+            $values[$valueKey] = $defaultValue;
+        }
+        return $values;
+    }
+
     protected function guardConfigurationValueIsSet(string $valueKey, array $values, array $pathToConfiguration): void
     {
         if (($values[$valueKey] ?? null) === null) {
@@ -68,7 +95,7 @@ abstract class AbstractConfiguration extends StrictObject implements Configurati
                     sprintf(
                         "Expected configuration '%s' to be an array indexed only by strings, got key %s (with value '%s')",
                         $this->getConfigurationPath($valueKey, $pathToConfiguration),
-                        var_export($itemValue, true),
+                        var_export($itemKey, true),
                         $itemValue
                     )
                 );

@@ -2,7 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Configurations;
 
-class MenuConfiguration extends AbstractConfiguration
+class MenuConfiguration extends AbstractShowOnConfiguration
 {
     public const POSITION_FIXED = 'position_fixed';
     public const ITEMS = 'items';
@@ -17,19 +17,17 @@ class MenuConfiguration extends AbstractConfiguration
     private $pathToMenu;
     /** @var HomeButtonConfiguration */
     private $homeButtonConfiguration;
-    /** @var array */
-    private $values;
 
     public function __construct(array $values, array $pathToMenu)
     {
+        parent::__construct($values, $pathToMenu);
+
         $this->pathToMenu = $pathToMenu;
 
         $this->homeButtonConfiguration = $this->createHomeButtonConfiguration($values);
 
         $this->guardFixedMenuPositionUsageIsSet($values);
         $this->guardItemsAreArrayOrNothing($values);
-
-        $this->values = $values;
     }
 
     private function createHomeButtonConfiguration(array $values): HomeButtonConfiguration
@@ -92,11 +90,6 @@ class MenuConfiguration extends AbstractConfiguration
         $this->guardConfigurationValueIsObject(static::ITEMS, $values, $this->pathToMenu);
     }
 
-    public function getValues(): array
-    {
-        return $this->values;
-    }
-
     public function isPositionFixed(): bool
     {
         return (bool)$this->getValues()[static::POSITION_FIXED];
@@ -115,7 +108,7 @@ class MenuConfiguration extends AbstractConfiguration
             ),
             E_USER_DEPRECATED
         );
-        return $this->getHomeButtonConfiguration()->showOnHomePage();
+        return $this->getHomeButtonConfiguration()->isShownOnHomePage();
     }
 
     /**
@@ -131,7 +124,7 @@ class MenuConfiguration extends AbstractConfiguration
             ),
             E_USER_DEPRECATED
         );
-        return $this->getHomeButtonConfiguration()->showOnRoutes();
+        return $this->getHomeButtonConfiguration()->isShownOnRoutes();
     }
 
     /**
@@ -161,5 +154,28 @@ class MenuConfiguration extends AbstractConfiguration
     public function getItems(): array
     {
         return $this->getValues()[static::ITEMS] ?? [];
+    }
+
+    public function isShownOnGateway(): bool
+    {
+        return parent::isShownOnGateway()
+            && ($this->hasSomeItems() || $this->getHomeButtonConfiguration()->isShownOnGateway());
+    }
+
+    private function hasSomeItems(): bool
+    {
+        return count($this->getItems()) > 0;
+    }
+
+    public function isShownOnHomepage(): bool
+    {
+        return parent::isShownOnHomePage()
+            && ($this->hasSomeItems() || $this->getHomeButtonConfiguration()->isShownOnHomePage());
+    }
+
+    public function isShownOnRoutes(): bool
+    {
+        return parent::isShownOnRoutes()
+            && ($this->hasSomeItems() || $this->getHomeButtonConfiguration()->isShownOnRoutes());
     }
 }

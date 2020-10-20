@@ -5,8 +5,8 @@ $fixed = $menuConfiguration->isPositionFixed()
     : '';
 $homeButton = '';
 /** @var $homepageDetector \DrdPlus\RulesSkeleton\HomepageDetector */
-if (($menuConfiguration->getHomeButtonConfiguration()->showOnHomePage() && $homepageDetector->isHomepageRequested())
-    || ($menuConfiguration->getHomeButtonConfiguration()->showOnRoutes() && !$homepageDetector->isHomepageRequested())
+if (($menuConfiguration->getHomeButtonConfiguration()->isShownOnHomePage() && $homepageDetector->isHomepageRequested())
+    || ($menuConfiguration->getHomeButtonConfiguration()->isShownOnRoutes() && !$homepageDetector->isHomepageRequested())
 ) {
     $homeButtonId = \DrdPlus\RulesSkeleton\HtmlHelper::ID_HOME_BUTTON;
     $homeButton = <<<HTML

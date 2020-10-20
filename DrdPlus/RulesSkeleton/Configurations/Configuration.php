@@ -59,8 +59,6 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     private $menuConfiguration;
     /** @var GatewayConfiguration */
     private $gatewayConfiguration;
-    /** @var array */
-    private $values;
 
     /**
      * @param Dirs $dirs
@@ -77,7 +75,8 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
         $this->guardSetTitleSmiley($values);
         $this->guardValidEshopUrl($values);
         $this->guardValidFaviconUrl($values);
-        $this->values = $values;
+
+        parent::__construct($values);
     }
 
     // MENU
@@ -276,11 +275,6 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
         return $this->dirs;
     }
 
-    public function getValues(): array
-    {
-        return $this->values;
-    }
-
     public function getGoogleAnalyticsId(): string
     {
         return $this->getValues()[static::GOOGLE][static::ANALYTICS_ID];
@@ -315,7 +309,7 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
             ),
             E_USER_DEPRECATED
         );
-        return $this->getMenuConfiguration()->getHomeButtonConfiguration()->showOnHomePage();
+        return $this->getMenuConfiguration()->getHomeButtonConfiguration()->isShownOnHomePage();
     }
 
     /**
@@ -331,7 +325,7 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
             ),
             E_USER_DEPRECATED
         );
-        return $this->getMenuConfiguration()->getHomeButtonConfiguration()->showOnRoutes();
+        return $this->getMenuConfiguration()->getHomeButtonConfiguration()->isShownOnRoutes();
     }
 
     /**

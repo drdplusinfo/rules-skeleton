@@ -41,12 +41,16 @@ class ServicesContainer extends StrictObject
     private $configuration;
     /** @var HomepageDetector */
     private $homepageDetector;
+    /** @var Ticket */
+    private $ticket;
     /** @var HtmlHelper */
     private $htmlHelper;
     /** @var Head */
     private $head;
     /** @var Menu */
-    private $menu;
+    private $gatewayMenu;
+    /** @var Menu */
+    private $passedMenu;
     /** @var Cache */
     private $tablesWebCache;
     /** @var CssFiles */
@@ -94,7 +98,7 @@ class ServicesContainer extends StrictObject
     /** @var CacheCleaner */
     private $cacheCleaner;
     /** @var Cache */
-    private $passWebCache;
+    private $gatewayWebCache;
     /** @var Cache */
     private $passedWebCache;
     /** @var RouterCacheDirProvider */
@@ -130,6 +134,17 @@ class ServicesContainer extends StrictObject
             $this->homepageDetector = new HomepageDetector($this->getPathProvider());
         }
         return $this->homepageDetector;
+    }
+
+    public function getTicket(): Ticket
+    {
+        if ($this->ticket === null) {
+            $this->ticket = new Ticket(
+                $this->getConfiguration()->getGatewayConfiguration(),
+                $this->getUsagePolicy()
+            );
+        }
+        return $this->ticket;
     }
 
     public function getCurrentWebVersion(): CurrentWebVersion
@@ -276,12 +291,28 @@ class ServicesContainer extends StrictObject
         return $this->htmlHelper;
     }
 
-    public function getMenu(): Menu
+    public function getGatewayMenu(): Menu
     {
-        if ($this->menu === null) {
-            $this->menu = new Menu($this->getConfiguration()->getMenuConfiguration(), $this->getHomepageDetector());
+        if ($this->gatewayMenu === null) {
+            $this->gatewayMenu = new Menu(
+                $this->getConfiguration()->getMenuConfiguration(),
+                $this->getHomepageDetector(),
+                $this->getTicket()
+            );
         }
-        return $this->menu;
+        return $this->gatewayMenu;
+    }
+
+    public function getPassedMenu(): Menu
+    {
+        if ($this->passedMenu === null) {
+            $this->passedMenu = new Menu(
+                $this->getConfiguration()->getMenuConfiguration(),
+                $this->getHomepageDetector(),
+                $this->getTicket()
+            );
+        }
+        return $this->passedMenu;
     }
 
     public function getHead(): Head
@@ -451,6 +482,7 @@ class ServicesContainer extends StrictObject
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
+                $this->getConfiguration(),
                 $this->getEnvironment()->isInProduction()
             );
         }
@@ -505,16 +537,17 @@ class ServicesContainer extends StrictObject
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
+                $this->getConfiguration(),
                 $this->getEnvironment()->isInProduction()
             );
         }
         return $this->tablesWebCache;
     }
 
-    public function getPassWebCache(): Cache
+    public function getGatewayWebCache(): Cache
     {
-        if ($this->passWebCache === null) {
-            $this->passWebCache = new WebCache(
+        if ($this->gatewayWebCache === null) {
+            $this->gatewayWebCache = new WebCache(
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 WebCache::GATEWAY,
@@ -522,10 +555,11 @@ class ServicesContainer extends StrictObject
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
+                $this->getConfiguration(),
                 $this->getEnvironment()->isInProduction()
             );
         }
-        return $this->passWebCache;
+        return $this->gatewayWebCache;
     }
 
     public function getPassedWebCache(): Cache
@@ -539,6 +573,7 @@ class ServicesContainer extends StrictObject
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
+                $this->getConfiguration(),
                 $this->getEnvironment()->isInProduction()
             );
         }
@@ -556,6 +591,7 @@ class ServicesContainer extends StrictObject
                 $this->getContentIrrelevantRequestAliases(),
                 $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
+                $this->getConfiguration(),
                 $this->getEnvironment()->isInProduction()
             );
         }
@@ -592,6 +628,7 @@ class ServicesContainer extends StrictObject
             $this->getContentIrrelevantRequestAliases(),
             $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
+            $this->getConfiguration(),
             $this->getEnvironment()->isInProduction()
         );
     }

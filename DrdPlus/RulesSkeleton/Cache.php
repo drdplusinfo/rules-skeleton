@@ -2,6 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use Granam\Git\Exceptions\CanNotDiffDetachedBranch;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
@@ -24,6 +25,8 @@ abstract class Cache extends StrictObject
     private $request;
     /** @var Git */
     private $git;
+    /** @var Configuration */
+    private $configuration;
     /** @var bool */
     protected $isInProduction;
     /** @var ContentIrrelevantRequestAliases */
@@ -50,6 +53,7 @@ abstract class Cache extends StrictObject
         ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases,
         ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter,
         Git $git,
+        Configuration $configuration,
         bool $isInProduction
     )
     {
@@ -60,6 +64,7 @@ abstract class Cache extends StrictObject
         $this->contentIrrelevantRequestAliases = $contentIrrelevantRequestAliases;
         $this->contentIrrelevantParametersFilter = $contentIrrelevantParametersFilter;
         $this->git = $git;
+        $this->configuration = $configuration;
         $this->isInProduction = $isInProduction;
     }
 
@@ -131,8 +136,13 @@ abstract class Cache extends StrictObject
             '%s_%s_%s',
             $this->currentWebVersion->getCurrentPatchVersion(),
             $this->currentWebVersion->getCurrentCommitHash(),
-            $this->getGitStamp()
+            $this->getChangesStamp()
         );
+    }
+
+    private function getChangesStamp(): string
+    {
+        return md5($this->getGitStamp() . '_' . $this->getLocalConfigurationStamp());
     }
 
     private function getGitStamp(): string
@@ -150,6 +160,14 @@ abstract class Cache extends StrictObject
         $diffAgainstOriginMasterImploded = \implode($diffAgainstOriginMaster);
 
         return \md5($gitStatusImploded . $diffAgainstOriginMasterImploded);
+    }
+
+    private function getLocalConfigurationStamp(): string
+    {
+        if ($this->isInProduction()) {
+            return 'production';
+        }
+        return md5(serialize($this->configuration->getValues()));
     }
 
     /**

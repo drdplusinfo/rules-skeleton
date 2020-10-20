@@ -5,8 +5,12 @@ web:
   name: 'HTML kostra pro DrDPlus, jakoby pravidla čaroděje'
   title_smiley: '☠️'
   menu:
+    show_on_gateway: true
+    show_on_homepage: true
+    show_on_routes: true
     position_fixed: false
     home_button:
+      show_on_gateway: true
       show_on_homepage: true
       show_on_routes: true
       target: 'https://www.drdplus.info'

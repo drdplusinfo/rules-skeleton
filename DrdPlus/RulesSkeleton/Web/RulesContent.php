@@ -119,10 +119,10 @@ class RulesContent extends StrictObject implements StringInterface
 
     private function injectMenuWrapper(HtmlDocument $htmlDocument): void
     {
-        $headElement = $htmlDocument->createElement('div');
-        $headElement->setAttribute('id', HtmlHelper::ID_MENU_WRAPPER);
-        $headElement->prop_set_innerHTML($this->menu->getValue());
-        $htmlDocument->body->insertBefore($headElement, $htmlDocument->body->firstElementChild);
+        $menuWrapper = $htmlDocument->createElement('div');
+        $menuWrapper->setAttribute('id', HtmlHelper::ID_MENU_WRAPPER);
+        $menuWrapper->prop_set_innerHTML($this->menu->getValue());
+        $htmlDocument->body->insertBefore($menuWrapper, $htmlDocument->body->firstElementChild);
     }
 
     private function injectCacheId(HtmlDocument $htmlDocument): void

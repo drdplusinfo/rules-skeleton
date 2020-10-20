@@ -3,7 +3,6 @@
 namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
-use DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\GatewayConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration;
 use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
@@ -165,28 +164,6 @@ class ConfigurationTest extends AbstractContentTest
         $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
         $completeSettings = $this->getSomeValidConfigurationValues();
         unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::POSITION_FIXED]);
-        new Configuration($this->getDirs(), $completeSettings);
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_not_create_it_without_defining_if_show_home_button_on_homepage(): void
-    {
-        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
-        $completeSettings = $this->getSomeValidConfigurationValues();
-        unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON][HomeButtonConfiguration::SHOW_ON_HOMEPAGE]);
-        new Configuration($this->getDirs(), $completeSettings);
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_not_create_it_without_defining_if_show_home_button_on_routes(): void
-    {
-        $this->expectException(\DrdPlus\RulesSkeleton\Configurations\Exceptions\InvalidConfiguration::class);
-        $completeSettings = $this->getSomeValidConfigurationValues();
-        unset($completeSettings[Configuration::WEB][Configuration::MENU][MenuConfiguration::HOME_BUTTON][HomeButtonConfiguration::SHOW_ON_ROUTES]);
         new Configuration($this->getDirs(), $completeSettings);
     }
 

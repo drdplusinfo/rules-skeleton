@@ -6,24 +6,16 @@ class GatewayConfiguration extends AbstractConfiguration
 {
     public const PROTECTED_ACCESS = 'protected_access';
 
-    /** @var array */
-    private $values;
-
-    public function __construct(array $settings, array $pathToMenu)
+    public function __construct(array $values, array $pathToMenu)
     {
-        $this->guardProtectedAccessIsSet($settings, $pathToMenu);
-        $this->values = $settings;
+        $this->guardProtectedAccessIsSet($values, $pathToMenu);
+        parent::__construct($values);
     }
 
-    protected function guardProtectedAccessIsSet(array $settings, array $pathToMenu): void
+    protected function guardProtectedAccessIsSet(array $values, array $pathToMenu): void
     {
-        $this->guardConfigurationValueIsSet(static::PROTECTED_ACCESS, $settings, $pathToMenu);
-        $this->guardConfigurationValueIsBoolean(static::PROTECTED_ACCESS, $settings, $pathToMenu);
-    }
-
-    public function getValues(): array
-    {
-        return $this->values;
+        $this->guardConfigurationValueIsSet(static::PROTECTED_ACCESS, $values, $pathToMenu);
+        $this->guardConfigurationValueIsBoolean(static::PROTECTED_ACCESS, $values, $pathToMenu);
     }
 
     public function hasProtectedAccess(): bool

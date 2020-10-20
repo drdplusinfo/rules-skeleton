@@ -2,6 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\Dirs;
 use Granam\Git\Git;
 
@@ -22,6 +23,7 @@ class WebCache extends Cache
         ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases,
         ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter,
         Git $git,
+        Configuration $configuration,
         bool $isInProduction
     )
     {
@@ -33,6 +35,7 @@ class WebCache extends Cache
             $contentIrrelevantRequestAliases,
             $contentIrrelevantParametersFilter,
             $git,
+            $configuration,
             $isInProduction
         );
     }

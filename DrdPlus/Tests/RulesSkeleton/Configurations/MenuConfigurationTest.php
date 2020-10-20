@@ -14,6 +14,7 @@ class MenuConfigurationTest extends AbstractContentTest
     protected static $validMenuConfiguration = [
         MenuConfiguration::POSITION_FIXED => true,
         MenuConfiguration::HOME_BUTTON => [
+            HomeButtonConfiguration::SHOW_ON_GATEWAY => true,
             HomeButtonConfiguration::SHOW_ON_HOMEPAGE => true,
             HomeButtonConfiguration::SHOW_ON_ROUTES => true,
             HomeButtonConfiguration::TARGET => 'hit!',
@@ -75,10 +76,8 @@ class MenuConfigurationTest extends AbstractContentTest
         $values[Configuration::SHOW_HOME_BUTTON_ON_HOMEPAGE] = true;
         unset($values[MenuConfiguration::HOME_BUTTON]);
 
-        $this->expectException(InvalidConfiguration::class);
-        $this->expectExceptionMessageMatches("~Expected explicitly defined configuration 'foo.bar.home_button.show_on_routes'.+~");
-
-        new MenuConfiguration($values, ['foo', 'bar']);
+        $menuConfiguration = new MenuConfiguration($values, ['foo', 'bar']);
+        self::assertTrue($menuConfiguration->getHomeButtonConfiguration()->isShownOnHomePage());
     }
 
     /**
@@ -92,5 +91,90 @@ class MenuConfigurationTest extends AbstractContentTest
         ];
         $menuConfiguration = new MenuConfiguration($values, ['foo', 'bar']);
         self::assertSame($values[MenuConfiguration::ITEMS], $menuConfiguration->getItems());
+    }
+
+    /**
+     * @test
+     * @dataProvider provideValuesToCheckIfMenuIsShown
+     * @param array $items
+     * @param bool $homeButtonIsShownOnGateway
+     * @param bool $homeButtonIsShownOnHomepage
+     * @param bool $homeButtonIsShownOnRoutes
+     * @param bool $isShownOnGateway
+     * @param bool $isShownOnHomepage
+     * @param bool $isShownOnRoutes
+     */
+    public function I_can_easily_check_if_menu_is_shown_on_homepage_or_routes(
+        array $items,
+        bool $homeButtonIsShownOnGateway,
+        bool $homeButtonIsShownOnHomepage,
+        bool $homeButtonIsShownOnRoutes,
+        bool $isShownOnGateway,
+        bool $isShownOnHomepage,
+        bool $isShownOnRoutes
+    )
+    {
+        $values = static::$validMenuConfiguration;
+        $values[MenuConfiguration::ITEMS] = $items;
+        $values[MenuConfiguration::HOME_BUTTON] = [
+            HomeButtonConfiguration::SHOW_ON_GATEWAY => $homeButtonIsShownOnGateway,
+            HomeButtonConfiguration::SHOW_ON_HOMEPAGE => $homeButtonIsShownOnHomepage,
+            HomeButtonConfiguration::SHOW_ON_ROUTES => $homeButtonIsShownOnRoutes,
+        ];
+        $menuConfiguration = new MenuConfiguration($values, ['foo', 'bar']);
+        self::assertSame($isShownOnGateway, $menuConfiguration->isShownOnGateway());
+        self::assertSame($isShownOnHomepage, $menuConfiguration->isShownOnHomepage());
+        self::assertSame($isShownOnRoutes, $menuConfiguration->isShownOnRoutes());
+    }
+
+    public function provideValuesToCheckIfMenuIsShown(): array
+    {
+        return [
+            'with items and home button everywhere' => [
+                ['some key' => 'some item'], // items
+                true,                        // homeButtonIsShownOnGateway
+                true,                        // homeButtonIsShownOnHomepage
+                true,                        // homeButtonIsShownOnRoutes
+                true,                        // isShownOnGateway
+                true,                        // isShownOnHomepage
+                true,                        // isShownOnRoutes
+            ],
+            'only with items' => [
+                ['some key' => 'some item'], // items
+                false,                       // homeButtonIsShownOnGateway
+                false,                       // homeButtonIsShownOnHomepage
+                false,                       // homeButtonIsShownOnRoutes
+                true,                        // isShownOnGateway
+                true,                        // isShownOnHomepage
+                true,                        // isShownOnRoutes
+            ],
+            'only with home button on gateway' => [
+                [],                          // items
+                true,                        // homeButtonIsShownOnGateway
+                false,                       // homeButtonIsShownOnHomepage
+                false,                       // homeButtonIsShownOnRoutes
+                true,                        // isShownOnGateway
+                false,                       // isShownOnHomepage
+                false,                       // isShownOnRoutes
+            ],
+            'only with home button on homepage' => [
+                [],                          // items
+                false,                       // homeButtonIsShownOnGateway
+                true,                        // homeButtonIsShownOnHomepage
+                false,                       // homeButtonIsShownOnRoutes
+                false,                       // isShownOnGateway
+                true,                        // isShownOnHomepage
+                false,                       // isShownOnRoutes
+            ],
+            'only with home button on routes' => [
+                [],                          // items
+                false,                       // homeButtonIsShownOnGateway
+                false,                       // homeButtonIsShownOnHomepage
+                true,                        // homeButtonIsShownOnRoutes
+                false,                       // isShownOnGateway
+                false,                       // isShownOnHomepage
+                true,                        // isShownOnRoutes
+            ],
+        ];
     }
 }
