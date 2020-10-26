@@ -102,7 +102,7 @@ class WebPartsContainer extends StrictObject
                 $this->webFiles,
                 $this,
                 $this->getRulesMainBodyPreProcessor(),
-                null
+                $this->getRulesMainBodyPostProcessor()
             );
         }
         return $this->rulesMainBody;
@@ -117,6 +117,11 @@ class WebPartsContainer extends StrictObject
             );
         }
         return $this->rulesMainBodyPreProcessor;
+    }
+
+    protected function getRulesMainBodyPostProcessor()
+    {
+        return null;
     }
 
     protected function getTablesBodyPostProcessor(): TablesBodyPostProcessor
