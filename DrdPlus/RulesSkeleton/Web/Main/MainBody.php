@@ -4,7 +4,6 @@ namespace DrdPlus\RulesSkeleton\Web\Main;
 
 use DrdPlus\RulesSkeleton\Web\RulesBodyInterface;
 use DrdPlus\RulesSkeleton\Web\Tools\HtmlDocumentProcessorInterface;
-use DrdPlus\RulesSkeleton\Web\Tools\RulesMainBodyPreProcessor;
 use DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer;
 use Granam\WebContentBuilder\HtmlDocument;
 use Granam\WebContentBuilder\Web\Body;
@@ -17,25 +16,25 @@ class MainBody extends Body implements RulesBodyInterface
      */
     private $webPartsContainer;
     /**
-     * @var RulesMainBodyPreProcessor
+     * @var HtmlDocumentProcessorInterface|null
      */
     private $rulesMainBodyPreProcessor;
     /**
      * @var HtmlDocumentProcessorInterface|null
      */
-    private $htmlDocumentPostProcessor;
+    private $rulesMainBodyPostProcessor;
 
     public function __construct(
         WebFiles $webFiles,
         WebPartsContainer $webPartsContainer,
-        RulesMainBodyPreProcessor $rulesMainBodyPreProcessor,
+        ?HtmlDocumentProcessorInterface $rulesMainBodyPreProcessor,
         ?HtmlDocumentProcessorInterface $htmlDocumentPostProcessor
     )
     {
         parent::__construct($webFiles);
         $this->webPartsContainer = $webPartsContainer;
         $this->rulesMainBodyPreProcessor = $rulesMainBodyPreProcessor;
-        $this->htmlDocumentPostProcessor = $htmlDocumentPostProcessor;
+        $this->rulesMainBodyPostProcessor = $htmlDocumentPostProcessor;
     }
 
     protected function fetchPhpFileContent(string $file): string
@@ -76,9 +75,9 @@ class MainBody extends Body implements RulesBodyInterface
 
     public function postProcessDocument(HtmlDocument $htmlDocument): HtmlDocument
     {
-        if (!$this->htmlDocumentPostProcessor) {
+        if (!$this->rulesMainBodyPostProcessor) {
             return $htmlDocument;
         }
-        return $this->htmlDocumentPostProcessor->processDocument($htmlDocument);
+        return $this->rulesMainBodyPostProcessor->processDocument($htmlDocument);
     }
 }

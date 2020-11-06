@@ -10,7 +10,7 @@ class ContentTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_get_content(): void
+    public function I_can_get_content_for_tests(): void
     {
         self::assertSame($this->getHtmlDocument()->saveHTML(), $this->getContent());
     }

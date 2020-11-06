@@ -45,6 +45,7 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     public const DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT = 'default_public_to_local_url_part_replacement';
     public const MENU = 'menu';
     public const GATEWAY = 'gateway';
+    public const PREFETCH = 'prefetch';
     // google
     public const GOOGLE = 'google';
     public const ANALYTICS_ID = 'analytics_id';
@@ -59,6 +60,8 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     private $menuConfiguration;
     /** @var GatewayConfiguration */
     private $gatewayConfiguration;
+    /** @var PrefetchConfiguration */
+    private $prefetchConfiguration;
 
     /**
      * @param Dirs $dirs
@@ -69,6 +72,7 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
         $this->dirs = $dirs;
         $this->menuConfiguration = $this->createMenuConfiguration($values);
         $this->gatewayConfiguration = $this->createGatewayConfiguration($values);
+        $this->prefetchConfiguration = $this->createPrefetchConfiguration($values);
 
         $this->guardValidGoogleAnalyticsId($values);
         $this->guardNonEmptyWebName($values);
@@ -98,6 +102,11 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
 
         $this->guardGatewayConfigurationExists($values);
         return new GatewayConfiguration($values[static::WEB][static::GATEWAY], [static::WEB, static::GATEWAY]);
+    }
+
+    protected function createPrefetchConfiguration(array $values): PrefetchConfiguration
+    {
+        return new PrefetchConfiguration($values[static::WEB][static::PREFETCH] ?? [], [static::WEB, static::PREFETCH]);
     }
 
     private function guardMenuConfigurationExists(array $values)
@@ -268,6 +277,11 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     public function getGatewayConfiguration(): GatewayConfiguration
     {
         return $this->gatewayConfiguration;
+    }
+
+    public function getPrefetchConfiguration(): PrefetchConfiguration
+    {
+        return $this->prefetchConfiguration;
     }
 
     public function getDirs(): Dirs

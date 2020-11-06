@@ -2,15 +2,11 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\Cache;
-use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\RulesSkeleton\CurrentWebVersion;
+use DrdPlus\RulesSkeleton\CacheInterface;
 use DrdPlus\RulesSkeleton\Redirect;
-use DrdPlus\RulesSkeleton\Web\Menu\MenuBodyInterface;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringInterface;
 use Granam\WebContentBuilder\HtmlDocument;
-use Granam\WebContentBuilder\Web\Body;
 use Granam\WebContentBuilder\Web\HtmlContentInterface;
 
 class RulesContent extends StrictObject implements StringInterface
@@ -23,16 +19,12 @@ class RulesContent extends StrictObject implements StringInterface
 
     /** @var HtmlContentInterface */
     private $htmlContent;
-    /** @var CurrentWebVersion */
-    private $currentWebVersion;
     /** @var Head */
     private $head;
-    /** @var MenuBodyInterface */
-    private $menuBody;
-    /** @var Body */
-    private $body;
-    /** @var Cache */
+    /** @var CacheInterface */
     private $cache;
+    /** @var RulesHtmlDocumentPostProcessor */
+    private $rulesHtmlDocumentPostProcessor;
     /** @var string */
     private $contentType;
     /** @var Redirect|null */
@@ -42,17 +34,15 @@ class RulesContent extends StrictObject implements StringInterface
 
     public function __construct(
         HtmlContentInterface $htmlContent,
-        MenuBodyInterface $menuBody,
-        CurrentWebVersion $currentWebVersion,
-        Cache $cache,
+        CacheInterface $cache,
+        RulesHtmlDocumentPostProcessor $rulesHtmlDocumentPostProcessor,
         string $contentType,
         ?Redirect $redirect
     )
     {
         $this->htmlContent = $htmlContent;
-        $this->currentWebVersion = $currentWebVersion;
-        $this->menuBody = $menuBody;
         $this->cache = $cache;
+        $this->rulesHtmlDocumentPostProcessor = $rulesHtmlDocumentPostProcessor;
         $this->contentType = $contentType;
         $this->redirect = $redirect;
     }
@@ -84,65 +74,25 @@ class RulesContent extends StrictObject implements StringInterface
         }
         $previousMemoryLimit = \ini_set('memory_limit', '1G');
         $htmlDocument = $this->buildHtmlDocument();
-        $updatedContent = $htmlDocument->saveHTML();
-        $this->cache->cacheContent($updatedContent);
+        $content = $htmlDocument->saveHTML();
+        $this->cache->cacheContent($content);
         if ($previousMemoryLimit !== false) {
             \ini_set('memory_limit', $previousMemoryLimit);
         }
 
         // has to be AFTER cache as we do not want to cache it
-        return $this->injectRedirectIfAny($updatedContent);
+        return $this->injectRedirectIfAny($content);
     }
 
     protected function buildHtmlDocument(): HtmlDocument
     {
         if ($this->htmlDocument === null) {
             $htmlDocument = $this->htmlContent->getHtmlDocument();
-
-            $this->injectCacheStamp($htmlDocument);
-            $this->injectMenuWrapper($htmlDocument);
-            $this->injectCacheId($htmlDocument);
-            $this->injectBackgroundWallpaper($htmlDocument);
-
+            $this->rulesHtmlDocumentPostProcessor->processDocument($htmlDocument);
             $this->htmlDocument = $htmlDocument;
         }
 
         return $this->htmlDocument;
-    }
-
-    private function injectCacheStamp(HtmlDocument $htmlDocument): void
-    {
-        $patchVersion = $this->currentWebVersion->getCurrentPatchVersion();
-        $htmlDocument->documentElement->setAttribute('data-content-version', $patchVersion);
-        $htmlDocument->documentElement->setAttribute('data-cached-at', \date(\DATE_ATOM));
-    }
-
-    private function injectMenuWrapper(HtmlDocument $htmlDocument): void
-    {
-        $menuWrapper = $htmlDocument->createElement('div');
-        $menuWrapper->setAttribute('id', HtmlHelper::ID_MENU_WRAPPER);
-        $menuWrapper->prop_set_innerHTML($this->menuBody->getValue());
-        $htmlDocument->body->insertBefore($menuWrapper, $htmlDocument->body->firstElementChild);
-    }
-
-    private function injectCacheId(HtmlDocument $htmlDocument): void
-    {
-        $htmlDocument->documentElement->setAttribute(HtmlHelper::DATA_CACHE_STAMP, $this->cache->getCacheId());
-    }
-
-    private function injectBackgroundWallpaper(HtmlDocument $htmlDocument): void
-    {
-        $this->injectBackgroundWallpaperPart($htmlDocument, HtmlHelper::CLASS_BACKGROUND_WALLPAPER_RIGHT_PART);
-        $this->injectBackgroundWallpaperPart($htmlDocument, HtmlHelper::CLASS_BACKGROUND_WALLPAPER_LEFT_PART);
-    }
-
-    private function injectBackgroundWallpaperPart(HtmlDocument $htmlDocument, string $htmlClass): void
-    {
-        $backgroundWallpaper = $htmlDocument->createElement('div');
-        $backgroundWallpaper->classList->add($htmlClass);
-        $backgroundWallpaper->classList->add(HtmlHelper::CLASS_BACKGROUND_WALLPAPER);
-        $backgroundWallpaper->classList->add(HtmlHelper::CLASS_BACKGROUND_RELATED);
-        $htmlDocument->body->insertBefore($backgroundWallpaper, $htmlDocument->body->firstElementChild);
     }
 
     private function getCachedContent(): ?string

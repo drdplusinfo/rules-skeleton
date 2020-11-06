@@ -22,6 +22,8 @@ web:
       twitter: "https://twitter.com/DrdInfo"
       facebook: "https://www.facebook.com/drdplus.info"
       trello: "https://trello.com/b/L64FNYj3/drdplusinfo"
+  prefetch:
+    anchors_regexp: "~^[.]/~"
 google:
   analytics_id: 'UA-121206931-0'
 application:

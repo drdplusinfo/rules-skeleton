@@ -78,6 +78,20 @@ abstract class AbstractConfiguration extends StrictObject implements Configurati
         }
     }
 
+    protected function guardConfigurationValueIsValidRegexp(string $valueKey, array $values, array $pathToConfiguration): void
+    {
+        $value = $values[$valueKey];
+        if (!preg_match('~^(.).*\1$~', $value)) {
+            throw new Exceptions\InvalidConfiguration(
+                sprintf(
+                    "Expected configuration '%s' to be a valid regexp with leading and trailing delimiters, got %s",
+                    $this->getConfigurationPath($valueKey, $pathToConfiguration),
+                    var_export($values[$valueKey], true)
+                )
+            );
+        }
+    }
+
     protected function guardConfigurationValueIsObject(string $valueKey, array $values, array $pathToConfiguration): void
     {
         if (!is_array($values[$valueKey])) {

@@ -3,9 +3,12 @@
 namespace DrdPlus\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\Web\Menu\MenuBodyInterface;
 use DrdPlus\RulesSkeleton\Web\RulesContent;
+use DrdPlus\RulesSkeleton\Web\RulesHtmlDocumentPostProcessor;
 use Granam\Strict\Object\StrictObject;
 use Granam\WebContentBuilder\Web\Exceptions\UnknownWebFilesDir;
+use Granam\WebContentBuilder\Web\HtmlContentInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -79,13 +82,15 @@ class RulesApplication extends StrictObject
         }
         $servicesContainer = $this->servicesContainer;
         if ($servicesContainer->getTablesRequestDetector()->areTablesRequested()) {
-            $this->content = new RulesContent(
-                $servicesContainer->getTablesContent(),
+            $rulesHtmlDocumentPostProcessor = $this->createRulesHtmlDocumentPostProcessor(
                 $servicesContainer->getPassedMenuBody(),
-                $servicesContainer->getCurrentWebVersion(),
+                $servicesContainer->getTablesWebCache()
+            );
+            $this->content = $this->createRulesContent(
+                $servicesContainer->getTablesContent(),
                 $servicesContainer->getTablesWebCache(),
                 RulesContent::TABLES,
-                $this->getRedirect()
+                $rulesHtmlDocumentPostProcessor
             );
 
             return $this->content;
@@ -93,39 +98,66 @@ class RulesApplication extends StrictObject
         if ($servicesContainer->getRequest()->isRequestedPdf()
             && $servicesContainer->getRoutedWebPartsContainer()->getPdfBody()->getPdfFile()
         ) {
-            $this->content = new RulesContent(
-                $servicesContainer->getPdfContent(),
+            $rulesHtmlDocumentPostProcessor = $this->createRulesHtmlDocumentPostProcessor(
                 $servicesContainer->getEmptyMenuBody(),
-                $servicesContainer->getCurrentWebVersion(),
+                $servicesContainer->getDummyWebCache()
+            );
+            $this->content = $this->createRulesContent(
+                $servicesContainer->getPdfContent(),
                 $servicesContainer->getDummyWebCache(),
                 RulesContent::PDF,
-                $this->getRedirect()
+                $rulesHtmlDocumentPostProcessor
             );
 
             return $this->content;
         }
         if (!$this->canPassIn()) {
-            $this->content = new RulesContent(
-                $servicesContainer->getGatewayContent(),
+            $rulesHtmlDocumentPostProcessor = $this->createRulesHtmlDocumentPostProcessor(
                 $servicesContainer->getGatewayMenuBody(),
-                $servicesContainer->getCurrentWebVersion(),
+                $servicesContainer->getGatewayWebCache()
+            );
+            $this->content = $this->createRulesContent(
+                $servicesContainer->getGatewayContent(),
                 $servicesContainer->getGatewayWebCache(),
                 RulesContent::GATEWAY,
-                $this->getRedirect()
+                $rulesHtmlDocumentPostProcessor
             );
 
             return $this->content;
         }
-        $this->content = new RulesContent(
-            $servicesContainer->getRulesMainContent(),
+        $rulesHtmlDocumentPostProcessor = $this->createRulesHtmlDocumentPostProcessor(
             $servicesContainer->getPassedMenuBody(),
-            $servicesContainer->getCurrentWebVersion(),
+            $servicesContainer->getPassedWebCache()
+        );
+        $this->content = $this->createRulesContent(
+            $servicesContainer->getRulesMainContent(),
             $servicesContainer->getPassedWebCache(),
             RulesContent::FULL,
-            $this->getRedirect()
+            $rulesHtmlDocumentPostProcessor
         );
 
         return $this->content;
+    }
+
+    private function createRulesHtmlDocumentPostProcessor(MenuBodyInterface $menuBody, CacheIdProvider $cacheIdProvider): RulesHtmlDocumentPostProcessor
+    {
+        return new RulesHtmlDocumentPostProcessor(
+            $menuBody,
+            $this->servicesContainer->getCurrentWebVersion(),
+            $cacheIdProvider,
+            $this->configuration->getPrefetchConfiguration()
+        );
+    }
+
+    private function createRulesContent(HtmlContentInterface $content, CacheInterface $cache, string $contentType, RulesHtmlDocumentPostProcessor $rulesHtmlDocumentPostProcessor): RulesContent
+    {
+        return new RulesContent(
+            $content,
+            $cache,
+            $rulesHtmlDocumentPostProcessor,
+            $contentType,
+            $this->getRedirect()
+        );
     }
 
     private function getRedirect(): ?Redirect
@@ -151,7 +183,7 @@ class RulesApplication extends StrictObject
         return $this->canPassIn = $this->servicesContainer->getTicket()->canPassIn();
     }
 
-    private function checkThatCanPassNow()
+    private function checkThatCanPassNow(): void
     {
         if (!$this->servicesContainer->getTicket()->canPassIn()) {
             throw new Exceptions\CanNotPassIn('Visitor should be able to pass in but still can not');
@@ -211,13 +243,15 @@ class RulesApplication extends StrictObject
             return $this->notFoundContent;
         }
         $servicesContainer = $this->servicesContainer;
-        $this->notFoundContent = new RulesContent(
-            $servicesContainer->getNotFoundContent(),
+        $rulesHtmlDocumentPostProcessor = $this->createRulesHtmlDocumentPostProcessor(
             $servicesContainer->getPassedMenuBody(),
-            $servicesContainer->getCurrentWebVersion(),
+            $servicesContainer->getNotFoundCache()
+        );
+        $this->notFoundContent = $this->createRulesContent(
+            $servicesContainer->getNotFoundContent(),
             $servicesContainer->getNotFoundCache(),
             RulesContent::NOT_FOUND,
-            $this->getRedirect()
+            $rulesHtmlDocumentPostProcessor
         );
 
         return $this->notFoundContent;

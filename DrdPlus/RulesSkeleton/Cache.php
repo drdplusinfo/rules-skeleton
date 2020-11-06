@@ -7,7 +7,7 @@ use Granam\Git\Exceptions\CanNotDiffDetachedBranch;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
 
-abstract class Cache extends StrictObject
+abstract class Cache extends StrictObject implements CacheInterface
 {
     // named parameters
     public const IN_PRODUCTION = true;
@@ -34,17 +34,6 @@ abstract class Cache extends StrictObject
     /** @var ContentIrrelevantParametersFilter */
     private $contentIrrelevantParametersFilter;
 
-    /**
-     * @param CurrentWebVersion $currentWebVersion
-     * @param string $projectRootDir
-     * @param string $cacheRootDir
-     * @param Request $request
-     * @param ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases
-     * @param ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter
-     * @param Git $git
-     * @param bool $isInProduction
-     * @throws \RuntimeException
-     */
     public function __construct(
         CurrentWebVersion $currentWebVersion,
         string $projectRootDir,

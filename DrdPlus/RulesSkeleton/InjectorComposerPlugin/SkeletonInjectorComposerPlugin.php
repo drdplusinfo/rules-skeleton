@@ -171,10 +171,10 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             ],
             $documentRoot
         );
-        $this->removeIfHasFreeAccess(['./css/generic/skeleton/rules-gateway.css'], $documentRoot);
+        $this->removeFilesIfHasFreeAccess(['./css/generic/skeleton/rules-gateway.css'], $documentRoot);
     }
 
-    private function removeIfHasFreeAccess(array $filesToRemove, string $documentRoot)
+    private function removeFilesIfHasFreeAccess(array $filesToRemove, string $documentRoot)
     {
         $dirs = $this->getDirs($documentRoot);
         $configuration = $this->getConfiguration($dirs);
@@ -215,7 +215,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             ],
             $documentRoot
         );
-        $this->removeIfHasFreeAccess(
+        $this->removeFilesIfHasFreeAccess(
             [
                 './js/generic/skeleton/rules-gateway-pass-expiration.js',
                 './js/generic/skeleton/rules-gateway-pass-hash.js',
