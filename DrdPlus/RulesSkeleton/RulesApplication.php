@@ -2,7 +2,6 @@
 
 namespace DrdPlus\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Web\Menu\MenuBodyInterface;
 use DrdPlus\RulesSkeleton\Web\RulesContent;
 use DrdPlus\RulesSkeleton\Web\RulesHtmlDocumentPostProcessor;
@@ -16,8 +15,6 @@ class RulesApplication extends StrictObject
 {
     /** @var ServicesContainer */
     private $servicesContainer;
-    /** @var Configuration */
-    private $configuration;
     /** @var RulesContent */
     private $content;
     /** @var Redirect */
@@ -30,7 +27,6 @@ class RulesApplication extends StrictObject
     public function __construct(ServicesContainer $servicesContainer)
     {
         $this->servicesContainer = $servicesContainer;
-        $this->configuration = $servicesContainer->getConfiguration();
     }
 
     public function run(): void
@@ -141,12 +137,7 @@ class RulesApplication extends StrictObject
 
     private function createRulesHtmlDocumentPostProcessor(MenuBodyInterface $menuBody, CacheIdProvider $cacheIdProvider): RulesHtmlDocumentPostProcessor
     {
-        return new RulesHtmlDocumentPostProcessor(
-            $menuBody,
-            $this->servicesContainer->getCurrentWebVersion(),
-            $cacheIdProvider,
-            $this->configuration->getPrefetchConfiguration()
-        );
+        return new RulesHtmlDocumentPostProcessor($menuBody, $this->servicesContainer->getCurrentWebVersion(), $cacheIdProvider);
     }
 
     private function createRulesContent(HtmlContentInterface $content, CacheInterface $cache, string $contentType, RulesHtmlDocumentPostProcessor $rulesHtmlDocumentPostProcessor): RulesContent

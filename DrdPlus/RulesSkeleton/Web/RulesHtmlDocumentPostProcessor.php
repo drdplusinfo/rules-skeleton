@@ -3,7 +3,6 @@
 namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\CacheIdProvider;
-use DrdPlus\RulesSkeleton\Configurations\PrefetchConfiguration;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Web\Menu\MenuBodyInterface;
@@ -21,20 +20,16 @@ class RulesHtmlDocumentPostProcessor implements HtmlDocumentProcessorInterface
     private $body;
     /** @var CacheIdProvider */
     private $cacheIdProvider;
-    /** @var PrefetchConfiguration */
-    private $prefetchConfiguration;
 
     public function __construct(
         MenuBodyInterface $menuBody,
         CurrentWebVersion $currentWebVersion,
-        CacheIdProvider $cacheIdProvider,
-        PrefetchConfiguration $prefetchConfiguration
+        CacheIdProvider $cacheIdProvider
     )
     {
         $this->currentWebVersion = $currentWebVersion;
         $this->menuBody = $menuBody;
         $this->cacheIdProvider = $cacheIdProvider;
-        $this->prefetchConfiguration = $prefetchConfiguration;
     }
 
     public function processDocument(HtmlDocument $htmlDocument): HtmlDocument
@@ -43,7 +38,6 @@ class RulesHtmlDocumentPostProcessor implements HtmlDocumentProcessorInterface
         $this->injectMenuWrapper($htmlDocument);
         $this->injectCacheId($htmlDocument);
         $this->injectBackgroundWallpaper($htmlDocument);
-        $this->injectPrefetch($htmlDocument);
         return $htmlDocument;
     }
 
@@ -81,44 +75,4 @@ class RulesHtmlDocumentPostProcessor implements HtmlDocumentProcessorInterface
         $backgroundWallpaper->classList->add(HtmlHelper::CLASS_BACKGROUND_RELATED);
         $htmlDocument->body->insertBefore($backgroundWallpaper, $htmlDocument->body->firstElementChild);
     }
-
-    private function injectPrefetch(HtmlDocument $htmlDocument): void
-    {
-        $anchorsRegexp = $this->prefetchConfiguration->getAnchorsRegexp();
-        if ($anchorsRegexp === '') {
-            return;
-        }
-        $matchingHrefs = $this->getMatchingHrefs($anchorsRegexp, $htmlDocument);
-        if (!$matchingHrefs) {
-            return;
-        }
-        foreach (array_unique($matchingHrefs) as $matchingHref) {
-            $this->injectPrefetchToHref($matchingHref, $htmlDocument);
-        }
-    }
-
-    private function getMatchingHrefs(string $anchorsRegexp, HtmlDocument $htmlDocument): array
-    {
-        $anchors = $htmlDocument->body->getElementsByTagName('a');
-        $matchingHrefs = [];
-        foreach ($anchors as $anchor) {
-            $href = (string)$anchor->getAttribute('href');
-            if ($href === '') {
-                continue;
-            }
-            if (preg_match($anchorsRegexp, $href)) {
-                $matchingHrefs[] = $href;
-            }
-        }
-        return $matchingHrefs;
-    }
-
-    private function injectPrefetchToHref(string $href, HtmlDocument $htmlDocument): void
-    {
-        $link = $htmlDocument->createElement('link');
-        $link->setAttribute('rel', 'prefetch');
-        $link->setAttribute('href', $href);
-        $htmlDocument->head->appendChild($link);
-    }
-
 }
