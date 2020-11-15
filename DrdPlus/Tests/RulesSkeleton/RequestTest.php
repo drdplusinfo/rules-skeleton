@@ -25,7 +25,7 @@ class RequestTest extends AbstractContentTest
         self::assertSame('from get', $request->getValue('foo'));
         self::assertSame('from post', $request->getValue('bar'));
         self::assertSame('from cookie', $request->getValue('baz'));
-        self::assertSame('/qux/foobar/foobaz', $request->getPath());
+        self::assertSame('/qux/foobar/foobaz', $request->getRequestPath());
     }
 
     public static function getCrawlerUserAgents(): array
@@ -280,10 +280,10 @@ class RequestTest extends AbstractContentTest
     public function I_can_get_current_path(): void
     {
         $request = new Request($this->getBot(), $this->getEnvironment(), [], [], [], ['REQUEST_URI' => null]);
-        self::assertSame('/', $request->getPath());
+        self::assertSame('/', $request->getRequestPath());
 
         $request = new Request($this->getBot(), $this->getEnvironment(), [], [], [], ['REQUEST_URI' => '/foo/bar']);
-        self::assertSame('/foo/bar', $request->getPath());
+        self::assertSame('/foo/bar', $request->getRequestPath());
     }
 
     /**
@@ -340,7 +340,7 @@ class RequestTest extends AbstractContentTest
     public function I_will_get_homepage_on_multiple_slashes(): void
     {
         $request = new Request($this->getBot(), $this->getEnvironment(), [], [], [], ['REQUEST_URI' => '//']);
-        self::assertSame('/', $request->getPath());
+        self::assertSame('/', $request->getRequestPath());
     }
 
     /**
@@ -349,7 +349,7 @@ class RequestTest extends AbstractContentTest
     public function I_will_get_homepage_on_double_dot_as_only_request_uri(): void
     {
         $request = new Request($this->getBot(), $this->getEnvironment(), [], [], [], ['REQUEST_URI' => ':']);
-        self::assertSame('/', $request->getPath());
+        self::assertSame('/', $request->getRequestPath());
     }
 
     /**

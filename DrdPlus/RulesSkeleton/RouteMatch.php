@@ -83,25 +83,16 @@ class RouteMatch extends StrictObject
         return $this->resource;
     }
 
-    /**
-     * @return string|null
-     */
     public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPrefix(): ?string
     {
         return $this->prefix;
     }
 
-    /**
-     * @return string|null
-     */
     public function getHost(): ?string
     {
         return $this->host;

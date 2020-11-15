@@ -6,9 +6,7 @@ use Granam\Strict\Object\StrictObject;
 
 abstract class AbstractPublicFiles extends StrictObject implements \IteratorAggregate
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $preferMinified;
 
     public function __construct(bool $preferMinified)
@@ -16,7 +14,7 @@ abstract class AbstractPublicFiles extends StrictObject implements \IteratorAggr
         $this->preferMinified = $preferMinified;
     }
 
-    protected function removeMapFiles(array $files)
+    protected function removeMapFiles(array $files): array
     {
         return \array_filter($files, static function (string $file) {
             return !\preg_match('~[.]map$~', $file);

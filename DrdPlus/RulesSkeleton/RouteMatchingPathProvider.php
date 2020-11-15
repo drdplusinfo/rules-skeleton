@@ -4,7 +4,7 @@ namespace DrdPlus\RulesSkeleton;
 
 use Granam\Strict\Object\StrictObject;
 
-class PathProvider extends StrictObject
+class RouteMatchingPathProvider extends StrictObject
 {
     /**
      * @var RulesUrlMatcher
@@ -21,7 +21,12 @@ class PathProvider extends StrictObject
         $this->url = $url;
     }
 
-    public function getPath(): string
+    /**
+     * @return string
+     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
+     * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException
+     */
+    public function getMatchingPath(): string
     {
         $match = $this->urlMatcher->match($this->url);
         return $match->getPath();

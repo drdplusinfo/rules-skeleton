@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton;
+namespace DrdPlus\RulesSkeleton\Cache;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\Dirs;
+use DrdPlus\RulesSkeleton\CurrentWebVersion;
+use DrdPlus\RulesSkeleton\RequestPathProvider;
 use Granam\Git\Git;
 
 class WebCache extends Cache
@@ -19,9 +21,9 @@ class WebCache extends Cache
         CurrentWebVersion $currentWebVersion,
         Dirs $dirs,
         string $cacheSubDir,
-        Request $request,
-        ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases,
-        ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter,
+        RequestPathProvider $requestPathProvider,
+        CachingPermissionProvider $cachingPermissionProvider,
+        ContentRelatedContextHashProvider $contentRelatedContextHashProvider,
         Git $git,
         Configuration $configuration,
         bool $isInProduction
@@ -31,9 +33,9 @@ class WebCache extends Cache
             $currentWebVersion,
             $dirs->getProjectRoot(),
             $dirs->getCacheRoot() . '/web/' . $cacheSubDir,
-            $request,
-            $contentIrrelevantRequestAliases,
-            $contentIrrelevantParametersFilter,
+            $requestPathProvider,
+            $cachingPermissionProvider,
+            $contentRelatedContextHashProvider,
             $git,
             $configuration,
             $isInProduction

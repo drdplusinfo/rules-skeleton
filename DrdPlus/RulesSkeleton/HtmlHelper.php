@@ -265,9 +265,6 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         }
     }
 
-    /**
-     * @param HtmlDocument $html
-     */
     public function resolveDisplayMode(HtmlDocument $html): void
     {
         if ($this->inDevMode) {
@@ -309,10 +306,6 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         }
     }
 
-    /**
-     * @param HtmlDocument $htmlDocument
-     * @return HtmlDocument
-     */
     public function makeExternalDrdPlusLinksLocal(HtmlDocument $htmlDocument): HtmlDocument
     {
         foreach ($this->getExternalAnchors($htmlDocument) as $externalAnchor) {

@@ -2,7 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\CacheInterface;
+use DrdPlus\RulesSkeleton\Cache\CacheInterface;
 use DrdPlus\RulesSkeleton\Redirect;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringInterface;

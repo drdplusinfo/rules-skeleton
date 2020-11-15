@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton;
+namespace DrdPlus\RulesSkeleton\Cache;
 
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
+use DrdPlus\RulesSkeleton\CurrentWebVersion;
+use DrdPlus\RulesSkeleton\RequestPathProvider;
 use Granam\Git\Exceptions\CanNotDiffDetachedBranch;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
@@ -17,30 +19,30 @@ abstract class Cache extends StrictObject implements CacheInterface
     protected $projectRootDir;
     /** @var string */
     private $cacheRootDir;
+    /** @var RequestPathProvider */
+    private $requestPathProvider;
     /** @var array|string[] */
     protected $cacheRoots;
     /** @var CurrentWebVersion */
     protected $currentWebVersion;
-    /** @var Request */
-    private $request;
+    /** @var CachingPermissionProvider */
+    private $cachingPermissionProvider;
+    /** @var ContentRelatedContextHashProvider */
+    private $contentRelatedContextHashProvider;
     /** @var Git */
     private $git;
     /** @var Configuration */
     private $configuration;
     /** @var bool */
     protected $isInProduction;
-    /** @var ContentIrrelevantRequestAliases */
-    private $contentIrrelevantRequestAliases;
-    /** @var ContentIrrelevantParametersFilter */
-    private $contentIrrelevantParametersFilter;
 
     public function __construct(
         CurrentWebVersion $currentWebVersion,
         string $projectRootDir,
         string $cacheRootDir,
-        Request $request,
-        ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases,
-        ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter,
+        RequestPathProvider $requestPathProvider,
+        CachingPermissionProvider $cachingPermissionProvider,
+        ContentRelatedContextHashProvider $contentRelatedContextHashProvider,
         Git $git,
         Configuration $configuration,
         bool $isInProduction
@@ -49,52 +51,35 @@ abstract class Cache extends StrictObject implements CacheInterface
         $this->currentWebVersion = $currentWebVersion;
         $this->projectRootDir = $projectRootDir;
         $this->cacheRootDir = $cacheRootDir;
-        $this->request = $request;
-        $this->contentIrrelevantRequestAliases = $contentIrrelevantRequestAliases;
-        $this->contentIrrelevantParametersFilter = $contentIrrelevantParametersFilter;
+        $this->requestPathProvider = $requestPathProvider;
+        $this->contentRelatedContextHashProvider = $contentRelatedContextHashProvider;
         $this->git = $git;
         $this->configuration = $configuration;
         $this->isInProduction = $isInProduction;
+        $this->cachingPermissionProvider = $cachingPermissionProvider;
     }
 
-    /**
-     * @return string
-     */
     public function getCacheDir(): string
     {
         $currentVersion = $this->currentWebVersion->getCurrentMinorVersion();
-        if (($this->cacheRoots[$currentVersion] ?? null) === null) {
-            $cacheRoot = $this->cacheRootDir . '/' . $currentVersion;
+        $requestPath = $this->requestPathProvider->getRequestPath();
+        if (($this->cacheRoots[$currentVersion][$requestPath] ?? null) === null) {
+            $cacheRoot = rtrim($this->cacheRootDir . '/' . $currentVersion . '/' . $requestPath, '/');
             if (!\file_exists($cacheRoot)) {
                 if (!@\mkdir($cacheRoot, 0775, true /* with parents */) && !\is_dir($cacheRoot)) {
                     throw new \RuntimeException('Can not create directory for page cache ' . $cacheRoot);
                 }
-                \chmod($cacheRoot, 0775); // because umask could suppress it
+                chmod($cacheRoot, 0775); // because umask could suppress it
             }
-            $this->cacheRoots[$currentVersion] = $cacheRoot;
+            $this->cacheRoots[$currentVersion][$requestPath] = $cacheRoot;
         }
 
-        return $this->cacheRoots[$currentVersion];
+        return $this->cacheRoots[$currentVersion][$requestPath];
     }
 
     public function isInProduction(): bool
     {
         return $this->isInProduction;
-    }
-
-    protected function getCurrentRequestHash(): string
-    {
-        $filteredGetParameters = $this->contentIrrelevantParametersFilter
-            ->removeContentIrrelevantParameters($this->request->getValuesFromGet());
-        $contentRelevantPath = $this->contentIrrelevantRequestAliases->getTruePath(
-            $this->request->getPath(),
-            $filteredGetParameters
-        );
-        $contentRelevantGetParameters = $this->contentIrrelevantRequestAliases->getTrueParameters(
-            $this->request->getPath(),
-            $filteredGetParameters
-        );
-        return \md5($contentRelevantPath . \serialize($contentRelevantGetParameters));
     }
 
     /**
@@ -103,15 +88,12 @@ abstract class Cache extends StrictObject implements CacheInterface
      */
     public function isCacheValid(): bool
     {
-        $cacheParameter = $this->request->getValue(Request::CACHE) ?? '';
-
-        return ($cacheParameter === '' || !\in_array($cacheParameter, [Request::DISABLE, 'disabled', '0'], true))
-            && \is_readable($this->getCacheFileName());
+        return $this->cachingPermissionProvider->isCachingAllowed() && is_readable($this->getCacheFileName());
     }
 
     public function getCacheId(): string
     {
-        return $this->getCurrentContentHash() . '_' . $this->getCurrentRequestHash();
+        return $this->getCurrentContentHash() . '_' . $this->contentRelatedContextHashProvider->getContextHash();
     }
 
     private function getCacheFileName(): string
@@ -145,10 +127,10 @@ abstract class Cache extends StrictObject implements CacheInterface
         } catch (CanNotDiffDetachedBranch $exception) {
             $diffAgainstOriginMaster = [$exception->getMessage()];
         }
-        $gitStatusImploded = \implode($gitStatus);
-        $diffAgainstOriginMasterImploded = \implode($diffAgainstOriginMaster);
+        $gitStatusImploded = implode($gitStatus);
+        $diffAgainstOriginMasterImploded = implode($diffAgainstOriginMaster);
 
-        return \md5($gitStatusImploded . $diffAgainstOriginMasterImploded);
+        return md5($gitStatusImploded . $diffAgainstOriginMasterImploded);
     }
 
     private function getLocalConfigurationStamp(): string
@@ -161,11 +143,11 @@ abstract class Cache extends StrictObject implements CacheInterface
 
     /**
      * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotReadCachedContent
+     * @throws \DrdPlus\RulesSkeleton\Cache\Exceptions\CanNotReadCachedContent
      */
     public function getCachedContent(): string
     {
-        $cachedContent = \file_get_contents($this->getCacheFileName());
+        $cachedContent = file_get_contents($this->getCacheFileName());
         if ($cachedContent === false) {
             throw new Exceptions\CanNotReadCachedContent("Can not read cached content from '{$this->getCacheFileName()}'");
         }
@@ -175,16 +157,16 @@ abstract class Cache extends StrictObject implements CacheInterface
 
     /**
      * @param string $content
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotSaveContentForDebug
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotChangeAccessToFileWithContentForDebug
+     * @throws \DrdPlus\RulesSkeleton\Cache\Exceptions\CanNotSaveContentForDebug
+     * @throws \DrdPlus\RulesSkeleton\Cache\Exceptions\CanNotChangeAccessToFileWithContentForDebug
      */
     public function saveContentForDebug(string $content): void
     {
         $cacheDebugFileName = $this->getCacheDebugFileName();
-        if (!\file_put_contents($cacheDebugFileName, $content, \LOCK_EX)) {
+        if (!file_put_contents($cacheDebugFileName, $content, \LOCK_EX)) {
             throw new Exceptions\CanNotSaveContentForDebug('Can not save content for debugging purpose into ' . $cacheDebugFileName);
         }
-        if (!@\chmod($cacheDebugFileName, 0664)) {
+        if (!@chmod($cacheDebugFileName, 0664)) {
             throw new Exceptions\CanNotChangeAccessToFileWithContentForDebug(
                 'Can not change access to 0644 for file with content for debug ' . $cacheDebugFileName
             );
@@ -197,7 +179,12 @@ abstract class Cache extends StrictObject implements CacheInterface
      */
     private function getCacheDebugFileName(): string
     {
-        return $this->getCacheDir() . "/{$this->geCacheDebugFileBaseNamePartWithoutGet()}_{$this->getCurrentRequestHash()}.html";
+        return sprintf(
+            '%s/%s_%s.html',
+            $this->getCacheDir(),
+            $this->geCacheDebugFileBaseNamePartWithoutGet(),
+            $this->contentRelatedContextHashProvider->getContextHash()
+        );
     }
 
     private function geCacheDebugFileBaseNamePartWithoutGet(): string
@@ -212,8 +199,8 @@ abstract class Cache extends StrictObject implements CacheInterface
     public function cacheContent(string $content): void
     {
         $cacheFileName = $this->getCacheFileName();
-        \file_put_contents($cacheFileName, $content, \LOCK_EX);
-        \chmod($cacheFileName, 0664);
+        file_put_contents($cacheFileName, $content, \LOCK_EX);
+        chmod($cacheFileName, 0664);
         $this->clearOldCache();
     }
 
@@ -223,18 +210,20 @@ abstract class Cache extends StrictObject implements CacheInterface
     private function clearOldCache(): void
     {
         $foldersToSkip = ['.', '..', '.gitignore'];
-        $currentVersion = $this->currentWebVersion->getCurrentMinorVersion();
-        $cacheRoot = $this->cacheRoots[$currentVersion];
+        $cacheDir = $this->getCacheDir();
 
         $currentContentHash = $this->getCurrentContentHash();
-        foreach (\scandir($cacheRoot, \SCANDIR_SORT_NONE) as $folder) {
-            if (\in_array($folder, $foldersToSkip, true)) {
+        foreach (scandir($cacheDir, \SCANDIR_SORT_NONE) as $folder) {
+            if (in_array($folder, $foldersToSkip, true)) {
                 continue;
             }
-            if (\strpos($folder, $currentContentHash) !== false) { // that file is valid
+            if (strpos($folder, $currentContentHash) !== false) { // that file is valid
                 continue;
             }
-            \unlink($cacheRoot . '/' . $folder);
+            if (is_dir($cacheDir . '/' . $folder)) { // dir with cached sub-routes
+                continue;
+            }
+            unlink($cacheDir . '/' . $folder);
         }
     }
 }

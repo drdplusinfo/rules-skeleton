@@ -3,7 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton\Configurations;
 
 use DrdPlus\RulesSkeleton\Configurations\RoutedDirs;
-use DrdPlus\RulesSkeleton\PathProvider;
+use DrdPlus\RulesSkeleton\RouteMatchingPathProvider;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Mockery\MockInterface;
 
@@ -16,20 +16,20 @@ class RoutedDirsTest extends AbstractContentTest
     {
         $dirsClass = static::getSutClass();
         /** @var RoutedDirs $routedDirs */
-        $routedDirs = new $dirsClass('foo', $this->createPathProvider('\\bar'));
+        $routedDirs = new $dirsClass('foo', $this->createRouteMatchingPathProvider('\\bar'));
         self::assertSame('foo/web/bar', $routedDirs->getWebRoot());
     }
 
     /**
      * @param string $path
-     * @return PathProvider|MockInterface
+     * @return RouteMatchingPathProvider|MockInterface
      */
-    private function createPathProvider(string $path): PathProvider
+    private function createRouteMatchingPathProvider(string $path): RouteMatchingPathProvider
     {
-        $pathProvider = $this->mockery(PathProvider::class);
-        $pathProvider->shouldReceive('getPath')
+        $routeMatchingPathProvider = $this->mockery(RouteMatchingPathProvider::class);
+        $routeMatchingPathProvider->shouldReceive('getMatchingPath')
             ->andReturn($path);
 
-        return $pathProvider;
+        return $routeMatchingPathProvider;
     }
 }

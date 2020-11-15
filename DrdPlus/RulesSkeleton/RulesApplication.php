@@ -2,6 +2,8 @@
 
 namespace DrdPlus\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\Cache\CacheIdProvider;
+use DrdPlus\RulesSkeleton\Cache\CacheInterface;
 use DrdPlus\RulesSkeleton\Web\Menu\MenuBodyInterface;
 use DrdPlus\RulesSkeleton\Web\RulesContent;
 use DrdPlus\RulesSkeleton\Web\RulesHtmlDocumentPostProcessor;

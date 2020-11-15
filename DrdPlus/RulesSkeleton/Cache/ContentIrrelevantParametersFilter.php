@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton;
+namespace DrdPlus\RulesSkeleton\Cache;
 
 use Granam\Strict\Object\StrictObject;
 
@@ -14,7 +14,7 @@ class ContentIrrelevantParametersFilter extends StrictObject
         $this->contentIrrelevantParameterNames = \array_fill_keys($contentIrrelevantParameterNames, '');
     }
 
-    public function removeContentIrrelevantParameters(array $parameters): array
+    public function filterContentIrrelevantParameters(array $parameters): array
     {
         return \array_diff_key($parameters, $this->contentIrrelevantParameterNames);
     }

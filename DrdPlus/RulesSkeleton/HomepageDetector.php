@@ -8,12 +8,10 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class HomepageDetector extends StrictObject
 {
-    /**
-     * @var PathProvider
-     */
+    /** @var RouteMatchingPathProvider */
     private $pathProvider;
 
-    public function __construct(PathProvider $pathProvider)
+    public function __construct(RouteMatchingPathProvider $pathProvider)
     {
         $this->pathProvider = $pathProvider;
     }
@@ -21,7 +19,7 @@ class HomepageDetector extends StrictObject
     public function isHomepageRequested(): bool
     {
         try {
-            $path = $this->pathProvider->getPath();
+            $path = $this->pathProvider->getMatchingPath();
             return $path === '' || $path === '/';
         } catch (RouteNotFoundException | ResourceNotFoundException $notFoundException) {
             return false;

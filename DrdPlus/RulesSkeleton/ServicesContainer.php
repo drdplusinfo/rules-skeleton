@@ -3,6 +3,16 @@
 namespace DrdPlus\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
+use DrdPlus\RulesSkeleton\Cache\Cache;
+use DrdPlus\RulesSkeleton\Cache\CacheCleaner;
+use DrdPlus\RulesSkeleton\Cache\ContentIrrelevantParametersFilter;
+use DrdPlus\RulesSkeleton\Cache\ContentIrrelevantRequestAlias;
+use DrdPlus\RulesSkeleton\Cache\ContentIrrelevantRequestAliases;
+use DrdPlus\RulesSkeleton\Cache\DummyWebCache;
+use DrdPlus\RulesSkeleton\Cache\RequestCachingPermissionProvider;
+use DrdPlus\RulesSkeleton\Cache\RequestHashProvider;
+use DrdPlus\RulesSkeleton\Cache\RouterCacheDirProvider;
+use DrdPlus\RulesSkeleton\Cache\WebCache;
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\Dirs;
 use DrdPlus\RulesSkeleton\Configurations\RoutedDirs;
@@ -12,6 +22,7 @@ use DrdPlus\RulesSkeleton\Web\Main\MainContent;
 use DrdPlus\RulesSkeleton\Web\Menu\EmptyMenuBody;
 use DrdPlus\RulesSkeleton\Web\Menu\MenuBody;
 use DrdPlus\RulesSkeleton\Web\NotFound\NotFoundContent;
+use DrdPlus\RulesSkeleton\Web\PdfContent;
 use DrdPlus\RulesSkeleton\Web\Tables\TablesContent;
 use DrdPlus\RulesSkeleton\Web\Tools\WebFiles;
 use DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer;
@@ -67,7 +78,7 @@ class ServicesContainer extends StrictObject
     private $routedWebRootProvider;
     /** @var WebRootProvider */
     private $rootWebRootProvider;
-    /** @var PathProvider */
+    /** @var RouteMatchingPathProvider */
     private $pathProvider;
     /** @var Request */
     private $request;
@@ -107,6 +118,10 @@ class ServicesContainer extends StrictObject
     private $routerCacheDirProvider;
     /** @var WebCache */
     private $routerCache;
+    /** @var RequestCachingPermissionProvider */
+    private $requestCachingPermissionProvider;
+    /** @var RequestHashProvider */
+    private $requestHashProvider;
     /** @var YamlFileLoader */
     private $projectRootFileLocator;
     /** @var Cache */
@@ -421,10 +436,10 @@ class ServicesContainer extends StrictObject
         return new RoutedDirs($dirs->getProjectRoot(), $this->getPathProvider());
     }
 
-    protected function getPathProvider(): PathProvider
+    protected function getPathProvider(): RouteMatchingPathProvider
     {
         if ($this->pathProvider === null) {
-            $this->pathProvider = new PathProvider($this->getRulesUrlMatcher(), $this->getRequest()->getCurrentUrl());
+            $this->pathProvider = new RouteMatchingPathProvider($this->getRulesUrlMatcher(), $this->getRequest()->getCurrentUrl());
         }
         return $this->pathProvider;
     }
@@ -481,14 +496,34 @@ class ServicesContainer extends StrictObject
                 $this->getDirs(),
                 WebCache::ROUTER,
                 $this->getRequest(),
-                $this->getContentIrrelevantRequestAliases(),
-                $this->getContentIrrelevantParametersFilter(),
+                $this->getRequestCachingPermissionProvider(),
+                $this->getRequestHashProvider(),
                 $this->getGit(),
                 $this->getConfiguration(),
                 $this->getEnvironment()->isInProduction()
             );
         }
         return $this->routerCache;
+    }
+
+    public function getRequestCachingPermissionProvider(): RequestCachingPermissionProvider
+    {
+        if ($this->requestCachingPermissionProvider === null) {
+            $this->requestCachingPermissionProvider = new RequestCachingPermissionProvider($this->getRequest());
+        }
+        return $this->requestCachingPermissionProvider;
+    }
+
+    public function getRequestHashProvider(): RequestHashProvider
+    {
+        if ($this->requestHashProvider === null) {
+            $this->requestHashProvider = new RequestHashProvider(
+                $this->getRequest(),
+                $this->getContentIrrelevantRequestAliases(),
+                $this->getContentIrrelevantParametersFilter()
+            );
+        }
+        return $this->requestHashProvider;
     }
 
     protected function getYamlFileWithRoutes(): string
@@ -536,8 +571,8 @@ class ServicesContainer extends StrictObject
                 $this->getDirs(),
                 WebCache::TABLES,
                 $this->getRequest(),
-                $this->getContentIrrelevantRequestAliases(),
-                $this->getContentIrrelevantParametersFilter(),
+                $this->getRequestCachingPermissionProvider(),
+                $this->getRequestHashProvider(),
                 $this->getGit(),
                 $this->getConfiguration(),
                 $this->getEnvironment()->isInProduction()
@@ -554,8 +589,8 @@ class ServicesContainer extends StrictObject
                 $this->getDirs(),
                 WebCache::GATEWAY,
                 $this->getRequest(),
-                $this->getContentIrrelevantRequestAliases(),
-                $this->getContentIrrelevantParametersFilter(),
+                $this->getRequestCachingPermissionProvider(),
+                $this->getRequestHashProvider(),
                 $this->getGit(),
                 $this->getConfiguration(),
                 $this->getEnvironment()->isInProduction()
@@ -572,8 +607,8 @@ class ServicesContainer extends StrictObject
                 $this->getDirs(),
                 WebCache::PASSED_GATEWAY,
                 $this->getRequest(),
-                $this->getContentIrrelevantRequestAliases(),
-                $this->getContentIrrelevantParametersFilter(),
+                $this->getRequestCachingPermissionProvider(),
+                $this->getRequestHashProvider(),
                 $this->getGit(),
                 $this->getConfiguration(),
                 $this->getEnvironment()->isInProduction()
@@ -590,8 +625,8 @@ class ServicesContainer extends StrictObject
                 $this->getDirs(),
                 WebCache::NOT_FOUND,
                 $this->getRequest(),
-                $this->getContentIrrelevantRequestAliases(),
-                $this->getContentIrrelevantParametersFilter(),
+                $this->getRequestCachingPermissionProvider(),
+                $this->getRequestHashProvider(),
                 $this->getGit(),
                 $this->getConfiguration(),
                 $this->getEnvironment()->isInProduction()
@@ -627,8 +662,8 @@ class ServicesContainer extends StrictObject
             $this->getDirs(),
             WebCache::DUMMY,
             $this->getRequest(),
-            $this->getContentIrrelevantRequestAliases(),
-            $this->getContentIrrelevantParametersFilter(),
+            $this->getRequestCachingPermissionProvider(),
+            $this->getRequestHashProvider(),
             $this->getGit(),
             $this->getConfiguration(),
             $this->getEnvironment()->isInProduction()

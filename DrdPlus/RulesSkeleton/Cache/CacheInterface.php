@@ -1,6 +1,6 @@
 <?php
 
-namespace DrdPlus\RulesSkeleton;
+namespace DrdPlus\RulesSkeleton\Cache;
 
 interface CacheInterface extends CacheIdProvider
 {

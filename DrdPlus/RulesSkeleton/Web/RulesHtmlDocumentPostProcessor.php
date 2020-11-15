@@ -2,7 +2,7 @@
 
 namespace DrdPlus\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\CacheIdProvider;
+use DrdPlus\RulesSkeleton\Cache\CacheIdProvider;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Web\Menu\MenuBodyInterface;

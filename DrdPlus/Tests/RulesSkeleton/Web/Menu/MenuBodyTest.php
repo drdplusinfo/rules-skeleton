@@ -6,7 +6,7 @@ use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\MenuConfiguration;
 use DrdPlus\RulesSkeleton\HomepageDetector;
 use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\RulesSkeleton\PathProvider;
+use DrdPlus\RulesSkeleton\RouteMatchingPathProvider;
 use DrdPlus\RulesSkeleton\Ticket;
 use DrdPlus\RulesSkeleton\Web\Menu\MenuBody;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
@@ -207,7 +207,7 @@ HTML
         $menu = new MenuBody(
             $configuration->getMenuConfiguration(),
             new HomepageDetector(
-                new PathProvider(
+                new RouteMatchingPathProvider(
                     $this->getServicesContainer()->getRulesUrlMatcher(),
                     uniqid('/non/existing/path', true)
                 )

@@ -30,7 +30,7 @@ class AbstractPublicFilesTest extends TestWithMockery
 
             }
 
-            public function removeMapFiles(array $files)
+            public function removeMapFiles(array $files): array
             {
                 return parent::removeMapFiles($files);
             }

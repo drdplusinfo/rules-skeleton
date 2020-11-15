@@ -3,10 +3,12 @@
 namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
 use DeviceDetector\Parser\Bot;
+use DrdPlus\RulesSkeleton\Cache\ContentIrrelevantParametersFilter;
+use DrdPlus\RulesSkeleton\Cache\ContentIrrelevantRequestAliases;
+use DrdPlus\RulesSkeleton\Cache\RequestCachingPermissionProvider;
+use DrdPlus\RulesSkeleton\Cache\RequestHashProvider;
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\Configurations\ProjectUrlConfiguration;
-use DrdPlus\RulesSkeleton\ContentIrrelevantParametersFilter;
-use DrdPlus\RulesSkeleton\ContentIrrelevantRequestAliases;
 use DrdPlus\RulesSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Configurations\Dirs;
@@ -452,6 +454,42 @@ TEXT
         return $contentIrrelevantRequestAliases;
     }
 
+    protected function getRequestCachingPermissionProvider(): RequestCachingPermissionProvider
+    {
+        static $requestCachingPermissionProvider;
+        if ($requestCachingPermissionProvider === null) {
+            $requestCachingPermissionProvider = $this->createServicesContainer()->getRequestCachingPermissionProvider();
+        }
+        return $requestCachingPermissionProvider;
+    }
+
+    protected function createRequestCachingPermissionProvider(Request $request = null): RequestCachingPermissionProvider
+    {
+        return new RequestCachingPermissionProvider($request ?? $this->getRequest());
+    }
+
+    protected function getRequestHashProvider(): RequestHashProvider
+    {
+        static $requestHashProvider;
+        if ($requestHashProvider === null) {
+            $requestHashProvider = $this->createServicesContainer()->getRequestHashProvider();
+        }
+        return $requestHashProvider;
+    }
+
+    protected function createRequestHashProvider(
+        Request $request = null,
+        ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases = null,
+        ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter = null
+    ): RequestHashProvider
+    {
+        return new RequestHashProvider(
+            $request ?? $this->getRequest(),
+            $contentIrrelevantRequestAliases ?? $this->getContentIrrelevantRequestAliases(),
+            $contentIrrelevantParametersFilter ?? $this->getContentIrrelevantParametersFilter()
+        );
+    }
+
     protected function getContentIrrelevantParametersFilter(): ContentIrrelevantParametersFilter
     {
         static $contentIrrelevantParametersFilter;
@@ -470,11 +508,10 @@ TEXT
     {
         $originalConfiguration = $this->getConfiguration();
         $configurationClass = \get_class($originalConfiguration);
-        $customConfiguration = new $configurationClass(
+        return new $configurationClass(
             $dirs ?? $originalConfiguration->getDirs(),
             \array_replace_recursive($originalConfiguration->getValues(), $customSettings)
         );
-        return $customConfiguration;
     }
 
     protected function createRulesApplication(ServicesContainer $servicesContainer = null)

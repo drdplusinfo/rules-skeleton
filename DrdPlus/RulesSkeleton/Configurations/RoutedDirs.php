@@ -2,16 +2,16 @@
 
 namespace DrdPlus\RulesSkeleton\Configurations;
 
-use DrdPlus\RulesSkeleton\PathProvider;
+use DrdPlus\RulesSkeleton\RouteMatchingPathProvider;
 
 class RoutedDirs extends Dirs
 {
-    /** @var PathProvider */
+    /** @var RouteMatchingPathProvider */
     private $pathProvider;
     /** @var string */
     private $relativeWebRoot;
 
-    public function __construct(string $projectRoot, PathProvider $pathProvider)
+    public function __construct(string $projectRoot, RouteMatchingPathProvider $pathProvider)
     {
         parent::__construct($projectRoot);
         $this->pathProvider = $pathProvider;
@@ -29,7 +29,7 @@ class RoutedDirs extends Dirs
     protected function getRelativeWebRoot(): string
     {
         if ($this->relativeWebRoot === null) {
-            $this->relativeWebRoot = $this->unifyRelativePath($this->pathProvider->getPath());
+            $this->relativeWebRoot = $this->unifyRelativePath($this->pathProvider->getMatchingPath());
         }
         return $this->relativeWebRoot;
     }

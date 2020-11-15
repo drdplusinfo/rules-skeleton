@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton;
+namespace DrdPlus\RulesSkeleton\Cache;
 
 use Granam\Strict\Object\StrictObject;
 use Symfony\Component\Config\FileLocator;

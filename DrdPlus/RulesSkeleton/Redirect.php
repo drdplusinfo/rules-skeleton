@@ -17,17 +17,11 @@ class Redirect extends StrictObject
         $this->afterSeconds = $afterSeconds;
     }
 
-    /**
-     * @return string
-     */
     public function getTarget(): string
     {
         return $this->target;
     }
 
-    /**
-     * @return int
-     */
     public function getAfterSeconds(): int
     {
         return $this->afterSeconds;

@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton\Cache;
 
-use DrdPlus\RulesSkeleton\Cache;
+use DrdPlus\RulesSkeleton\Cache\Cache;
+use DrdPlus\RulesSkeleton\Cache\WebCache;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
-use DrdPlus\RulesSkeleton\Exceptions\CanNotReadCachedContent;
 use DrdPlus\RulesSkeleton\Request;
-use DrdPlus\RulesSkeleton\WebCache;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
 use Mockery\MockInterface;
@@ -41,8 +40,8 @@ class WebCacheTest extends AbstractContentTest
             $dirs,
             $cacheSubDir,
             $this->getRequest(),
-            $this->getContentIrrelevantRequestAliases(),
-            $this->getContentIrrelevantParametersFilter(),
+            $this->getRequestCachingPermissionProvider(),
+            $this->getRequestHashProvider(),
             $this->getGit(),
             $this->getConfiguration(),
             Cache::NOT_IN_PRODUCTION
@@ -85,34 +84,43 @@ class WebCacheTest extends AbstractContentTest
      */
     public function I_will_get_cached_content_if_available(): void
     {
-        $request = $this->mockery($this->getRequestClass());
-        $request->makePartial();
-
-        $webCacheClass = $this->getWebCacheClass();
+        $request = $this->createRequestPartialMock();
         $cacheSubDir = \uniqid(__FUNCTION__, true);
+        $webCacheClass = $this->getWebCacheClass();
         /** @var WebCache $cache */
         $cache = new $webCacheClass(
             $this->getCurrentWebVersion(),
             $this->getDirs(),
             $cacheSubDir,
             $request,
-            $this->getContentIrrelevantRequestAliases(),
-            $this->getContentIrrelevantParametersFilter(),
+            $this->createRequestCachingPermissionProvider($request),
+            $this->createRequestHashProvider($request),
             $this->getGit(),
             $this->getConfiguration(),
             Cache::NOT_IN_PRODUCTION
         );
         self::assertFalse($cache->isCacheValid(), 'Nothing should be cached so far');
+
         $cache->cacheContent($content = 'foo of bar over baz!');
         self::assertTrue($cache->isCacheValid(), 'Expected content to be cached now');
         self::assertSame($content, $cache->getCachedContent());
 
-        $request->allows('getPath')
-            ->andReturn('/different-route');
+        $request->shouldReceive('getRequestPath')->andReturn('/different-route');
         self::assertFalse($cache->isCacheValid(), 'Nothing should be cached due to different route');
+
         $cache->cacheContent($content);
         self::assertTrue($cache->isCacheValid(), 'Expected content to be cached now');
         self::assertSame($content, $cache->getCachedContent());
+    }
+
+    /**
+     * @return Request|MockInterface
+     */
+    private function createRequestPartialMock(): Request
+    {
+        $request = $this->mockery($this->getRequestClass());
+        $request->makePartial();
+        return $request;
     }
 
     /**
@@ -123,31 +131,28 @@ class WebCacheTest extends AbstractContentTest
      */
     public function I_can_disable_cache(?string $cacheParameter, bool $expectedCacheValid): void
     {
-        $webCacheClass = $this->getWebCacheClass();
+        $request = $this->createRequest([Request::CACHE => $cacheParameter]);
         $cacheSubDir = \uniqid(__FUNCTION__, true);
+        $webCacheClass = $this->getWebCacheClass();
         /** @var WebCache $cache */
         $cache = new $webCacheClass(
             $this->getCurrentWebVersion(),
             $this->getDirs(),
             $cacheSubDir,
-            $this->createRequest([Request::CACHE => $cacheParameter]),
-            $this->getContentIrrelevantRequestAliases(),
-            $this->getContentIrrelevantParametersFilter(),
+            $request,
+            $this->createRequestCachingPermissionProvider($request),
+            $this->createRequestHashProvider($request),
             $this->getGit(),
             $this->getConfiguration(),
             Cache::NOT_IN_PRODUCTION
         );
+
         self::assertFalse($cache->isCacheValid(), 'Nothing should be cached so far');
+
         $cache->cacheContent($content = 'pocked world');
         self::assertSame($expectedCacheValid, $cache->isCacheValid());
-        try {
-            $cache->getCachedContent();
-        } catch (CanNotReadCachedContent $canNotReadCachedContent) {
-            if ($expectedCacheValid) {
-                throw $canNotReadCachedContent;
-            }
-            self::assertTrue(true);
-        }
+
+        self::assertSame($content, $cache->getCachedContent(), 'Expected content to be cached in any case');
     }
 
     public function provideCacheParameter(): array
@@ -171,8 +176,8 @@ class WebCacheTest extends AbstractContentTest
         $contentIrrelevantParametersFilter = $this->getServicesContainer()->getContentIrrelevantParametersFilter();
         self::assertSame(
             [],
-            $contentIrrelevantParametersFilter->removeContentIrrelevantParameters($cacheIrrelevantParameters),
-            'Some parameters are not irrelevant for cache (and therefore page content)'
+            $contentIrrelevantParametersFilter->filterContentIrrelevantParameters($cacheIrrelevantParameters),
+            'Expected every parameter to be irrelevant for cache (and therefore page content)'
         );
 
         $webCacheClass = $this->getWebCacheClass();
@@ -183,25 +188,28 @@ class WebCacheTest extends AbstractContentTest
             $this->getDirs(),
             $cacheSubDir,
             $this->getRequest(),
-            $this->getContentIrrelevantRequestAliases(),
-            $contentIrrelevantParametersFilter,
+            $this->getRequestCachingPermissionProvider(),
+            $this->createRequestHashProvider(null, null, $contentIrrelevantParametersFilter),
             $this->getGit(),
             $this->getConfiguration(),
             Cache::NOT_IN_PRODUCTION
         );
+
         self::assertFalse($cacheWithoutTrial->isCacheValid(), 'Nothing should be cached so far');
+
         $cacheWithoutTrial->cacheContent($content = 'foo of bar over baz!');
         self::assertTrue($cacheWithoutTrial->isCacheValid(), 'Expected content to be cached now');
         self::assertSame($content, $cacheWithoutTrial->getCachedContent());
 
+        $request = $this->createRequest($cacheIrrelevantParameters);
         /** @var Cache $cacheWithTrialRequest */
         $cacheWithTrialRequest = new $webCacheClass(
             $this->getCurrentWebVersion(),
             $this->getDirs(),
             $cacheSubDir, // same sub-dir
-            $this->createRequest($cacheIrrelevantParameters),
-            $this->getContentIrrelevantRequestAliases(),
-            $contentIrrelevantParametersFilter,
+            $request,
+            $this->createRequestCachingPermissionProvider($request),
+            $this->createRequestHashProvider($request, null, $contentIrrelevantParametersFilter),
             $this->getGit(),
             $this->getConfiguration(),
             Cache::NOT_IN_PRODUCTION

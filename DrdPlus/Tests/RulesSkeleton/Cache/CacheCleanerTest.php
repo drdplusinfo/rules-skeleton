@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton\Cache;
 
-use DrdPlus\RulesSkeleton\CacheCleaner;
-use DrdPlus\RulesSkeleton\Exceptions\CacheRootDirIsNotSafe;
-use DrdPlus\RulesSkeleton\Exceptions\InvalidCacheRootDirSafetyCheck;
+use DrdPlus\RulesSkeleton\Cache\CacheCleaner;
+use DrdPlus\RulesSkeleton\Cache\Exceptions\CacheRootDirIsNotSafe;
+use DrdPlus\RulesSkeleton\Cache\Exceptions\InvalidCacheRootDirSafetyCheck;
 use Granam\Tests\Tools\TestWithMockery;
 
 class CacheCleanerTest extends TestWithMockery

@@ -54,7 +54,7 @@ class RulesMainBodyPreProcessor extends StrictObject implements HtmlDocumentProc
 
     protected function getRouteBodyClass(): string
     {
-        $sanitizedPath = StringTools::toConstantLikeValue($this->request->getPath());
+        $sanitizedPath = StringTools::toConstantLikeValue($this->request->getRequestPath());
         if ($sanitizedPath === '' || $sanitizedPath === '_') {
             return HtmlHelper::CLASS_ROOT_PATH_ROUTE;
         }

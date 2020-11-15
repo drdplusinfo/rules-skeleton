@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\Tests\RulesSkeleton;
+namespace DrdPlus\Tests\RulesSkeleton\Cache;
 
-use DrdPlus\RulesSkeleton\RouterCacheDirProvider;
-use DrdPlus\RulesSkeleton\WebCache;
+use DrdPlus\RulesSkeleton\Cache\RouterCacheDirProvider;
+use DrdPlus\RulesSkeleton\Cache\WebCache;
 use Granam\Tests\Tools\TestWithMockery;
 use Mockery\MockInterface;
 use Symfony\Component\Config\FileLocator;
@@ -39,11 +39,6 @@ class RouterCacheDirProviderTest extends TestWithMockery
             ->with($routesFile)
             ->andReturn($routesFilePath);
         return $fileLocator;
-    }
-
-    private function getRoutesFilePath(string $filePath): string
-    {
-        return $filePath;
     }
 
     /**

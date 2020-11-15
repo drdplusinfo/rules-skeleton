@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DrdPlus\RulesSkeleton;
+namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Web\PdfBody;
 use Granam\Strict\Object\StrictObject;

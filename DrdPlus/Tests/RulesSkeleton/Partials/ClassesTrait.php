@@ -3,6 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
 use DeviceDetector\Parser\Bot;
+use DrdPlus\RulesSkeleton\Cache\WebCache;
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\Configurations\Dirs;
@@ -11,7 +12,6 @@ use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesApplication;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
-use DrdPlus\RulesSkeleton\WebCache;
 
 trait ClassesTrait
 {

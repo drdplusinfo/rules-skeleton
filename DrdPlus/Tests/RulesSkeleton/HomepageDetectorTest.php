@@ -3,7 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\HomepageDetector;
-use DrdPlus\RulesSkeleton\PathProvider;
+use DrdPlus\RulesSkeleton\RouteMatchingPathProvider;
 use Granam\Tests\Tools\TestWithMockery;
 use Mockery\MockInterface;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
@@ -30,12 +30,12 @@ class HomepageDetectorTest extends TestWithMockery
 
     /**
      * @param string $path
-     * @return PathProvider|MockInterface
+     * @return RouteMatchingPathProvider|MockInterface
      */
-    private function createPathProvider(string $path): PathProvider
+    private function createPathProvider(string $path): RouteMatchingPathProvider
     {
-        $pathProvider = $this->mockery(PathProvider::class);
-        $pathProvider->shouldReceive('getPath')
+        $pathProvider = $this->mockery(RouteMatchingPathProvider::class);
+        $pathProvider->shouldReceive('getMatchingPath')
             ->andReturn($path);
         return $pathProvider;
     }
@@ -61,12 +61,12 @@ class HomepageDetectorTest extends TestWithMockery
 
     /**
      * @param ExceptionInterface $exception
-     * @return PathProvider|MockInterface
+     * @return RouteMatchingPathProvider|MockInterface
      */
-    private function createBrokenPathProvider(ExceptionInterface $exception): PathProvider
+    private function createBrokenPathProvider(ExceptionInterface $exception): RouteMatchingPathProvider
     {
-        $pathProvider = $this->mockery(PathProvider::class);
-        $pathProvider->shouldReceive('getPath')
+        $pathProvider = $this->mockery(RouteMatchingPathProvider::class);
+        $pathProvider->shouldReceive('getMatchingPath')
             ->andThrow($exception);
         return $pathProvider;
     }

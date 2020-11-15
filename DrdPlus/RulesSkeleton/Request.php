@@ -5,7 +5,7 @@ namespace DrdPlus\RulesSkeleton;
 use DeviceDetector\Parser\Bot;
 use Granam\Strict\Object\StrictObject;
 
-class Request extends StrictObject
+class Request extends StrictObject implements RequestPathProvider
 {
     public const VERSION = 'version';
     public const UPDATE = 'update';
@@ -104,7 +104,7 @@ class Request extends StrictObject
         return $this->getCurrentUrl($overwriteParameters, $excludeParameters);
     }
 
-    public function getPath(): string
+    public function getRequestPath(): string
     {
         $requestUri = $this->server['REQUEST_URI'] ?? '/';
         if ($requestUri === ':') {
