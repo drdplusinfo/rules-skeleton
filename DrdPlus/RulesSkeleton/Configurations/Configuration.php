@@ -20,9 +20,9 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
         $globalConfig = new YamlFileReader($dirs->getProjectRoot() . '/' . static::CONFIG_DISTRIBUTION_YML);
         $config = $globalConfig->getValues();
         $localConfigFile = $dirs->getProjectRoot() . '/' . static::CONFIG_LOCAL_YML;
-        if (\file_exists($localConfigFile)) {
+        if (file_exists($localConfigFile)) {
             $localConfig = new YamlFileReader($dirs->getProjectRoot() . '/' . static::CONFIG_LOCAL_YML);
-            $config = \array_replace_recursive($config, $localConfig->getValues());
+            $config = array_replace_recursive($config, $localConfig->getValues());
         }
 
         return new static($dirs, $config);
@@ -182,7 +182,7 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
      */
     private function guardValidGoogleAnalyticsId(array $values): void
     {
-        if (!\preg_match('~^UA-121206931-\d+$~', $values[static::GOOGLE][static::ANALYTICS_ID] ?? '')) {
+        if (!preg_match('~^UA-121206931-\d+$~', $values[static::GOOGLE][static::ANALYTICS_ID] ?? '')) {
             throw new Exceptions\InvalidGoogleAnalyticsId(
                 sprintf(
                     'Expected something like UA-121206931-1 in configuration %s.%s, got %s',
@@ -217,7 +217,7 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
      */
     private function guardSetTitleSmiley(array $values): void
     {
-        if (!\array_key_exists(static::TITLE_SMILEY, $values[static::WEB])) {
+        if (!array_key_exists(static::TITLE_SMILEY, $values[static::WEB])) {
             throw new Exceptions\InvalidConfiguration(
                 sprintf(
                     'Title smiley should be set in configuration %s.%s, even if just an empty string',
@@ -254,8 +254,8 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
         if ($favicon === null) {
             return;
         }
-        if (!\filter_var($favicon, \ FILTER_VALIDATE_URL)
-            && !\file_exists($this->getDirs()->getProjectRoot() . '/' . \ltrim($favicon, '/'))
+        if (!filter_var($favicon, \FILTER_VALIDATE_URL)
+            && !file_exists($this->getDirs()->getProjectRoot() . '/' . ltrim($favicon, '/'))
         ) {
             throw new Exceptions\GivenFaviconHasNotBeenFound("Favicon $favicon is not an URL neither readable file");
         }
@@ -289,8 +289,9 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     {
         trigger_error(
             sprintf(
-                '%s is deprecated, use \DrdPlus\RulesSkeleton\Configurations\MenuConfiguration::isPositionFixed instead',
-                __FUNCTION__
+                '%s is deprecated, use %s instead',
+                static::class . '::' . __FUNCTION__,
+                MenuConfiguration::class . '::' . 'isPositionFixed'
             ),
             E_USER_DEPRECATED
         );
@@ -305,8 +306,9 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     {
         trigger_error(
             sprintf(
-                '%s is deprecated, use \DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration::showOnHomePage instead',
-                __FUNCTION__
+                '%s is deprecated, use %s instead',
+                static::class . '::' . __FUNCTION__,
+                HomeButtonConfiguration::class . '::' . 'showOnHomePage'
             ),
             E_USER_DEPRECATED
         );
@@ -321,8 +323,9 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     {
         trigger_error(
             sprintf(
-                '%s is deprecated, use \DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration::showOnRoutes instead',
-                __FUNCTION__
+                '%s is deprecated, use %s instead',
+                static::class . '::' . __FUNCTION__,
+                HomeButtonConfiguration::class . '::' . 'showOnRoutes'
             ),
             E_USER_DEPRECATED
         );
@@ -337,8 +340,9 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     {
         trigger_error(
             sprintf(
-                '%s is deprecated, use \DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration::getTarget instead',
-                __FUNCTION__
+                '%s is deprecated, use %s instead',
+                static::class . '::' . __FUNCTION__,
+                HomeButtonConfiguration::class . '::' . 'getTarget'
             ),
             E_USER_DEPRECATED
         );
@@ -363,8 +367,9 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     {
         trigger_error(
             sprintf(
-                '%s is deprecated, use \DrdPlus\RulesSkeleton\Configurations\GatewayConfiguration::hasProtectedAccess instead',
-                __FUNCTION__
+                '%s is deprecated, use %s instead',
+                static::class . '::' . __FUNCTION__,
+                GatewayConfiguration::class . '::' . 'hasProtectedAccess'
             ),
             E_USER_DEPRECATED
         );
