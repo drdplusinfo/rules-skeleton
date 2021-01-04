@@ -254,7 +254,7 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
         if ($favicon === null) {
             return;
         }
-        if (!filter_var($favicon, \FILTER_VALIDATE_URL)
+        if (!filter_var($favicon, FILTER_VALIDATE_URL)
             && !file_exists($this->getDirs()->getProjectRoot() . '/' . ltrim($favicon, '/'))
         ) {
             throw new Exceptions\GivenFaviconHasNotBeenFound("Favicon $favicon is not an URL neither readable file");
