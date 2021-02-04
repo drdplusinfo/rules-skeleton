@@ -1,64 +1,65 @@
 {
-  "name": "drdplus/rules-skeleton",
-  "license": "MIT",
-  "type": "composer-plugin",
-  "description": "Skeleton for DrD+ rules as HTML",
-  "keywords": [
-    "drd plus",
-    "rules",
-    "helper",
-    "skeleton"
-  ],
-  "autoload": {
-    "psr-4": {
-      "DrdPlus\\": "DrdPlus/"
-    }
-  },
-  "bin": [
-    "bin/fix_web_permissions.sh"
-  ],
-  "require": {
-    "php": ">=7.1",
-    "ext-curl": "*",
-    "ext-dom": "*",
-    "ext-json": "*",
-    "ext-mbstring": "*",
-    "ext-posix": "*",
-    "ext-yaml": "*",
-    "ext-zlib": "*",
-    "composer-plugin-api": "^1.1",
-    "drdplus/web-versions": "^1.0",
-    "erusev/parsedown": "^1.7",
-    "granam/git": "^1.2",
-    "granam/web-content-builder": "^2.0",
-    "granam/yaml-reader": "^1.0",
-    "phpmailer/phpmailer": "^6.0",
-    "piwik/device-detector": "^3.11",
-    "symfony/config": "^4.3",
-    "symfony/http-foundation": "^4.3",
-    "symfony/routing": "^4.3",
-    "symfony/yaml": "^4.3",
-    "tracy/tracy": "^2.4"
-  },
-  "require-dev": {
-    "composer/composer": "^1.9",
-    "granam/exceptions-hierarchy": "^5.0",
-    "mockery/mockery": "^1.2",
-    "phpunit/phpunit": "^9.3",
-    "roave/security-advisories": "dev-master"
-  },
-  "config": {
-    "sort-packages": true
-  },
-  "extra": {
-    "class": "DrdPlus\\RulesSkeleton\\InjectorComposerPlugin\\SkeletonInjectorComposerPlugin"
-  },
-  "scripts": {
-    "post-update-cmd": [
-      "php vendor/bin/assets --css --dir=css"
+    "name": "drdplus/rules-skeleton",
+    "license": "MIT",
+    "type": "composer-plugin",
+    "description": "Skeleton for DrD+ rules as HTML",
+    "keywords": [
+        "drd plus",
+        "rules",
+        "helper",
+        "skeleton"
     ],
-    "post-install-cmd": [
-      "php vendor/bin/assets --css --dir=css"
-    ]
-  }
+    "autoload": {
+        "psr-4": {
+            "DrdPlus\\RulesSkeleton\\": "src",
+            "Tests\\DrdPlus\\": "tests"
+        }
+    },
+    "bin": [
+        "bin/fix_web_permissions.sh"
+    ],
+    "require": {
+        "php": ">=7.3",
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-posix": "*",
+        "ext-yaml": "*",
+        "ext-zlib": "*",
+        "composer-plugin-api": "^1.1|^2.0",
+        "drdplus/web-versions": "^1.0",
+        "erusev/parsedown": "^1.7",
+        "granam/git": "^1.2",
+        "granam/web-content-builder": "^2.2",
+        "granam/yaml-reader": "^1.0",
+        "phpmailer/phpmailer": "^6.0",
+        "symfony/config": "^4.3",
+        "symfony/http-foundation": "^4.3",
+        "symfony/routing": "^4.3",
+        "symfony/yaml": "^4.3",
+        "tracy/tracy": "^2.4"
+    },
+    "require-dev": {
+        "composer/composer": "^1.9",
+        "granam/exceptions-hierarchy": "^5.0",
+        "granam/test-with-mockery": "^2.0",
+        "mockery/mockery": "^1.2",
+        "phpunit/phpunit": "^9.3",
+        "roave/security-advisories": "dev-master"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "class": "DrdPlus\\RulesSkeleton\\InjectorComposerPlugin\\SkeletonInjectorComposerPlugin"
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "php vendor/bin/assets --css --dir=css"
+        ],
+        "post-install-cmd": [
+            "php vendor/bin/assets --css --dir=css"
+        ]
+    }
 }
