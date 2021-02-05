@@ -59,7 +59,6 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->addVersionsToAssets($documentRoot);
         $this->flushCache($documentRoot);
         $this->copyGoogleVerification($documentRoot);
-        $this->copyPhpUnitConfig($documentRoot);
         $this->copyGitignoreToCache($documentRoot);
         $this->populateRoutes($documentRoot);
         $this->populateIndex($documentRoot);
@@ -130,11 +129,6 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
     private function copyGoogleVerification(string $documentRoot): void
     {
         $this->passThrough(["cp ./vendor/{$this->skeletonPackageName}/google8d8724e0c2818dfc.html ."], $documentRoot);
-    }
-
-    private function copyPhpUnitConfig(string $documentRoot): void
-    {
-        $this->passThrough(["cp --no-clobber ./vendor/$this->skeletonPackageName/phpunit.xml.dist ."], $documentRoot);
     }
 
     private function addVersionsToAssets(string $documentRoot)
