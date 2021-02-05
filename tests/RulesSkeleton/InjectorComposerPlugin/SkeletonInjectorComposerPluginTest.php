@@ -4,6 +4,7 @@ namespace Tests\DrdPlus\RulesSkeleton\InjectorComposerPlugin;
 
 use Composer\Plugin\PluginInterface;
 use DrdPlus\RulesSkeleton\InjectorComposerPlugin\SkeletonInjectorComposerPlugin;
+use Granam\WebContentBuilder\WebContentBuilderInjectorComposerPlugin;
 use Tests\DrdPlus\RulesSkeleton\Partials\AbstractContentTest;
 
 class SkeletonInjectorComposerPluginTest extends AbstractContentTest
@@ -191,5 +192,14 @@ PHP
 
         self::assertDirectoryExists($webDir);
         self::assertDirectoryIsWritable($webDir);
+    }
+
+    /**
+     * @test
+     */
+    public function Injector_can_be_created()
+    {
+        $webContentBuilderInjectorComposerPlugin = new SkeletonInjectorComposerPlugin();
+        self::assertNotEmpty($webContentBuilderInjectorComposerPlugin);
     }
 }

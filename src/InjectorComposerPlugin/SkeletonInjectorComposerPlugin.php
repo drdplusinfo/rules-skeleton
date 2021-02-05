@@ -19,8 +19,6 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
 {
     public const RULES_SKELETON_PACKAGE_NAME = 'drdplus/rules-skeleton';
 
-    /** @var Composer */
-    private $composer;
     /** @var IOInterface */
     private $io;
     /** @var bool */
@@ -43,7 +41,6 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
 
     public function activate(Composer $composer, IOInterface $io): void
     {
-        $this->composer = $composer;
         $this->io = $io;
     }
 
@@ -289,4 +286,15 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
             $documentRoot
         );
     }
+
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+        // nothing to do here
+    }
+
+    public function uninstall(Composer $composer, IOInterface $io)
+    {
+        // nothing to do here
+    }
+
 }

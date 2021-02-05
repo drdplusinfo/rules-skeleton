@@ -41,7 +41,7 @@
         "tracy/tracy": "^2.4"
     },
     "require-dev": {
-        "composer/composer": "^1.9",
+        "composer/composer": "^2.0",
         "granam/exceptions-hierarchy": "^5.0",
         "granam/test-with-mockery": "^2.0",
         "mockery/mockery": "^1.2",
