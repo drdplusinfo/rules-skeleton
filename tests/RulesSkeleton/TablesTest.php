@@ -28,7 +28,7 @@ class TablesTest extends AbstractContentTest
             self::assertCount(0, $tables, 'No tables expected due to tests configuration');
             self::assertCount(0, $expectedTableIds, 'No tables expected due to tests configuration');
         } else {
-            self::assertGreaterThan(0, count($tables), 'Some tables expected due to tests configuration');
+            self::assertGreaterThan(0, is_countable($tables) ? count($tables) : 0, 'Some tables expected due to tests configuration');
             self::assertGreaterThan(0, count($expectedTableIds), 'Some tables expected due to tests configuration');
         }
         $fetchedTableIds = $this->getElementsIds($tables);
@@ -63,9 +63,7 @@ class TablesTest extends AbstractContentTest
     private function getElementsIds(\Traversable $elements): array
     {
         return \array_map(
-            function (Element $element): string {
-                return $this->getHtmlHelper()->getFirstIdFrom($element);
-            },
+            fn(Element $element): string => $this->getHtmlHelper()->getFirstIdFrom($element),
             $this->traversableToArray($elements)
         );
     }

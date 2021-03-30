@@ -14,7 +14,7 @@ class AnchorsTest extends AbstractContentTest
     private const ID_WITH_ALLOWED_ELEMENTS_ONLY = 'with_allowed_elements_only';
 
     /** @var HTMLDocument[]|array */
-    private static $externalHtmlDocuments;
+    private static ?array $externalHtmlDocuments = null;
 
     /**
      * @test
@@ -57,9 +57,7 @@ class AnchorsTest extends AbstractContentTest
             'Some local anchors point to non-existing IDs: ' . implode(
                 ',',
                 array_map(
-                    static function (string $id) {
-                        return "'$id'";
-                    },
+                    static fn(string $id) => "'$id'",
                     $missingTargets
                 )
             )
@@ -138,7 +136,7 @@ class AnchorsTest extends AbstractContentTest
         return $links;
     }
 
-    private static $checkedExternalAnchors = [];
+    private static array $checkedExternalAnchors = [];
 
     /**
      * @test
@@ -380,9 +378,7 @@ class AnchorsTest extends AbstractContentTest
                 0,
                 $originalIds,
                 'No original IDs, identified by CSS class ' . HtmlHelper::CLASS_INVISIBLE_ID . ' expected, got '
-                . \implode("\n", \array_map(static function (Element $element) {
-                    return $element->outerHTML;
-                }, $this->collectionToArray($originalIds)))
+                . \implode("\n", \array_map(static fn(Element $element) => $element->outerHTML, $this->collectionToArray($originalIds)))
             );
 
             return;

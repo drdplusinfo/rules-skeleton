@@ -7,7 +7,7 @@ use Tests\DrdPlus\RulesSkeleton\Partials\AbstractContentTest;
 
 class HomeButtonConfigurationTest extends AbstractContentTest
 {
-    private static $homeButtonConfigurationValues = [
+    private static array $homeButtonConfigurationValues = [
         HomeButtonConfiguration::SHOW_ON_HOMEPAGE => true,
         HomeButtonConfiguration::SHOW_ON_ROUTES => true,
         HomeButtonConfiguration::TARGET => '/',

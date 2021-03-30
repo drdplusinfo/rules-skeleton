@@ -73,99 +73,52 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         return new static((new YamlFileReader($yamlConfigFile))->getValues(), $htmlHelper);
     }
 
-    // every setting SHOULD be strict (expecting instead of ignoring)
+    private bool $hasTables = true;
+    private bool $hasTablesRelatedContent = true;
+    private array $someExpectedTableIds = [];
+    private bool $hasTableOfContents = true;
+    private bool $hasHeadings = true;
+    private bool $hasAuthors = true;
+    private ?string $localUrl = null;
+    private bool $hasExternalAnchorsWithHashes = true;
+    private bool $hasCustomBodyContent = true;
+    private bool $hasNotes = true;
+    private bool $hasIds = true;
+    private bool $hasCalculations = true;
+    private bool $hasAnchorsToSameDocument = true;
+    private bool $hasLocalLinks = true;
+    private bool $hasLinksToAltar = true;
+    private bool $hasButtons = true;
+    private bool $hasShownHomeButtonOnHomepage = true;
+    private bool $hasShownHomeButtonOnRoutes = true;
+    private bool $hasMarkedContent = true;
+    private bool $hasMarkedResult = true;
+    private bool $hasLocalRepositories = false;
+    private bool $areGenericAssetsVersioned = true;
+    private bool $hasVendorDirVersioned = true;
 
-    /** @var bool */
-    private $hasTables = true;
-    /** @var bool */
-    private $hasTablesRelatedContent = true;
-    /** @var array|string[] */
-    private $someExpectedTableIds = [];
-    /** @var bool */
-    private $hasTableOfContents = true;
-    /** @var bool */
-    private $hasHeadings = true;
-    /** @var bool */
-    private $hasAuthors = true;
-    /** @var string */
-    private $localUrl;
-    /** @var bool */
-    private $hasExternalAnchorsWithHashes = true;
-    /** @var bool */
-    private $hasCustomBodyContent = true;
-    /** @var bool */
-    private $hasNotes = true;
-    /** @var bool */
-    private $hasIds = true;
-    /** @var bool */
-    private $hasCalculations = true;
-    /** @var bool */
-    private $hasAnchorsToSameDocument = true;
-    /** @var bool */
-    private $hasLocalLinks = true;
-    /** @var bool */
-    private $hasLinksToAltar = true;
-    /** @var bool */
-    private $hasButtons = true;
-    /** @var bool */
-    private $hasShownHomeButtonOnHomepage = true;
-    /** @var bool */
-    private $hasShownHomeButtonOnRoutes = true;
-    /** @var bool */
-    private $hasMarkedContent = true;
-    /** @var bool */
-    private $hasMarkedResult = true;
-    /** @var bool */
-    private $hasLocalRepositories = false;
-    /** @var bool */
-    private $areGenericAssetsVersioned = true;
-    /** @var bool */
-    private $hasVendorDirVersioned = true;
-
-    /** @var string */
-    private $expectedWebName;
-    /** @var string */
-    private $expectedPageTitle;
-    /** @var string */
-    private $expectedGoogleAnalyticsId = 'UA-121206931-1';
-    /** @var array|string[] */
-    private $allowedCalculationIdPrefixes = ['Hod proti', 'Hod na', 'Výpočet'];
-    /** @var string */
-    private $expectedPublicUrl;
-    /** @var bool */
-    private $hasProtectedAccess = true;
-    /** @var bool */
-    private $hasPdf = true;
-    /** @var bool */
-    private $canBeBoughtOnEshop = true;
-    /** @var string */
-    private $expectedEshopUrlRegexp = '~^https://obchod\.altar\.cz/[^/]+\.html$~';
-    /** @var bool */
-    private $hasCharacterSheet = true;
-    /** @var bool */
-    private $hasLinksToJournals = true;
-    /** @var bool */
-    private $hasLinkToSingleJournal = true;
-    /** @var bool */
-    private $hasDebugContacts = true;
-    /** @var bool */
-    private $hasDebugContactsWithEmail = true;
-    /** @var string */
-    private $debugContactsEmail = 'info@drdplus.info';
-    /** @var string */
-    private $expectedLicence = self::LICENCE_BY_ACCESS;
-    /** @var array|string[] */
-    private $tooShortFailureNames = ['nevšiml si'];
-    /** @var array|string[] */
-    private $tooShortSuccessNames = ['všiml si'];
-    /** @var array|string[] */
-    private $tooShortResultNames = ['Bonus', 'Postih'];
-    /** @var bool */
-    private $hasHomeButtonOnHomepage = true;
-    /** @var bool */
-    private $hasHomeButtonOnRoutes = true;
-    /** @var string */
-    private $expectedHomeButtonTarget = 'https://www.drdplus.info';
+    private ?string $expectedWebName = null;
+    private ?string $expectedPageTitle = null;
+    private string $expectedGoogleAnalyticsId = 'UA-121206931-1';
+    private array $allowedCalculationIdPrefixes = ['Hod proti', 'Hod na', 'Výpočet'];
+    private ?string $expectedPublicUrl = null;
+    private bool $hasProtectedAccess = true;
+    private bool $hasPdf = true;
+    private bool $canBeBoughtOnEshop = true;
+    private string $expectedEshopUrlRegexp = '~^https://obchod\.altar\.cz/[^/]+\.html$~';
+    private bool $hasCharacterSheet = true;
+    private bool $hasLinksToJournals = true;
+    private bool $hasLinkToSingleJournal = true;
+    private bool $hasDebugContacts = true;
+    private bool $hasDebugContactsWithEmail = true;
+    private string $debugContactsEmail = 'info@drdplus.info';
+    private string $expectedLicence = self::LICENCE_BY_ACCESS;
+    private array $tooShortFailureNames = ['nevšiml si'];
+    private array $tooShortSuccessNames = ['všiml si'];
+    private array $tooShortResultNames = ['Bonus', 'Postih'];
+    private bool $hasHomeButtonOnHomepage = true;
+    private bool $hasHomeButtonOnRoutes = true;
+    private string $expectedHomeButtonTarget = 'https://www.drdplus.info';
 
     /**
      * @param array $values

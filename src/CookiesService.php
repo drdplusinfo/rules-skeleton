@@ -8,8 +8,7 @@ class CookiesService extends StrictObject
 {
     public const VERSION = 'version';
 
-    /** @var Request */
-    private $request;
+    private \DrdPlus\RulesSkeleton\Request $request;
 
     public function __construct(Request $request)
     {

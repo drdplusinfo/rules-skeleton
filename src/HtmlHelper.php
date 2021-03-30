@@ -60,12 +60,9 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         );
     }
 
-    /** @var ProjectUrlConfiguration */
-    private $projectUrlConfiguration;
-    /** @var bool */
-    private $inDevMode;
-    /** @var bool */
-    private $shouldHideCovered;
+    private \DrdPlus\RulesSkeleton\Configurations\ProjectUrlConfiguration $projectUrlConfiguration;
+    private bool $inDevMode;
+    private bool $shouldHideCovered;
 
     public function __construct(
         Dirs $dirs,

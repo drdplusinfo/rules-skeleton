@@ -6,14 +6,10 @@ use Granam\Strict\Object\StrictObject;
 
 class Environment extends StrictObject
 {
-    /** @var string */
-    private $phpSapi;
-    /** @var string|null */
-    private $projectEnvironment;
-    /** @var string|null */
-    private $remoteAddress;
-    /** @var string|null */
-    private $forcedMode;
+    private string $phpSapi;
+    private ?string $projectEnvironment = null;
+    private ?string $remoteAddress = null;
+    private ?string $forcedMode = null;
 
     public static function createFromGlobals(): Environment
     {

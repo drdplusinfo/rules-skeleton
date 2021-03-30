@@ -8,8 +8,7 @@ use Granam\WebContentBuilder\HtmlDocument;
 
 class PdfBody extends StrictObject implements RulesBodyInterface
 {
-    /** @var Dirs */
-    private $dirs;
+    private \DrdPlus\RulesSkeleton\Configurations\Dirs $dirs;
     /** @var string|bool */
     private $pdfFile;
 

@@ -10,12 +10,9 @@ class UsagePolicy extends StrictObject
     public const TRIAL_COOKIE_NAME = 'trialCookieName';
     public const TRIAL_EXPIRED_AT_COOKIE_NAME = 'trialExpiredAtCookieName';
 
-    /** @var string */
-    private $articleName;
-    /** @var Request */
-    private $request;
-    /** @var CookiesService */
-    private $cookiesService;
+    private string $articleName;
+    private \DrdPlus\RulesSkeleton\Request $request;
+    private \DrdPlus\RulesSkeleton\CookiesService $cookiesService;
 
     /**
      * @param string $articleName

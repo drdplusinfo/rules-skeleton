@@ -7,10 +7,7 @@ use Granam\Strict\Object\StrictObject;
 class CacheCleaner extends StrictObject
 {
 
-    /**
-     * @var string $cacheRootDir
-     */
-    private $cacheRootDir;
+    private string $cacheRootDir;
 
     /**
      * @param string $cacheRootDir

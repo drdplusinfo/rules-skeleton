@@ -19,12 +19,9 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
 {
     public const RULES_SKELETON_PACKAGE_NAME = 'drdplus/rules-skeleton';
 
-    /** @var IOInterface */
-    private $io;
-    /** @var bool */
-    private $alreadyInjected = false;
-    /** @var string */
-    private $skeletonPackageName;
+    private ?\Composer\IO\IOInterface $io = null;
+    private bool $alreadyInjected = false;
+    private string $skeletonPackageName;
 
     public static function getSubscribedEvents(): array
     {
@@ -174,9 +171,7 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         }
         $this->passThrough(
             array_map(
-                static function (string $fileToRemove) {
-                    return 'rm ' . escapeshellarg($fileToRemove);
-                },
+                static fn(string $fileToRemove) => 'rm ' . escapeshellarg($fileToRemove),
                 $filesToRemove
             ),
             $documentRoot

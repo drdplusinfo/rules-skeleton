@@ -17,20 +17,13 @@ class RulesContent extends StrictObject implements StringInterface
     public const GATEWAY = 'gateway';
     public const NOT_FOUND = 'not_found';
 
-    /** @var HtmlContentInterface */
-    private $htmlContent;
-    /** @var Head */
-    private $head;
-    /** @var CacheInterface */
-    private $cache;
-    /** @var RulesHtmlDocumentPostProcessor */
-    private $rulesHtmlDocumentPostProcessor;
-    /** @var string */
-    private $contentType;
-    /** @var Redirect|null */
-    private $redirect;
-    /** @var HtmlDocument */
-    private $htmlDocument;
+    private \Granam\WebContentBuilder\Web\HtmlContentInterface $htmlContent;
+    private \DrdPlus\RulesSkeleton\Web\Head $head;
+    private \DrdPlus\RulesSkeleton\Cache\CacheInterface $cache;
+    private \DrdPlus\RulesSkeleton\Web\RulesHtmlDocumentPostProcessor $rulesHtmlDocumentPostProcessor;
+    private string $contentType;
+    private ?\DrdPlus\RulesSkeleton\Redirect $redirect = null;
+    private ?\Granam\WebContentBuilder\HtmlDocument $htmlDocument = null;
 
     public function __construct(
         HtmlContentInterface $htmlContent,

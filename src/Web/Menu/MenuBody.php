@@ -9,12 +9,9 @@ use Granam\Strict\Object\StrictObject;
 
 class MenuBody extends StrictObject implements MenuBodyInterface
 {
-    /** @var MenuConfiguration */
-    private $menuConfiguration;
-    /** @var HomepageDetector */
-    private $homepageDetector;
-    /** @var Ticket */
-    private $ticket;
+    private \DrdPlus\RulesSkeleton\Configurations\MenuConfiguration $menuConfiguration;
+    private \DrdPlus\RulesSkeleton\HomepageDetector $homepageDetector;
+    private \DrdPlus\RulesSkeleton\Ticket $ticket;
 
     public function __construct(
         MenuConfiguration $menuConfiguration,

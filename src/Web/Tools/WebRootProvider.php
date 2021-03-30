@@ -8,8 +8,7 @@ use Granam\WebContentBuilder\Web\SourceDirProviderInterface;
 
 class WebRootProvider extends StrictObject implements SourceDirProviderInterface
 {
-    /** @var Dirs */
-    private $dirs;
+    private \DrdPlus\RulesSkeleton\Configurations\Dirs $dirs;
 
     public function __construct(Dirs $dirs)
     {

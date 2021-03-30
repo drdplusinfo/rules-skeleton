@@ -21,7 +21,7 @@ use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\RulesSkeleton\Web\Main\MainBody;
 use Tests\DrdPlus\RulesSkeleton\Exceptions\GlobalsAreNotBackedUp;
 use Tests\DrdPlus\RulesSkeleton\TestsConfiguration;
-use DrdPlus\WebVersions\WebVersions;
+use Granam\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\String\StringTools;
 use Granam\TestWithMockery\TestWithMockery;
@@ -42,20 +42,15 @@ abstract class AbstractContentTest extends TestWithMockery
 
     /** @var Bot */
     private $bot;
-    /** @var Git */
-    private $git;
-    /** @var Dirs */
-    private $dirs;
+    private ?\Granam\Git\Git $git = null;
+    private ?\DrdPlus\RulesSkeleton\Configurations\Dirs $dirs = null;
     /** @var Environment */
     private $environment;
-    /** @var CookiesService */
-    private $cookiesService;
-    /** @var Request */
-    private $request;
-    /** @var TestsConfiguration */
-    private $testsConfiguration;
-    protected $needPassIn = true;
-    protected $needPassOut = false;
+    private ?\DrdPlus\RulesSkeleton\CookiesService $cookiesService = null;
+    private ?\DrdPlus\RulesSkeleton\Request $request = null;
+    private \Tests\DrdPlus\RulesSkeleton\TestsConfiguration $testsConfiguration;
+    protected bool $needPassIn = true;
+    protected bool $needPassOut = false;
     /** @var Configuration */
     private $configuration;
     private $frontendSkeletonChecked;
@@ -75,7 +70,7 @@ abstract class AbstractContentTest extends TestWithMockery
         static $testsConfiguration;
         if ($testsConfiguration === null) {
             /** @var TestsConfiguration|string $class */
-            $class = $class ?? TestsConfiguration::class;
+            $class ??= TestsConfiguration::class;
             $testsConfiguration = $class::createFromYaml(
                 DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml',
                 $this->getHtmlHelper()
@@ -177,7 +172,7 @@ abstract class AbstractContentTest extends TestWithMockery
 
     protected function createKey(array $get, array $post, array $cookies, string $url): string
     {
-        return \json_encode($get) . '-' . \json_encode($post) . '-' . \json_encode($cookies) . '-' . $url . (int)$this->needPassIn() . (int)$this->needPassOut();
+        return \json_encode($get, JSON_THROW_ON_ERROR) . '-' . \json_encode($post, JSON_THROW_ON_ERROR) . '-' . \json_encode($cookies, JSON_THROW_ON_ERROR) . '-' . $url . (int)$this->needPassIn() . (int)$this->needPassOut();
     }
 
     protected function needPassIn(): bool
@@ -255,9 +250,9 @@ abstract class AbstractContentTest extends TestWithMockery
         bool $shouldHideCovered = false
     ): HtmlHelper
     {
-        $dirs = $dirs ?? $this->getDirs();
+        $dirs ??= $this->getDirs();
         $env = $this->createEnvironment($forcedMode);
-        $projectUrlConfiguration = $projectUrlConfiguration ?? $this->createCustomConfiguration([], $dirs);
+        $projectUrlConfiguration ??= $this->createCustomConfiguration([], $dirs);
         return new HtmlHelper(
             $dirs,
             $projectUrlConfiguration,
@@ -284,9 +279,10 @@ abstract class AbstractContentTest extends TestWithMockery
 
     protected function createProjectUrlConfiguration(string $getPublicUrlPartRegexp, string $getPublicToLocalUrlReplacement): ProjectUrlConfiguration
     {
-        return new class($getPublicUrlPartRegexp, $getPublicToLocalUrlReplacement) implements ProjectUrlConfiguration {
-            private $publicUrlPartRegexp;
-            private $publicToLocalUrlReplacement;
+        return new class($getPublicUrlPartRegexp, $getPublicToLocalUrlReplacement) implements ProjectUrlConfiguration
+        {
+            private string $publicUrlPartRegexp;
+            private string $publicToLocalUrlReplacement;
 
             public function __construct(string $getPublicUrlPartRegexp, string $getPublicToLocalUrlReplacement)
             {
@@ -313,7 +309,7 @@ abstract class AbstractContentTest extends TestWithMockery
         $originalCookies = $_COOKIE;
         $originalRequest = $_REQUEST;
         /** @noinspection PhpUnusedLocalVariableInspection */
-        $rulesApplication = $rulesApplication ?? null;
+        $rulesApplication ??= null;
         $_GET[Request::CACHE] = Request::DISABLE;
         \ob_start();
         /** @noinspection PhpIncludeInspection */
@@ -657,7 +653,7 @@ TEXT
     protected function isSkeletonChecked(string $skeletonDocumentRoot = null): bool
     {
         static $skeletonChecked = [];
-        $skeletonDocumentRoot = $skeletonDocumentRoot ?? $this->getRulesSkeletonProjectRoot();
+        $skeletonDocumentRoot ??= $this->getRulesSkeletonProjectRoot();
         if (($skeletonChecked[$skeletonDocumentRoot] ?? null) === null) {
             $projectRootRealPath = \realpath($this->getProjectRoot());
             self::assertNotEmpty($projectRootRealPath, 'Can not find out real path of project root ' . \var_export($this->getProjectRoot(), true));
@@ -752,7 +748,7 @@ TEXT
     {
         static $rulesContentForDev = [];
         if (($rulesContentForDev[$show][$hide] ?? null) === null) {
-            $get['mode'] = 'dev';
+            $get = ['mode' => 'dev'];
             if ($show !== '') {
                 $get['show'] = $show;
             }
@@ -833,7 +829,11 @@ TEXT
 
     protected function createWebVersions(Git $git = null, string $repositoryDir = null): WebVersions
     {
-        return new WebVersions($git ?? $this->createGit(), $repositoryDir ?? $this->getDirs()->getProjectRoot());
+        return new WebVersions(
+            $git ?? $this->createGit(),
+            $repositoryDir ?? $this->getDirs()->getProjectRoot(),
+            'master'
+        );
     }
 
     protected function createCurrentWebVersion(
@@ -875,7 +875,8 @@ TEXT
 
     protected function createEmptyHead(): HeadInterface
     {
-        return new class implements HeadInterface {
+        return new class implements HeadInterface
+        {
             public function __toString()
             {
                 return $this->getValue();
@@ -911,7 +912,7 @@ TEXT
             self::assertFileExists($composerFilePath, 'composer.json has not been found in document root');
             $content = \file_get_contents($composerFilePath);
             self::assertNotEmpty($content, "Nothing has been fetched from $composerFilePath, is readable?");
-            $composerConfig = \json_decode($content, true /*as array */);
+            $composerConfig = \json_decode($content, true, 512, JSON_THROW_ON_ERROR /*as array */);
             self::assertIsArray($composerConfig, 'Can not decode composer.json content fetched from ' . $composerFilePath);
         }
 

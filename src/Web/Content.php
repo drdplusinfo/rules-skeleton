@@ -11,8 +11,7 @@ abstract class Content extends \Granam\WebContentBuilder\Web\Content implements 
 {
     /** @var HtmlHelper */
     protected $htmlHelper;
-    /** @var Environment */
-    protected $environment;
+    protected \DrdPlus\RulesSkeleton\Environment $environment;
     /** @var RulesBodyInterface */
     protected $body;
 

@@ -8,7 +8,7 @@ use Symfony\Component\Routing\RequestContext;
 
 class DummyUrlMatcher extends StrictObject implements UrlMatcherInterface
 {
-    private $context;
+    private ?\Symfony\Component\Routing\RequestContext $context = null;
 
     public function setContext(RequestContext $context)
     {

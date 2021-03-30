@@ -6,22 +6,10 @@ use Granam\Strict\Object\StrictObject;
 
 class ContentIrrelevantRequestAlias extends StrictObject
 {
-    /**
-     * @var string
-     */
-    private $truePath;
-    /**
-     * @var array
-     */
-    private $trueParameters;
-    /**
-     * @var string
-     */
-    private $aliasPath;
-    /**
-     * @var array
-     */
-    private $aliasGetParameters;
+    private string $truePath;
+    private array $trueParameters;
+    private string $aliasPath;
+    private array $aliasGetParameters;
 
     public function __construct(string $truePath, array $trueParameters, string $aliasPath, array $aliasGetParameters)
     {

@@ -15,16 +15,11 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class RulesApplication extends StrictObject
 {
-    /** @var ServicesContainer */
-    private $servicesContainer;
-    /** @var RulesContent */
-    private $content;
-    /** @var Redirect */
-    private $redirect;
-    /** @var bool */
-    private $canPassIn;
-    /** @var RulesContent */
-    private $notFoundContent;
+    private ServicesContainer $servicesContainer;
+    private ?RulesContent $content = null;
+    private ?Redirect $redirect = null;
+    private ?bool $canPassIn = null;
+    private ?RulesContent $notFoundContent = null;
 
     public function __construct(ServicesContainer $servicesContainer)
     {

@@ -3,7 +3,7 @@
 namespace Tests\DrdPlus\RulesSkeleton;
 
 use Tests\DrdPlus\RulesSkeleton\Partials\AbstractContentTest;
-use DrdPlus\WebVersions\WebVersions;
+use Granam\WebVersions\WebVersions;
 use Granam\Git\Git;
 use PHPUnit\Framework\TestCase;
 
@@ -22,15 +22,16 @@ class CurrentWebVersionTest extends AbstractContentTest
         );
     }
 
-    private function createGitWithCurrentBranchName(string $branchName)
+    private function createGitWithCurrentBranchName(string $branchName): Git
     {
         return new class($branchName, $this->getProjectRoot()) extends Git
         {
-            private $branchName;
-            private $expectedRepositoryDir;
+            private string $branchName;
+            private string $expectedRepositoryDir;
 
             public function __construct(string $branchName, string $expectedRepositoryDir)
             {
+                parent::__construct();
                 $this->branchName = $branchName;
                 $this->expectedRepositoryDir = $expectedRepositoryDir;
             }
@@ -68,32 +69,33 @@ class CurrentWebVersionTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_will_get_unstable_version_if_there_is_no_last_stable_version(): void
+    public function I_will_get_null_if_there_is_no_last_stable_version(): void
     {
         $gitWithoutLastStableVersion = $this->createGitWithoutLastStableVersion($this->getProjectRoot());
         $webVersions = $this->createWebVersions($gitWithoutLastStableVersion, $this->getProjectRoot());
-        self::assertSame(WebVersions::LAST_UNSTABLE_VERSION, $webVersions->getLastUnstableVersion());
-        self::assertSame($webVersions->getLastUnstableVersion(), $webVersions->getLastStableMinorVersion());
+        self::assertSame('master', $webVersions->getLastUnstableVersion());
+        self::assertNull($webVersions->getLastStableMinorVersion());
     }
 
     private function createGitWithoutLastStableVersion(string $expectedRepositoryDir): Git
     {
         return new class($expectedRepositoryDir) extends Git
         {
-            private $expectedRepositoryDir;
+            private string $expectedRepositoryDir;
 
             public function __construct(string $expectedRepositoryDir)
             {
+                parent::__construct();
                 $this->expectedRepositoryDir = $expectedRepositoryDir;
             }
 
             public function getLastStableMinorVersion(
-                string $dir,
+                string $repositoryDir,
                 bool $readLocal = self::INCLUDE_LOCAL_BRANCHES,
                 bool $readRemote = self::INCLUDE_REMOTE_BRANCHES
             ): ?string
             {
-                TestCase::assertSame($this->expectedRepositoryDir, $dir);
+                TestCase::assertSame($this->expectedRepositoryDir, $repositoryDir);
 
                 return null;
             }
@@ -149,9 +151,7 @@ class CurrentWebVersionTest extends AbstractContentTest
                 ',',
                 array_filter(
                     \scandir(\dirname($gitHeadFilePath), SCANDIR_SORT_NONE),
-                    function (string $dirName) {
-                        return $dirName !== '.' && $dirName !== '..';
-                    }
+                    static fn(string $dirName) => $dirName !== '.' && $dirName !== '..'
                 )
             )
         );

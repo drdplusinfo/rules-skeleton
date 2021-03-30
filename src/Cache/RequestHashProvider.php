@@ -7,12 +7,9 @@ use Granam\Strict\Object\StrictObject;
 
 class RequestHashProvider extends StrictObject implements ContentRelatedContextHashProvider
 {
-    /** @var Request */
-    private $request;
-    /** @var ContentIrrelevantRequestAliases */
-    private $contentIrrelevantRequestAliases;
-    /** @var ContentIrrelevantParametersFilter */
-    private $contentIrrelevantParametersFilter;
+    private \DrdPlus\RulesSkeleton\Request $request;
+    private \DrdPlus\RulesSkeleton\Cache\ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases;
+    private \DrdPlus\RulesSkeleton\Cache\ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter;
 
     public function __construct(
         Request $request,

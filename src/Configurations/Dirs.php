@@ -4,10 +4,8 @@ namespace DrdPlus\RulesSkeleton\Configurations;
 
 class Dirs extends \Granam\WebContentBuilder\Dirs
 {
-    /** @var string */
-    private $cacheRoot;
-    /** @var string */
-    private $pdfRoot;
+    private string $cacheRoot;
+    private string $pdfRoot;
 
     public function __construct(string $projectRoot)
     {

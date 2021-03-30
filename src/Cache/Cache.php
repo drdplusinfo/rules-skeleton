@@ -15,26 +15,16 @@ abstract class Cache extends StrictObject implements CacheInterface
     public const IN_PRODUCTION = true;
     public const NOT_IN_PRODUCTION = false;
 
-    /** @var string */
-    protected $projectRootDir;
-    /** @var string */
-    private $cacheRootDir;
-    /** @var RequestPathProvider */
-    private $requestPathProvider;
-    /** @var array|string[] */
-    protected $cacheRoots;
-    /** @var CurrentWebVersion */
-    protected $currentWebVersion;
-    /** @var CachingPermissionProvider */
-    private $cachingPermissionProvider;
-    /** @var ContentRelatedContextHashProvider */
-    private $contentRelatedContextHashProvider;
-    /** @var Git */
-    private $git;
-    /** @var Configuration */
-    private $configuration;
-    /** @var bool */
-    protected $isInProduction;
+    protected string $projectRootDir;
+    private string $cacheRootDir;
+    private \DrdPlus\RulesSkeleton\RequestPathProvider $requestPathProvider;
+    protected array $cacheRoots = [];
+    protected \DrdPlus\RulesSkeleton\CurrentWebVersion $currentWebVersion;
+    private \DrdPlus\RulesSkeleton\Cache\CachingPermissionProvider $cachingPermissionProvider;
+    private \DrdPlus\RulesSkeleton\Cache\ContentRelatedContextHashProvider $contentRelatedContextHashProvider;
+    private \Granam\Git\Git $git;
+    private \DrdPlus\RulesSkeleton\Configurations\Configuration $configuration;
+    protected bool $isInProduction;
 
     public function __construct(
         CurrentWebVersion $currentWebVersion,

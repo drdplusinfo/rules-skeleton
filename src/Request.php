@@ -19,18 +19,12 @@ class Request extends StrictObject implements RequestPathProvider
     public const TRIAL = 'trial';
     public const TRIAL_EXPIRED_AT = 'trial_expired_at';
 
-    /** @var Bot */
-    private $botParser;
-    /** @var Environment */
-    private $environment;
-    /** @var array */
-    private $get;
-    /** @var array */
-    private $post;
-    /** @var array */
-    private $cookies;
-    /** @var array */
-    private $server;
+    private \DeviceDetector\Parser\Bot $botParser;
+    private \DrdPlus\RulesSkeleton\Environment $environment;
+    private array $get;
+    private array $post;
+    private array $cookies;
+    private array $server;
 
     public static function createFromGlobals(Bot $botParser, Environment $environment): Request
     {
@@ -176,17 +170,13 @@ class Request extends StrictObject implements RequestPathProvider
     public function getRequestedTablesIds(): array
     {
         $wantedTableIds = \array_map(
-            function (string $id) {
-                return \trim($id);
-            },
+            fn(string $id) => \trim($id),
             \explode(',', $this->get[self::TABLES] ?? $this->get[self::TABULKY] ?? '')
         );
 
         return \array_filter(
             $wantedTableIds,
-            function (string $id) {
-                return $id !== '';
-            }
+            fn(string $id) => $id !== ''
         );
     }
 

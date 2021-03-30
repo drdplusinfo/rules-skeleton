@@ -12,8 +12,7 @@ use Mockery\MockInterface;
 
 class WebCacheTest extends AbstractContentTest
 {
-    /** @var string */
-    protected $temporaryRootDir;
+    protected ?string $temporaryRootDir = null;
 
     protected function tearDown(): void
     {

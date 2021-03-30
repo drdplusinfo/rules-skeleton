@@ -16,7 +16,7 @@ class TracyDebugger extends StrictObject
      */
     public static function enable(bool $inProductionMode = null, TracyLogger $tracyLogger = null): void
     {
-        $tracyLogger = $tracyLogger ?? new TracyLogger(
+        $tracyLogger ??= new TracyLogger(
                 '/var/log/php/tracy',
                 'info@drdplus.info',
                 new BlueScreen(),

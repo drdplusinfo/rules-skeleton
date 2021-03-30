@@ -54,12 +54,9 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     public const YAML_FILE_WITH_ROUTES = 'yaml_file_with_routes';
     public const DEFAULT_YAML_FILE_WITH_ROUTES = 'default_yaml_file_with_routes';
 
-    /** @var Dirs */
-    private $dirs;
-    /** @var MenuConfiguration */
-    private $menuConfiguration;
-    /** @var GatewayConfiguration */
-    private $gatewayConfiguration;
+    private \DrdPlus\RulesSkeleton\Configurations\Dirs $dirs;
+    private \DrdPlus\RulesSkeleton\Configurations\MenuConfiguration $menuConfiguration;
+    private \DrdPlus\RulesSkeleton\Configurations\GatewayConfiguration $gatewayConfiguration;
 
     /**
      * @param Dirs $dirs

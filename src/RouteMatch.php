@@ -7,13 +7,13 @@ use Granam\Strict\Object\StrictObject;
 
 class RouteMatch extends StrictObject
 {
-    private $resource;
-    private $type;
-    private $prefix;
-    private $path;
-    private $query;
-    private $routeName;
-    private $host;
+    private ?string $resource = null;
+    private ?string $type = null;
+    private ?string $prefix = null;
+    private ?string $path = null;
+    private array $query;
+    private ?string $routeName = null;
+    private ?string $host = null;
     private $schemes;
     private $methods;
     private $defaults;
@@ -27,6 +27,7 @@ class RouteMatch extends StrictObject
     private $format;
     private $utf8;
     private $exclude;
+    private $stateless;
 
     /**
      * @param array $values
@@ -40,7 +41,8 @@ class RouteMatch extends StrictObject
             throw new Exceptions\MissingRequiredPathInRouteMatch('Got matches ' . var_export($values, true));
         }
         $this->routeName = $values['_route'] ?? null;
-        parse_str($values['query'] ?? '', $this->query);
+
+        $this->query = $this->parseQuery($values['query'] ?? '');
         $this->resource = $values['resource'] ?? null;
         $this->type = $values['type'] ?? null;
         $this->prefix = $values['prefix'] ?? null;
@@ -58,6 +60,13 @@ class RouteMatch extends StrictObject
         $this->format = $values['format'] ?? null;
         $this->utf8 = $values['utf8'] ?? null;
         $this->exclude = $values['exclude'] ?? null;
+        $this->stateless = $values['stateless'] ?? null;
+    }
+
+    protected function parseQuery(?string $queryString): array
+    {
+        parse_str($queryString, $queryArray);
+        return $queryArray;
     }
 
     public function getRouteName(): ?string
@@ -201,4 +210,13 @@ class RouteMatch extends StrictObject
     {
         return $this->exclude;
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function getStateless()
+    {
+        return $this->stateless;
+    }
+
 }

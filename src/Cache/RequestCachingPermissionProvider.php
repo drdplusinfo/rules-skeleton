@@ -7,8 +7,7 @@ use Granam\Strict\Object\StrictObject;
 
 class RequestCachingPermissionProvider extends StrictObject implements CachingPermissionProvider
 {
-    /** @var Request */
-    private $request;
+    private \DrdPlus\RulesSkeleton\Request $request;
 
     public function __construct(Request $request)
     {

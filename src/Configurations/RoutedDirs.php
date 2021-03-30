@@ -6,10 +6,8 @@ use DrdPlus\RulesSkeleton\RouteMatchingPathProvider;
 
 class RoutedDirs extends Dirs
 {
-    /** @var RouteMatchingPathProvider */
-    private $pathProvider;
-    /** @var string */
-    private $relativeWebRoot;
+    private \DrdPlus\RulesSkeleton\RouteMatchingPathProvider $pathProvider;
+    private ?string $relativeWebRoot = null;
 
     public function __construct(string $projectRoot, RouteMatchingPathProvider $pathProvider)
     {

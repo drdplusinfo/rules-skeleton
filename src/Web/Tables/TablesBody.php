@@ -11,10 +11,8 @@ use Granam\WebContentBuilder\HtmlDocument;
 class TablesBody extends StrictObject implements RulesBodyInterface
 {
 
-    /** @var MainBody */
-    private $rulesMainBody;
-    /** @var TablesBodyPostProcessor */
-    private $tablesBodyPostProcessor;
+    private \DrdPlus\RulesSkeleton\Web\Main\MainBody $rulesMainBody;
+    private \DrdPlus\RulesSkeleton\Web\Tools\TablesBodyPostProcessor $tablesBodyPostProcessor;
 
     public function __construct(
         MainBody $rulesMainBody,

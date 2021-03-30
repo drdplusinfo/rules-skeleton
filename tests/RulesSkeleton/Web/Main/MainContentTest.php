@@ -72,9 +72,7 @@ class MainContentTest extends ContentTest
         $idsCount = \array_count_values($ids);
         $duplicatedIds = \array_filter(
             $idsCount,
-            static function (int $count) {
-                return $count > 1;
-            }
+            static fn(int $count) => $count > 1
         );
         self::assertSame([], $duplicatedIds, 'Some IDs are used multiple times');
     }

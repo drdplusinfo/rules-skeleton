@@ -11,19 +11,16 @@ class TracyLogger implements ILogger
 {
 
     /** @var string name of the directory where errors should be logged */
-    private $logDirectory;
+    private string $logDirectory;
     /** @var string|array email or emails to which send error notifications */
-    private $email;
+    private string $email;
     /** @var string sender of email notifications */
-    private $fromEmail;
+    private ?string $fromEmail = null;
     /** @var string|int interval for sending email as text (like 2 days) or seconds */
-    private $emailSnooze;
-    /** @var PHPMailer */
-    private $mailer;
-    /** @var \Tracy\BlueScreen|null */
-    private $blueScreen;
-    /** @var string */
-    private $lowestSeverityToSendEmail;
+    private int $emailSnooze;
+    private \PHPMailer\PHPMailer\PHPMailer $mailer;
+    private \Tracy\BlueScreen $blueScreen;
+    private string $lowestSeverityToSendEmail;
 
     /**
      * @param string $logDirectory

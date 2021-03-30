@@ -7,18 +7,9 @@ use Symfony\Component\Config\FileLocator;
 
 class RouterCacheDirProvider extends StrictObject
 {
-    /**
-     * @var FileLocator
-     */
-    private $fileLocator;
-    /**
-     * @var string
-     */
-    private $routesFile;
-    /**
-     * @var WebCache
-     */
-    private $routerCache;
+    private \Symfony\Component\Config\FileLocator $fileLocator;
+    private string $routesFile;
+    private \DrdPlus\RulesSkeleton\Cache\WebCache $routerCache;
 
     public function __construct(
         FileLocator $fileLocator,

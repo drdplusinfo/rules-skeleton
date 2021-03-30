@@ -27,7 +27,7 @@ use DrdPlus\RulesSkeleton\Web\Tables\TablesContent;
 use DrdPlus\RulesSkeleton\Web\Tools\WebFiles;
 use DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer;
 use DrdPlus\RulesSkeleton\Web\Tools\WebRootProvider;
-use DrdPlus\WebVersions\WebVersions;
+use Granam\WebVersions\WebVersions;;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringTools;
@@ -42,96 +42,51 @@ use Symfony\Component\Routing\RequestContext;
 class ServicesContainer extends StrictObject
 {
 
-    /** @var CurrentWebVersion */
-    private $currentWebVersion;
-    /** @var WebVersions */
-    private $webVersions;
-    /** @var Git */
-    private $git;
-    /** @var Configuration */
-    private $configuration;
-    /** @var HomepageDetector */
-    private $homepageDetector;
-    /** @var Ticket */
-    private $ticket;
-    /** @var HtmlHelper */
-    private $htmlHelper;
-    /** @var Head */
-    private $head;
-    /** @var MenuBody */
-    private $gatewayMenuBody;
-    /** @var MenuBody */
-    private $passedMenuBody;
-    /** @var EmptyMenuBody */
-    private $emptyMenuBody;
-    /** @var Cache */
-    private $tablesWebCache;
-    /** @var CssFiles */
-    private $cssFiles;
-    /** @var JsFiles */
-    private $jsFiles;
-    /** @var WebFiles */
-    private $routedWebFiles;
-    /** @var WebFiles */
-    private $rootWebFiles;
-    /** @var WebRootProvider */
-    private $routedWebRootProvider;
-    /** @var WebRootProvider */
-    private $rootWebRootProvider;
-    /** @var RouteMatchingPathProvider */
-    private $pathProvider;
-    /** @var Request */
-    private $request;
-    /** @var Environment */
-    private $environment;
-    /** @var ContentIrrelevantRequestAliases */
-    private $contentIrrelevantRequestAliases;
-    /** @var ContentIrrelevantParametersFilter */
-    private $contentIrrelevantParametersFilter;
-    /** @var Bot */
-    private $botParser;
-    /** @var WebPartsContainer */
-    private $rootWebPartsContainer;
-    /** @var WebPartsContainer */
-    private $routedWebPartsContainer;
-    /** @var MainContent */
-    private $rulesMainContent;
-    /** @var MainContent */
-    private $tablesMainContent;
-    /** @var HtmlContentInterface */
-    private $rulesPdfWebContent;
-    /** @var GatewayContent */
-    private $gatewayContent;
-    /** @var NotFoundContent */
-    private $notFoundContent;
-    /** @var CookiesService */
-    private $cookiesService;
-    /** @var \DateTimeImmutable */
-    private $now;
-    /** @var CacheCleaner */
-    private $cacheCleaner;
-    /** @var Cache */
-    private $gatewayWebCache;
-    /** @var Cache */
-    private $passedWebCache;
-    /** @var RouterCacheDirProvider */
-    private $routerCacheDirProvider;
-    /** @var WebCache */
-    private $routerCache;
-    /** @var RequestCachingPermissionProvider */
-    private $requestCachingPermissionProvider;
-    /** @var RequestHashProvider */
-    private $requestHashProvider;
-    /** @var YamlFileLoader */
-    private $projectRootFileLocator;
-    /** @var Cache */
-    private $notFoundCache;
-    /** @var UsagePolicy */
-    private $usagePolicy;
-    /** @var RulesUrlMatcher */
-    private $rulesUrlMatcher;
-    /** @var TablesRequestDetector */
-    private $tablesRequestDetector;
+    private ?\DrdPlus\RulesSkeleton\CurrentWebVersion $currentWebVersion = null;
+    private ?\Granam\WebVersions\WebVersions $webVersions = null;
+    private ?\Granam\Git\Git $git = null;
+    private \DrdPlus\RulesSkeleton\Configurations\Configuration $configuration;
+    private ?\DrdPlus\RulesSkeleton\HomepageDetector $homepageDetector = null;
+    private ?\DrdPlus\RulesSkeleton\Ticket $ticket = null;
+    private \DrdPlus\RulesSkeleton\HtmlHelper $htmlHelper;
+    private ?\DrdPlus\RulesSkeleton\Web\Head $head = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Menu\MenuBody $gatewayMenuBody = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Menu\MenuBody $passedMenuBody = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Menu\EmptyMenuBody $emptyMenuBody = null;
+    private ?\DrdPlus\RulesSkeleton\Cache\WebCache $tablesWebCache = null;
+    private ?\Granam\WebContentBuilder\Web\CssFiles $cssFiles = null;
+    private ?\Granam\WebContentBuilder\Web\JsFiles $jsFiles = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tools\WebFiles $routedWebFiles = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tools\WebFiles $rootWebFiles = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tools\WebRootProvider $routedWebRootProvider = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tools\WebRootProvider $rootWebRootProvider = null;
+    private ?\DrdPlus\RulesSkeleton\RouteMatchingPathProvider $pathProvider = null;
+    private ?\DrdPlus\RulesSkeleton\Request $request = null;
+    private \DrdPlus\RulesSkeleton\Environment $environment;
+    private ?\DrdPlus\RulesSkeleton\Cache\ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases = null;
+    private ?\DrdPlus\RulesSkeleton\Cache\ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter = null;
+    private ?\DeviceDetector\Parser\Bot $botParser = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer $rootWebPartsContainer = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer $routedWebPartsContainer = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Main\MainContent $rulesMainContent = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tables\TablesContent $tablesMainContent = null;
+    private ?\DrdPlus\RulesSkeleton\Web\PdfContent $rulesPdfWebContent = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Gateway\GatewayContent $gatewayContent = null;
+    private ?\DrdPlus\RulesSkeleton\Web\NotFound\NotFoundContent $notFoundContent = null;
+    private ?\DrdPlus\RulesSkeleton\CookiesService $cookiesService = null;
+    private ?\DateTimeImmutable $now = null;
+    private ?\DrdPlus\RulesSkeleton\Cache\CacheCleaner $cacheCleaner = null;
+    private ?\DrdPlus\RulesSkeleton\Cache\WebCache $gatewayWebCache = null;
+    private ?\DrdPlus\RulesSkeleton\Cache\WebCache $passedWebCache = null;
+    private ?\DrdPlus\RulesSkeleton\Cache\RouterCacheDirProvider $routerCacheDirProvider = null;
+    private ?\DrdPlus\RulesSkeleton\Cache\WebCache $routerCache = null;
+    private ?\DrdPlus\RulesSkeleton\Cache\RequestCachingPermissionProvider $requestCachingPermissionProvider = null;
+    private ?\DrdPlus\RulesSkeleton\Cache\RequestHashProvider $requestHashProvider = null;
+    private ?\Symfony\Component\Config\FileLocator $projectRootFileLocator = null;
+    private ?\DrdPlus\RulesSkeleton\Cache\WebCache $notFoundCache = null;
+    private ?\DrdPlus\RulesSkeleton\UsagePolicy $usagePolicy = null;
+    private ?\DrdPlus\RulesSkeleton\RulesUrlMatcher $rulesUrlMatcher = null;
+    private ?\DrdPlus\RulesSkeleton\TablesRequestDetector $tablesRequestDetector = null;
 
     public function __construct(Configuration $configuration, Environment $environment, HtmlHelper $htmlHelper)
     {
@@ -179,7 +134,7 @@ class ServicesContainer extends StrictObject
     public function getWebVersions(): WebVersions
     {
         if ($this->webVersions === null) {
-            $this->webVersions = new WebVersions($this->getGit(), $this->getDirs()->getProjectRoot());
+            $this->webVersions = new WebVersions($this->getGit(), $this->getDirs()->getProjectRoot(), 'master');
         }
         return $this->webVersions;
     }
@@ -458,7 +413,7 @@ class ServicesContainer extends StrictObject
         if ($yamlFileWithRoutes === '') {
             return new DummyUrlMatcher();
         }
-        $_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ?? ''; // as http-foundation request requires string
+        $_SERVER['REQUEST_URI'] ??= ''; // as http-foundation request requires string
         $router = new \Symfony\Component\Routing\Router(
             new YamlFileLoader(new FileLocator([$this->getDirs()->getProjectRoot()])),
             $yamlFileWithRoutes,

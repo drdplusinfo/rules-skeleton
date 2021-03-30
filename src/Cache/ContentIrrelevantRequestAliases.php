@@ -9,7 +9,7 @@ class ContentIrrelevantRequestAliases extends StrictObject
     /**
      * @var ContentIrrelevantRequestAlias[]
      */
-    private $contentIrrelevantRequestAliases = [];
+    private array $contentIrrelevantRequestAliases = [];
 
     /**
      * @param ContentIrrelevantRequestAlias[] $contentIrrelevantRequestAliases

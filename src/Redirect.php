@@ -6,10 +6,8 @@ use Granam\Strict\Object\StrictObject;
 
 class Redirect extends StrictObject
 {
-    /** @var string */
-    private $target;
-    /** @var int */
-    private $afterSeconds;
+    private string $target;
+    private int $afterSeconds;
 
     public function __construct(string $target, int $afterSeconds)
     {

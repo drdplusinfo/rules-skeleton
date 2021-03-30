@@ -174,9 +174,7 @@ class CalculationsTest extends AbstractContentTest
         $allowedCalculationIdPrefixes = $this->getTestsConfiguration()->getAllowedCalculationIdPrefixes();
         $allowedCalculationIdPrefixesRegexp = $this->toRegexpOr($allowedCalculationIdPrefixes);
         $allowedCalculationIdConstantLikePrefixes = \array_map(
-            function (string $allowedPrefix) {
-                return StringTools::toConstantLikeValue($allowedPrefix);
-            },
+            fn(string $allowedPrefix) => StringTools::toConstantLikeValue($allowedPrefix),
             $allowedCalculationIdPrefixes
         );
         $allowedCalculationIdConstantLikePrefixesRegexp = $this->toRegexpOr($allowedCalculationIdConstantLikePrefixes);
@@ -215,9 +213,7 @@ class CalculationsTest extends AbstractContentTest
                 implode(
                     ', ',
                     array_map(
-                        function (string $id) {
-                            return "'{$id}'";
-                        },
+                        fn(string $id) => "'{$id}'",
                         $idsWithMissingAnchors
                     )
                 )
@@ -231,9 +227,7 @@ class CalculationsTest extends AbstractContentTest
                 implode(
                     "\n",
                     array_map(
-                        function (Element $anchor) {
-                            return $anchor->prop_get_outerHTML();
-                        },
+                        fn(Element $anchor) => $anchor->prop_get_outerHTML(),
                         $emptyAnchors
                     )
                 )

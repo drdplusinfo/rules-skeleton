@@ -17,34 +17,20 @@ use Granam\Strict\Object\StrictObject;
 
 class WebPartsContainer extends StrictObject
 {
-    /** @var Configuration */
-    private $configuration;
-    /** @var UsagePolicy */
-    private $usagePolicy;
-    /** @var Dirs */
-    private $dirs;
-    /** @var HtmlHelper */
-    private $htmlHelper;
-    /** @var Request */
-    private $request;
-    /** @var WebFiles */
-    private $webFiles;
-    /** @var GatewayBody */
-    private $gatewayBody;
-    /** @var DebugContactsBody */
-    private $debugContactsBody;
-    /** @var PdfBody */
-    private $pdfBody;
-    /** @var MainBody */
-    private $rulesMainBody;
-    /** @var RulesMainBodyPreProcessor */
-    private $rulesMainBodyPreProcessor;
-    /** @var TablesBodyPostProcessor */
-    private $tablesBodyPostProcessor;
-    /** @var NotFoundBody */
-    private $notFoundBody;
-    /** @var TablesBody */
-    private $tablesBody;
+    private \DrdPlus\RulesSkeleton\Configurations\Configuration $configuration;
+    private \DrdPlus\RulesSkeleton\UsagePolicy $usagePolicy;
+    private \DrdPlus\RulesSkeleton\Configurations\Dirs $dirs;
+    private \DrdPlus\RulesSkeleton\HtmlHelper $htmlHelper;
+    private \DrdPlus\RulesSkeleton\Request $request;
+    private \DrdPlus\RulesSkeleton\Web\Tools\WebFiles $webFiles;
+    private ?\DrdPlus\RulesSkeleton\Web\Gateway\GatewayBody $gatewayBody = null;
+    private ?\DrdPlus\RulesSkeleton\Web\DebugContacts\DebugContactsBody $debugContactsBody = null;
+    private ?\DrdPlus\RulesSkeleton\Web\PdfBody $pdfBody = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Main\MainBody $rulesMainBody = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tools\RulesMainBodyPreProcessor $rulesMainBodyPreProcessor = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tools\TablesBodyPostProcessor $tablesBodyPostProcessor = null;
+    private ?\DrdPlus\RulesSkeleton\Web\NotFound\NotFoundBody $notFoundBody = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tables\TablesBody $tablesBody = null;
 
     public function __construct(
         Configuration $configuration,

@@ -12,12 +12,9 @@ use Granam\WebContentBuilder\HtmlDocument;
 
 class GatewayBody extends StrictObject implements RulesBodyInterface
 {
-    /** @var Configuration */
-    private $configuration;
-    /** @var UsagePolicy */
-    private $usagePolicy;
-    /** @var Request */
-    private $request;
+    private \DrdPlus\RulesSkeleton\Configurations\Configuration $configuration;
+    private \DrdPlus\RulesSkeleton\UsagePolicy $usagePolicy;
+    private \DrdPlus\RulesSkeleton\Request $request;
 
     public function __construct(Configuration $configuration, UsagePolicy $usagePolicy, Request $request)
     {

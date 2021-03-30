@@ -12,14 +12,10 @@ use Granam\WebContentBuilder\Web\Body;
 
 class RulesHtmlDocumentPostProcessor implements HtmlDocumentProcessorInterface
 {
-    /** @var CurrentWebVersion */
-    private $currentWebVersion;
-    /** @var MenuBodyInterface */
-    private $menuBody;
-    /** @var Body */
-    private $body;
-    /** @var CacheIdProvider */
-    private $cacheIdProvider;
+    private \DrdPlus\RulesSkeleton\CurrentWebVersion $currentWebVersion;
+    private \DrdPlus\RulesSkeleton\Web\Menu\MenuBodyInterface $menuBody;
+    private \Granam\WebContentBuilder\Web\Body $body;
+    private \DrdPlus\RulesSkeleton\Cache\CacheIdProvider $cacheIdProvider;
 
     public function __construct(
         MenuBodyInterface $menuBody,

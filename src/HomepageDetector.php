@@ -8,8 +8,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class HomepageDetector extends StrictObject
 {
-    /** @var RouteMatchingPathProvider */
-    private $pathProvider;
+    private \DrdPlus\RulesSkeleton\RouteMatchingPathProvider $pathProvider;
 
     public function __construct(RouteMatchingPathProvider $pathProvider)
     {

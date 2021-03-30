@@ -3,9 +3,9 @@
 namespace DrdPlus\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\Configurations\Dirs;
-use DrdPlus\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
+use Granam\WebVersions\WebVersions;
 
 /**
  * Reader of GIT tags defining available versions of web filesF
@@ -13,16 +13,11 @@ use Granam\Strict\Object\StrictObject;
 class CurrentWebVersion extends StrictObject
 {
 
-    /** @var Dirs */
-    private $dirs;
-    /** @var string */
-    private $currentCommitHash;
-    /** @var string */
-    private $currentPatchVersion;
-    /** @var Git */
-    private $git;
-    /** @var WebVersions */
-    private $webVersions;
+    private Dirs $dirs;
+    private ?string $currentCommitHash = null;
+    private ?string $currentPatchVersion = null;
+    private Git $git;
+    private WebVersions $webVersions;
 
     public function __construct(Dirs $dirs, Git $git, WebVersions $webVersions)
     {
@@ -39,7 +34,11 @@ class CurrentWebVersion extends StrictObject
     public function getCurrentPatchVersion(): string
     {
         if ($this->currentPatchVersion === null) {
-            $this->currentPatchVersion = $this->webVersions->getLastPatchVersionOf($this->getCurrentMinorVersion());
+            if ($this->webVersions->getLastUnstableVersion() === $this->getCurrentMinorVersion()) {
+                $this->currentPatchVersion = $this->getCurrentMinorVersion(); // master, main...
+            } else {
+                $this->currentPatchVersion = $this->webVersions->getLastPatchVersionOf($this->getCurrentMinorVersion());
+            }
         }
 
         return $this->currentPatchVersion;

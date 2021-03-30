@@ -6,8 +6,7 @@ use Granam\Strict\Object\StrictObject;
 
 class ContentIrrelevantParametersFilter extends StrictObject
 {
-    /** @var array|string[] */
-    private $contentIrrelevantParameterNames;
+    private array $contentIrrelevantParameterNames;
 
     public function __construct(array $contentIrrelevantParameterNames)
     {

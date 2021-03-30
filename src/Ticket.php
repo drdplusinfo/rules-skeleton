@@ -7,14 +7,8 @@ use Granam\Strict\Object\StrictObject;
 
 class Ticket extends StrictObject
 {
-    /**
-     * @var GatewayConfiguration
-     */
-    private $gatewayConfiguration;
-    /**
-     * @var UsagePolicy
-     */
-    private $usagePolicy;
+    private \DrdPlus\RulesSkeleton\Configurations\GatewayConfiguration $gatewayConfiguration;
+    private \DrdPlus\RulesSkeleton\UsagePolicy $usagePolicy;
 
     public function __construct(
         GatewayConfiguration $gatewayConfiguration,

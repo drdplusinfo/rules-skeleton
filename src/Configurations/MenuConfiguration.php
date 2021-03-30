@@ -13,10 +13,8 @@ class MenuConfiguration extends AbstractShowOnConfiguration
     public const SHOW_HOME_BUTTON_ON_ROUTES = 'show_home_button_on_routes';
     public const HOME_BUTTON_TARGET = 'home_button_target';
 
-    /** @var array */
-    private $pathToMenu;
-    /** @var HomeButtonConfiguration */
-    private $homeButtonConfiguration;
+    private array $pathToMenu;
+    private \DrdPlus\RulesSkeleton\Configurations\HomeButtonConfiguration $homeButtonConfiguration;
 
     public function __construct(array $values, array $pathToMenu)
     {

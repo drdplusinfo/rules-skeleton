@@ -11,7 +11,7 @@ use Tests\DrdPlus\RulesSkeleton\Partials\AbstractContentTest;
 class MenuConfigurationTest extends AbstractContentTest
 {
 
-    protected static $validMenuConfiguration = [
+    protected static array $validMenuConfiguration = [
         MenuConfiguration::POSITION_FIXED => true,
         MenuConfiguration::HOME_BUTTON => [
             HomeButtonConfiguration::SHOW_ON_GATEWAY => true,

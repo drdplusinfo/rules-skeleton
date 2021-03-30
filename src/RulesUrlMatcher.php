@@ -8,10 +8,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 class RulesUrlMatcher extends StrictObject
 {
-    /**
-     * @var UrlMatcherInterface
-     */
-    private $urlMatcher;
+    private \Symfony\Component\Routing\Matcher\UrlMatcherInterface $urlMatcher;
 
     public function __construct(UrlMatcherInterface $urlMatcher)
     {

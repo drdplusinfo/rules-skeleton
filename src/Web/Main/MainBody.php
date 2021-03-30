@@ -11,18 +11,9 @@ use Granam\WebContentBuilder\Web\WebFiles;
 
 class MainBody extends Body implements RulesBodyInterface
 {
-    /**
-     * @var WebPartsContainer
-     */
-    private $webPartsContainer;
-    /**
-     * @var HtmlDocumentProcessorInterface|null
-     */
-    private $rulesMainBodyPreProcessor;
-    /**
-     * @var HtmlDocumentProcessorInterface|null
-     */
-    private $rulesMainBodyPostProcessor;
+    private \DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer $webPartsContainer;
+    private ?\DrdPlus\RulesSkeleton\Web\Tools\HtmlDocumentProcessorInterface $rulesMainBodyPreProcessor = null;
+    private ?\DrdPlus\RulesSkeleton\Web\Tools\HtmlDocumentProcessorInterface $rulesMainBodyPostProcessor = null;
 
     public function __construct(
         WebFiles $webFiles,
@@ -40,10 +31,8 @@ class MainBody extends Body implements RulesBodyInterface
     protected function fetchPhpFileContent(string $file): string
     {
         $content = new class($file, $this->webPartsContainer) {
-            /** @var string */
-            private $file;
-            /** @var WebPartsContainer */
-            private $webPartsContainer;
+            private string $file;
+            private \DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer $webPartsContainer;
 
             public function __construct(string $file, WebPartsContainer $webPartsContainer)
             {
@@ -53,7 +42,8 @@ class MainBody extends Body implements RulesBodyInterface
 
             public function fetchContent(): string
             {
-                \extract(['webPartsContainer' => $this->webPartsContainer], \EXTR_SKIP);
+                $tmp = ['webPartsContainer' => $this->webPartsContainer];
+                \extract($tmp, \EXTR_SKIP);
                 \ob_start();
                 /** @noinspection PhpIncludeInspection */
                 include $this->file;

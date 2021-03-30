@@ -11,7 +11,7 @@ use Granam\String\StringTools;
 
 class ConfigurationTest extends AbstractContentTest
 {
-    private $createdYamlTempFiles = [];
+    private array $createdYamlTempFiles = [];
 
     /**
      * @test

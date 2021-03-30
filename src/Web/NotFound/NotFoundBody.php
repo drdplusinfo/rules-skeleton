@@ -10,10 +10,8 @@ use Granam\WebContentBuilder\HtmlDocument;
 
 class NotFoundBody extends StrictObject implements RulesBodyInterface
 {
-    /** @var Request */
-    private $request;
-    /** @var DebugContactsBody */
-    private $debugContactsBody;
+    private \DrdPlus\RulesSkeleton\Request $request;
+    private \DrdPlus\RulesSkeleton\Web\DebugContacts\DebugContactsBody $debugContactsBody;
 
     public function __construct(Request $request, DebugContactsBody $debugContactsBody)
     {

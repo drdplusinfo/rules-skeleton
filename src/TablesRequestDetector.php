@@ -6,14 +6,8 @@ use Granam\Strict\Object\StrictObject;
 
 class TablesRequestDetector extends StrictObject
 {
-    /**
-     * @var RulesUrlMatcher
-     */
-    private $rulesUrlMatcher;
-    /**
-     * @var Request
-     */
-    private $request;
+    private \DrdPlus\RulesSkeleton\RulesUrlMatcher $rulesUrlMatcher;
+    private \DrdPlus\RulesSkeleton\Request $request;
 
     public function __construct(RulesUrlMatcher $rulesUrlMatcher, Request $request)
     {

@@ -10,8 +10,7 @@ use Granam\WebContentBuilder\Web\HtmlContentInterface;
 
 class PdfContent extends StrictObject implements HtmlContentInterface
 {
-    /** @var Body */
-    private $pdfBody;
+    private \DrdPlus\RulesSkeleton\Web\PdfBody $pdfBody;
 
     public function __construct(PdfBody $pdfBody)
     {

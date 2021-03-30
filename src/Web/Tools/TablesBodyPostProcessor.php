@@ -9,14 +9,8 @@ use Granam\WebContentBuilder\HtmlDocument;
 
 class TablesBodyPostProcessor extends StrictObject implements HtmlDocumentProcessorInterface
 {
-    /**
-     * @var Request
-     */
-    private $request;
-    /**
-     * @var HtmlHelper
-     */
-    private $htmlHelper;
+    private \DrdPlus\RulesSkeleton\Request $request;
+    private \DrdPlus\RulesSkeleton\HtmlHelper $htmlHelper;
 
     public function __construct(Request $request, HtmlHelper $htmlHelper)
     {

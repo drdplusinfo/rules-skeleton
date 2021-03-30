@@ -7,8 +7,7 @@ use Granam\Strict\Object\StrictObject;
 abstract class AbstractConfiguration extends StrictObject implements ConfigurationValues
 {
 
-    /** @var array */
-    protected $values;
+    protected ?array $values = null;
 
     protected function __construct(array $values)
     {

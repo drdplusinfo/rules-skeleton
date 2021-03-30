@@ -6,14 +6,8 @@ use Granam\Strict\Object\StrictObject;
 
 class RouteMatchingPathProvider extends StrictObject
 {
-    /**
-     * @var RulesUrlMatcher
-     */
-    private $urlMatcher;
-    /**
-     * @var string
-     */
-    private $url;
+    private \DrdPlus\RulesSkeleton\RulesUrlMatcher $urlMatcher;
+    private string $url;
 
     public function __construct(RulesUrlMatcher $urlMatcher, string $url)
     {
