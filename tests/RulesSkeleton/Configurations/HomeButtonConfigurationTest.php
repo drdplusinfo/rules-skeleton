@@ -41,6 +41,19 @@ class HomeButtonConfigurationTest extends AbstractContentTest
         self::assertSame($showOnRoutes, $homeButtonConfiguration->isShownOnRoutes());
     }
 
+    /**
+     * @test
+     */
+    public function Home_button_is_shown_by_default()
+    {
+        $values = static::$homeButtonConfigurationValues;
+        unset($values[HomeButtonConfiguration::SHOW_ON_GATEWAY], $values[HomeButtonConfiguration::SHOW_ON_HOMEPAGE], $values[HomeButtonConfiguration::SHOW_ON_ROUTES]);
+        $homeButtonConfiguration = new HomeButtonConfiguration($values, ['foo']);
+        self::assertTrue($homeButtonConfiguration->isShownOnGateway());
+        self::assertTrue($homeButtonConfiguration->isShownOnHomePage());
+        self::assertTrue($homeButtonConfiguration->isShownOnRoutes());
+    }
+
     public function provideValuesToCheckIfHomeButtonIsShown(): array
     {
         return [
