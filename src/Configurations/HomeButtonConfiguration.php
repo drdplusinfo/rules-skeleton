@@ -13,8 +13,13 @@ class HomeButtonConfiguration extends AbstractShowOnConfiguration
         if ($this->isShown()) {
             $values = $this->ensureTarget($values, $pathToHomeButton);
             $values = $this->ensureImage($values, $pathToHomeButton);
-            $this->setValues($values);
+            $this->replaceValues($values);
         }
+    }
+
+    protected function replaceValues(array $valuesToReplace)
+    {
+        $this->values = array_merge($this->values, $valuesToReplace);
     }
 
     protected function ensureTarget(array $values, array $pathToMenu): array

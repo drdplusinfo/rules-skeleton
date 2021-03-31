@@ -150,7 +150,7 @@ class MenuConfiguration extends AbstractShowOnConfiguration
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
     public function getItems(): array
     {
