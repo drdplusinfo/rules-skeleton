@@ -100,18 +100,18 @@ class MenuConfigurationTest extends AbstractContentTest
      * @param bool $homeButtonIsShownOnGateway
      * @param bool $homeButtonIsShownOnHomepage
      * @param bool $homeButtonIsShownOnRoutes
-     * @param bool $isShownOnGateway
-     * @param bool $isShownOnHomepage
-     * @param bool $isShownOnRoutes
+     * @param bool $shouldBeShownOnGateway
+     * @param bool $shouldBeShownOnHomepage
+     * @param bool $shouldBeShownOnRoutes
      */
     public function I_can_easily_check_if_menu_is_shown_on_homepage_or_routes(
         array $items,
         bool $homeButtonIsShownOnGateway,
         bool $homeButtonIsShownOnHomepage,
         bool $homeButtonIsShownOnRoutes,
-        bool $isShownOnGateway,
-        bool $isShownOnHomepage,
-        bool $isShownOnRoutes
+        bool $shouldBeShownOnGateway,
+        bool $shouldBeShownOnHomepage,
+        bool $shouldBeShownOnRoutes
     )
     {
         $values = static::$validMenuConfiguration;
@@ -122,9 +122,9 @@ class MenuConfigurationTest extends AbstractContentTest
             HomeButtonConfiguration::SHOW_ON_ROUTES => $homeButtonIsShownOnRoutes,
         ];
         $menuConfiguration = new MenuConfiguration($values, ['foo', 'bar']);
-        self::assertSame($isShownOnGateway, $menuConfiguration->isShownOnGateway());
-        self::assertSame($isShownOnHomepage, $menuConfiguration->isShownOnHomepage());
-        self::assertSame($isShownOnRoutes, $menuConfiguration->isShownOnRoutes());
+        self::assertSame($shouldBeShownOnGateway, $menuConfiguration->isShownOnGateway());
+        self::assertSame($shouldBeShownOnHomepage, $menuConfiguration->isShownOnHomepage());
+        self::assertSame($shouldBeShownOnRoutes, $menuConfiguration->isShownOnRoutes());
     }
 
     public function provideValuesToCheckIfMenuIsShown(): array
@@ -135,45 +135,45 @@ class MenuConfigurationTest extends AbstractContentTest
                 true,                        // homeButtonIsShownOnGateway
                 true,                        // homeButtonIsShownOnHomepage
                 true,                        // homeButtonIsShownOnRoutes
-                true,                        // isShownOnGateway
-                true,                        // isShownOnHomepage
-                true,                        // isShownOnRoutes
+                true,                        // shouldBeShownOnGateway
+                true,                        // shouldBeShownOnHomepage
+                true,                        // shouldBeShownOnRoutes
             ],
             'only with items' => [
                 ['some key' => 'some item'], // items
                 false,                       // homeButtonIsShownOnGateway
                 false,                       // homeButtonIsShownOnHomepage
                 false,                       // homeButtonIsShownOnRoutes
-                true,                        // isShownOnGateway
-                true,                        // isShownOnHomepage
-                true,                        // isShownOnRoutes
+                true,                        // shouldBeShownOnGateway
+                true,                        // shouldBeShownOnHomepage
+                true,                        // shouldBeShownOnRoutes
             ],
             'only with home button on gateway' => [
                 [],                          // items
                 true,                        // homeButtonIsShownOnGateway
                 false,                       // homeButtonIsShownOnHomepage
                 false,                       // homeButtonIsShownOnRoutes
-                true,                        // isShownOnGateway
-                false,                       // isShownOnHomepage
-                false,                       // isShownOnRoutes
+                true,                        // shouldBeShownOnGateway
+                false,                       // shouldBeShownOnHomepage
+                false,                       // shouldBeShownOnRoutes
             ],
             'only with home button on homepage' => [
                 [],                          // items
                 false,                       // homeButtonIsShownOnGateway
                 true,                        // homeButtonIsShownOnHomepage
                 false,                       // homeButtonIsShownOnRoutes
-                false,                       // isShownOnGateway
-                true,                        // isShownOnHomepage
-                false,                       // isShownOnRoutes
+                false,                       // shouldBeShownOnGateway
+                true,                        // shouldBeShownOnHomepage
+                false,                       // shouldBeShownOnRoutes
             ],
             'only with home button on routes' => [
                 [],                          // items
                 false,                       // homeButtonIsShownOnGateway
                 false,                       // homeButtonIsShownOnHomepage
                 true,                        // homeButtonIsShownOnRoutes
-                false,                       // isShownOnGateway
-                false,                       // isShownOnHomepage
-                true,                        // isShownOnRoutes
+                false,                       // shouldBeShownOnGateway
+                false,                       // shouldBeShownOnHomepage
+                true,                        // shouldBeShownOnRoutes
             ],
         ];
     }
