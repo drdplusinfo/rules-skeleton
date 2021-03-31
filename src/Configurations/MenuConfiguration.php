@@ -35,13 +35,14 @@ class MenuConfiguration extends AbstractShowOnConfiguration
         $values = $this->upgradeHomeButtonTargetToNewWay($values);
 
         $this->guardHomeButtonConfigurationExists($values);
-        $pathToHomeButton = array_merge($this->pathToMenu, [self::HOME_BUTTON]);
-        return new HomeButtonConfiguration($values[self::HOME_BUTTON], $pathToHomeButton);
+        $pathToHomeButton = array_merge($this->pathToMenu, [static::HOME_BUTTON]);
+        return new HomeButtonConfiguration($values[static::HOME_BUTTON], $pathToHomeButton);
     }
 
     private function guardHomeButtonConfigurationExists(array $values)
     {
-        $this->guardConfigurationValueIsSet(self::HOME_BUTTON, $values, $this->pathToMenu);
+        $this->guardConfigurationValueIsSet(static::HOME_BUTTON, $values, $this->pathToMenu);
+        $this->guardConfigurationValueIsObject(static::HOME_BUTTON, $values, $this->pathToMenu);
     }
 
     private function ensureFixedMenuPosition(array $values): array

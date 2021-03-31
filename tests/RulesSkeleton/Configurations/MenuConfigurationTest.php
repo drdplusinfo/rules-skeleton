@@ -189,4 +189,17 @@ class MenuConfigurationTest extends AbstractContentTest
         self::assertFalse($menuConfiguration->isPositionFixed());
     }
 
+    /**
+     * @test
+     */
+    public function I_am_stopped_on_non_array_home_button_configuration()
+    {
+        $values = static::$validMenuConfiguration;
+        $values[MenuConfiguration::HOME_BUTTON] = true;
+
+        $this->expectException(InvalidConfiguration::class);
+        $this->expectExceptionMessageMatches('~got true~');
+        new MenuConfiguration($values, ['foo']);
+    }
+
 }
