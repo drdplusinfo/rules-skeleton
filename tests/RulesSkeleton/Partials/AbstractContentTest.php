@@ -40,20 +40,15 @@ abstract class AbstractContentTest extends TestWithMockery
 
     use ClassesTrait;
 
-    /** @var Bot */
-    private $bot;
-    private ?\Granam\Git\Git $git = null;
-    private ?\DrdPlus\RulesSkeleton\Configurations\Dirs $dirs = null;
-    /** @var Environment */
-    private $environment;
-    private ?\DrdPlus\RulesSkeleton\CookiesService $cookiesService = null;
-    private ?\DrdPlus\RulesSkeleton\Request $request = null;
-    private \Tests\DrdPlus\RulesSkeleton\TestsConfiguration $testsConfiguration;
+    private ?Bot $bot = null;
+    private ?Git $git = null;
+    private ?Dirs $dirs = null;
+    private ?Environment $environment = null;
+    private ?CookiesService $cookiesService = null;
+    private ?Request $request = null;
     protected bool $needPassIn = true;
     protected bool $needPassOut = false;
-    /** @var Configuration */
-    private $configuration;
-    private $frontendSkeletonChecked;
+    private ?Configuration $configuration = null;
 
     protected function setUp(): void
     {
@@ -78,6 +73,11 @@ abstract class AbstractContentTest extends TestWithMockery
         }
 
         return $testsConfiguration;
+    }
+
+    protected function toLocalLink(string $link): string
+    {
+        return $this->getHtmlHelper()->turnToLocalLink($link);
     }
 
     protected function goIn(): bool

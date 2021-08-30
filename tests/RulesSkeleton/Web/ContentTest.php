@@ -57,8 +57,8 @@ class ContentTest extends AbstractContentTest
     public function provideLinkToDrdPlus(): array
     {
         return [
-            ['https://pph.drdplus.info/foo#Příprava postavy', 'http://pph.drdplus.loc/foo#priprava_postavy'],
-            ['https://bojovnik.drdplus.info/#Nekonečné kopí', 'http://bojovnik.drdplus.loc/#nekonecne_kopi'],
+            ['https://pph.drdplus.info/foo#Příprava postavy', $this->toLocalLink('https://pph.drdplus.info') . '/foo#priprava_postavy'],
+            ['https://bojovnik.drdplus.info/#Nekonečné kopí', $this->toLocalLink('https://bojovnik.drdplus.info') . '/#nekonecne_kopi'],
         ];
     }
 
@@ -99,6 +99,6 @@ class ContentTest extends AbstractContentTest
             $this->createEmptyHead(),
             $this->createMainBody('<a href="https://blog.drdplus.info/#!index.md">To blog</a>')
         );
-        self::assertStringContainsString('http://blog.drdplus.loc/#!index.md', $rulesMainContent->getValue());
+        self::assertStringContainsString($this->toLocalLink('https://blog.drdplus.info') . '/#!index.md', $rulesMainContent->getValue());
     }
 }
