@@ -70,23 +70,27 @@ class RulesApplication extends StrictObject
 
     private function getContent(): RulesContent
     {
-        if ($this->content) {
-            return $this->content;
+        if (!$this->content) {
+            $this->content = $this->createContent();
         }
+
+        return $this->content;
+    }
+
+    protected function createContent(): RulesContent
+    {
         $servicesContainer = $this->servicesContainer;
         if ($servicesContainer->getTablesRequestDetector()->areTablesRequested()) {
             $rulesHtmlDocumentPostProcessor = $this->createRulesHtmlDocumentPostProcessor(
                 $servicesContainer->getPassedMenuBody(),
                 $servicesContainer->getTablesWebCache()
             );
-            $this->content = $this->createRulesContent(
+            return $this->createRulesContent(
                 $servicesContainer->getTablesContent(),
                 $servicesContainer->getTablesWebCache(),
                 RulesContent::TABLES,
                 $rulesHtmlDocumentPostProcessor
             );
-
-            return $this->content;
         }
         if ($servicesContainer->getRequest()->isRequestedPdf()
             && $servicesContainer->getRoutedWebPartsContainer()->getPdfBody()->getPdfFile()
@@ -95,41 +99,35 @@ class RulesApplication extends StrictObject
                 $servicesContainer->getEmptyMenuBody(),
                 $servicesContainer->getDummyWebCache()
             );
-            $this->content = $this->createRulesContent(
+            return $this->createRulesContent(
                 $servicesContainer->getPdfContent(),
                 $servicesContainer->getDummyWebCache(),
                 RulesContent::PDF,
                 $rulesHtmlDocumentPostProcessor
             );
-
-            return $this->content;
         }
         if (!$this->canPassIn()) {
             $rulesHtmlDocumentPostProcessor = $this->createRulesHtmlDocumentPostProcessor(
                 $servicesContainer->getGatewayMenuBody(),
                 $servicesContainer->getGatewayWebCache()
             );
-            $this->content = $this->createRulesContent(
+            return $this->createRulesContent(
                 $servicesContainer->getGatewayContent(),
                 $servicesContainer->getGatewayWebCache(),
                 RulesContent::GATEWAY,
                 $rulesHtmlDocumentPostProcessor
             );
-
-            return $this->content;
         }
         $rulesHtmlDocumentPostProcessor = $this->createRulesHtmlDocumentPostProcessor(
             $servicesContainer->getPassedMenuBody(),
             $servicesContainer->getPassedWebCache()
         );
-        $this->content = $this->createRulesContent(
+        return $this->createRulesContent(
             $servicesContainer->getRulesMainContent(),
             $servicesContainer->getPassedWebCache(),
             RulesContent::FULL,
             $rulesHtmlDocumentPostProcessor
         );
-
-        return $this->content;
     }
 
     private function createRulesHtmlDocumentPostProcessor(MenuBodyInterface $menuBody, CacheIdProvider $cacheIdProvider): RulesHtmlDocumentPostProcessor
