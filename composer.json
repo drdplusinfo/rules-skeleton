@@ -33,10 +33,11 @@
     "ext-yaml": "*",
     "ext-zlib": "*",
     "composer-plugin-api": "^1.1|^2.0",
-    "granam/web-versions": "^1.1",
     "erusev/parsedown": "^1.7",
     "granam/git": "^2.0",
+    "granam/strict-object": "^3.1",
     "granam/web-content-builder": "^2.3",
+    "granam/web-versions": "^1.1",
     "granam/yaml-reader": "^1.0",
     "phpmailer/phpmailer": "^6.0",
     "symfony/config": "^5.2",
@@ -51,7 +52,7 @@
     "granam/test-with-mockery": "^2.0",
     "mockery/mockery": "^1.2",
     "phpunit/phpunit": "^9.3",
-    "rector/rector": "^0.10.3",
+    "rector/rector": "^0.11",
     "roave/security-advisories": "dev-latest"
   },
   "config": {
