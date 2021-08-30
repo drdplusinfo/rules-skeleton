@@ -45,7 +45,6 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     public const DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT = 'default_public_to_local_url_part_replacement';
     public const MENU = 'menu';
     public const GATEWAY = 'gateway';
-    public const PREFETCH = 'prefetch';
     // google
     public const GOOGLE = 'google';
     public const ANALYTICS_ID = 'analytics_id';
@@ -54,14 +53,10 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     public const YAML_FILE_WITH_ROUTES = 'yaml_file_with_routes';
     public const DEFAULT_YAML_FILE_WITH_ROUTES = 'default_yaml_file_with_routes';
 
-    private \DrdPlus\RulesSkeleton\Configurations\Dirs $dirs;
-    private \DrdPlus\RulesSkeleton\Configurations\MenuConfiguration $menuConfiguration;
-    private \DrdPlus\RulesSkeleton\Configurations\GatewayConfiguration $gatewayConfiguration;
+    private Dirs $dirs;
+    private MenuConfiguration $menuConfiguration;
+    private GatewayConfiguration $gatewayConfiguration;
 
-    /**
-     * @param Dirs $dirs
-     * @param array $values
-     */
     public function __construct(Dirs $dirs, array $values)
     {
         $this->dirs = $dirs;
