@@ -27,12 +27,11 @@ use DrdPlus\RulesSkeleton\Web\Tables\TablesContent;
 use DrdPlus\RulesSkeleton\Web\Tools\WebFiles;
 use DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer;
 use DrdPlus\RulesSkeleton\Web\Tools\WebRootProvider;
-use Granam\WebVersions\WebVersions;;
+use Granam\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringTools;
 use Granam\WebContentBuilder\Web\CssFiles;
-use Granam\WebContentBuilder\Web\HtmlContentInterface;
 use Granam\WebContentBuilder\Web\JsFiles;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
@@ -42,13 +41,15 @@ use Symfony\Component\Routing\RequestContext;
 class ServicesContainer extends StrictObject
 {
 
+    private \DrdPlus\RulesSkeleton\Configurations\Configuration $configuration;
+    private \DrdPlus\RulesSkeleton\Environment $environment;
+    private \DrdPlus\RulesSkeleton\HtmlHelper $htmlHelper;
+
     private ?\DrdPlus\RulesSkeleton\CurrentWebVersion $currentWebVersion = null;
     private ?\Granam\WebVersions\WebVersions $webVersions = null;
     private ?\Granam\Git\Git $git = null;
-    private \DrdPlus\RulesSkeleton\Configurations\Configuration $configuration;
     private ?\DrdPlus\RulesSkeleton\HomepageDetector $homepageDetector = null;
     private ?\DrdPlus\RulesSkeleton\Ticket $ticket = null;
-    private \DrdPlus\RulesSkeleton\HtmlHelper $htmlHelper;
     private ?\DrdPlus\RulesSkeleton\Web\Head $head = null;
     private ?\DrdPlus\RulesSkeleton\Web\Menu\MenuBody $gatewayMenuBody = null;
     private ?\DrdPlus\RulesSkeleton\Web\Menu\MenuBody $passedMenuBody = null;
@@ -62,7 +63,6 @@ class ServicesContainer extends StrictObject
     private ?\DrdPlus\RulesSkeleton\Web\Tools\WebRootProvider $rootWebRootProvider = null;
     private ?\DrdPlus\RulesSkeleton\RouteMatchingPathProvider $pathProvider = null;
     private ?\DrdPlus\RulesSkeleton\Request $request = null;
-    private \DrdPlus\RulesSkeleton\Environment $environment;
     private ?\DrdPlus\RulesSkeleton\Cache\ContentIrrelevantRequestAliases $contentIrrelevantRequestAliases = null;
     private ?\DrdPlus\RulesSkeleton\Cache\ContentIrrelevantParametersFilter $contentIrrelevantParametersFilter = null;
     private ?\DeviceDetector\Parser\Bot $botParser = null;
@@ -98,6 +98,16 @@ class ServicesContainer extends StrictObject
     public function getConfiguration(): Configuration
     {
         return $this->configuration;
+    }
+
+    public function getEnvironment(): Environment
+    {
+        return $this->environment;
+    }
+
+    public function getHtmlHelper(): HtmlHelper
+    {
+        return $this->htmlHelper;
     }
 
     public function getHomepageDetector(): HomepageDetector
@@ -145,11 +155,6 @@ class ServicesContainer extends StrictObject
             $this->request = Request::createFromGlobals($this->getBotParser(), $this->getEnvironment());
         }
         return $this->request;
-    }
-
-    public function getEnvironment(): Environment
-    {
-        return $this->environment;
     }
 
     public function getGit(): Git
@@ -256,11 +261,6 @@ class ServicesContainer extends StrictObject
             );
         }
         return $this->notFoundContent;
-    }
-
-    public function getHtmlHelper(): HtmlHelper
-    {
-        return $this->htmlHelper;
     }
 
     public function getGatewayMenuBody(): MenuBody
