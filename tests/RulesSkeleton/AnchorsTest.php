@@ -99,7 +99,18 @@ class AnchorsTest extends AbstractContentTest
      */
     public function I_can_reach_every_local_link()
     {
-        $localLinks = $this->getLocalLinks();
+        $this->goIn();
+        foreach ($this->getLocalLinks() as $localLink) {
+            $url = $this->getTestsConfiguration()->getLocalUrl();
+            $url = rtrim($url, '/') . '/' . ltrim($localLink, '/');
+            $responseHttpCode = $this->fetchContentFromUrl($url, false)['responseHttpCode'];
+            $this->assertSame(
+                200,
+                $responseHttpCode,
+                "Can not fetch content from local URL $localLink"
+            );
+        }
+        $this->goOut();
     }
 
     /**
@@ -121,19 +132,24 @@ class AnchorsTest extends AbstractContentTest
         }
         $externalLinks = [];
         $localLinks = [];
+        $others = [];
         /** @var Element $anchor */
         foreach ($this->getHtmlDocument()->getElementsByTagName('a') as $anchor) {
             $link = (string)$anchor->getAttribute('href');
             $urlParts = parse_url($link);
             if (!empty($urlParts['host'])) {
                 $externalLinks[] = $link;
-            } else {
+            } elseif (empty($urlParts['scheme'])) {
                 $localLinks[] = $link;
+            } else {
+                $others[] = $link;
             }
         }
-        $links = ['local' => array_unique($localLinks), 'external' => array_unique($externalLinks)];
-
-        return $links;
+        return [
+            'local' => array_unique($localLinks),
+            'external' => array_unique($externalLinks),
+            'others' => array_unique($others),
+        ];
     }
 
     private static array $checkedExternalAnchors = [];
