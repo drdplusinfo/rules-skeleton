@@ -198,21 +198,31 @@ class TablesTest extends AbstractContentTest
             );
         } else {
             $tablesRoute = $this->getTestsConfiguration()->getLocalUrl() . '/tables?foo=bar&' . Request::TRIAL . '=1';
+
             $this->goIn();
             $response = $this->fetchContentFromUrl($tablesRoute, false);
             $this->goOut();
-            $response['content'] = strlen($response['content']) > 123
-                ? (substr($response['content'], 0, 120) . '...')
-                : $response['content'];
+
             self::assertContains(
                 $response['responseHttpCode'],
                 [200, 201, 202, 203],
                 sprintf(
                     'Seems tables with query has broken routing, try URL %s (%s)',
                     $tablesRoute,
-                    json_encode($response, JSON_PRETTY_PRINT)
+                    json_encode($this->shortenContentInResponse($response), JSON_PRETTY_PRINT)
                 )
             );
         }
+    }
+
+    private function shortenContentInResponse(array $response): array
+    {
+        if (!$response['content']) {
+            return $response;
+        }
+        $response['content'] = mb_strlen($response['content']) > 123
+            ? (mb_substr($response['content'], 0, 120) . '...')
+            : $response['content'];
+        return $response;
     }
 }
