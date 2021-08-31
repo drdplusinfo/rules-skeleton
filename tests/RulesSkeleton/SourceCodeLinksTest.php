@@ -18,20 +18,19 @@ class SourceCodeLinksTest extends AbstractContentTest
             return;
         }
         foreach ($sourceUrls as $sourceUrl) {
-            $localFile = $this->toLocalPath($sourceUrl);
-            $toLocalFile = '';
-            foreach (\explode('/', $localFile) as $filePart) {
-                if ($filePart === '') {
-                    continue;
-                }
-                if (!\file_exists($toLocalFile . '/' . $filePart)) {
-                    self::fail(
-                        "Dir or file '$filePart' does not exists in dir '$toLocalFile' (was looking for $localFile linked by $sourceUrl)"
-                    );
-                }
-                $toLocalFile .= '/' . $filePart;
-            }
-            self::assertFileExists($localFile, \preg_replace('~^.+\.\./~', '', $localFile));
+            $rawSourceCodeUrl = $this->toRawSourceCodeUrl($sourceUrl);
+            $response = $this->fetchContentFromUrl($rawSourceCodeUrl, true);
+            $responseHttpCode = $response['responseHttpCode'];
+            self::assertTrue(
+                $responseHttpCode >= 200 && $responseHttpCode < 300,
+                "Ugly Response code from $rawSourceCodeUrl"
+            );
+            self::assertNotEmpty($response, 'Nothing has been fetched from ' . $rawSourceCodeUrl);
+            self::assertMatchesRegularExpression(
+                '~^<[?]php\s~',
+                $response['content'] ?? '',
+                'Expected valid PHP file as a source code'
+            );
         }
     }
 
@@ -60,25 +59,15 @@ class SourceCodeLinksTest extends AbstractContentTest
     }
 
     /**
-     * @param string $link like https://github.com/jaroslavtyc/drdplus-professions/blob/master/DrdPlus/Professions/Priest.php
-     * @return string
+     * @param string $link for example https://github.com/jaroslavtyc/drdplus-professions/blob/master/DrdPlus/Professions/Priest.php
+     * @return string for example https://raw.githubusercontent.com/jaroslavtyc/drdplus-professions/blob/master/DrdPlus/Professions/Priest.php
      */
-    private function toLocalPath(string $link): string
+    private function toRawSourceCodeUrl(string $link): string
     {
-        $withoutWebRoot = \preg_replace('~https://github[.]com/~', '', $link);
-        $withoutGithubSpecifics = \preg_replace('~(?<type>blob|tree)/master/~', '', $withoutWebRoot);
-        $withLocalSubDirs = \preg_replace('~^granam/~', '/granam/', $withoutGithubSpecifics);
-        $withLocalSubDirs = \preg_replace('~^drdplusinfo/~', '/drdplus.info/', $withLocalSubDirs);
-        $localProjectsRootDir = DRD_PLUS_PROJECT_ROOT . '/../..';
-        $localPath = $localProjectsRootDir . '/' . \ltrim($withLocalSubDirs, '/');
-        if (\file_exists($localPath) && \preg_match('~(?<type>blob|tree)/master/~', $withoutWebRoot, $matches)) {
-            if (\is_file($localPath)) {
-                self::assertSame('blob', $matches['type'], "File $localPath should be linked as blob, not " . $matches['type']);
-            } elseif (\is_dir($localPath)) {
-                self::assertSame('tree', $matches['type'], "Dir $localPath should be linked as tree, not " . $matches['type']);
-            }
-        }
-
-        return $localPath;
+        return \preg_replace(
+            '~https://github[.]com/((.(?!blob/))+/)(blob/)?~',
+            'https://raw.githubusercontent.com/$1',
+            $link
+        );
     }
 }
