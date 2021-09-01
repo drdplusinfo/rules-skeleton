@@ -4,9 +4,11 @@ namespace Tests\DrdPlus\RulesSkeleton\Partials;
 
 interface TestsConfigurationReader
 {
-    public function getLocalUrl(): string;
+    public function canHaveTables(): bool;
 
     public function hasTables(): bool;
+
+    public function getLocalUrl(): string;
 
     public function hasTablesRelatedContent(): bool;
 

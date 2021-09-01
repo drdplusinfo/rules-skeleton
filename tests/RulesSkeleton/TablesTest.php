@@ -20,6 +20,11 @@ class TablesTest extends AbstractContentTest
     public function I_can_get_tables_only(array $get, string $url): void
     {
         $this->goOut(); // tables should be accessible for free
+
+        if (!$this->getTestsConfiguration()->canHaveTables()) {
+            $this->testNotFoundResponseOnTablesRoute($url, $get);
+            return;
+        }
         $htmlDocumentWithTablesOnly = $this->getHtmlDocument($get, [], [], $url);
         /** @var NodeList|Element[] $tables */
         $tables = $htmlDocumentWithTablesOnly->getElementsByTagName('table');
@@ -36,6 +41,21 @@ class TablesTest extends AbstractContentTest
         self::assertEmpty($missingIds, 'Some tables with IDs are missing: ' . \implode(',', $missingIds));
         $this->There_is_no_other_content_than_tables($htmlDocumentWithTablesOnly);
         $this->Expected_table_ids_are_present($fetchedTableIds);
+    }
+
+    protected function testNotFoundResponseOnTablesRoute(string $url, array $get)
+    {
+        $urlWithQuery = $url . '?' . http_build_query($get);
+        $responseHttpCode = $this->fetchContentFromUrl($urlWithQuery, false)['responseHttpCode'];
+        self::assertSame(
+            404,
+            $responseHttpCode,
+            sprintf(
+                "Expected Not found response from URL %s due to tests directive '%s'",
+                $urlWithQuery,
+                TestsConfiguration::CAN_HAVE_TABLES
+            )
+        );
     }
 
     public function provideParametersToGetTablesOnly(): array

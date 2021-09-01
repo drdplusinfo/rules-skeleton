@@ -2,6 +2,7 @@
 
 namespace Tests\DrdPlus\RulesSkeleton;
 
+use Tests\DrdPlus\RulesSkeleton\Exceptions\AllowedCalculationPrefixShouldStartByUpperLetter;
 use Tests\DrdPlus\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
 
@@ -154,12 +155,23 @@ class TestsConfigurationTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_disable_test_of_tables(): void
+    public function I_can_configure_tests_to_no_tables_support(): void
+    {
+        $testsConfiguration = $this->createTestsConfiguration();
+        self::assertTrue($testsConfiguration->canHaveTables(), 'Tables support should be expected by default');
+        $testsConfiguration = $this->createTestsConfiguration([TestsConfiguration::CAN_HAVE_TABLES => false]);
+        self::assertFalse($testsConfiguration->hasTables(), 'Tables support should be disabled now');
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_configure_tests_to_zero_tables_expected(): void
     {
         $testsConfiguration = $this->createTestsConfiguration();
         self::assertTrue($testsConfiguration->hasTables(), 'Tables should be expected to test by default');
         $testsConfiguration = $this->createTestsConfiguration([TestsConfiguration::HAS_TABLES => false]);
-        self::assertFalse($testsConfiguration->hasTables(), 'Test of tables should be disabled now');
+        self::assertFalse($testsConfiguration->hasTables(), 'No tables should be expected now');
     }
 
     /**
@@ -205,7 +217,7 @@ class TestsConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_add_allowed_calculation_id_prefix_with_lowercase_first_letter(): void
     {
-        $this->expectException(\Tests\DrdPlus\RulesSkeleton\Exceptions\AllowedCalculationPrefixShouldStartByUpperLetter::class);
+        $this->expectException(AllowedCalculationPrefixShouldStartByUpperLetter::class);
         $this->expectExceptionMessageMatches('~říčany u čeho chceš~');
         $this->createTestsConfiguration(
             [TestsConfiguration::ALLOWED_CALCULATION_ID_PREFIXES => ['říčany u čeho chceš']]
@@ -217,7 +229,7 @@ class TestsConfigurationTest extends AbstractContentTest
      */
     public function I_can_not_set_allowed_calculation_id_prefixes_with_even_single_one_with_lowercase_first_letter(): void
     {
-        $this->expectException(\Tests\DrdPlus\RulesSkeleton\Exceptions\AllowedCalculationPrefixShouldStartByUpperLetter::class);
+        $this->expectException(AllowedCalculationPrefixShouldStartByUpperLetter::class);
         $this->expectExceptionMessageMatches('~žbrdloch~');
         $this->createTestsConfiguration(
             [TestsConfiguration::ALLOWED_CALCULATION_ID_PREFIXES => [
