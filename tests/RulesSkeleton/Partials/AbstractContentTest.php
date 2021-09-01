@@ -19,6 +19,7 @@ use DrdPlus\RulesSkeleton\RulesApplication;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\RulesSkeleton\Web\Main\MainBody;
+use Symfony\Component\Process\Process;
 use Tests\DrdPlus\RulesSkeleton\Exceptions\GlobalsAreNotBackedUp;
 use Tests\DrdPlus\RulesSkeleton\TestsConfiguration;
 use Granam\WebVersions\WebVersions;
@@ -40,6 +41,8 @@ abstract class AbstractContentTest extends TestWithMockery
 
     use ClassesTrait;
 
+    protected static ?Process $localServerProcess = null;
+
     private ?Bot $bot = null;
     private ?Git $git = null;
     private ?Dirs $dirs = null;
@@ -58,6 +61,26 @@ abstract class AbstractContentTest extends TestWithMockery
         if ($this->getTestsConfiguration()->hasProtectedAccess()) {
             $this->goIn();
         }
+        $this->startLocalWebServer($this->getTestsConfiguration()->getLocalTestingAddress());
+    }
+
+    protected function startLocalWebServer(string $localAddress)
+    {
+        if (!static::$localServerProcess || !static::$localServerProcess->isRunning()) {
+            static::$localServerProcess = new Process(['php', '-S', $localAddress]);
+            static::$localServerProcess->start();
+        }
+        if (!static::$localServerProcess->isRunning()) {
+            self::markTestSkipped(
+                sprintf(
+                    "Local web server via `php -S %s` is not running. Exit code %d (%s), message '%s'",
+                    $localAddress,
+                    static::$localServerProcess->getExitCode(),
+                    static::$localServerProcess->getExitCodeText(),
+                    static::$localServerProcess->getErrorOutput()
+                )
+            );
+        }
     }
 
     protected function getTestsConfiguration(string $class = null): TestsConfiguration
@@ -66,10 +89,7 @@ abstract class AbstractContentTest extends TestWithMockery
         if ($testsConfiguration === null) {
             /** @var TestsConfiguration|string $class */
             $class ??= TestsConfiguration::class;
-            $testsConfiguration = $class::createFromYaml(
-                DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml',
-                $this->getHtmlHelper()
-            );
+            $testsConfiguration = $class::createFromYaml(DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml');
         }
 
         return $testsConfiguration;
