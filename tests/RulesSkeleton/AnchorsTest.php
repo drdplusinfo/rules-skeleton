@@ -165,7 +165,7 @@ class AnchorsTest extends AbstractContentTest
             if (\in_array($link, self::$checkedExternalAnchors, true)) {
                 continue;
             }
-            $weAreOffline = $this->isLinkAccessible($originalLink, $link);
+            $weAreOffline = !$this->isLinkAccessible($link);
             if ($weAreOffline) {
                 $skippedExternalUrls[] = $link;
             } else {
@@ -207,16 +207,13 @@ class AnchorsTest extends AbstractContentTest
         return \strpos($link, 'drdplus.loc') !== false || \strpos($link, 'drdplus.info') !== false;
     }
 
-    private function isLinkAccessible(string $originalLink, string $localizedLink): bool
+    protected function isLinkAccessible(string $link): bool
     {
-        if ($originalLink !== $localizedLink) {
-            return false; // nothing changed so it is not an drdplus.info link and is still external
-        }
-        $host = \parse_url($localizedLink, \PHP_URL_HOST);
+        $hostname = \parse_url($link, \PHP_URL_HOST);
 
-        return $host !== false
-            && !\filter_var($host, \FILTER_VALIDATE_IP)
-            && \gethostbyname($host) === $host; // instead of IP address we got again the site name
+        return $hostname !== false
+            // already an IP, or DNS name translatable to an IP (if can not be translated, then gethostbyname returns given hostname back)
+            && (\filter_var($hostname, \FILTER_VALIDATE_IP) || \gethostbyname($hostname) !== $hostname);
     }
 
     private function getFromCache(string $cacheFileBaseName): string
@@ -279,7 +276,7 @@ class AnchorsTest extends AbstractContentTest
         $skippedExternalUrls = [];
         foreach ($externalAnchorsWithHash as $originalLink) {
             $link = $this->getHtmlHelper()->turnToLocalLink($originalLink);
-            if ($this->isLinkAccessible($originalLink, $link)) {
+            if (!$this->isLinkAccessible($link)) {
                 $skippedExternalUrls[] = $link;
                 continue;
             }

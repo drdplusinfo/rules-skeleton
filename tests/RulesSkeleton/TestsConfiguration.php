@@ -15,6 +15,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const LICENCE_MIT = 'MIT';
     public const LICENCE_PROPRIETARY = 'proprietary';
 
+    public const CAN_HAVE_TABLES = 'can_have_tables';
     public const HAS_TABLES = 'has_tables';
     public const HAS_TABLE_OF_CONTENTS = 'has_table_of_contents';
     public const HAS_TABLES_RELATED_CONTENT = 'has_tables_related_content';
@@ -73,6 +74,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         return new static((new YamlFileReader($yamlConfigFile))->getValues(), $htmlHelper);
     }
 
+    private bool $canHaveTables = true;
     private bool $hasTables = true;
     private bool $hasTablesRelatedContent = true;
     private array $someExpectedTableIds = [];
@@ -129,7 +131,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
      */
     public function __construct(array $values, HtmlHelper $htmlHelper)
     {
-        $this->setHasTables($values);
+        $this->setCanHaveTables($values);
+        $this->setHasTables($values, $this->canHaveTables());
         $this->setHasTablesRelatedContent($values, $this->hasTables());
         $this->setSomeExpectedTableIds($values, $this->hasTables());
         $this->setHasTableOfContents($values);
@@ -176,8 +179,17 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setExpectedHomeButtonTargetFromRoutes($values);
     }
 
-    private function setHasTables(array $values): void
+    private function setCanHaveTables(array $values): void
     {
+        $this->canHaveTables = (bool)($values[self::CAN_HAVE_TABLES] ?? $this->canHaveTables);
+    }
+
+    private function setHasTables(array $values, bool $canHaveTables): void
+    {
+        if (!$canHaveTables) {
+            $this->hasTables = false;
+            return;
+        }
         $this->hasTables = (bool)($values[self::HAS_TABLES] ?? $this->hasTables);
     }
 
@@ -188,6 +200,11 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
             return;
         }
         $this->hasTablesRelatedContent = (bool)($values[self::HAS_TABLES_RELATED_CONTENT] ?? $this->hasTablesRelatedContent);
+    }
+
+    public function canHaveTables(): bool
+    {
+        return $this->canHaveTables;
     }
 
     public function hasTables(): bool
