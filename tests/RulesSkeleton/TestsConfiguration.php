@@ -54,6 +54,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const HAS_VENDOR_DIR_VERSIONED = 'has_vendor_dir_versioned';
 
     public const SOME_EXPECTED_TABLE_IDS = 'some_expected_table_ids';
+    public const LOCAL_TESTING_ADDRESS = 'local_testing_address';
     public const EXPECTED_PUBLIC_URL = 'expected_public_url';
     public const EXPECTED_WEB_NAME = 'expected_web_name';
     public const ALLOWED_CALCULATION_ID_PREFIXES = 'allowed_calculation_id_prefixes';
@@ -69,9 +70,9 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const HAS_HOME_BUTTON_ON_ROUTES = 'has_home_button_on_routes';
     public const EXPECTED_HOME_BUTTON_TARGET = 'expected_home_button_target';
 
-    public static function createFromYaml(string $yamlConfigFile, HtmlHelper $htmlHelper): TestsConfiguration
+    public static function createFromYaml(string $yamlConfigFile): TestsConfiguration
     {
-        return new static((new YamlFileReader($yamlConfigFile))->getValues(), $htmlHelper);
+        return new static((new YamlFileReader($yamlConfigFile))->getValues());
     }
 
     private bool $canHaveTables = true;
@@ -81,7 +82,6 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private bool $hasTableOfContents = true;
     private bool $hasHeadings = true;
     private bool $hasAuthors = true;
-    private ?string $localUrl = null;
     private bool $hasExternalAnchorsWithHashes = true;
     private bool $hasCustomBodyContent = true;
     private bool $hasNotes = true;
@@ -104,6 +104,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private string $expectedGoogleAnalyticsId = 'UA-121206931-1';
     private array $allowedCalculationIdPrefixes = ['Hod proti', 'Hod na', 'Výpočet'];
     private ?string $expectedPublicUrl = null;
+    private ?string $localTestingAddress = null;
+    private ?string $localUrl = null;
     private bool $hasProtectedAccess = true;
     private bool $hasPdf = true;
     private bool $canBeBoughtOnEshop = true;
@@ -124,12 +126,11 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
 
     /**
      * @param array $values
-     * @param HtmlHelper $htmlHelper
      * @throws \Tests\DrdPlus\RulesSkeleton\Exceptions\InvalidLocalUrl
      * @throws \Tests\DrdPlus\RulesSkeleton\Exceptions\InvalidPublicUrl
      * @throws \Tests\DrdPlus\RulesSkeleton\Exceptions\PublicUrlShouldUseHttps
      */
-    public function __construct(array $values, HtmlHelper $htmlHelper)
+    public function __construct(array $values)
     {
         $this->setCanHaveTables($values);
         $this->setHasTables($values, $this->canHaveTables());
@@ -138,8 +139,9 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setHasTableOfContents($values);
         $this->setHasHeadings($values);
         $this->setHasAuthors($values);
-        $this->setPublicUrl($values);
-        $this->setLocalUrl($this->getExpectedPublicUrl(), $htmlHelper);
+        $this->setExpectedPublicUrl($values);
+        $this->setLocalTestingAddress($values);
+        $this->setLocalUrl($this->getLocalTestingAddress());
         $this->setHasExternalAnchorsWithHashes($values);
         $this->setHasCustomBodyContent($values);
         $this->setHasNotes($values);
@@ -293,22 +295,26 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         return $this->hasAuthors;
     }
 
-    private function setPublicUrl(array $values)
+    private function setExpectedPublicUrl(array $values)
     {
-        $publicUrl = \trim($values[self::EXPECTED_PUBLIC_URL] ?? '');
+        $expectedPublicUrl = trim($values[self::EXPECTED_PUBLIC_URL] ?? '');
         try {
-            $this->guardValidUrl($publicUrl);
+            $this->guardValidUrl($expectedPublicUrl);
         } catch (InvalidUrl $invalidUrl) {
             throw new Exceptions\InvalidPublicUrl(
-                sprintf("Given public URL under key '%s' is not valid: '%s'", self::EXPECTED_PUBLIC_URL, $publicUrl),
+                sprintf(
+                    "Given expected public URL under key '%s' is not valid: '%s'",
+                    self::EXPECTED_PUBLIC_URL,
+                    $expectedPublicUrl
+                ),
                 $invalidUrl->getCode(),
                 $invalidUrl
             );
         }
-        if (\strpos($publicUrl, 'https://') !== 0) {
-            throw new Exceptions\PublicUrlShouldUseHttps("Given public URL should use HTTPS: '$publicUrl'");
+        if (!str_starts_with($expectedPublicUrl, 'https://')) {
+            throw new Exceptions\PublicUrlShouldUseHttps("Given public URL should use HTTPS: '$expectedPublicUrl'");
         }
-        $this->expectedPublicUrl = $publicUrl;
+        $this->expectedPublicUrl = $expectedPublicUrl;
     }
 
     /**
@@ -317,40 +323,27 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
      */
     private function guardValidUrl(string $url): void
     {
-        if (!\filter_var($url, \FILTER_VALIDATE_URL)) {
+        if (!\filter_var($url, \FILTER_VALIDATE_URL, \FILTER_FLAG_HOSTNAME)) {
             throw new Exceptions\InvalidUrl("Given URL is not valid: '$url'");
         }
     }
 
-    private function setLocalUrl(string $publicUrl, HtmlHelper $htmlHelper)
+    private function setLocalUrl(string $localTestingUrl)
     {
-        $localUrl = $htmlHelper->turnToLocalLink($publicUrl);
-        if (!$this->isLocalLinkAccessible($localUrl)) {
-            throw new Exceptions\InvalidLocalUrl(
-                sprintf(
-                    <<<TEXT
-Given local URL can not be reached or is not local: '$localUrl'.
-You can change public-to-local-URL conversion via configuration %s.%s and %s.%s
-TEXT
-                    ,
-                    Configuration::WEB,
-                    Configuration::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REGEXP,
-                    Configuration::WEB,
-                    Configuration::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT
-                )
-            );
-        }
+        $localUrl = "http://$localTestingUrl";
         $this->guardValidUrl($localUrl);
         $this->localUrl = $localUrl;
     }
 
-    private function isLocalLinkAccessible(string $localUrl): bool
+    private function setLocalTestingAddress(array $values)
     {
-        $host = \parse_url($localUrl, \PHP_URL_HOST);
-
-        return $host !== false
-            && !\filter_var($host, \FILTER_VALIDATE_IP)
-            && \gethostbyname($host) === '127.0.0.1';
+        $localTestingAddress = trim($values[self::LOCAL_TESTING_ADDRESS] ?? 'localhost:9999');
+        if (!$localTestingAddress || preg_match('~^[a-z]*://~', $localTestingAddress)) {
+            throw new Exceptions\InvalidLocalUrl(
+                "Given local testing address should not use a protocol as `php -S {address}` refuses that: '$localTestingAddress'"
+            );
+        }
+        $this->localTestingAddress = $localTestingAddress;
     }
 
     private function setHasExternalAnchorsWithHashes(array $values)
@@ -435,7 +428,7 @@ TEXT
 
     private function setExpectedWebName(array $values)
     {
-        $expectedWebName = \trim($values[self::EXPECTED_WEB_NAME] ?? '');
+        $expectedWebName = trim($values[self::EXPECTED_WEB_NAME] ?? '');
         if ($expectedWebName === '') {
             throw new Exceptions\MissingExpectedWebName('Expected some web name under key ' . self::EXPECTED_WEB_NAME);
         }
@@ -460,7 +453,7 @@ TEXT
 
     private function setExpectedPageTitle(array $values)
     {
-        $expectedPageTitle = \trim($values[self::EXPECTED_PAGE_TITLE] ?? '');
+        $expectedPageTitle = trim($values[self::EXPECTED_PAGE_TITLE] ?? '');
         if ($expectedPageTitle === '') {
             throw new Exceptions\MissingExpectedPageTitle('Expected some page title under key ' . self::EXPECTED_PAGE_TITLE);
         }
@@ -469,7 +462,7 @@ TEXT
 
     private function setExpectedGoogleAnalyticsId(array $values)
     {
-        $expectedGoogleAnalyticsId = \trim($values[self::EXPECTED_GOOGLE_ANALYTICS_ID] ?? '');
+        $expectedGoogleAnalyticsId = trim($values[self::EXPECTED_GOOGLE_ANALYTICS_ID] ?? '');
         if ($expectedGoogleAnalyticsId === '') {
             throw new Exceptions\MissingExpectedGoogleAnalyticsId('Expected some Google analytics ID under key ' . self::EXPECTED_GOOGLE_ANALYTICS_ID);
         }
@@ -600,6 +593,11 @@ TEXT
     public function getExpectedPublicUrl(): string
     {
         return $this->expectedPublicUrl;
+    }
+
+    public function getLocalTestingAddress(): string
+    {
+        return $this->localTestingAddress;
     }
 
     public function getLocalUrl(): string

@@ -8,6 +8,8 @@ interface TestsConfigurationReader
 
     public function hasTables(): bool;
 
+    public function getLocalTestingAddress(): string;
+
     public function getLocalUrl(): string;
 
     public function hasTablesRelatedContent(): bool;

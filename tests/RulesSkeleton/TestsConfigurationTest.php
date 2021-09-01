@@ -261,7 +261,10 @@ class TestsConfigurationTest extends AbstractContentTest
      */
     public function I_can_set_and_get_local_and_public_url(): void
     {
-        $testsConfiguration = $this->createTestsConfiguration([TestsConfiguration::EXPECTED_PUBLIC_URL => 'https://drdplus.info']);
+        $testsConfiguration = $this->createTestsConfiguration([
+            TestsConfiguration::EXPECTED_PUBLIC_URL => 'https://drdplus.info',
+            TestsConfiguration::LOCAL_TESTING_ADDRESS => 'drdplus.loc',
+        ]);
         self::assertSame('http://drdplus.loc', $testsConfiguration->getLocalUrl());
         self::assertSame('https://drdplus.info', $testsConfiguration->getExpectedPublicUrl());
     }
