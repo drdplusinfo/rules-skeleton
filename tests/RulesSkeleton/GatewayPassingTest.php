@@ -80,6 +80,14 @@ class GatewayPassingTest extends AbstractContentTest
      */
     public function I_can_confirm_ownership(): void
     {
+        if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
+            self::assertFalse(
+                false,
+                'Nothing to confirm as page has free access'
+            );
+
+            return;
+        }
         $html = new HTMLDocument($this->getContent()); // includes confirmation via cookie
         $forms = $html->getElementsByTagName('form');
         self::assertCount(0, $forms, 'No forms expected in confirmed content');

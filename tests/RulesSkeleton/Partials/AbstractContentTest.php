@@ -166,7 +166,6 @@ abstract class AbstractContentTest extends TestWithMockery
                 $this->goOut();
             }
             \ob_start();
-            /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
             $contents[$key] = \ob_get_clean();
             $_POST = $originalPost;
