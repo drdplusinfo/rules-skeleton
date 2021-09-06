@@ -1,14 +1,18 @@
 <?php
+
+namespace DrdPlus\RulesSkeleton;
+
 $documentRoot = include __DIR__ . '/_bootstrap.php';
 
-$environment = $environment ?? \DrdPlus\RulesSkeleton\Environment::createFromGlobals();
+$environment = $environment ?? Environment::createFromGlobals();
 if (PHP_SAPI !== 'cli') {
-    \DrdPlus\RulesSkeleton\TracyDebugger::enable($environment->isInProduction());
+    TracyDebugger::enable($environment->isInProduction());
 }
-$dirs = $dirs ?? new \DrdPlus\RulesSkeleton\Configurations\Dirs($documentRoot);
-$configuration = $configuration ?? \DrdPlus\RulesSkeleton\Configurations\Configuration::createFromYml($dirs);
+$dirs = $dirs ?? new Configurations\Dirs($documentRoot);
 $htmlHelper = $htmlHelper
-    ?? \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($dirs, $environment, $configuration);
-$servicesContainer = $servicesContainer ?? new \DrdPlus\RulesSkeleton\ServicesContainer($configuration, $environment, $htmlHelper);
+    ?? HtmlHelper::createFromGlobals($dirs, $environment);
 
-return $rulesApplication ?? new \DrdPlus\RulesSkeleton\RulesApplication($servicesContainer);
+$configuration = $configuration ?? Configurations\Configuration::createFromYml($dirs);
+$servicesContainer = $servicesContainer ?? new ServicesContainer($configuration, $environment, $htmlHelper);
+
+return $rulesApplication ?? new RulesApplication($servicesContainer);

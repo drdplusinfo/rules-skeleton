@@ -17,3 +17,5 @@ too_short_result_names:
   - 'Bonus'
   - 'Postih'
 has_vendor_dir_versioned: false
+public_to_local_url_part_regexp: '~https://(rules[.]skeleton[.])drdplus[.]info~'
+public_to_local_url_part_replacement: 'http://localhost:9999'

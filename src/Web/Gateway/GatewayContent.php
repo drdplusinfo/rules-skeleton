@@ -33,8 +33,5 @@ class GatewayContent extends Content
         $this->htmlHelper->externalLinksTargetToBlank($htmlDocument);
         $this->htmlHelper->markExternalLinksByClass($htmlDocument);
         $this->htmlHelper->addVersionHashToAssets($htmlDocument);
-        if (!$this->environment->isInProduction()) {
-            $this->htmlHelper->makeExternalDrdPlusLinksLocal($htmlDocument);
-        }
     }
 }

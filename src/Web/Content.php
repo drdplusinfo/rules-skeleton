@@ -58,8 +58,5 @@ abstract class Content extends \Granam\WebContentBuilder\Web\Content implements 
         $this->htmlHelper->prepareSourceCodeLinks($htmlDocument);
         $this->htmlHelper->markExternalLinksByClass($htmlDocument);
         $this->htmlHelper->addVersionHashToAssets($htmlDocument);
-        if (!$this->environment->isInProduction()) {
-            $this->htmlHelper->makeExternalDrdPlusLinksLocal($htmlDocument);
-        }
     }
 }

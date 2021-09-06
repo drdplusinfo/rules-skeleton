@@ -12,34 +12,6 @@ class HtmlHelperTest extends AbstractContentTest
 {
     /**
      * @test
-     * @dataProvider providePublicToLocalLinks
-     * @param string $publicUrlPartRegexp
-     * @param string $publicToLocalUrlReplacement
-     * @param string $publicLink
-     * @param string $expectedLocalLink
-     */
-    public function I_can_turn_public_link_to_local(
-        string $publicUrlPartRegexp,
-        string $publicToLocalUrlReplacement,
-        string $publicLink,
-        string $expectedLocalLink
-    ): void
-    {
-        $projectUrlConfiguration = $this->createProjectUrlConfiguration($publicUrlPartRegexp, $publicToLocalUrlReplacement);
-        self::assertSame($expectedLocalLink, $this->createHtmlHelper($projectUrlConfiguration)->turnToLocalLink($publicLink));
-    }
-
-    public function providePublicToLocalLinks(): array
-    {
-        return [
-            ['~https?://((?:[^.]+[.])*)example[.]com~', 'http://$1example.loc', 'https://www.example.com', 'http://www.example.loc'],
-            ['~https?://((?:[^.]+[.])*)example[.]com~', 'http://$1example.loc', 'https://free.example.com', 'http://free.example.loc'],
-            ['~https?://((?:[^.]+[.])*)example[.]com~', 'http://$1example.loc', 'https://paid.example.com', 'http://paid.example.loc'],
-        ];
-    }
-
-    /**
-     * @test
      */
     public function I_can_create_id_from_any_name(): void
     {
@@ -85,19 +57,13 @@ class HtmlHelperTest extends AbstractContentTest
         }
     }
 
-    protected function createSut(
-        string $publicUrlPartRegexp = '~https?://((?:[^.]+[.])*)example[.]com~',
-        string $publicToLocalUrlReplacement = 'http://$1example.loc'
-    ): HtmlHelper
+    protected function createSut(): HtmlHelper
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
         $dirs = $this->getDirs();
-        return $htmlHelperClass::createFromGlobals(
-            $dirs,
-            $this->getEnvironment(),
-            $this->createProjectUrlConfiguration($publicUrlPartRegexp, $publicToLocalUrlReplacement)
-        );
+
+        return $htmlHelperClass::createFromGlobals($dirs, $this->getEnvironment());
     }
 
     /**
@@ -220,42 +186,6 @@ HTML
         $invisibleId = $invisibleIdElement->id;
         self::assertNotEmpty($invisibleId);
         self::assertSame(\str_replace('#', '_', $expectedOriginalId), $invisibleId);
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_turn_public_drd_plus_links_to_locals(): void
-    {
-        $htmlHelper = $this->createSut(
-            '~https?://((?:[^.]+[.])*)drdplus[.]info~',
-            'http://$1drdplus.loc'
-        );
-
-        $htmlDocument = new HtmlDocument(<<<HTML
-        <!DOCTYPE html> 
-<html lang="cs">
-<head>
-  <title>Just a test</title>
-  <meta charset="utf-8">
-</head>
-<body>
-  <a href="https://foo-bar.baz.drdplus.info" id="single_link">Sub-doména na DrD+ info</a>
-  <a href="https://qux.drdplus.info" id="marked_as_local">Sub-doména na DrD+ info označená jako local</a>
-  <a>Tohle je takový divný odkaz bez href, stává se.</a>
-</body>
-</html>
-HTML
-        );
-        /** @var Element $localizedLink */
-        $htmlHelper->markExternalLinksByClass($htmlDocument);
-        $htmlHelper->makeExternalDrdPlusLinksLocal($htmlDocument);
-        $localizedLink = $htmlDocument->getElementById('single_link');
-        self::assertNotEmpty($localizedLink, 'No element found by ID single_link');
-        self::assertSame('http://foo-bar.baz.drdplus.loc', $localizedLink->getAttribute('href'));
-        $localizedLocalLikeLink = $htmlDocument->getElementById('marked_as_local');
-        self::assertNotEmpty($localizedLocalLikeLink, 'No element found by ID marked_as_local');
-        self::assertSame('http://qux.drdplus.loc', $localizedLocalLikeLink->getAttribute('href'));
     }
 
     /**

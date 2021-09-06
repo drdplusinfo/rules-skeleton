@@ -8,7 +8,6 @@ use DrdPlus\RulesSkeleton\Cache\ContentIrrelevantRequestAliases;
 use DrdPlus\RulesSkeleton\Cache\RequestCachingPermissionProvider;
 use DrdPlus\RulesSkeleton\Cache\RequestHashProvider;
 use DrdPlus\RulesSkeleton\Configurations\Configuration;
-use DrdPlus\RulesSkeleton\Configurations\ProjectUrlConfiguration;
 use DrdPlus\RulesSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Configurations\Dirs;
@@ -93,11 +92,6 @@ abstract class AbstractContentTest extends TestWithMockery
         }
 
         return $testsConfiguration;
-    }
-
-    protected function toLocalLink(string $link): string
-    {
-        return $this->getHtmlHelper()->turnToLocalLink($link);
     }
 
     protected function goIn(): bool
@@ -257,14 +251,12 @@ abstract class AbstractContentTest extends TestWithMockery
     }
 
     /**
-     * @param ProjectUrlConfiguration|null $projectUrlConfiguration
      * @param Dirs|null $dirs
      * @param string|null $forcedMode
      * @param bool $shouldHideCovered
      * @return HtmlHelper|\Mockery\MockInterface
      */
     protected function createHtmlHelper(
-        ProjectUrlConfiguration $projectUrlConfiguration = null,
         Dirs $dirs = null,
         string $forcedMode = null,
         bool $shouldHideCovered = false
@@ -272,10 +264,9 @@ abstract class AbstractContentTest extends TestWithMockery
     {
         $dirs ??= $this->getDirs();
         $env = $this->createEnvironment($forcedMode);
-        $projectUrlConfiguration ??= $this->createCustomConfiguration([], $dirs);
+
         return new HtmlHelper(
             $dirs,
-            $projectUrlConfiguration,
             $env->isOnForcedDevelopmentMode(),
             $shouldHideCovered
         );
@@ -297,42 +288,15 @@ abstract class AbstractContentTest extends TestWithMockery
         );
     }
 
-    protected function createProjectUrlConfiguration(string $getPublicUrlPartRegexp, string $getPublicToLocalUrlReplacement): ProjectUrlConfiguration
-    {
-        return new class($getPublicUrlPartRegexp, $getPublicToLocalUrlReplacement) implements ProjectUrlConfiguration
-        {
-            private string $publicUrlPartRegexp;
-            private string $publicToLocalUrlReplacement;
-
-            public function __construct(string $getPublicUrlPartRegexp, string $getPublicToLocalUrlReplacement)
-            {
-                $this->publicUrlPartRegexp = $getPublicUrlPartRegexp;
-                $this->publicToLocalUrlReplacement = $getPublicToLocalUrlReplacement;
-            }
-
-            public function getPublicUrlPartRegexp(): string
-            {
-                return $this->publicUrlPartRegexp;
-            }
-
-            public function getPublicToLocalUrlReplacement(): string
-            {
-                return $this->publicToLocalUrlReplacement;
-            }
-        };
-    }
-
     protected function fetchNonCachedContent(RulesApplication $rulesApplication = null, bool $backupGlobals = true): string
     {
         $originalGet = $_GET;
         $originalPost = $_POST;
         $originalCookies = $_COOKIE;
         $originalRequest = $_REQUEST;
-        /** @noinspection PhpUnusedLocalVariableInspection */
         $rulesApplication ??= null;
         $_GET[Request::CACHE] = Request::DISABLE;
         \ob_start();
-        /** @noinspection PhpIncludeInspection */
         include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
         $content = \ob_get_clean();
         if ($backupGlobals) {
@@ -992,5 +956,35 @@ TEXT
                 'Global $_COOKIE after filtering pass-related values is not empty, have you forgot to set @backupGlobals enabled ? ' . \var_export($cookieTrash, true)
             );
         }
+    }
+
+    protected function makeExternalDrdPlusLinksLocal(HtmlDocument $htmlDocument): HtmlDocument
+    {
+        foreach ($this->getHtmlHelper()->getExternalAnchors($htmlDocument) as $externalAnchor) {
+            $externalAnchor->setAttribute('href', $this->turnToLocalLink($externalAnchor->getAttribute('href') ?? ''));
+        }
+        foreach ($this->getHtmlHelper()->getInternalAnchors($htmlDocument) as $internalAnchor) {
+            $internalAnchor->setAttribute('href', $this->turnToLocalLink($internalAnchor->getAttribute('href') ?? ''));
+        }
+        /** @var Element $iFrame */
+        foreach ($htmlDocument->getElementsByTagName('iframe') as $iFrame) {
+            $iFrame->setAttribute('src', $this->turnToLocalLink($iFrame->getAttribute('src')));
+        }
+
+        return $htmlDocument;
+    }
+
+    /**
+     * Turn link into local version
+     * @param string $link
+     * @return string
+     */
+    protected function turnToLocalLink(string $link): string
+    {
+        return \preg_replace(
+            $this->getTestsConfiguration()->getPublicToLocalUrlPartRegexp(),
+            $this->getTestsConfiguration()->getPublicToLocalUrlReplacement(),
+            $link
+        );
     }
 }

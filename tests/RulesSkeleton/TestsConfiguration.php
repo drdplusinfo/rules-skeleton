@@ -69,6 +69,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const HAS_HOME_BUTTON_ON_HOMEPAGE = 'has_home_button_on_homepage';
     public const HAS_HOME_BUTTON_ON_ROUTES = 'has_home_button_on_routes';
     public const EXPECTED_HOME_BUTTON_TARGET = 'expected_home_button_target';
+    public const PUBLIC_TO_LOCAL_URL_PART_REGEXP = 'public_to_local_url_part_regexp';
+    public const PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT = 'public_to_local_url_part_replacement';
 
     public static function createFromYaml(string $yamlConfigFile): TestsConfiguration
     {
@@ -123,6 +125,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private bool $hasHomeButtonOnHomepage = true;
     private bool $hasHomeButtonOnRoutes = true;
     private string $expectedHomeButtonTarget = 'https://www.drdplus.info';
+    private ?string $publicToLocalUrlPartRegexp = null;
+    private ?string $publicToLocalUrlReplacement = null;
 
     /**
      * @param array $values
@@ -179,6 +183,8 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setHasHomeButtonOnHomepage($values);
         $this->setHasHomeButtonOnRoutes($values);
         $this->setExpectedHomeButtonTargetFromRoutes($values);
+        $this->setPublicTLocalUrlPartRegexp($values);
+        $this->setPublicToLocalUrlReplacement($values);
     }
 
     private function setCanHaveTables(array $values): void
@@ -590,6 +596,36 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->expectedHomeButtonTarget = $values[self::EXPECTED_HOME_BUTTON_TARGET] ?? $this->expectedHomeButtonTarget;
     }
 
+    private function setPublicTLocalUrlPartRegexp(array $values)
+    {
+        $publicToLocalUrlPartRegexp = $values[self::PUBLIC_TO_LOCAL_URL_PART_REGEXP] ?? null;
+        if (!$publicToLocalUrlPartRegexp || !preg_match('~^(.).+\1$~', $publicToLocalUrlPartRegexp)) {
+            throw new Exceptions\InvalidPublicUrlPartRegexp(
+                sprintf(
+                    "Expected valid regexp, got %s for tests configuration key '%s'",
+                    var_export($publicToLocalUrlPartRegexp, true),
+                    self::PUBLIC_TO_LOCAL_URL_PART_REGEXP
+                )
+            );
+        }
+        $this->publicToLocalUrlPartRegexp = $publicToLocalUrlPartRegexp;
+    }
+
+    private function setPublicToLocalUrlReplacement(array $values)
+    {
+        $publicToLocalUrlReplacement = $values[self::PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT] ?? null;
+        if (!is_string($publicToLocalUrlReplacement) || $publicToLocalUrlReplacement === '') {
+            throw new Exceptions\InvalidPublicUrlPartRegexpReplacement(
+                sprintf(
+                    "Expected some valid replacement for a public-to-local regexp match, got %s for tests configuration key '%s'",
+                    var_export($publicToLocalUrlReplacement, true),
+                    self::PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT
+                )
+            );
+        }
+        $this->publicToLocalUrlReplacement = $publicToLocalUrlReplacement;
+    }
+
     public function getExpectedPublicUrl(): string
     {
         return $this->expectedPublicUrl;
@@ -798,5 +834,15 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public function getExpectedHomeButtonTarget(): string
     {
         return $this->expectedHomeButtonTarget;
+    }
+
+    public function getPublicToLocalUrlPartRegexp(): string
+    {
+        return $this->publicToLocalUrlPartRegexp;
+    }
+
+    public function getPublicToLocalUrlReplacement(): string
+    {
+        return $this->publicToLocalUrlReplacement;
     }
 }
