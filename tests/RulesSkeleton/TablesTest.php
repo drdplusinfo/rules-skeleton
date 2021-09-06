@@ -43,15 +43,15 @@ class TablesTest extends AbstractContentTest
         $this->Expected_table_ids_are_present($fetchedTableIds);
     }
 
-    protected function testNotFoundResponseOnTablesRoute(string $url, array $get)
+    protected function testNotFoundResponseOnTablesRoute(string $localUrlPath, array $get)
     {
-        $urlWithQuery = $url . '?' . http_build_query($get);
+        $urlWithQuery = $this->getTestsConfiguration()->getLocalUrl() . '/' . $localUrlPath . '?' . http_build_query($get);
         $responseHttpCode = $this->fetchContentFromUrl($urlWithQuery, false)['responseHttpCode'];
         self::assertSame(
             404,
             $responseHttpCode,
             sprintf(
-                "Expected Not found response from URL %s due to tests directive '%s'",
+                "Expected Not found response from URL %s due to tests directive '%s'=0",
                 $urlWithQuery,
                 TestsConfiguration::CAN_HAVE_TABLES
             )
@@ -142,11 +142,17 @@ class TablesTest extends AbstractContentTest
      */
     public function I_can_get_wanted_tables_from_content(): void
     {
+        if (!$this->getTestsConfiguration()->canHaveTables()) {
+            $this->testNotFoundResponseOnTablesRoute('/tables', []);
+            return;
+        }
+
         if (!$this->getTestsConfiguration()->hasTables()) {
-            self::assertFalse(false, 'Disabled by tests configuration');
+            $this->testEmptyContentOnTablesRoute('/tables', []);
 
             return;
         }
+
         $tableIds = $this->getTableIds();
         $implodedTableIds = \implode(',', $tableIds);
         $htmlDocument = $this->getHtmlDocument([Request::TABLES => $implodedTableIds]);
@@ -174,11 +180,17 @@ class TablesTest extends AbstractContentTest
      */
     public function I_can_get_tables_related_content(): void
     {
+        if (!$this->getTestsConfiguration()->canHaveTables()) {
+            $this->testNotFoundResponseOnTablesRoute('/tables', []);
+            return;
+        }
+
         if (!$this->getTestsConfiguration()->hasTables()) {
-            self::assertFalse(false, 'Disabled by tests configuration');
+            $this->testEmptyContentOnTablesRoute('/tables', []);
 
             return;
         }
+
         $htmlDocument = $this->getHtmlDocument([], [], [], '/tables');
         $tablesRelatedElements = $htmlDocument->body->getElementsByClassName(HtmlHelper::CLASS_TABLES_RELATED);
         if (!$this->getTestsConfiguration()->hasTablesRelatedContent()) {
@@ -204,11 +216,31 @@ class TablesTest extends AbstractContentTest
         );
     }
 
+    protected function testEmptyContentOnTablesRoute(string $localUrlPath, array $get)
+    {
+        $urlWithQuery = $this->getTestsConfiguration()->getLocalUrl() . '/' . $localUrlPath . '?' . http_build_query($get);
+        $responseHttpCode = $this->fetchContentFromUrl($urlWithQuery, false)['responseHttpCode'];
+        self::assertSame(
+            200,
+            $responseHttpCode,
+            sprintf(
+                "Expected OK response from URL %s as tests directive '%s' is not active and tables list should be ust empty",
+                $urlWithQuery,
+                TestsConfiguration::CAN_HAVE_TABLES
+            )
+        );
+    }
+
     /**
      * @test
      */
     public function I_can_get_tables_only_even_with_query_in_url(): void
     {
+        if (!$this->getTestsConfiguration()->canHaveTables()) {
+            $this->testNotFoundResponseOnTablesRoute('/tables', ['foo' => 'bar']);
+            return;
+        }
+
         if ($this->getTestsConfiguration()->hasTables()) {
             $tablesWithQuery = $this->getHtmlDocument(['foo' => 'bar'], [], [], '/tables');
             self::assertGreaterThan(
