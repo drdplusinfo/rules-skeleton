@@ -97,4 +97,9 @@ interface TestsConfigurationReader
     public function hasHomeButtonOnRoutes(): bool;
 
     public function getExpectedHomeButtonTarget(): string;
+
+    public function getPublicToLocalUrlPartRegexp(): string;
+
+    public function getPublicToLocalUrlReplacement(): string;
+
 }

@@ -46,49 +46,23 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public const DATA_CACHED_AT = 'data-cached-at';
     public const DATA_HAS_MARKED_EXTERNAL_URLS = 'data-has-marked-external-urls';
 
-    public static function createFromGlobals(
-        Dirs $dirs,
-        Environment $environment,
-        ProjectUrlConfiguration $projectUrlConfiguration
-    ): HtmlHelper
+    public static function createFromGlobals(Dirs $dirs, Environment $environment): HtmlHelper
     {
         return new static(
             $dirs,
-            $projectUrlConfiguration,
             $environment->isOnForcedDevelopmentMode(),
             !empty($_GET['hide']) && \strpos(\trim($_GET['hide']), 'cover') === 0
         );
     }
 
-    private \DrdPlus\RulesSkeleton\Configurations\ProjectUrlConfiguration $projectUrlConfiguration;
     private bool $inDevMode;
     private bool $shouldHideCovered;
 
-    public function __construct(
-        Dirs $dirs,
-        ProjectUrlConfiguration $projectUrlConfiguration,
-        bool $inDevMode,
-        bool $shouldHideCovered
-    )
+    public function __construct(Dirs $dirs, bool $inDevMode, bool $shouldHideCovered)
     {
         parent::__construct($dirs);
-        $this->projectUrlConfiguration = $projectUrlConfiguration;
         $this->inDevMode = $inDevMode;
         $this->shouldHideCovered = $shouldHideCovered;
-    }
-
-    /**
-     * Turn link into local version
-     * @param string $link
-     * @return string
-     */
-    public function turnToLocalLink(string $link): string
-    {
-        return \preg_replace(
-            $this->projectUrlConfiguration->getPublicUrlPartRegexp(),
-            $this->projectUrlConfiguration->getPublicToLocalUrlReplacement(),
-            $link
-        );
     }
 
     /**
@@ -152,9 +126,9 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
 
     /**
      * @param HtmlDocument $htmlDocument
-     * @return array|Element[]
+     * @return Element[]
      */
-    protected function getExternalAnchors(HtmlDocument $htmlDocument): array
+    public function getExternalAnchors(HtmlDocument $htmlDocument): array
     {
         $externalAnchors = [];
         foreach ($htmlDocument->getElementsByTagName('a') as $anchor) {
@@ -164,6 +138,22 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         }
 
         return $externalAnchors;
+    }
+
+    /**
+     * @param HtmlDocument $htmlDocument
+     * @return Element[]
+     */
+    public function getInternalAnchors(HtmlDocument $htmlDocument): array
+    {
+        $internalAnchors = [];
+        foreach ($htmlDocument->getElementsByTagName('a') as $anchor) {
+            if (!$this->isAnchorExternal($anchor)) {
+                $internalAnchors[] = $anchor;
+            }
+        }
+
+        return $internalAnchors;
     }
 
     protected function isAnchorExternal(Element $anchor): bool
@@ -301,34 +291,6 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
             }
             $this->removeClassesAboutCodeCoverage($child);
         }
-    }
-
-    public function makeExternalDrdPlusLinksLocal(HtmlDocument $htmlDocument): HtmlDocument
-    {
-        foreach ($this->getExternalAnchors($htmlDocument) as $externalAnchor) {
-            $externalAnchor->setAttribute('href', $this->turnToLocalLink($externalAnchor->getAttribute('href') ?? ''));
-        }
-        foreach ($this->getInternalAnchors($htmlDocument) as $internalAnchor) {
-            $internalAnchor->setAttribute('href', $this->turnToLocalLink($internalAnchor->getAttribute('href') ?? ''));
-        }
-        /** @var Element $iFrame */
-        foreach ($htmlDocument->getElementsByTagName('iframe') as $iFrame) {
-            $iFrame->setAttribute('src', $this->turnToLocalLink($iFrame->getAttribute('src')));
-        }
-
-        return $htmlDocument;
-    }
-
-    protected function getInternalAnchors(HtmlDocument $htmlDocument): array
-    {
-        $internalAnchors = [];
-        foreach ($htmlDocument->getElementsByTagName('a') as $anchor) {
-            if (!$this->isAnchorExternal($anchor)) {
-                $internalAnchors[] = $anchor;
-            }
-        }
-
-        return $internalAnchors;
     }
 
     public function replaceDiacriticsFromDrdPlusAnchorHashes(HtmlDocument $htmlDocument): HtmlDocument

@@ -120,14 +120,9 @@ class TestsConfigurationTest extends AbstractContentTest
     protected function createTestsConfiguration(array $config = []): TestsConfiguration
     {
         $sutClass = static::getSutClass();
-        $projectUrlConfiguration = $this->createProjectUrlConfiguration(
-            '~https?://((?:[^.]+[.])*)drdplus[.]info~',
-            'http://$1drdplus.loc'
-        );
 
         return new $sutClass(
             \array_merge($this->getTestsConfigurationDefaultValues(), $config),
-            $this->createHtmlHelper($projectUrlConfiguration)
         );
     }
 
@@ -139,6 +134,9 @@ class TestsConfigurationTest extends AbstractContentTest
             TestsConfiguration::EXPECTED_WEB_NAME => 'Michelangelo',
             TestsConfiguration::EXPECTED_PAGE_TITLE => 'Donatello',
             TestsConfiguration::EXPECTED_GOOGLE_ANALYTICS_ID => 'UA-UB-1',
+            TestsConfiguration::PUBLIC_TO_LOCAL_URL_PART_REGEXP => '~https://(rules[.]skeleton[.])drdplus[.]info~',
+            TestsConfiguration::PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT => '~http://localhost:9999~',
+
         ];
     }
 

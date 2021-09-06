@@ -161,7 +161,7 @@ class AnchorsTest extends AbstractContentTest
     {
         $skippedExternalUrls = [];
         foreach ($this->getExternalLinks() as $originalLink) {
-            $link = $this->getHtmlHelper()->turnToLocalLink($originalLink);
+            $link = $this->turnToLocalLink($originalLink);
             if (\in_array($link, self::$checkedExternalAnchors, true)) {
                 continue;
             }
@@ -275,7 +275,7 @@ class AnchorsTest extends AbstractContentTest
         );
         $skippedExternalUrls = [];
         foreach ($externalAnchorsWithHash as $originalLink) {
-            $link = $this->getHtmlHelper()->turnToLocalLink($originalLink);
+            $link = $this->turnToLocalLink($originalLink);
             if (!$this->isLinkAccessible($link)) {
                 $skippedExternalUrls[] = $link;
                 continue;
@@ -670,7 +670,7 @@ class AnchorsTest extends AbstractContentTest
     {
         $linksToCharacterSheet = [];
         foreach ($this->getExternalLinks() as $link) {
-            $link = $this->getHtmlHelper()->turnToLocalLink($link);
+            $link = $this->turnToLocalLink($link);
             if (\strpos($link, 'charakternik.pdf')) {
                 $linksToCharacterSheet[] = $link;
             }
@@ -690,7 +690,7 @@ class AnchorsTest extends AbstractContentTest
             sprintf("PDF character sheet expected  as test configuration says by '%s'", TestsConfiguration::HAS_CHARACTER_SHEET)
         );
         $expectedOriginalLink = 'https://www.drdplus.info/pdf/charakternik.pdf';
-        $expectedLink = $this->getHtmlHelper()->turnToLocalLink($expectedOriginalLink);
+        $expectedLink = $this->turnToLocalLink($expectedOriginalLink);
         foreach ($linksToCharacterSheet as $linkToCharacterSheet) {
             self::assertSame(
                 $expectedLink,
@@ -707,7 +707,7 @@ class AnchorsTest extends AbstractContentTest
     {
         $linksToJournal = [];
         foreach ($this->getExternalLinks() as $link) {
-            $link = $this->getHtmlHelper()->turnToLocalLink($link);
+            $link = $this->turnToLocalLink($link);
             if (\preg_match('~/denik_\w+\.pdf$~', $link)) {
                 $linksToJournal[] = $link;
             }
@@ -737,7 +737,7 @@ class AnchorsTest extends AbstractContentTest
         if (!$this->getTestsConfiguration()->hasLinkToSingleJournal()) {
             foreach ($linksToJournal as $linkToJournal) {
                 self::assertMatchesRegularExpression(
-                    '~^' . \preg_quote($this->getHtmlHelper()->turnToLocalLink('https://www.drdplus.info'), '~') . '/pdf/deniky/denik_\w+[.]pdf$~',
+                    '~^' . \preg_quote($this->turnToLocalLink('https://www.drdplus.info'), '~') . '/pdf/deniky/denik_\w+[.]pdf$~',
                     $linkToJournal,
                     'Every link to PDF journal should lead to https://www.drdplus.info/pdf/deniky/denik_foo.pdf'
                 );
@@ -747,7 +747,7 @@ class AnchorsTest extends AbstractContentTest
         }
         self::assertTrue($this->getTestsConfiguration()->hasLinksToJournals());
         $expectedOriginalLink = $this->getExpectedLinkToJournal();
-        $expectedLink = $this->getHtmlHelper()->turnToLocalLink($expectedOriginalLink);
+        $expectedLink = $this->turnToLocalLink($expectedOriginalLink);
         foreach ($linksToJournal as $linkToJournal) {
             self::assertSame(
                 $expectedLink,

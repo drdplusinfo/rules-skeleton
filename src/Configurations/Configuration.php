@@ -4,7 +4,7 @@ namespace DrdPlus\RulesSkeleton\Configurations;
 
 use Granam\YamlReader\YamlFileReader;
 
-class Configuration extends AbstractConfiguration implements ProjectUrlConfiguration
+class Configuration extends AbstractConfiguration
 {
     public const CONFIG_LOCAL_YML = 'config.local.yml';
     public const CONFIG_DISTRIBUTION_YML = 'config.distribution.yml';
@@ -386,18 +386,6 @@ class Configuration extends AbstractConfiguration implements ProjectUrlConfigura
     public function getDefaultYamlFileWithRoutes(): string
     {
         return $this->getValues()[static::APPLICATION][static::DEFAULT_YAML_FILE_WITH_ROUTES] ?? 'routes.yml';
-    }
-
-    public function getPublicUrlPartRegexp(): string
-    {
-        return $this->getValues()[static::WEB][static::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REGEXP]
-            ?? '~https?://((?:[^.]+[.])*)drdplus[.]info~';
-    }
-
-    public function getPublicToLocalUrlReplacement(): string
-    {
-        return $this->getValues()[static::WEB][static::DEFAULT_PUBLIC_TO_LOCAL_URL_PART_REPLACEMENT]
-            ?? 'http://$1drdplus.loc';
     }
 
 }

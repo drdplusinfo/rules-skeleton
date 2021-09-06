@@ -3,6 +3,8 @@
 namespace Tests\DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Web\Main\MainContent;
+use Granam\WebContentBuilder\HtmlDocument;
+use Gt\Dom\Element;
 use Tests\DrdPlus\RulesSkeleton\Partials\AbstractContentTest;
 
 class ContentTest extends AbstractContentTest
@@ -57,8 +59,8 @@ class ContentTest extends AbstractContentTest
     public function provideLinkToDrdPlus(): array
     {
         return [
-            ['https://pph.drdplus.info/foo#Příprava postavy', $this->toLocalLink('https://pph.drdplus.info') . '/foo#priprava_postavy'],
-            ['https://bojovnik.drdplus.info/#Nekonečné kopí', $this->toLocalLink('https://bojovnik.drdplus.info') . '/#nekonecne_kopi'],
+            ['https://pph.drdplus.info/foo#Příprava postavy', $this->turnToLocalLink('https://pph.drdplus.info') . '/foo#priprava_postavy'],
+            ['https://bojovnik.drdplus.info/#Nekonečné kopí', $this->turnToLocalLink('https://bojovnik.drdplus.info') . '/#nekonecne_kopi'],
         ];
     }
 
@@ -99,6 +101,6 @@ class ContentTest extends AbstractContentTest
             $this->createEmptyHead(),
             $this->createMainBody('<a href="https://blog.drdplus.info/#!index.md">To blog</a>')
         );
-        self::assertStringContainsString($this->toLocalLink('https://blog.drdplus.info') . '/#!index.md', $rulesMainContent->getValue());
+        self::assertStringContainsString($this->turnToLocalLink('https://blog.drdplus.info') . '/#!index.md', $rulesMainContent->getValue());
     }
 }
