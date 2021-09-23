@@ -37,15 +37,15 @@ class TablesTest extends AbstractContentTest
             self::assertGreaterThan(0, count($expectedTableIds), 'Some tables expected due to tests configuration');
         }
         $fetchedTableIds = $this->getElementsIds($tables);
-        $missingIds = \array_diff($expectedTableIds, $fetchedTableIds);
-        self::assertEmpty($missingIds, 'Some tables with IDs are missing: ' . \implode(',', $missingIds));
+        $missingIds = array_diff($expectedTableIds, $fetchedTableIds);
+        self::assertEmpty($missingIds, 'Some tables with IDs are missing: ' .  implode(',', $missingIds));
         $this->There_is_no_other_content_than_tables($htmlDocumentWithTablesOnly);
         $this->Expected_table_ids_are_present($fetchedTableIds);
     }
 
     protected function testNotFoundResponseOnTablesRoute(string $localUrlPath, array $get)
     {
-        $urlWithQuery = $this->getTestsConfiguration()->getLocalUrl() . '/' . $localUrlPath . '?' . http_build_query($get);
+        $urlWithQuery = $this->getTestsConfiguration()->getLocalUrl() . '/' . ltrim($localUrlPath, '/') . '?' . http_build_query($get);
         $responseHttpCode = $this->fetchContentFromUrl($urlWithQuery, false)['responseHttpCode'];
         self::assertSame(
             404,
@@ -82,7 +82,7 @@ class TablesTest extends AbstractContentTest
 
     private function getElementsIds(\Traversable $elements): array
     {
-        return \array_map(
+        return array_map(
             fn(Element $element): string => $this->getHtmlHelper()->getFirstIdFrom($element),
             $this->traversableToArray($elements)
         );
@@ -101,7 +101,7 @@ class TablesTest extends AbstractContentTest
     protected function Expected_table_ids_are_present(array $tableIds): void
     {
         $someExpectedTableIds = $this->getTestsConfiguration()->getSomeExpectedTableIds();
-        $missingIds = \array_diff($someExpectedTableIds, $tableIds);
+        $missingIds = array_diff($someExpectedTableIds, $tableIds);
         self::assertEmpty(
             $missingIds,
             sprintf(
@@ -132,7 +132,11 @@ class TablesTest extends AbstractContentTest
             self::assertSame(
                 'table',
                 $child->tagName,
-                'Expected only tables, got ' . $child->outerHTML
+                sprintf(
+                    "Expected only tables as tests configuration says it should work by '%s', got %s",
+                    TestsConfiguration::CAN_HAVE_TABLES,
+                    $child->outerHTML
+                )
             );
         }
     }
@@ -154,7 +158,7 @@ class TablesTest extends AbstractContentTest
         }
 
         $tableIds = $this->getTableIds();
-        $implodedTableIds = \implode(',', $tableIds);
+        $implodedTableIds =  implode(',', $tableIds);
         $htmlDocument = $this->getHtmlDocument([Request::TABLES => $implodedTableIds]);
         $tables = $htmlDocument->body->getElementsByTagName('table');
         self::assertGreaterThan(
@@ -169,7 +173,7 @@ class TablesTest extends AbstractContentTest
         self::assertCount(count($tableIds), $tables, 'Expected same amount of tables as requested');
         self::assertSame(
             [],
-            \array_diff($this->getTestsConfiguration()->getSomeExpectedTableIds(), $tableIds),
+            array_diff($this->getTestsConfiguration()->getSomeExpectedTableIds(), $tableIds),
             'Some expected table IDs are missing'
         );
         $this->There_is_no_other_content_than_tables($htmlDocument);
