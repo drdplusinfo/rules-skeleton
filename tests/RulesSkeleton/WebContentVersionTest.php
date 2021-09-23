@@ -30,7 +30,7 @@ class WebContentVersionTest extends AbstractContentTest
         self::assertNotEmpty(
             $patchTags,
             'Some patch-version tags expected for versions: '
-            . \implode(',', $allStableMinorVersions)
+            .  implode(',', $allStableMinorVersions)
         );
         foreach ($allStableMinorVersions as $stableMinorVersion) {
             $stableVersionTags = [];

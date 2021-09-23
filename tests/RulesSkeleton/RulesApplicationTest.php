@@ -53,7 +53,7 @@ class RulesApplicationTest extends AbstractContentTest
             self::assertTrue(
                 $menu->classList->contains('fixed'),
                 'Contacts should be fixed as application says so;'
-                . ' current classes are ' . \implode(',', $this->tokenListToArray($menu->classList))
+                . ' current classes are ' .  implode(',', $this->tokenListToArray($menu->classList))
             );
         }
     }

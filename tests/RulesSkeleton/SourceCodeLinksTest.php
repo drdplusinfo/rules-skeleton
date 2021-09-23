@@ -53,7 +53,7 @@ class SourceCodeLinksTest extends AbstractContentTest
      */
     private function parseSourceUrls(string $html): array
     {
-        \preg_match_all('~data-source-code="(?<links>[^"]+)"~', $html, $matches);
+        preg_match_all('~data-source-code="(?<links>[^"]+)"~', $html, $matches);
 
         return $matches['links'];
     }
@@ -64,7 +64,7 @@ class SourceCodeLinksTest extends AbstractContentTest
      */
     private function toRawSourceCodeUrl(string $link): string
     {
-        return \preg_replace(
+        return preg_replace(
             '~https://github[.]com/((.(?!blob/))+/)(blob/)?~',
             'https://raw.githubusercontent.com/$1',
             $link

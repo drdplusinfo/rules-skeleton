@@ -34,10 +34,10 @@ class CalculationsTest extends AbstractContentTest
     {
         $regexpParts = [];
         foreach ($values as $value) {
-            $regexpParts[] = \preg_quote($value, $delimiter);
+            $regexpParts[] = preg_quote($value, $delimiter);
         }
 
-        return \implode('|', $regexpParts);
+        return  implode('|', $regexpParts);
     }
 
     /**
@@ -173,7 +173,7 @@ class CalculationsTest extends AbstractContentTest
         }
         $allowedCalculationIdPrefixes = $this->getTestsConfiguration()->getAllowedCalculationIdPrefixes();
         $allowedCalculationIdPrefixesRegexp = $this->toRegexpOr($allowedCalculationIdPrefixes);
-        $allowedCalculationIdConstantLikePrefixes = \array_map(
+        $allowedCalculationIdConstantLikePrefixes = array_map(
             fn(string $allowedPrefix) => StringTools::toConstantLikeValue($allowedPrefix),
             $allowedCalculationIdPrefixes
         );
@@ -239,10 +239,10 @@ class CalculationsTest extends AbstractContentTest
     {
         $escaped = [];
         foreach ($values as $value) {
-            $escaped[] = \preg_quote($value, $regexpDelimiter);
+            $escaped[] = preg_quote($value, $regexpDelimiter);
         }
 
-        return \implode('|', $escaped);
+        return  implode('|', $escaped);
     }
 
 }

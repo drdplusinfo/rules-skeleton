@@ -246,7 +246,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
                     self::HAS_TABLES,
                     $someExpectedTableIds === null
                         ? 'nothing'
-                        : \var_export($someExpectedTableIds, true)
+                        : var_export($someExpectedTableIds, true)
                 )
             );
         }
@@ -260,7 +260,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         if (!$structureOk) {
             throw new Exceptions\MissingSomeExpectedTableIdsInTestsConfiguration(
                 "Expected flat array of strings for '" . self::SOME_EXPECTED_TABLE_IDS . "', got "
-                . \var_export($someExpectedTableIds, true)
+                . var_export($someExpectedTableIds, true)
             );
         }
         $this->someExpectedTableIds = $someExpectedTableIds;

@@ -18,12 +18,12 @@ class MainContentTest extends ContentTest
     {
         self::assertSame(
             0,
-            \preg_match(
+            preg_match(
                 '~.{0,10}2k6\s*(?!<span class="upper-index">\+</span>).{0,20}\+~',
                 $this->getContentWithoutIds(),
                 $matches
             ),
-            \var_export($matches, true)
+            var_export($matches, true)
         );
     }
 
@@ -54,12 +54,12 @@ class MainContentTest extends ContentTest
     {
         self::assertSame(
             0,
-            \preg_match(
+            preg_match(
                 '~.{0,10}(?:(?<!<span class="upper-index">)\s*[®™]|[®™]\s*(?!</span>).{0,10})~u',
                 $this->getContent(),
                 $matches
             ),
-            \var_export($matches, true)
+            var_export($matches, true)
         );
     }
 
@@ -69,8 +69,8 @@ class MainContentTest extends ContentTest
     public function Every_id_is_unique(): void
     {
         $ids = $this->parseAllIds($this->getHtmlDocument());
-        $idsCount = \array_count_values($ids);
-        $duplicatedIds = \array_filter(
+        $idsCount = array_count_values($ids);
+        $duplicatedIds = array_filter(
             $idsCount,
             static fn(int $count) => $count > 1
         );

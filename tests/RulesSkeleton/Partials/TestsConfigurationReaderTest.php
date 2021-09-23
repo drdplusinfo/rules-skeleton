@@ -41,7 +41,7 @@ class TestsConfigurationReaderTest extends TestWithMockery
         $testsConfigurationReflection = new \ReflectionClass($testsConfigurationClass);
         $methods = $testsConfigurationReflection->getMethods(\ReflectionMethod::IS_PUBLIC ^ \ReflectionMethod::IS_ABSTRACT);
         $getters = [];
-        $testsConfigurationClasses = \array_unique([ // descendants can inherit current configuration class
+        $testsConfigurationClasses = array_unique([ // descendants can inherit current configuration class
             TestsConfiguration::class,
             TestsConfigurationReader::class,
             $testsConfigurationClass,

@@ -122,8 +122,8 @@ class GatewayPassingTest extends AbstractContentTest
             $gatewayContentDocument = new HTMLDocument($gatewayContent);
             $rulesContentDocument = new HTMLDocument($rulesContent);
             self::assertSame(
-                \preg_replace('~' . HtmlHelper::DATA_CACHED_AT . '="[^"]+"~', '', $gatewayContentDocument->body->innerHTML),
-                \preg_replace('~' . HtmlHelper::DATA_CACHED_AT . '="[^"]+"~', '', $rulesContentDocument->body->innerHTML),
+                preg_replace('~' . HtmlHelper::DATA_CACHED_AT . '="[^"]+"~', '', $gatewayContentDocument->body->innerHTML),
+                preg_replace('~' . HtmlHelper::DATA_CACHED_AT . '="[^"]+"~', '', $rulesContentDocument->body->innerHTML),
                 'Expected rules content for a crawler, skipping ownership confirmation page'
             );
         }
