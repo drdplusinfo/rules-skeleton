@@ -122,7 +122,7 @@ class TestsConfigurationTest extends AbstractContentTest
         $sutClass = static::getSutClass();
 
         return new $sutClass(
-            \array_merge($this->getTestsConfigurationDefaultValues(), $config),
+            array_merge($this->getTestsConfigurationDefaultValues(), $config),
         );
     }
 

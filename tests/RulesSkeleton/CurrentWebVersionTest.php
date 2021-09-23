@@ -60,7 +60,7 @@ class CurrentWebVersionTest extends AbstractContentTest
             );
         } else {
             self::assertMatchesRegularExpression(
-                '~^' . \preg_quote($currentWebVersion->getCurrentMinorVersion(), '~') . '[.]\d+$~',
+                '~^' . preg_quote($currentWebVersion->getCurrentMinorVersion(), '~') . '[.]\d+$~',
                 $currentWebVersion->getCurrentPatchVersion()
             );
         }
@@ -147,7 +147,7 @@ class CurrentWebVersionTest extends AbstractContentTest
         }
         throw new Exceptions\CanNotReadGitHead(
             "Could not read $gitHeadFilePath, in that dir are files "
-            . \implode(
+            .  implode(
                 ',',
                 array_filter(
                     \scandir(\dirname($gitHeadFilePath), SCANDIR_SORT_NONE),

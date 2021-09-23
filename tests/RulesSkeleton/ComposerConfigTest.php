@@ -17,7 +17,7 @@ class ComposerConfigTest extends AbstractContentTest
     public function Project_is_using_php_of_version_with_nullable_type_hints(): void
     {
         $requiredPhpVersion = $this->getComposerConfig()['require']['php'];
-        self::assertGreaterThan(0, \preg_match('~(?<version>\d.+)$~', $requiredPhpVersion, $matches));
+        self::assertGreaterThan(0, preg_match('~(?<version>\d.+)$~', $requiredPhpVersion, $matches));
         $minimalPhpVersion = $matches['version'];
         self::assertGreaterThanOrEqual(
             0,
@@ -50,7 +50,7 @@ class ComposerConfigTest extends AbstractContentTest
                 'php vendor/bin/assets --css --dir=css',
                 $postChangeScripts,
                 'Missing script to compile assets, there are only scripts '
-                . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($postChangeScripts, true))
+                . preg_replace('~^Array\n\((.+)\)~', '$1', var_export($postChangeScripts, true))
             );
         }
     }

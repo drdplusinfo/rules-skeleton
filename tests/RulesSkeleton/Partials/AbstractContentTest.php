@@ -148,13 +148,13 @@ abstract class AbstractContentTest extends TestWithMockery
             $originalCookies = $_COOKIE;
             $originalRequestUri = $_SERVER['REQUEST_URI'] ?? null;
             if ($get) {
-                $_GET = \array_merge($_GET, $get);
+                $_GET = array_merge($_GET, $get);
             }
             if ($post) {
-                $_POST = \array_merge($_POST, $post);
+                $_POST = array_merge($_POST, $post);
             }
             if ($cookies) {
-                $_COOKIE = \array_merge($_COOKIE, $cookies);
+                $_COOKIE = array_merge($_COOKIE, $cookies);
             }
             $_SERVER['REQUEST_URI'] = $url;
             if ($_GET) {
@@ -165,17 +165,17 @@ abstract class AbstractContentTest extends TestWithMockery
             } elseif ($this->needPassOut()) {
                 $this->goOut();
             }
-            \ob_start();
+            ob_start();
             include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
-            $contents[$key] = \ob_get_clean();
+            $contents[$key] = ob_get_clean();
             $_POST = $originalPost;
             $_GET = $originalGet;
             $_COOKIE = $originalCookies;
             $_SERVER['REQUEST_URI'] = $originalRequestUri;
             self::assertNotEmpty(
                 $contents[$key],
-                'Nothing has been fetched with GET ' . \var_export($get, true) . ', POST ' . \var_export($post, true)
-                . ' and COOKIE ' . \var_export($cookies, true)
+                'Nothing has been fetched with GET ' . var_export($get, true) . ', POST ' . var_export($post, true)
+                . ' and COOKIE ' . var_export($cookies, true)
                 . ' from ' . DirName::getPathWithResolvedParents(DRD_PLUS_INDEX_FILE_NAME_TO_TEST)
             );
         }
@@ -185,7 +185,7 @@ abstract class AbstractContentTest extends TestWithMockery
 
     protected function createKey(array $get, array $post, array $cookies, string $url): string
     {
-        return \json_encode($get, JSON_THROW_ON_ERROR) . '-' . \json_encode($post, JSON_THROW_ON_ERROR) . '-' . \json_encode($cookies, JSON_THROW_ON_ERROR) . '-' . $url . (int)$this->needPassIn() . (int)$this->needPassOut();
+        return json_encode($get, JSON_THROW_ON_ERROR) . '-' . json_encode($post, JSON_THROW_ON_ERROR) . '-' . json_encode($cookies, JSON_THROW_ON_ERROR) . '-' . $url . (int)$this->needPassIn() . (int)$this->needPassOut();
     }
 
     protected function needPassIn(): bool
@@ -295,9 +295,9 @@ abstract class AbstractContentTest extends TestWithMockery
         $originalRequest = $_REQUEST;
         $rulesApplication ??= null;
         $_GET[Request::CACHE] = Request::DISABLE;
-        \ob_start();
+        ob_start();
         include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
-        $content = \ob_get_clean();
+        $content = ob_get_clean();
         if ($backupGlobals) {
             $_GET = $originalGet;
             $_POST = $originalPost;
@@ -349,7 +349,7 @@ TEXT
                 foreach ($cookies as $name => $value) {
                     $cookieData[] = "$name=$value";
                 }
-                \curl_setopt($curl, \CURLOPT_COOKIE, \implode('; ', $cookieData));
+                \curl_setopt($curl, \CURLOPT_COOKIE,  implode('; ', $cookieData));
             }
             foreach ($headers as $headerName => $headerValue) {
                 \curl_setopt($curl, \CURLOPT_HEADER, "$headerName=$headerValue");
@@ -373,7 +373,7 @@ TEXT
     protected function runCommand(string $command): array
     {
         \exec("$command 2>&1", $output, $returnCode);
-        self::assertSame(0, $returnCode, "Failed command '$command', got output " . \var_export($output, true));
+        self::assertSame(0, $returnCode, "Failed command '$command', got output " . var_export($output, true));
 
         return $output;
     }
@@ -412,7 +412,7 @@ TEXT
             throw new \RuntimeException(
                 "Can not find out if is vendor dir versioned or not by command '{$command}'"
                 . ", got return code '{$resultCode}' and output\n"
-                . \implode("\n", $output)
+                .  implode("\n", $output)
             );
         }
 
@@ -494,7 +494,7 @@ TEXT
         $configurationClass = \get_class($originalConfiguration);
         return new $configurationClass(
             $dirs ?? $originalConfiguration->getDirs(),
-            \array_replace_recursive($originalConfiguration->getValues(), $customSettings)
+            array_replace_recursive($originalConfiguration->getValues(), $customSettings)
         );
     }
 
@@ -639,9 +639,9 @@ TEXT
         $skeletonDocumentRoot ??= $this->getRulesSkeletonProjectRoot();
         if (($skeletonChecked[$skeletonDocumentRoot] ?? null) === null) {
             $projectRootRealPath = \realpath($this->getProjectRoot());
-            self::assertNotEmpty($projectRootRealPath, 'Can not find out real path of project root ' . \var_export($this->getProjectRoot(), true));
+            self::assertNotEmpty($projectRootRealPath, 'Can not find out real path of project root ' . var_export($this->getProjectRoot(), true));
             $skeletonRootRealPath = \realpath($skeletonDocumentRoot);
-            self::assertNotEmpty($skeletonRootRealPath, 'Can not find out real path of skeleton root ' . \var_export($skeletonRootRealPath, true));
+            self::assertNotEmpty($skeletonRootRealPath, 'Can not find out real path of skeleton root ' . var_export($skeletonRootRealPath, true));
             $skeletonChecked[$skeletonDocumentRoot] = $projectRootRealPath === $skeletonRootRealPath;
         }
 
@@ -780,7 +780,7 @@ TEXT
     protected function unifyPath(string $path): string
     {
         $path = \str_replace('\\', '/', $path);
-        $path = \preg_replace('~/[.](?:/|$)~', '/', $path);
+        $path = preg_replace('~/[.](?:/|$)~', '/', $path);
 
         return $this->squashTwoDots($path);
     }
@@ -788,7 +788,7 @@ TEXT
     private function squashTwoDots(string $path): string
     {
         $originalPath = $path;
-        $path = \preg_replace('~/[^/.]+/[.]{2}~', '', $path);
+        $path = preg_replace('~/[^/.]+/[.]{2}~', '', $path);
         if ($originalPath === $path) {
             return $originalPath; // nothing has been squashed
         }
@@ -895,7 +895,7 @@ TEXT
             self::assertFileExists($composerFilePath, 'composer.json has not been found in document root');
             $content = \file_get_contents($composerFilePath);
             self::assertNotEmpty($content, "Nothing has been fetched from $composerFilePath, is readable?");
-            $composerConfig = \json_decode($content, true, 512, JSON_THROW_ON_ERROR /*as array */);
+            $composerConfig = json_decode($content, true, 512, JSON_THROW_ON_ERROR /*as array */);
             self::assertIsArray($composerConfig, 'Can not decode composer.json content fetched from ' . $composerFilePath);
         }
 
@@ -935,10 +935,10 @@ TEXT
      */
     public function Globals_are_cleaned(): void
     {
-        self::assertCount(0, $_GET, 'Global $_GET is not empty, have you forgot to set @backupGlobals enabled ?, ' . \var_export($_GET, true));
-        self::assertCount(0, $_POST, 'Global $_POST is not empty, have you forgot to set @backupGlobals enabled ? ' . \var_export($_POST, true));
+        self::assertCount(0, $_GET, 'Global $_GET is not empty, have you forgot to set @backupGlobals enabled ?, ' . var_export($_GET, true));
+        self::assertCount(0, $_POST, 'Global $_POST is not empty, have you forgot to set @backupGlobals enabled ? ' . var_export($_POST, true));
         if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
-            self::assertCount(0, $_COOKIE, 'Global $_COOKIE is not empty, have you forgot to set @backupGlobals enabled ? ' . \var_export($_COOKIE, true));
+            self::assertCount(0, $_COOKIE, 'Global $_COOKIE is not empty, have you forgot to set @backupGlobals enabled ? ' . var_export($_COOKIE, true));
         } else {
             $allowedCookieKeys = [
                 UsagePolicy::OWNERSHIP_COOKIE_NAME,
@@ -948,11 +948,11 @@ TEXT
             if (isset($_COOKIE[UsagePolicy::OWNERSHIP_COOKIE_NAME])) {
                 $allowedCookieKeys[] = $_COOKIE[UsagePolicy::OWNERSHIP_COOKIE_NAME];
             }
-            $cookieTrash = \array_diff_key($_COOKIE, \array_fill_keys($allowedCookieKeys, 'foo'));
+            $cookieTrash = array_diff_key($_COOKIE, array_fill_keys($allowedCookieKeys, 'foo'));
             self::assertCount(
                 0,
                 $cookieTrash,
-                'Global $_COOKIE after filtering pass-related values is not empty, have you forgot to set @backupGlobals enabled ? ' . \var_export($cookieTrash, true)
+                'Global $_COOKIE after filtering pass-related values is not empty, have you forgot to set @backupGlobals enabled ? ' . var_export($cookieTrash, true)
             );
         }
     }
@@ -980,7 +980,7 @@ TEXT
      */
     protected function turnToLocalLink(string $link): string
     {
-        return \preg_replace(
+        return preg_replace(
             $this->getTestsConfiguration()->getPublicToLocalUrlPartRegexp(),
             $this->getTestsConfiguration()->getPublicToLocalUrlReplacement(),
             $link

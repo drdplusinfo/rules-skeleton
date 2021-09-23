@@ -29,7 +29,7 @@ class AnchorsTest extends AbstractContentTest
                 sprintf(
                     "No anchors pointing to same document expected as tests config says by '%s'. But there are IDs to make anchors from: %s",
                     TestsConfiguration::HAS_ANCHORS_TO_SAME_DOCUMENT,
-                    "\n" . \implode("\n", $anchorsToSameDocument)
+                    "\n" .  implode("\n", $anchorsToSameDocument)
                 )
             );
 
@@ -320,7 +320,7 @@ class AnchorsTest extends AbstractContentTest
             $isDrdPlus = false;
             if ($this->isDrdPlusLink($link)) {
                 self::assertNotEmpty(
-                    \preg_match('~//(?<subDomain>[^.]+([.][^.]+)*)\.drdplus\.~', $link),
+                    preg_match('~//(?<subDomain>[^.]+([.][^.]+)*)\.drdplus\.~', $link),
                     "Expected some sub-domain in link $link"
                 );
                 $isDrdPlus = true;
@@ -391,7 +391,7 @@ class AnchorsTest extends AbstractContentTest
                 0,
                 $originalIds,
                 'No original IDs, identified by CSS class ' . HtmlHelper::CLASS_INVISIBLE_ID . ' expected, got '
-                . \implode("\n", \array_map(static fn(Element $element) => $element->outerHTML, $this->collectionToArray($originalIds)))
+                .  implode("\n", array_map(static fn(Element $element) => $element->outerHTML, $this->collectionToArray($originalIds)))
             );
 
             return;
@@ -525,7 +525,7 @@ class AnchorsTest extends AbstractContentTest
                 $urlsWithLocalHosts[] = $anchor->outerHTML;
             }
         }
-        self::assertCount(0, $urlsWithLocalHosts, "There are forgotten local URLs \n" . \implode(",\n", $urlsWithLocalHosts));
+        self::assertCount(0, $urlsWithLocalHosts, "There are forgotten local URLs \n" .  implode(",\n", $urlsWithLocalHosts));
     }
 
     private function getPostDataToFetchContent(bool $isDrdPlus): array
@@ -565,7 +565,7 @@ class AnchorsTest extends AbstractContentTest
             self::assertCount(
                 0,
                 $invalidAnchors,
-                'Some anchors from ownership confirmation points to invalid links ' . \implode(',', $invalidAnchors)
+                'Some anchors from ownership confirmation points to invalid links ' .  implode(',', $invalidAnchors)
             );
         }
     }
@@ -576,7 +576,7 @@ class AnchorsTest extends AbstractContentTest
      */
     private function parseInvalidAnchors(string $content): array
     {
-        \preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?![#?]|https?|[.]?/|mailto).)+[^>]+>)~', $content, $matches);
+        preg_match_all('~(?<invalidAnchors><a[^>]+href="(?:(?![#?]|https?|[.]?/|mailto).)+[^>]+>)~', $content, $matches);
 
         return $matches['invalidAnchors'];
     }
@@ -737,7 +737,7 @@ class AnchorsTest extends AbstractContentTest
         if (!$this->getTestsConfiguration()->hasLinkToSingleJournal()) {
             foreach ($linksToJournal as $linkToJournal) {
                 self::assertMatchesRegularExpression(
-                    '~^' . \preg_quote($this->turnToLocalLink('https://www.drdplus.info'), '~') . '/pdf/deniky/denik_\w+[.]pdf$~',
+                    '~^' . preg_quote($this->turnToLocalLink('https://www.drdplus.info'), '~') . '/pdf/deniky/denik_\w+[.]pdf$~',
                     $linkToJournal,
                     'Every link to PDF journal should lead to https://www.drdplus.info/pdf/deniky/denik_foo.pdf'
                 );
@@ -767,7 +767,7 @@ class AnchorsTest extends AbstractContentTest
         $currentPageTitle = $this->getCurrentPageTitle();
         self::assertSame(
             1,
-            \preg_match('~\s(?<lastWord>\w+)$~u', $currentPageTitle, $matches),
+            preg_match('~\s(?<lastWord>\w+)$~u', $currentPageTitle, $matches),
             "No last word found in '$currentPageTitle'"
         );
         $lastWord = $matches['lastWord'];

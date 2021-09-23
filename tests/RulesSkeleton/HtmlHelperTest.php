@@ -199,7 +199,7 @@ HTML
     {
         $htmlHelper = $this->createSut();
 
-        $implodedLinks = \implode("\n", $links);
+        $implodedLinks =  implode("\n", $links);
         $htmlDocument = new HtmlDocument(<<<HTML
         <!DOCTYPE html>
 <html lang="cs">
