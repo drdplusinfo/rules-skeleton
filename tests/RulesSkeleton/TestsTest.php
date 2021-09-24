@@ -144,7 +144,7 @@ class TestsTest extends AbstractContentTest
                 continue;
             }
             self::assertNotEmpty(
-                preg_match('~/tests/(?<className>[A-Z][[:alnum:]]+/[^/].+)\.php~', $filename, $matches),
+                preg_match('~/tests/(?<className>[A-Z][[:alnum:]]+/[^/].+)[.]php$~', $filename, $matches),
                 "DrdPlus class name has not been determined from $filename"
             );
             $class = 'Tests\\DrdPlus\\' . str_replace('/', '\\', $matches['className']);
