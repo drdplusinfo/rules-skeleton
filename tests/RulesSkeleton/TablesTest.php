@@ -22,7 +22,11 @@ class TablesTest extends AbstractContentTest
         $this->goOut(); // tables should be accessible for free
 
         if (!$this->getTestsConfiguration()->canHaveTables()) {
-            $this->testNotFoundResponseOnTablesRoute($url, $get);
+            if (!$url || $url === '/') {
+                $this->testTablesViaGetParameterLeadsToHomepage($get);
+            } else {
+                $this->testNotFoundResponseOnTablesRoute($url, $get);
+            }
             return;
         }
         $htmlDocumentWithTablesOnly = $this->getHtmlDocument($get, [], [], $url);
@@ -38,9 +42,28 @@ class TablesTest extends AbstractContentTest
         }
         $fetchedTableIds = $this->getElementsIds($tables);
         $missingIds = array_diff($expectedTableIds, $fetchedTableIds);
-        self::assertEmpty($missingIds, 'Some tables with IDs are missing: ' .  implode(',', $missingIds));
+        self::assertEmpty($missingIds, 'Some tables with IDs are missing: ' . implode(',', $missingIds));
         $this->There_is_no_other_content_than_tables($htmlDocumentWithTablesOnly);
         $this->Expected_table_ids_are_present($fetchedTableIds);
+    }
+
+    protected function testTablesViaGetParameterLeadsToHomepage(array $get)
+    {
+        $localUrl = $this->getTestsConfiguration()->getLocalUrl();
+        $urlWithQuery = $localUrl . '?' . http_build_query($get);
+        $contentByQuery = $this->fetchContentFromUrl($urlWithQuery, true)['content'];
+        $homepageContent = $this->fetchContentFromUrl($urlWithQuery, true)['content'];
+
+        self::assertSame(
+            $homepageContent,
+            $contentByQuery,
+            sprintf(
+                "Expected same content from URL %s as from homepage URL %s due to tests directive '%s'=0",
+                $urlWithQuery,
+                $localUrl,
+                TestsConfiguration::CAN_HAVE_TABLES
+            )
+        );
     }
 
     protected function testNotFoundResponseOnTablesRoute(string $localUrlPath, array $get)
@@ -158,7 +181,7 @@ class TablesTest extends AbstractContentTest
         }
 
         $tableIds = $this->getTableIds();
-        $implodedTableIds =  implode(',', $tableIds);
+        $implodedTableIds = implode(',', $tableIds);
         $htmlDocument = $this->getHtmlDocument([Request::TABLES => $implodedTableIds]);
         $tables = $htmlDocument->body->getElementsByTagName('table');
         self::assertGreaterThan(
