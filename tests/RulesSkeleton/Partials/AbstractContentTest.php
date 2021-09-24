@@ -65,20 +65,11 @@ abstract class AbstractContentTest extends TestWithMockery
 
     protected function startLocalWebServer(string $localAddress)
     {
-        if (!static::$localServerProcess || !static::$localServerProcess->isRunning()) {
+        if (!static::$localServerProcess) {
             static::$localServerProcess = new Process(['php', '-S', $localAddress]);
             static::$localServerProcess->start();
-        }
-        if (!static::$localServerProcess->isRunning()) {
-            self::markTestSkipped(
-                sprintf(
-                    "Local web server via `php -S %s` is not running. Exit code %d (%s), message '%s'",
-                    $localAddress,
-                    static::$localServerProcess->getExitCode(),
-                    static::$localServerProcess->getExitCodeText(),
-                    static::$localServerProcess->getErrorOutput()
-                )
-            );
+
+            $this->skipTestIfLocalWebServerIsNotRunning();
         }
     }
 
@@ -329,36 +320,39 @@ TEXT
 
     protected function fetchContentFromUrl(string $url, bool $withBody, array $post = [], array $cookies = [], array $headers = []): array
     {
+        $this->skipTestIfLocalWebServerIsNeededButNotRunning($url);
+
         static $cachedContent = [];
         $key = ($withBody ? '1' : '0') . $this->createKey($headers, $post, $cookies, $url);
         if (($cachedContent[$key] ?? null) === null) {
-            $curl = \curl_init($url);
-            \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, 1);
-            \curl_setopt($curl, \CURLOPT_CONNECTTIMEOUT, 7);
+
+            $curl = curl_init($url);
+            curl_setopt($curl, \CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, \CURLOPT_CONNECTTIMEOUT, 7);
             if (!$withBody) {
                 // to get headers only
-                \curl_setopt($curl, \CURLOPT_HEADER, 1);
-                \curl_setopt($curl, \CURLOPT_NOBODY, 1);
+                curl_setopt($curl, \CURLOPT_HEADER, 1);
+                curl_setopt($curl, \CURLOPT_NOBODY, 1);
             }
-            \curl_setopt($curl, \CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'); // to get headers only
+            curl_setopt($curl, \CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'); // to get headers only
             if ($post) {
-                \curl_setopt($curl, \CURLOPT_POSTFIELDS, $post);
+                curl_setopt($curl, \CURLOPT_POSTFIELDS, $post);
             }
             if ($cookies) {
                 $cookieData = [];
                 foreach ($cookies as $name => $value) {
                     $cookieData[] = "$name=$value";
                 }
-                \curl_setopt($curl, \CURLOPT_COOKIE,  implode('; ', $cookieData));
+                curl_setopt($curl, \CURLOPT_COOKIE, implode('; ', $cookieData));
             }
             foreach ($headers as $headerName => $headerValue) {
-                \curl_setopt($curl, \CURLOPT_HEADER, "$headerName=$headerValue");
+                curl_setopt($curl, \CURLOPT_HEADER, "$headerName=$headerValue");
             }
-            $content = \curl_exec($curl);
-            $responseHttpCode = \curl_getinfo($curl, \CURLINFO_HTTP_CODE);
-            $redirectUrl = \curl_getinfo($curl, \CURLINFO_REDIRECT_URL);
-            $curlError = \curl_error($curl);
-            \curl_close($curl);
+            $content = curl_exec($curl);
+            $responseHttpCode = curl_getinfo($curl, \CURLINFO_HTTP_CODE);
+            $redirectUrl = curl_getinfo($curl, \CURLINFO_REDIRECT_URL);
+            $curlError = curl_error($curl);
+            curl_close($curl);
             $cachedContent[$key] = [
                 'responseHttpCode' => $responseHttpCode,
                 'redirectUrl' => $redirectUrl,
@@ -370,9 +364,32 @@ TEXT
         return $cachedContent[$key];
     }
 
+    protected function skipTestIfLocalWebServerIsNeededButNotRunning(string $url)
+    {
+        if (!str_starts_with($url, $this->getTestsConfiguration()->getLocalUrl())) {
+            return;
+        }
+        $this->skipTestIfLocalWebServerIsNotRunning();
+    }
+
+    protected function skipTestIfLocalWebServerIsNotRunning()
+    {
+        if (!static::$localServerProcess->isRunning()) {
+            self::markTestSkipped(
+                sprintf(
+                    "Local web server via `%s` is not running. Exit code %d (%s), message: '%s'",
+                    (string)static::$localServerProcess->getCommandLine(),
+                    static::$localServerProcess->getExitCode(),
+                    static::$localServerProcess->getExitCodeText(),
+                    trim(static::$localServerProcess->getErrorOutput())
+                )
+            );
+        }
+    }
+
     protected function runCommand(string $command): array
     {
-        \exec("$command 2>&1", $output, $returnCode);
+        exec("$command 2>&1", $output, $returnCode);
         self::assertSame(0, $returnCode, "Failed command '$command', got output " . var_export($output, true));
 
         return $output;
@@ -412,7 +429,7 @@ TEXT
             throw new \RuntimeException(
                 "Can not find out if is vendor dir versioned or not by command '{$command}'"
                 . ", got return code '{$resultCode}' and output\n"
-                .  implode("\n", $output)
+                . implode("\n", $output)
             );
         }
 

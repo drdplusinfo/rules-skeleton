@@ -107,7 +107,7 @@ class AnchorsTest extends AbstractContentTest
             $this->assertSame(
                 200,
                 $responseHttpCode,
-                "Can not fetch content from local URL $localLink"
+                "Can not fetch content from local URL $url"
             );
         }
         $this->goOut();
