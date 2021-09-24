@@ -49,8 +49,7 @@ class GatewayContentTest extends AbstractContentTest
         $content = $this->fetchContentFromUrl($url, true)['content'];
         self::assertNotEmpty($content, 'No content fetched from ' . $url);
 
-        $gatewayDocument = new HtmlDocument($content);
-        foreach ($gatewayDocument->getElementsByTagName('form') as $form) {
+        foreach ((new HtmlDocument($content))->getElementsByTagName('form') as $form) {
             $action = $form->getAttribute('action');
             if (!preg_match('~^/[^/]*$~', $action)) {
                 continue; // not a local link

@@ -2,7 +2,6 @@
 
 namespace Tests\DrdPlus\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\Configurations\Configuration;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use Tests\DrdPlus\RulesSkeleton\Exceptions\InvalidUrl;
 use Tests\DrdPlus\RulesSkeleton\Partials\TestsConfigurationReader;
@@ -329,7 +328,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
      */
     private function guardValidUrl(string $url): void
     {
-        if (!\filter_var($url, \FILTER_VALIDATE_URL, \FILTER_FLAG_HOSTNAME)) {
+        if (!filter_var($url, \FILTER_VALIDATE_URL, \FILTER_FLAG_HOSTNAME)) {
             throw new Exceptions\InvalidUrl("Given URL is not valid: '$url'");
         }
     }
