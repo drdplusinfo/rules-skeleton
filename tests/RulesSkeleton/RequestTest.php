@@ -28,23 +28,6 @@ class RequestTest extends AbstractContentTest
         self::assertSame('/qux/foobar/foobaz', $request->getRequestPath());
     }
 
-    public static function getCrawlerUserAgents(): array
-    {
-        return [
-            'Mozilla/5.0 (compatible; SeznamBot/3.2; +http://napoveda.seznam.cz/en/seznambot-intro/)',
-            'User-Agent: Mozilla/5.0 (compatible; SeznamBot/3.2-test4; +http://napoveda.seznam.cz/en/seznambot-intro/)',
-            'Googlebot',
-        ];
-    }
-
-    public static function getNonCrawlerUserAgents(): array
-    {
-        return [
-            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0', // Firefox
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36' // Chrome
-        ];
-    }
-
     /**
      * @test
      */
@@ -63,6 +46,15 @@ class RequestTest extends AbstractContentTest
         }
     }
 
+    public static function getCrawlerUserAgents(): array
+    {
+        return [
+            'Mozilla/5.0 (compatible; SeznamBot/3.2; +http://napoveda.seznam.cz/en/seznambot-intro/)',
+            'Mozilla/5.0 (compatible; SeznamBot/3.2-test4; +http://napoveda.seznam.cz/en/seznambot-intro/)',
+            'Googlebot',
+        ];
+    }
+
     /**
      * @test
      */
@@ -79,6 +71,14 @@ class RequestTest extends AbstractContentTest
                 'Browser has been wrongly marked as a bot from HTTP_USER_AGENT: ' . $nonCrawlerUserAgent
             );
         }
+    }
+
+    public static function getNonCrawlerUserAgents(): array
+    {
+        return [
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0', // Firefox
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36' // Chrome
+        ];
     }
 
     /**
