@@ -12,7 +12,7 @@ class CacheCleaner extends StrictObject
     /**
      * @param string $cacheRootDir
      * @param string $cacheDirHasToContain
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CacheRootDirIsNotSafe
+     * @throws \DrdPlus\RulesSkeleton\Cache\Exceptions\CacheRootDirIsNotSafe
      */
     public function __construct(
         string $cacheRootDir,
@@ -42,7 +42,7 @@ class CacheCleaner extends StrictObject
         try {
             $recursiveDirectoryIterator = new \RecursiveDirectoryIterator($this->cacheRootDir, \RecursiveDirectoryIterator::SKIP_DOTS);
         } catch (\UnexpectedValueException $unexpectedValueException) {
-            if (!file_exists($this->cacheRootDir)) {
+            if (!is_dir($this->cacheRootDir)) {
                 return true;
             }
             throw $unexpectedValueException;
@@ -58,7 +58,7 @@ class CacheCleaner extends StrictObject
                 throw new Exceptions\CanNotDeleteCacheFile("Can not delete cache file '{$file->getPathname()}'");
             }
         }
-        if (!@rmdir($this->cacheRootDir) && file_exists($this->cacheRootDir)) {
+        if (!@rmdir($this->cacheRootDir) && is_dir($this->cacheRootDir)) {
             throw new Exceptions\CanNotDeleteCacheDir("Can not delete cache root directory '{$this->cacheRootDir}'");
         }
         return true;
