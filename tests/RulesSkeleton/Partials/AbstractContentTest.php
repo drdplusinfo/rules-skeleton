@@ -334,7 +334,11 @@ TEXT
                 curl_setopt($curl, \CURLOPT_HEADER, 1);
                 curl_setopt($curl, \CURLOPT_NOBODY, 1);
             }
-            curl_setopt($curl, \CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'); // to get headers only
+            curl_setopt(
+                $curl,
+                \CURLOPT_USERAGENT,
+                'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0'
+            );
             if ($post) {
                 curl_setopt($curl, \CURLOPT_POSTFIELDS, $post);
             }
@@ -377,7 +381,7 @@ TEXT
         if (!static::$localServerProcess->isRunning()) {
             self::markTestSkipped(
                 sprintf(
-                    "Local web server via `%s` is not running. Exit code %d (%s), message: '%s'",
+                    "Local web server via `%s` controlled by tests is not running. Exit code %d (%s), message: '%s'",
                     (string)static::$localServerProcess->getCommandLine(),
                     static::$localServerProcess->getExitCode(),
                     static::$localServerProcess->getExitCodeText(),
@@ -896,12 +900,30 @@ TEXT
      */
     protected function createMainBody(string $content): MainBody
     {
-        $rulesMainBody = $this->mockery(MainBody::class);
-        $rulesMainBody->shouldReceive('getValue')
-            ->andReturn($content);
-        $rulesMainBody->makePartial();
+        return new class($content) extends MainBody
+        {
+            private string $content;
 
-        return $rulesMainBody;
+            public function __construct(string $content)
+            {
+                $this->content = $content;
+            }
+
+            public function getValue(): string
+            {
+                return $this->content;
+            }
+
+            public function preProcessDocument(HtmlDocument $document): HtmlDocument
+            {
+                return $document;
+            }
+
+            public function postProcessDocument(HtmlDocument $document): HtmlDocument
+            {
+                return $document;
+            }
+        };
     }
 
     protected function getComposerConfig(): array
