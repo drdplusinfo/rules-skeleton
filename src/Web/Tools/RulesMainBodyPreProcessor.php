@@ -10,8 +10,8 @@ use Granam\WebContentBuilder\HtmlDocument;
 
 class RulesMainBodyPreProcessor extends StrictObject implements HtmlDocumentProcessorInterface
 {
-    private \DrdPlus\RulesSkeleton\HtmlHelper $htmlHelper;
-    private \DrdPlus\RulesSkeleton\Request $request;
+    private HtmlHelper $htmlHelper;
+    private Request $request;
 
     public function __construct(HtmlHelper $htmlHelper, Request $request)
     {
