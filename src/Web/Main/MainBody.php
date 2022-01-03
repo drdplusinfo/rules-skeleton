@@ -11,9 +11,9 @@ use Granam\WebContentBuilder\Web\WebFiles;
 
 class MainBody extends Body implements RulesBodyInterface
 {
-    private \DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer $webPartsContainer;
-    private ?\DrdPlus\RulesSkeleton\Web\Tools\HtmlDocumentProcessorInterface $rulesMainBodyPreProcessor = null;
-    private ?\DrdPlus\RulesSkeleton\Web\Tools\HtmlDocumentProcessorInterface $rulesMainBodyPostProcessor = null;
+    private WebPartsContainer $webPartsContainer;
+    private ?HtmlDocumentProcessorInterface $rulesMainBodyPreProcessor;
+    private ?HtmlDocumentProcessorInterface $rulesMainBodyPostProcessor;
 
     public function __construct(
         WebFiles $webFiles,
@@ -30,9 +30,10 @@ class MainBody extends Body implements RulesBodyInterface
 
     protected function fetchPhpFileContent(string $file): string
     {
-        $content = new class($file, $this->webPartsContainer) {
+        $content = new class($file, $this->webPartsContainer)
+        {
             private string $file;
-            private \DrdPlus\RulesSkeleton\Web\Tools\WebPartsContainer $webPartsContainer;
+            private WebPartsContainer $webPartsContainer;
 
             public function __construct(string $file, WebPartsContainer $webPartsContainer)
             {
@@ -43,12 +44,10 @@ class MainBody extends Body implements RulesBodyInterface
             public function fetchContent(): string
             {
                 $tmp = ['webPartsContainer' => $this->webPartsContainer];
-                \extract($tmp, \EXTR_SKIP);
-                \ob_start();
-                /** @noinspection PhpIncludeInspection */
+                extract($tmp, \EXTR_SKIP);
+                ob_start();
                 include $this->file;
-
-                return \ob_get_clean();
+                return ob_get_clean();
             }
         };
 

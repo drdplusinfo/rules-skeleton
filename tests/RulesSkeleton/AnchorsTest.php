@@ -29,7 +29,7 @@ class AnchorsTest extends AbstractContentTest
                 sprintf(
                     "No anchors pointing to same document expected as tests config says by '%s'. But there are IDs to make anchors from: %s",
                     TestsConfiguration::HAS_ANCHORS_TO_SAME_DOCUMENT,
-                    "\n" .  implode("\n", $anchorsToSameDocument)
+                    "\n" . implode("\n", $anchorsToSameDocument)
                 )
             );
 
@@ -162,11 +162,10 @@ class AnchorsTest extends AbstractContentTest
         $skippedExternalUrls = [];
         foreach ($this->getExternalLinks() as $originalLink) {
             $link = $this->turnToLocalLink($originalLink);
-            if (\in_array($link, self::$checkedExternalAnchors, true)) {
+            if (in_array($link, self::$checkedExternalAnchors, true)) {
                 continue;
             }
-            $weAreOffline = !$this->isLinkAccessible($link);
-            if ($weAreOffline) {
+            if (!$this->isLinkAccessible($link)) { // we are offline
                 $skippedExternalUrls[] = $link;
             } else {
                 $responseHttpCode = false;
@@ -197,23 +196,23 @@ class AnchorsTest extends AbstractContentTest
         if ($skippedExternalUrls) {
             self::markTestSkipped(
                 'Some external URLs have been skipped as we are probably offline: ' .
-                \print_r($skippedExternalUrls, true)
+                print_r($skippedExternalUrls, true)
             );
         }
     }
 
     private function isDrdPlusLink(string $link): bool
     {
-        return \strpos($link, 'drdplus.loc') !== false || \strpos($link, 'drdplus.info') !== false;
+        return str_contains($link, 'drdplus.loc') || str_contains($link, 'drdplus.info');
     }
 
     protected function isLinkAccessible(string $link): bool
     {
-        $hostname = \parse_url($link, \PHP_URL_HOST);
+        $hostname = parse_url($link, \PHP_URL_HOST);
 
         return $hostname !== false
             // already an IP, or DNS name translatable to an IP (if can not be translated, then gethostbyname returns given hostname back)
-            && (\filter_var($hostname, \FILTER_VALIDATE_IP) || \gethostbyname($hostname) !== $hostname);
+            && (\filter_var($hostname, \FILTER_VALIDATE_IP) || gethostbyname($hostname) !== $hostname);
     }
 
     private function getFromCache(string $cacheFileBaseName): string
@@ -293,7 +292,7 @@ class AnchorsTest extends AbstractContentTest
         if ($skippedExternalUrls) {
             self::markTestSkipped(
                 'Some external URLs have been skipped as we are probably offline: ' .
-                \print_r($skippedExternalUrls, true)
+                print_r($skippedExternalUrls, true)
             );
         }
     }
@@ -391,7 +390,7 @@ class AnchorsTest extends AbstractContentTest
                 0,
                 $originalIds,
                 'No original IDs, identified by CSS class ' . HtmlHelper::CLASS_INVISIBLE_ID . ' expected, got '
-                .  implode("\n", array_map(static fn(Element $element) => $element->outerHTML, $this->collectionToArray($originalIds)))
+                . implode("\n", array_map(static fn(Element $element) => $element->outerHTML, $this->collectionToArray($originalIds)))
             );
 
             return;
@@ -516,16 +515,15 @@ class AnchorsTest extends AbstractContentTest
         foreach ($this->getHtmlDocument(['mode' => 'prod' /* do not turn links to local */])->getElementsByTagName('a') as $anchor) {
             $href = (string)$anchor->getAttribute('href');
             self::assertNotEmpty($href);
-            $parsedUrl = \parse_url($href);
-            $hostname = $parsedUrl['host'] ?? null;
+            $hostname = parse_url($href, PHP_URL_HOST) ?: null;
             if ($hostname === null) { // local link with anchor or query only
                 continue;
             }
-            if (\preg_match('~[.]loc#~', $hostname) || \gethostbyname($hostname) === '127.0.0.1') {
+            if (preg_match('~[.]loc#~', $hostname) || gethostbyname($hostname) === '127.0.0.1') {
                 $urlsWithLocalHosts[] = $anchor->outerHTML;
             }
         }
-        self::assertCount(0, $urlsWithLocalHosts, "There are forgotten local URLs \n" .  implode(",\n", $urlsWithLocalHosts));
+        self::assertCount(0, $urlsWithLocalHosts, "There are forgotten local URLs \n" . implode(",\n", $urlsWithLocalHosts));
     }
 
     private function getPostDataToFetchContent(bool $isDrdPlus): array
@@ -565,7 +563,7 @@ class AnchorsTest extends AbstractContentTest
             self::assertCount(
                 0,
                 $invalidAnchors,
-                'Some anchors from ownership confirmation points to invalid links ' .  implode(',', $invalidAnchors)
+                'Some anchors from ownership confirmation points to invalid links ' . implode(',', $invalidAnchors)
             );
         }
     }
@@ -606,8 +604,7 @@ class AnchorsTest extends AbstractContentTest
 
     private function getLinkToEshop(): Element
     {
-        $body = $this->getHtmlDocument()->body;
-        $rulesAuthorsElements = $body->getElementsByClassName(HtmlHelper::CLASS_RULES_AUTHORS);
+        $rulesAuthorsElements = $this->getHtmlDocument()->body->getElementsByClassName(HtmlHelper::CLASS_RULES_AUTHORS);
         self::assertGreaterThan(
             0,
             $rulesAuthorsElements->count(),
@@ -620,7 +617,7 @@ class AnchorsTest extends AbstractContentTest
         self::assertCount(
             1,
             $rulesAuthorsElements,
-            \sprintf("Expected one '%s' class, got %d of them", HtmlHelper::CLASS_RULES_AUTHORS, $rulesAuthorsElements->count())
+            sprintf("Expected one '%s' class, got %d of them", HtmlHelper::CLASS_RULES_AUTHORS, $rulesAuthorsElements->count())
         );
         $rulesAuthors = $rulesAuthorsElements->current();
         $lastElement = $rulesAuthors->lastElementChild;
@@ -630,7 +627,7 @@ class AnchorsTest extends AbstractContentTest
             'Expected link to eshop to be the last child of ' . HtmlHelper::CLASS_RULES_AUTHORS
         );
         $href = $lastElement->getAttribute('href') ?? '';
-        $host = \parse_url($href, \PHP_URL_HOST);
+        $host = parse_url($href, \PHP_URL_HOST);
         if ($host === 'obchod.altar.cz') {
             return $lastElement;
         }
@@ -640,7 +637,6 @@ class AnchorsTest extends AbstractContentTest
                 $rulesAuthors->outerHTML
             )
         );
-        throw new \RuntimeException('Something simply can not happen');
     }
 
     /**
@@ -650,11 +646,11 @@ class AnchorsTest extends AbstractContentTest
     {
         $linksToVukogvazd = [];
         foreach ($this->getExternalLinks() as $link) {
-            if (\strpos($link, 'vukogvazd.cz')) {
+            if (str_contains($link, 'vukogvazd.cz')) {
                 $linksToVukogvazd[] = $link;
             }
         }
-        if (\count($linksToVukogvazd) === 0) {
+        if (count($linksToVukogvazd) === 0) {
             self::assertFalse(false, 'No links to Vukogvazd have been found');
         } else {
             foreach ($linksToVukogvazd as $linkToVukogvazd) {
@@ -671,7 +667,7 @@ class AnchorsTest extends AbstractContentTest
         $linksToCharacterSheet = [];
         foreach ($this->getExternalLinks() as $link) {
             $link = $this->turnToLocalLink($link);
-            if (\strpos($link, 'charakternik.pdf')) {
+            if (str_contains($link, 'charakternik.pdf')) {
                 $linksToCharacterSheet[] = $link;
             }
         }
@@ -686,7 +682,7 @@ class AnchorsTest extends AbstractContentTest
         }
         self::assertGreaterThan(
             0,
-            \count($linksToCharacterSheet),
+            count($linksToCharacterSheet),
             sprintf("PDF character sheet expected  as test configuration says by '%s'", TestsConfiguration::HAS_CHARACTER_SHEET)
         );
         $expectedOriginalLink = 'https://www.drdplus.info/pdf/charakternik.pdf';
@@ -708,7 +704,7 @@ class AnchorsTest extends AbstractContentTest
         $linksToJournal = [];
         foreach ($this->getExternalLinks() as $link) {
             $link = $this->turnToLocalLink($link);
-            if (\preg_match('~/denik_\w+\.pdf$~', $link)) {
+            if (preg_match('~/denik_\w+\.pdf$~', $link)) {
                 $linksToJournal[] = $link;
             }
         }
@@ -727,7 +723,7 @@ class AnchorsTest extends AbstractContentTest
         }
         self::assertGreaterThan(
             0,
-            \count($linksToJournal),
+            count($linksToJournal),
             sprintf(
                 "PDF journals expected as test configuration says by '%s' or '%s'",
                 TestsConfiguration::HAS_LINKS_TO_JOURNALS,
