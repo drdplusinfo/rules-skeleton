@@ -25,9 +25,9 @@ class AbstractPublicFilesTest extends TestWithMockery
     {
         return new class($preferMinified) extends AbstractPublicFiles
         {
-            public function getIterator()
+            public function getIterator(): \Traversable
             {
-
+                return new \ArrayIterator();
             }
 
             public function removeMapFiles(array $files): array
@@ -54,9 +54,9 @@ class AbstractPublicFilesTest extends TestWithMockery
     {
         return new class($preferMinified) extends AbstractPublicFiles
         {
-            public function getIterator()
+            public function getIterator(): \Traversable
             {
-
+                return new \ArrayIterator();
             }
 
             public function filterUniqueFiles(array $files): array

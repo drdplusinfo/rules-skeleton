@@ -15,7 +15,7 @@ abstract class AbstractPublicFiles extends StrictObject implements \IteratorAggr
 
     protected function removeMapFiles(array $files): array
     {
-        return \array_filter($files, static fn(string $file) => !\preg_match('~[.]map$~', $file));
+        return array_filter($files, static fn(string $file) => !preg_match('~[.]map$~', $file));
     }
 
     protected function filterUniqueFiles(array $files): array
@@ -23,7 +23,7 @@ abstract class AbstractPublicFiles extends StrictObject implements \IteratorAggr
         $nonMinifiedFiles = [];
         $minifiedFiles = [];
         foreach ($files as $file) {
-            if (\preg_match('~[.]min[.][^\\/]+$~', $file)) {
+            if (preg_match('~[.]min[.][^\\/]+$~', $file)) {
                 $minifiedFiles[$file] = $file;
             } else {
                 $nonMinifiedFiles[$file] = $file;
@@ -34,8 +34,8 @@ abstract class AbstractPublicFiles extends StrictObject implements \IteratorAggr
         }
         $sameFiles = [];
         foreach ($nonMinifiedFiles as $nonMinifiedFile) {
-            $minifiedFile = \preg_replace('~[.]([^.]+)$~', '.min.$1', $nonMinifiedFile);
-            if (\array_key_exists($minifiedFile, $minifiedFiles)) {
+            $minifiedFile = preg_replace('~[.]([^.]+)$~', '.min.$1', $nonMinifiedFile);
+            if (array_key_exists($minifiedFile, $minifiedFiles)) {
                 $sameFiles[$nonMinifiedFile] = $minifiedFile;
             }
         }
@@ -43,12 +43,12 @@ abstract class AbstractPublicFiles extends StrictObject implements \IteratorAggr
             return $files;
         }
         $filesToRemove = $this->preferMinified
-            ? \array_keys($sameFiles)
-            : \array_values($sameFiles);
+            ? array_keys($sameFiles)
+            : array_values($sameFiles);
         foreach ($filesToRemove as $fileToRemove) {
-            unset($files[\array_search($fileToRemove, $files, true)]);
+            unset($files[array_search($fileToRemove, $files, true)]);
         }
 
-        return \array_values($files); // to reindex from zero
+        return array_values($files); // to reindex from zero
     }
 }
