@@ -127,7 +127,17 @@ class ContactsContentTest extends AbstractContentTest
     public function I_am_not_confused_by_link_to_debug_contacts_element()
     {
         $debugContactsElement = $this->getDebugContactsElement();
-        self::assertNotEmpty($debugContactsElement, 'Debug contacts are missing');
+        if (!$this->getTestsConfiguration()->hasDebugContacts()) {
+            self::assertEmpty(
+                $debugContactsElement,
+                sprintf("No debug contacts expected as tests configuration says by '%s'", TestsConfiguration::HAS_DEBUG_CONTACTS)
+            );
+            return;
+        }
+        self::assertNotEmpty(
+            $debugContactsElement,
+            sprintf("Debug contacts expected as tests configuration says by '%s'", TestsConfiguration::HAS_DEBUG_CONTACTS)
+        );
         $anchors = $debugContactsElement->getElementsByTagName('a');
         $debugContactsLocalLink = '#' . $this->getDebugContactsId();
         foreach ($anchors as $anchor) {
