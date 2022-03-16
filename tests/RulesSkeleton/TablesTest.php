@@ -251,7 +251,7 @@ class TablesTest extends AbstractContentTest
             200,
             $responseHttpCode,
             sprintf(
-                "Expected OK response from URL %s as tests directive '%s' is not active and tables list should be ust empty",
+                "Expected OK response from URL %s as tests directive '%s' is not active so tables list should be empty",
                 $urlWithQuery,
                 TestsConfiguration::CAN_HAVE_TABLES
             )
